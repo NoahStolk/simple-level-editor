@@ -2,7 +2,7 @@ using SimpleLevelEditor.Utils;
 using System.Collections.Immutable;
 using System.Runtime.CompilerServices;
 
-namespace SimpleLevelEditor.ContentParsers.Texture.TgaFormat;
+namespace SimpleLevelEditor.Content.Parsers.Texture.TgaFormat;
 
 public static class TgaParser
 {

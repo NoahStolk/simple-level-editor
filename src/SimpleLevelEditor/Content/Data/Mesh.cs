@@ -1,4 +1,4 @@
-namespace SimpleLevelEditor.ContentParsers.Model;
+namespace SimpleLevelEditor.Content.Data;
 
 public class Mesh
 {

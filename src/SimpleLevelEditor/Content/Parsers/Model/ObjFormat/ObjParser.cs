@@ -1,7 +1,7 @@
 using System.Globalization;
 using System.Text;
 
-namespace SimpleLevelEditor.ContentParsers.Model.ObjFormat;
+namespace SimpleLevelEditor.Content.Parsers.Model.ObjFormat;
 
 public static class ObjParser
 {

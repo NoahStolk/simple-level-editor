@@ -1,6 +1,6 @@
 using Silk.NET.OpenGL;
-using SimpleLevelEditor.ContentParsers.Texture;
-using SimpleLevelEditor.ContentParsers.Texture.TgaFormat;
+using SimpleLevelEditor.Content.Parsers.Texture;
+using SimpleLevelEditor.Content.Parsers.Texture.TgaFormat;
 using SimpleLevelEditor.State;
 using SimpleLevelEditor.Utils;
 

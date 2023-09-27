@@ -1,4 +1,4 @@
-using SimpleLevelEditor.ContentContainers;
+using SimpleLevelEditor.Content.Containers;
 using SimpleLevelEditor.Ui;
 using SimpleLevelEditor.Utils;
 
@@ -17,9 +17,9 @@ public static class Nodes
 		if (IsInitialized)
 			throw new InvalidOperationException("Custom nodes are already initialized.");
 
-		ShaderContainer.Add("Line", File.ReadAllText(Path.Combine("Content", "Shaders", "Line.vert")), File.ReadAllText(Path.Combine("Content", "Shaders", "Line.frag")));
-		ShaderContainer.Add("Mesh", File.ReadAllText(Path.Combine("Content", "Shaders", "Mesh.vert")), File.ReadAllText(Path.Combine("Content", "Shaders", "Mesh.frag")));
-		ShaderContainer.Add("Ui", File.ReadAllText(Path.Combine("Content", "Shaders", "Ui.vert")), File.ReadAllText(Path.Combine("Content", "Shaders", "Ui.frag")));
+		ShaderContainer.Add("Line", File.ReadAllText(Path.Combine("Resources", "Shaders", "Line.vert")), File.ReadAllText(Path.Combine("Resources", "Shaders", "Line.frag")));
+		ShaderContainer.Add("Mesh", File.ReadAllText(Path.Combine("Resources", "Shaders", "Mesh.vert")), File.ReadAllText(Path.Combine("Resources", "Shaders", "Mesh.frag")));
+		ShaderContainer.Add("Ui", File.ReadAllText(Path.Combine("Resources", "Shaders", "Ui.vert")), File.ReadAllText(Path.Combine("Resources", "Shaders", "Ui.frag")));
 
 		_imGuiController = new(Constants.WindowWidth, Constants.WindowHeight, static orthoProjection =>
 		{

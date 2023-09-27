@@ -1,6 +1,6 @@
 using System.Runtime.InteropServices;
 
-namespace SimpleLevelEditor.ContentParsers.Texture.TgaFormat;
+namespace SimpleLevelEditor.Content.Parsers.Texture.TgaFormat;
 
 [StructLayout(LayoutKind.Sequential)]
 internal readonly struct TgaHeader

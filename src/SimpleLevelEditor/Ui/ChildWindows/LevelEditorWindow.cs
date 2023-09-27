@@ -1,6 +1,6 @@
 using ImGuiNET;
 using Silk.NET.OpenGL;
-using SimpleLevelEditor.ContentContainers;
+using SimpleLevelEditor.Content.Containers;
 using SimpleLevelEditor.Formats.Level3d;
 using SimpleLevelEditor.Rendering;
 using SimpleLevelEditor.State;
@@ -216,7 +216,7 @@ public static class LevelEditorWindow
 				continue;
 			}
 
-			(ContentParsers.Model.Mesh Mesh, uint Vao)? mesh = MeshContainer.GetMesh(meshName);
+			(Content.Data.Mesh Mesh, uint Vao)? mesh = MeshContainer.GetMesh(meshName);
 			if (!mesh.HasValue)
 			{
 				DebugWindow.Warnings.Add("Cannot find mesh.");

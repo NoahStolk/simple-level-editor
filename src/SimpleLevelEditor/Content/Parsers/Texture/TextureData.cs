@@ -1,4 +1,4 @@
-namespace SimpleLevelEditor.ContentParsers.Texture;
+namespace SimpleLevelEditor.Content.Parsers.Texture;
 
 /// <summary>
 /// Represents data parsed from a texture format, such as a .tga file.

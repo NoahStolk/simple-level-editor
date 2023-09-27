@@ -46,8 +46,8 @@
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup Label="Content">
-    <None Include="Content\**\*">
+  <ItemGroup Label="Resources">
+    <None Include="Resources\**\*">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

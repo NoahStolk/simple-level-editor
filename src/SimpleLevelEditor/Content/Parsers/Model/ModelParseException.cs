@@ -1,6 +1,6 @@
 using System.Runtime.Serialization;
 
-namespace SimpleLevelEditor.ContentParsers.Model;
+namespace SimpleLevelEditor.Content.Parsers.Model;
 
 [Serializable]
 public class ModelParseException : Exception

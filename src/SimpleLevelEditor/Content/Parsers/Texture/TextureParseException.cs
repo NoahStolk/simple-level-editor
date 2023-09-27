@@ -1,6 +1,6 @@
 using System.Runtime.Serialization;
 
-namespace SimpleLevelEditor.ContentParsers.Texture;
+namespace SimpleLevelEditor.Content.Parsers.Texture;
 
 [Serializable]
 public class TextureParseException : Exception

@@ -1,6 +1,6 @@
 using SimpleLevelEditor.Utils;
 
-namespace SimpleLevelEditor.ContentParsers.Texture.TgaFormat;
+namespace SimpleLevelEditor.Content.Parsers.Texture.TgaFormat;
 
 internal static class TgaImageTypeExtensions
 {

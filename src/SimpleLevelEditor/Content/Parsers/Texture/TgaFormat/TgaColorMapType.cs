@@ -1,4 +1,4 @@
-namespace SimpleLevelEditor.ContentParsers.Texture.TgaFormat;
+namespace SimpleLevelEditor.Content.Parsers.Texture.TgaFormat;
 
 internal enum TgaColorMapType : byte
 {

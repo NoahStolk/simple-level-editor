@@ -1,6 +1,6 @@
 using Silk.NET.OpenGL;
 
-namespace SimpleLevelEditor.ContentLoaders;
+namespace SimpleLevelEditor.Content.Loaders;
 
 public static class ShaderLoader
 {

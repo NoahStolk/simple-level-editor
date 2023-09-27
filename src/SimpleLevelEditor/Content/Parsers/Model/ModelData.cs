@@ -1,4 +1,4 @@
-namespace SimpleLevelEditor.ContentParsers.Model;
+namespace SimpleLevelEditor.Content.Parsers.Model;
 
 /// <summary>
 /// Represents data parsed from a model format, such as a .obj file.

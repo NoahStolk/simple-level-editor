@@ -1,4 +1,4 @@
-namespace SimpleLevelEditor.ContentParsers.Model;
+namespace SimpleLevelEditor.Content.Parsers.Model;
 
 public readonly record struct Face(ushort Position, ushort Texture, ushort Normal)
 {

@@ -1,6 +1,6 @@
-using SimpleLevelEditor.ContentLoaders;
+using SimpleLevelEditor.Content.Loaders;
 
-namespace SimpleLevelEditor.ContentContainers;
+namespace SimpleLevelEditor.Content.Containers;
 
 public static class ShaderContainer
 {

@@ -1,6 +1,7 @@
 using Silk.NET.OpenGL;
-using SimpleLevelEditor.ContentParsers.Model;
-using SimpleLevelEditor.ContentParsers.Model.ObjFormat;
+using SimpleLevelEditor.Content.Data;
+using SimpleLevelEditor.Content.Parsers.Model;
+using SimpleLevelEditor.Content.Parsers.Model.ObjFormat;
 using SimpleLevelEditor.State;
 using SimpleLevelEditor.Utils;
 
