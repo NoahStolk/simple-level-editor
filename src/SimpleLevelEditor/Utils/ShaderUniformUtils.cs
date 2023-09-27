@@ -6,19 +6,7 @@ namespace SimpleLevelEditor.Utils;
 public static class ShaderUniformUtils
 {
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static void Set(int uniformLocation, bool value)
-	{
-		Set(uniformLocation, value ? 1 : 0);
-	}
-
-	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static void Set(int uniformLocation, int value)
-	{
-		Graphics.Gl.Uniform1(uniformLocation, value);
-	}
-
-	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static void Set(int uniformLocation, uint value)
 	{
 		Graphics.Gl.Uniform1(uniformLocation, value);
 	}
@@ -57,64 +45,5 @@ public static class ShaderUniformUtils
 			value.M41, value.M42, value.M43, value.M44,
 		};
 		Graphics.Gl.UniformMatrix4(uniformLocation, 1, false, data);
-	}
-
-	public static void Set(int uniformLocation, ReadOnlySpan<float> values)
-	{
-		if (values.IsEmpty)
-			return;
-
-		Graphics.Gl.Uniform1(uniformLocation, values);
-	}
-
-	public static void Set(int uniformLocation, ReadOnlySpan<Vector2> values)
-	{
-		if (values.IsEmpty)
-			return;
-
-		Span<float> span = stackalloc float[values.Length * 2];
-		for (int i = 0; i < values.Length; i++)
-		{
-			Vector2 vector = values[i];
-			span[i * 2] = vector.X;
-			span[i * 2 + 1] = vector.Y;
-		}
-
-		Graphics.Gl.Uniform2(uniformLocation, span);
-	}
-
-	public static void Set(int uniformLocation, ReadOnlySpan<Vector3> values)
-	{
-		if (values.IsEmpty)
-			return;
-
-		Span<float> span = stackalloc float[values.Length * 3];
-		for (int i = 0; i < values.Length; i++)
-		{
-			Vector3 vector = values[i];
-			span[i * 3] = vector.X;
-			span[i * 3 + 1] = vector.Y;
-			span[i * 3 + 2] = vector.Z;
-		}
-
-		Graphics.Gl.Uniform3(uniformLocation, span);
-	}
-
-	public static void Set(int uniformLocation, ReadOnlySpan<Vector4> values)
-	{
-		if (values.IsEmpty)
-			return;
-
-		Span<float> span = stackalloc float[values.Length * 4];
-		for (int i = 0; i < values.Length; i++)
-		{
-			Vector4 vector = values[i];
-			span[i * 4] = vector.X;
-			span[i * 4 + 1] = vector.Y;
-			span[i * 4 + 2] = vector.Z;
-			span[i * 4 + 3] = vector.W;
-		}
-
-		Graphics.Gl.Uniform4(uniformLocation, span);
 	}
 }

@@ -21,9 +21,12 @@ public sealed class Game
 	private int _currentSecond;
 	private int _updates;
 	private int _renders;
+	private ImGuiController _imGuiController;
 
-	public unsafe Game()
+	public unsafe Game(ImGuiController imGuiController)
 	{
+		_imGuiController = imGuiController;
+
 		// Must call setters here.
 		UpdateRate = 60;
 		MainLoopRate = 300;
@@ -34,7 +37,7 @@ public sealed class Game
 		{
 			// We overwrite the key callback, so we need to call this method again.
 			Input.KeyCallback(keys, state);
-			Nodes.ImGuiController.PressKey(keys, state);
+			imGuiController.PressKey(keys, state);
 		});
 	}
 
@@ -77,13 +80,13 @@ public sealed class Game
 
 	public void Render()
 	{
-		Nodes.ImGuiController.Update((float)FrameTime);
+		_imGuiController.Update((float)FrameTime);
 
 		Graphics.Gl.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit);
 
 		MainWindow.Render();
 
-		Nodes.ImGuiController.Render();
+		_imGuiController.Render();
 	}
 
 	public unsafe void Run()
@@ -97,7 +100,7 @@ public sealed class Game
 				Thread.Yield();
 		}
 
-		Nodes.ImGuiController.Destroy();
+		_imGuiController.Destroy();
 		Graphics.Glfw.Terminate();
 	}
 
