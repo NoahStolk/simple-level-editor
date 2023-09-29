@@ -7,18 +7,11 @@ namespace SimpleLevelEditor.Formats.Level3d;
 
 public class Entity : IBinarySerializable<Entity>
 {
-	public Entity(string name, OneOf<Point, Sphere, Aabb, StandingCylinder> shape, List<EntityProperty> properties)
-	{
-		Name = name;
-		Shape = shape;
-		Properties = properties;
-	}
+	public required string Name { get; set; }
 
-	public string Name { get; set; }
+	public required OneOf<Point, Sphere, Aabb, StandingCylinder> Shape { get; set; }
 
-	public OneOf<Point, Sphere, Aabb, StandingCylinder> Shape { get; set; }
-
-	public List<EntityProperty> Properties { get; set; }
+	public required List<EntityProperty> Properties { get; set; }
 
 	public static Entity Read(BinaryReader br)
 	{
@@ -39,7 +32,12 @@ public class Entity : IBinarySerializable<Entity>
 		for (int j = 0; j < propertyCount; j++)
 			properties.Add(EntityProperty.Read(br));
 
-		return new(name, shape, properties);
+		return new()
+		{
+			Name = name,
+			Shape = shape,
+			Properties = properties,
+		};
 	}
 
 	public void Write(BinaryWriter bw)

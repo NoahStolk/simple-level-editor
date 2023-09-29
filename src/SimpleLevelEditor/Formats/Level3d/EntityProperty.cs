@@ -6,33 +6,31 @@ namespace SimpleLevelEditor.Formats.Level3d;
 
 public class EntityProperty : IBinarySerializable<EntityProperty>
 {
-	public EntityProperty(string key, OneOf<bool, byte, ushort, int, float, Vector2, Vector3, Vector4, Quaternion, string> value)
-	{
-		Key = key;
-		Value = value;
-	}
+	public required string Key { get; set; }
 
-	public string Key { get; set; }
-
-	public OneOf<bool, byte, ushort, int, float, Vector2, Vector3, Vector4, Quaternion, string> Value { get; set; }
+	public required OneOf<bool, byte, ushort, int, float, Vector2, Vector3, Vector4, Quaternion, string> Value { get; set; }
 
 	public static EntityProperty Read(BinaryReader br)
 	{
 		string key = br.ReadString();
 		PropertyValueType propertyType = (PropertyValueType)br.ReadByte();
-		return propertyType switch
+		return new()
 		{
-			PropertyValueType.Boolean => new(key, br.ReadBoolean()),
-			PropertyValueType.UInt8 => new(key, br.ReadByte()),
-			PropertyValueType.UInt16 => new(key, br.ReadUInt16()),
-			PropertyValueType.Int32 => new(key, br.ReadInt32()),
-			PropertyValueType.Float32 => new(key, br.ReadSingle()),
-			PropertyValueType.Vector2Float32 => new(key, br.ReadVector2()),
-			PropertyValueType.Vector3Float32 => new(key, br.ReadVector3()),
-			PropertyValueType.Vector4Float32 => new(key, br.ReadVector4()),
-			PropertyValueType.QuaternionFloat32 => new(key, br.ReadQuaternion()),
-			PropertyValueType.String => new(key, br.ReadString()),
-			_ => throw new InvalidDataException("Invalid property type."),
+			Key = key,
+			Value = propertyType switch
+			{
+				PropertyValueType.Boolean => br.ReadBoolean(),
+				PropertyValueType.UInt8 => br.ReadByte(),
+				PropertyValueType.UInt16 => br.ReadUInt16(),
+				PropertyValueType.Int32 => br.ReadInt32(),
+				PropertyValueType.Float32 => br.ReadSingle(),
+				PropertyValueType.Vector2Float32 => br.ReadVector2(),
+				PropertyValueType.Vector3Float32 => br.ReadVector3(),
+				PropertyValueType.Vector4Float32 => br.ReadVector4(),
+				PropertyValueType.QuaternionFloat32 => br.ReadQuaternion(),
+				PropertyValueType.String => br.ReadString(),
+				_ => throw new InvalidDataException("Invalid property type."),
+			},
 		};
 	}
 

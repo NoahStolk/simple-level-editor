@@ -2,28 +2,26 @@ namespace SimpleLevelEditor.Formats.Level3d;
 
 public class Level3dData : IBinarySerializable<Level3dData>
 {
-	public Level3dData(int version, List<string> meshes, List<string> textures, List<WorldObject> worldObjects, List<Entity> entities)
-	{
-		Version = version;
-		Meshes = meshes;
-		Textures = textures;
-		WorldObjects = worldObjects;
-		Entities = entities;
-	}
-
 	private static ReadOnlySpan<byte> Magic => "SLELVL3D"u8;
 
-	public int Version { get; set; }
+	public required int Version { get; set; }
 
-	public List<string> Meshes { get; set; }
+	public required List<string> Meshes { get; set; }
 
-	public List<string> Textures { get; set; }
+	public required List<string> Textures { get; set; }
 
-	public List<WorldObject> WorldObjects { get; set; }
+	public required List<WorldObject> WorldObjects { get; set; }
 
-	public List<Entity> Entities { get; set; }
+	public required List<Entity> Entities { get; set; }
 
-	public static Level3dData Default => new(1, new(), new(), new(), new());
+	public static Level3dData Default => new()
+	{
+		Version = 1,
+		Meshes = new(),
+		Textures = new(),
+		WorldObjects = new(),
+		Entities = new(),
+	};
 
 	public static Level3dData Read(BinaryReader br)
 	{
@@ -53,7 +51,14 @@ public class Level3dData : IBinarySerializable<Level3dData>
 		for (int i = 0; i < entityCount; i++)
 			entities.Add(Entity.Read(br));
 
-		return new(version, meshes, textures, worldObjects, entities);
+		return new()
+		{
+			Version = version,
+			Meshes = meshes,
+			Textures = textures,
+			WorldObjects = worldObjects,
+			Entities = entities,
+		};
 	}
 
 	public void Write(BinaryWriter bw)
@@ -80,6 +85,13 @@ public class Level3dData : IBinarySerializable<Level3dData>
 
 	public Level3dData DeepCopy()
 	{
-		return new(Version, Meshes, Textures, WorldObjects, Entities);
+		return new()
+		{
+			Version = Version,
+			Meshes = new(Meshes),
+			Textures = new(Textures),
+			WorldObjects = new(WorldObjects),
+			Entities = new(Entities),
+		};
 	}
 }
