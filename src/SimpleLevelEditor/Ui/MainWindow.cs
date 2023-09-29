@@ -4,6 +4,8 @@ using SimpleLevelEditor.Formats;
 using SimpleLevelEditor.Model;
 using SimpleLevelEditor.State;
 using SimpleLevelEditor.Ui.ChildWindows;
+using System.Text;
+using System.Xml;
 
 namespace SimpleLevelEditor.Ui;
 
@@ -43,14 +45,13 @@ public static class MainWindow
 						}
 					}
 
+					const SerializerKind serializerKind = SerializerKind.Xml;
 					if (ImGui.MenuItem("Open"))
 					{
-						DialogResult dialogResult = Dialog.FileOpen("bin");
+						DialogResult dialogResult = Dialog.FileOpen(GetFileExtension(serializerKind));
 						if (dialogResult is { IsOk: true })
 						{
-							using FileStream fs = new(dialogResult.Path, FileMode.Open);
-							using BinaryReader br = new(fs);
-							LevelState.SetLevel(dialogResult.Path, BinaryFormatSerializer.ReadLevel(br));
+							Load(serializerKind, dialogResult.Path);
 						}
 					}
 
@@ -58,15 +59,24 @@ public static class MainWindow
 					{
 						if (LevelState.LevelFilePath != null)
 						{
-							Save(LevelState.LevelFilePath);
+							Save(serializerKind, LevelState.LevelFilePath);
 						}
 						else
 						{
-							DialogResult dialogResult = Dialog.FileSave("bin");
+							DialogResult dialogResult = Dialog.FileSave(GetFileExtension(serializerKind));
 							if (dialogResult is { IsOk: true })
 							{
-								Save(dialogResult.Path);
+								Save(serializerKind, dialogResult.Path);
 							}
+						}
+					}
+
+					if (ImGui.MenuItem("Save As"))
+					{
+						DialogResult dialogResult = Dialog.FileSave(GetFileExtension(serializerKind));
+						if (dialogResult is { IsOk: true })
+						{
+							Save(serializerKind, dialogResult.Path);
 						}
 					}
 
@@ -123,12 +133,69 @@ public static class MainWindow
 		ImGui.End(); // End 3D Level Editor
 	}
 
-	private static void Save(string path)
+	private static void Load(SerializerKind serializerKind, string path)
+	{
+		using FileStream fs = new(path, FileMode.Open);
+
+		Level3dData level;
+		switch (serializerKind)
+		{
+			case SerializerKind.Binary:
+			{
+				using BinaryReader br = new(fs);
+				level = BinaryFormatSerializer.ReadLevel(br);
+				break;
+			}
+
+			case SerializerKind.Xml:
+			{
+				using XmlReader reader = XmlReader.Create(fs);
+				level = XmlFormatSerializer.ReadLevel(reader);
+				break;
+			}
+
+			default:
+				throw new ArgumentOutOfRangeException(nameof(serializerKind), serializerKind, null);
+		}
+
+		LevelState.SetLevel(path, level);
+	}
+
+	private static void Save(SerializerKind serializerKind, string path)
 	{
 		using MemoryStream ms = new();
-		using BinaryWriter bw = new(ms);
-		BinaryFormatSerializer.WriteLevel(LevelState.Level, bw);
+
+		switch (serializerKind)
+		{
+			case SerializerKind.Xml:
+			{
+				using XmlWriter writer = XmlWriter.Create(ms, new() { Indent = true, Encoding = new UTF8Encoding(false) });
+				XmlFormatSerializer.WriteLevel(LevelState.Level, writer);
+				writer.Flush();
+
+				ms.Write("\n"u8);
+				break;
+			}
+
+			case SerializerKind.Binary:
+			{
+				using BinaryWriter bw = new(ms);
+				BinaryFormatSerializer.WriteLevel(LevelState.Level, bw);
+				break;
+			}
+		}
+
 		File.WriteAllBytes(path, ms.ToArray());
 		LevelState.SetLevel(path, LevelState.Level);
+	}
+
+	private static string GetFileExtension(SerializerKind serializerKind)
+	{
+		return serializerKind switch
+		{
+			SerializerKind.Xml => "xml",
+			SerializerKind.Binary => "bin",
+			_ => throw new ArgumentOutOfRangeException(nameof(serializerKind), serializerKind, null),
+		};
 	}
 }
