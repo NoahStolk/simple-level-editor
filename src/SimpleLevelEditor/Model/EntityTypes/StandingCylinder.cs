@@ -1,4 +1,4 @@
-namespace SimpleLevelEditor.Formats.Level3d.EntityTypes;
+namespace SimpleLevelEditor.Model.EntityTypes;
 
 public struct StandingCylinder
 {

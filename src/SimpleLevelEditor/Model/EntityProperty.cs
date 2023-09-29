@@ -1,10 +1,10 @@
 using OneOf;
 using SimpleLevelEditor.Extensions;
-using SimpleLevelEditor.Formats.Level3d.Enums;
+using SimpleLevelEditor.Model.Enums;
 
-namespace SimpleLevelEditor.Formats.Level3d;
+namespace SimpleLevelEditor.Model;
 
-public class EntityProperty : IBinarySerializable<EntityProperty>
+public class EntityProperty
 {
 	public required string Key { get; set; }
 

@@ -1,5 +1,4 @@
-using SimpleLevelEditor.Formats.Level3d;
-using SimpleLevelEditor.Formats.Level3d.Enums;
+using SimpleLevelEditor.Model;
 using SimpleLevelEditor.Rendering;
 using SimpleLevelEditor.Ui.ChildWindows;
 

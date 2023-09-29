@@ -1,6 +1,6 @@
-namespace SimpleLevelEditor.Formats.Level3d;
+namespace SimpleLevelEditor.Model;
 
-public class Level3dData : IBinarySerializable<Level3dData>
+public class Level3dData
 {
 	private static ReadOnlySpan<byte> Magic => "SLELVL3D"u8;
 

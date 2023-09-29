@@ -1,4 +1,4 @@
-namespace SimpleLevelEditor.Formats.Level3d.Enums;
+namespace SimpleLevelEditor.Model.Enums;
 
 [Flags]
 public enum WorldObjectValues : byte

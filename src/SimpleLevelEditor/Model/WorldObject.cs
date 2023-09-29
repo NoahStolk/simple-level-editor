@@ -1,9 +1,9 @@
 using SimpleLevelEditor.Extensions;
-using SimpleLevelEditor.Formats.Level3d.Enums;
+using SimpleLevelEditor.Model.Enums;
 
-namespace SimpleLevelEditor.Formats.Level3d;
+namespace SimpleLevelEditor.Model;
 
-public class WorldObject : IBinarySerializable<WorldObject>
+public class WorldObject
 {
 	public required int MeshId { get; set; }
 

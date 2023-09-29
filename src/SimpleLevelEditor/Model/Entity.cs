@@ -1,11 +1,11 @@
 using OneOf;
 using SimpleLevelEditor.Extensions;
-using SimpleLevelEditor.Formats.Level3d.EntityTypes;
-using SimpleLevelEditor.Formats.Level3d.Enums;
+using SimpleLevelEditor.Model.EntityTypes;
+using SimpleLevelEditor.Model.Enums;
 
-namespace SimpleLevelEditor.Formats.Level3d;
+namespace SimpleLevelEditor.Model;
 
-public class Entity : IBinarySerializable<Entity>
+public class Entity
 {
 	public required string Name { get; set; }
 
