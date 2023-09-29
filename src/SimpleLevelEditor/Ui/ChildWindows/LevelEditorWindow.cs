@@ -147,13 +147,13 @@ public static class LevelEditorWindow
 
 	private static void RenderLines()
 	{
-		uint lineShaderId = ShaderContainer.Shaders["Line"];
-		Gl.UseProgram(lineShaderId);
+		ShaderCacheEntry lineShader = ShaderContainer.Shaders["Line"];
+		Gl.UseProgram(lineShader.Id);
 
-		int view = Gl.GetUniformLocation(lineShaderId, "view");
-		int projection = Gl.GetUniformLocation(lineShaderId, "projection");
-		int model = Gl.GetUniformLocation(lineShaderId, "model");
-		int color = Gl.GetUniformLocation(lineShaderId, "color");
+		int view = lineShader.GetUniformLocation("view");
+		int projection = lineShader.GetUniformLocation("projection");
+		int model = lineShader.GetUniformLocation("model");
+		int color = lineShader.GetUniformLocation("color");
 
 		ShaderUniformUtils.Set(view, Camera3d.ViewMatrix);
 		ShaderUniformUtils.Set(projection, Camera3d.Projection);
@@ -194,12 +194,12 @@ public static class LevelEditorWindow
 
 	private static unsafe void RenderWorldObjects()
 	{
-		uint meshShaderId = ShaderContainer.Shaders["Mesh"];
-		Gl.UseProgram(meshShaderId);
+		ShaderCacheEntry meshShader = ShaderContainer.Shaders["Mesh"];
+		Gl.UseProgram(meshShader.Id);
 
-		int view = Gl.GetUniformLocation(meshShaderId, "view");
-		int projection = Gl.GetUniformLocation(meshShaderId, "projection");
-		int model = Gl.GetUniformLocation(meshShaderId, "model");
+		int view = meshShader.GetUniformLocation("view");
+		int projection = meshShader.GetUniformLocation("projection");
+		int model = meshShader.GetUniformLocation("model");
 
 		ShaderUniformUtils.Set(view, Camera3d.ViewMatrix);
 		ShaderUniformUtils.Set(projection, Camera3d.Projection);

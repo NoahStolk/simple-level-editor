@@ -2,12 +2,12 @@ namespace SimpleLevelEditor.Content;
 
 public static class ShaderContainer
 {
-	private static readonly Dictionary<string, uint> _shaders = new();
+	private static readonly Dictionary<string, ShaderCacheEntry> _shaders = new();
 
-	public static IReadOnlyDictionary<string, uint> Shaders => _shaders;
+	public static IReadOnlyDictionary<string, ShaderCacheEntry> Shaders => _shaders;
 
 	public static void Add(string name, string vertexCode, string fragmentCode)
 	{
-		_shaders.Add(name, ShaderLoader.Load(vertexCode, fragmentCode));
+		_shaders.Add(name, new(ShaderLoader.Load(vertexCode, fragmentCode)));
 	}
 }

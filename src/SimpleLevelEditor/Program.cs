@@ -16,11 +16,11 @@ foreach (string filePath in Directory.GetFiles(Path.Combine("Resources", "Shader
 
 ImGuiController imGuiController = new(Constants.WindowWidth, Constants.WindowHeight, static orthoProjection =>
 {
-	uint uiShaderId = ShaderContainer.Shaders["Ui"];
-	Graphics.Gl.UseProgram(uiShaderId);
+	ShaderCacheEntry uiShader = ShaderContainer.Shaders["Ui"];
+	Graphics.Gl.UseProgram(uiShader.Id);
 
-	int texture = Graphics.Gl.GetUniformLocation(uiShaderId, "Texture");
-	int projMtx = Graphics.Gl.GetUniformLocation(uiShaderId, "ProjMtx");
+	int texture = uiShader.GetUniformLocation("Texture");
+	int projMtx = uiShader.GetUniformLocation("ProjMtx");
 
 	ShaderUniformUtils.Set(texture, 0);
 	ShaderUniformUtils.Set(projMtx, orthoProjection);
