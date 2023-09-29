@@ -1,5 +1,6 @@
 using ImGuiNET;
 using NativeFileDialogSharp;
+using SimpleLevelEditor.Formats;
 using SimpleLevelEditor.Model;
 using SimpleLevelEditor.State;
 using SimpleLevelEditor.Ui.ChildWindows;
@@ -35,7 +36,7 @@ public static class MainWindow
 
 							Level3dData level = Level3dData.Default.DeepCopy();
 
-							level.Write(bw);
+							BinaryFormatSerializer.WriteLevel(level, bw);
 							File.WriteAllBytes(dialogResult.Path, ms.ToArray());
 
 							LevelState.SetLevel(dialogResult.Path, level);
@@ -49,7 +50,7 @@ public static class MainWindow
 						{
 							using FileStream fs = new(dialogResult.Path, FileMode.Open);
 							using BinaryReader br = new(fs);
-							LevelState.SetLevel(dialogResult.Path, Level3dData.Read(br));
+							LevelState.SetLevel(dialogResult.Path, BinaryFormatSerializer.ReadLevel(br));
 						}
 					}
 
@@ -126,7 +127,7 @@ public static class MainWindow
 	{
 		using MemoryStream ms = new();
 		using BinaryWriter bw = new(ms);
-		LevelState.Level.Write(bw);
+		BinaryFormatSerializer.WriteLevel(LevelState.Level, bw);
 		File.WriteAllBytes(path, ms.ToArray());
 		LevelState.SetLevel(path, LevelState.Level);
 	}
