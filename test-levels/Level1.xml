@@ -20,26 +20,11 @@
     <Texture Path="tex\TilesGray.tga" />
   </Textures>
   <WorldObjects>
-    <WorldObject MeshId="2" TextureId="0" BoundingMeshId="-1" Position="-1 0 2" Rotation="0 0 0" Scale="1 1 1" Values="None" />
-    <WorldObject MeshId="2" TextureId="0" BoundingMeshId="-1" Position="2 0 -2" Rotation="0 0 0" Scale="1 1 1" Values="None" />
-    <WorldObject MeshId="3" TextureId="0" BoundingMeshId="-1" Position="3 0 -0" Rotation="0 0 0" Scale="1 1 1" Values="None" />
-    <WorldObject MeshId="11" TextureId="0" BoundingMeshId="-1" Position="-1.676903 0 -1.7849853" Rotation="0 0 0" Scale="1 1 1" Values="None" />
-    <WorldObject MeshId="11" TextureId="0" BoundingMeshId="-1" Position="-1.6768854 0 -1.7849615" Rotation="0 0 0" Scale="1 1 1" Values="None" />
-    <WorldObject MeshId="11" TextureId="0" BoundingMeshId="-1" Position="-1.6768632 0 -1.7849925" Rotation="0 0 0" Scale="1 1 1" Values="None" />
-    <WorldObject MeshId="11" TextureId="0" BoundingMeshId="-1" Position="-1.6768721 -2.3841858E-07 -1.7850232" Rotation="0 0 0" Scale="1 1 1" Values="None" />
-    <WorldObject MeshId="11" TextureId="0" BoundingMeshId="-1" Position="-1.6768813 2.3841858E-07 -1.7850237" Rotation="0 0 0" Scale="1 1 1" Values="None" />
-    <WorldObject MeshId="11" TextureId="0" BoundingMeshId="-1" Position="-1.6768609 0 -1.7849946" Rotation="0 0 0" Scale="1 1 1" Values="None" />
-    <WorldObject MeshId="11" TextureId="0" BoundingMeshId="-1" Position="-1.6768818 2.3841858E-07 -1.7849905" Rotation="0 0 0" Scale="1 1 1" Values="None" />
-    <WorldObject MeshId="11" TextureId="0" BoundingMeshId="-1" Position="-1.6768641 0 -1.7850091" Rotation="0 0 0" Scale="1 1 1" Values="None" />
-    <WorldObject MeshId="11" TextureId="0" BoundingMeshId="-1" Position="-1.676847 0 -1.784996" Rotation="0 0 0" Scale="1 1 1" Values="None" />
-    <WorldObject MeshId="11" TextureId="0" BoundingMeshId="-1" Position="-1.6768554 0 -1.7850103" Rotation="0 0 0" Scale="1 1 1" Values="None" />
-    <WorldObject MeshId="11" TextureId="0" BoundingMeshId="-1" Position="-1.6768392 0 -1.7849967" Rotation="0 0 0" Scale="1 1 1" Values="None" />
-    <WorldObject MeshId="11" TextureId="0" BoundingMeshId="-1" Position="-1.6768482 2.3841858E-07 -1.7850409" Rotation="0 0 0" Scale="1 1 1" Values="None" />
-    <WorldObject MeshId="11" TextureId="0" BoundingMeshId="-1" Position="-1.6768447 -2.3841858E-07 -1.7849813" Rotation="0 0 0" Scale="1 1 1" Values="None" />
-    <WorldObject MeshId="11" TextureId="0" BoundingMeshId="-1" Position="-1.6768547 0 -1.7849638" Rotation="0 0 0" Scale="1 1 1" Values="None" />
-    <WorldObject MeshId="11" TextureId="0" BoundingMeshId="-1" Position="-1.6768537 2.3841858E-07 -1.7849824" Rotation="0 0 0" Scale="1 1 1" Values="None" />
-    <WorldObject MeshId="11" TextureId="0" BoundingMeshId="-1" Position="-1.6768361 -2.3841858E-07 -1.7849822" Rotation="0 0 0" Scale="1 1 1" Values="None" />
-    <WorldObject MeshId="9" TextureId="0" BoundingMeshId="-1" Position="-0 0 8" Rotation="0 0 0" Scale="1 1 1" Values="None" />
+    <WorldObject Mesh="mesh\Bullet.obj" Texture="tex\Blue.tga" BoundingMesh="-1" Position="-1 0 2" Rotation="0 0 0" Scale="1 1 1" Values="None" />
+    <WorldObject Mesh="mesh\Bullet.obj" Texture="tex\Blue.tga" BoundingMesh="-1" Position="2 0 -2" Rotation="0 0 0" Scale="1 1 1" Values="None" />
+    <WorldObject Mesh="mesh\DebugArrow.obj" Texture="tex\Blue.tga" BoundingMesh="-1" Position="3 0 -0" Rotation="0 0 0" Scale="1 1 1" Values="None" />
+    <WorldObject Mesh="mesh\Weapon.obj" Texture="tex\Blue.tga" BoundingMesh="-1" Position="-1.676903 0 -1.7849853" Rotation="0 0 0" Scale="1 1 1" Values="None" />
+    <WorldObject Mesh="mesh\Sphere.obj" Texture="tex\Blue.tga" BoundingMesh="-1" Position="-0 0 8" Rotation="0 0 0" Scale="1 1 1" Values="None" />
   </WorldObjects>
   <Entities />
 </Level>

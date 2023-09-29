@@ -86,9 +86,9 @@ public static class XmlFormatSerializer
 			{
 				WorldObject worldObject = new()
 				{
-					MeshId = int.Parse(reader.GetAttribute("MeshId") ?? throw _invalidFormat),
-					TextureId = int.Parse(reader.GetAttribute("TextureId") ?? throw _invalidFormat),
-					BoundingMeshId = int.Parse(reader.GetAttribute("BoundingMeshId") ?? throw _invalidFormat),
+					Mesh = reader.GetAttribute("Mesh") ?? throw _invalidFormat,
+					Texture = reader.GetAttribute("Texture") ?? throw _invalidFormat,
+					BoundingMesh = reader.GetAttribute("BoundingMesh") ?? throw _invalidFormat,
 					Position = ReadVector3(reader.GetAttribute("Position") ?? throw _invalidFormat),
 					Rotation = ReadVector3(reader.GetAttribute("Rotation") ?? throw _invalidFormat),
 					Scale = ReadVector3(reader.GetAttribute("Scale") ?? throw _invalidFormat),
@@ -205,9 +205,9 @@ public static class XmlFormatSerializer
 		foreach (WorldObject worldObject in level.WorldObjects)
 		{
 			writer.WriteStartElement("WorldObject");
-			writer.WriteAttributeString("MeshId", worldObject.MeshId.ToString());
-			writer.WriteAttributeString("TextureId", worldObject.TextureId.ToString());
-			writer.WriteAttributeString("BoundingMeshId", worldObject.BoundingMeshId.ToString());
+			writer.WriteAttributeString("Mesh", worldObject.Mesh);
+			writer.WriteAttributeString("Texture", worldObject.Texture);
+			writer.WriteAttributeString("BoundingMesh", worldObject.BoundingMesh);
 			writer.WriteVector3("Position", worldObject.Position);
 			writer.WriteVector3("Rotation", worldObject.Rotation);
 			writer.WriteVector3("Scale", worldObject.Scale);

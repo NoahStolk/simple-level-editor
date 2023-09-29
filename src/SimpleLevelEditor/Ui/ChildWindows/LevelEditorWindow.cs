@@ -127,11 +127,11 @@ public static class LevelEditorWindow
 				WorldObject worldObject = new()
 				{
 					Position = _targetPosition,
-					MeshId = LevelState.Level.Meshes.IndexOf(ObjectCreatorState.SelectedMeshName),
-					TextureId = 0,
+					Mesh = ObjectCreatorState.SelectedMeshName,
+					Texture = string.Empty,
 					Scale = new(1),
 					Rotation = new(0),
-					BoundingMeshId = -1,
+					BoundingMesh = string.Empty,
 					Values = WorldObjectValues.None,
 				};
 				LevelState.Level.WorldObjects.Add(worldObject);
@@ -251,11 +251,11 @@ public static class LevelEditorWindow
 			WorldObject worldObject = LevelState.Level.WorldObjects[i];
 			ShaderUniformUtils.Set(modelUniform, Matrix4x4.CreateScale(worldObject.Scale) * Matrix4x4.CreateFromYawPitchRoll(worldObject.Rotation.X, worldObject.Rotation.Y, worldObject.Rotation.Z) * Matrix4x4.CreateTranslation(worldObject.Position));
 
-			(Mesh Mesh, uint Vao)? mesh = GetMesh(worldObject.MeshId);
+			(Mesh Mesh, uint Vao)? mesh = GetMesh(worldObject.Mesh);
 			if (mesh == null)
 				continue;
 
-			uint? textureId = GetTexture(worldObject.TextureId);
+			uint? textureId = GetTexture(worldObject.Texture);
 			if (textureId == null)
 				continue;
 
@@ -272,8 +272,7 @@ public static class LevelEditorWindow
 		if (ObjectCreatorState.SelectedMeshName == null)
 			return;
 
-		int index = LevelState.Level.Meshes.IndexOf(ObjectCreatorState.SelectedMeshName);
-		(Mesh Mesh, uint Vao)? mesh = GetMesh(index);
+		(Mesh Mesh, uint Vao)? mesh = GetMesh(ObjectCreatorState.SelectedMeshName);
 		if (mesh == null)
 			return;
 
@@ -284,15 +283,8 @@ public static class LevelEditorWindow
 			Gl.DrawElements(PrimitiveType.Triangles, (uint)mesh.Value.Mesh.Indices.Length, DrawElementsType.UnsignedInt, i);
 	}
 
-	private static (Mesh Mesh, uint Vao)? GetMesh(int meshId)
+	private static (Mesh Mesh, uint Vao)? GetMesh(string meshName)
 	{
-		string? meshName = meshId >= 0 && LevelState.Level.Meshes.Count > meshId ? LevelState.Level.Meshes[meshId] : null;
-		if (meshName == null)
-		{
-			DebugWindow.Warnings.Add("Cannot find mesh name.");
-			return null;
-		}
-
 		(Mesh Mesh, uint Vao)? mesh = MeshContainer.GetMesh(meshName);
 		if (!mesh.HasValue)
 			DebugWindow.Warnings.Add("Cannot find mesh.");
@@ -300,15 +292,8 @@ public static class LevelEditorWindow
 		return mesh;
 	}
 
-	private static uint? GetTexture(int textureId)
+	private static uint? GetTexture(string textureName)
 	{
-		string? textureName = LevelState.Level.Textures.Count > textureId ? LevelState.Level.Textures[textureId] : null;
-		if (textureName == null)
-		{
-			DebugWindow.Warnings.Add("Cannot find texture name.");
-			return null;
-		}
-
 		uint? glTextureId = TextureContainer.GetTexture(textureName);
 		if (!glTextureId.HasValue)
 			DebugWindow.Warnings.Add("Cannot find texture.");

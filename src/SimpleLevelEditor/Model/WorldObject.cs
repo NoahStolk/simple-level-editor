@@ -4,11 +4,11 @@ namespace SimpleLevelEditor.Model;
 
 public class WorldObject
 {
-	public required int MeshId { get; set; }
+	public required string Mesh { get; set; }
 
-	public required int TextureId { get; set; }
+	public required string Texture { get; set; }
 
-	public required int BoundingMeshId { get; set; }
+	public required string BoundingMesh { get; set; }
 
 	public required Vector3 Scale { get; set; }
 
