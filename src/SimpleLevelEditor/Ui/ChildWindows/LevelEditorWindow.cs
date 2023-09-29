@@ -92,10 +92,10 @@ public static class LevelEditorWindow
 			ImGui.SeparatorText("Level Editor");
 
 			Camera3d.AspectRatio = framebufferSize.X / framebufferSize.Y;
-			RenderFramebuffer(framebufferSize);
+			Vector2 cursorScreenPos = ImGui.GetCursorScreenPos();
+			RenderFramebuffer(cursorScreenPos, framebufferSize);
 
 			ImDrawListPtr drawList = ImGui.GetWindowDrawList();
-			Vector2 cursorScreenPos = ImGui.GetCursorScreenPos();
 			drawList.AddImage((IntPtr)_textureHandle, cursorScreenPos, cursorScreenPos + framebufferSize, Vector2.UnitY, Vector2.UnitX);
 
 			Vector2 cursorPosition = ImGui.GetCursorPos();
@@ -119,7 +119,7 @@ public static class LevelEditorWindow
 		ImGui.EndChild(); // End Level Editor
 	}
 
-	private static unsafe void RenderFramebuffer(Vector2 size)
+	private static unsafe void RenderFramebuffer(Vector2 origin, Vector2 size)
 	{
 		Gl.BindFramebuffer(FramebufferTarget.Framebuffer, _framebuffer);
 
@@ -135,23 +135,34 @@ public static class LevelEditorWindow
 		Gl.Enable(EnableCap.CullFace);
 		Gl.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
 
-		RenderScene(size);
+		RenderScene(origin, size);
 
 		Gl.Viewport(originalViewport[0], originalViewport[1], (uint)originalViewport[2], (uint)originalViewport[3]);
 		Gl.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
 	}
 
-	private static void RenderScene(Vector2 size)
-	{
-		RenderLines();
-		RenderWorldObjects(size);
-	}
-
-	private static void RenderLines()
+	private static void RenderScene(Vector2 origin, Vector2 size)
 	{
 		ShaderCacheEntry lineShader = ShaderContainer.Shaders["Line"];
 		Gl.UseProgram(lineShader.Id);
 
+		RenderLines(lineShader);
+
+		ShaderCacheEntry meshShader = ShaderContainer.Shaders["Mesh"];
+		Gl.UseProgram(meshShader.Id);
+
+		int viewUniform = meshShader.GetUniformLocation("view");
+		int projectionUniform = meshShader.GetUniformLocation("projection");
+
+		ShaderUniformUtils.Set(viewUniform, Camera3d.ViewMatrix);
+		ShaderUniformUtils.Set(projectionUniform, Camera3d.Projection);
+
+		RenderWorldObjects(meshShader);
+		RenderSelection(meshShader, origin, size);
+	}
+
+	private static void RenderLines(ShaderCacheEntry lineShader)
+	{
 		int view = lineShader.GetUniformLocation("view");
 		int projection = lineShader.GetUniformLocation("projection");
 		int model = lineShader.GetUniformLocation("model");
@@ -194,22 +205,13 @@ public static class LevelEditorWindow
 		}
 	}
 
-	private static unsafe void RenderWorldObjects(Vector2 size)
+	private static unsafe void RenderWorldObjects(ShaderCacheEntry meshShader)
 	{
-		ShaderCacheEntry meshShader = ShaderContainer.Shaders["Mesh"];
-		Gl.UseProgram(meshShader.Id);
-
-		int view = meshShader.GetUniformLocation("view");
-		int projection = meshShader.GetUniformLocation("projection");
-		int model = meshShader.GetUniformLocation("model");
-
-		ShaderUniformUtils.Set(view, Camera3d.ViewMatrix);
-		ShaderUniformUtils.Set(projection, Camera3d.Projection);
-
+		int modelUniform = meshShader.GetUniformLocation("model");
 		for (int i = 0; i < LevelState.Level.WorldObjects.Count; i++)
 		{
 			WorldObject worldObject = LevelState.Level.WorldObjects[i];
-			ShaderUniformUtils.Set(model, Matrix4x4.CreateScale(worldObject.Scale) * Matrix4x4.CreateFromYawPitchRoll(worldObject.Rotation.X, worldObject.Rotation.Y, worldObject.Rotation.Z) * Matrix4x4.CreateTranslation(worldObject.Position));
+			ShaderUniformUtils.Set(modelUniform, Matrix4x4.CreateScale(worldObject.Scale) * Matrix4x4.CreateFromYawPitchRoll(worldObject.Rotation.X, worldObject.Rotation.Y, worldObject.Rotation.Z) * Matrix4x4.CreateTranslation(worldObject.Position));
 
 			(Mesh Mesh, uint Vao)? mesh = GetMesh(worldObject.MeshId);
 			if (mesh == null)
@@ -225,27 +227,40 @@ public static class LevelEditorWindow
 			fixed (uint* index = &mesh.Value.Mesh.Indices[0])
 				Gl.DrawElements(PrimitiveType.Triangles, (uint)mesh.Value.Mesh.Indices.Length, DrawElementsType.UnsignedInt, index);
 		}
+	}
 
-		// Selection
-		if (ObjectCreatorState.SelectedMeshName != null)
-		{
-			int index = LevelState.Level.Meshes.IndexOf(ObjectCreatorState.SelectedMeshName);
-			(Mesh Mesh, uint Vao)? mesh = GetMesh(index);
-			if (mesh != null)
-			{
-				Ray ray = Camera3d.ScreenToWorldPoint(Input.GetMousePosition(), size);
-				Vector3 min = new(float.NegativeInfinity, 0, float.NegativeInfinity);
-				Vector3 max = new(float.PositiveInfinity, 0, float.PositiveInfinity);
-				float? distance = ray.Intersects(min, max);
-				if (distance.HasValue)
-				{
-					ShaderUniformUtils.Set(model, Matrix4x4.CreateTranslation(ray.Position + ray.Direction * distance.Value));
-					Gl.BindVertexArray(mesh.Value.Vao);
-					fixed (uint* i = &mesh.Value.Mesh.Indices[0])
-						Gl.DrawElements(PrimitiveType.Triangles, (uint)mesh.Value.Mesh.Indices.Length, DrawElementsType.UnsignedInt, i);
-				}
-			}
-		}
+	private static unsafe void RenderSelection(ShaderCacheEntry meshShader, Vector2 origin, Vector2 size)
+	{
+		if (ObjectCreatorState.SelectedMeshName == null)
+			return;
+
+		int index = LevelState.Level.Meshes.IndexOf(ObjectCreatorState.SelectedMeshName);
+		(Mesh Mesh, uint Vao)? mesh = GetMesh(index);
+		if (mesh == null)
+			return;
+
+		Vector2 mousePosition = Input.GetMousePosition() - origin;
+		Ray ray = Camera3d.ScreenToWorldPoint(mousePosition, size);
+		DebugWindow.Warnings.Clear();
+		DebugWindow.Warnings.Add(ray.Position.ToString("0.00"));
+		DebugWindow.Warnings.Add(ray.Direction.ToString("0.00"));
+
+		Vector3 planeNormal = Vector3.UnitY;
+		Vector3 planeOrigin = Vector3.Zero;
+
+		float denominator = Vector3.Dot(planeNormal, ray.Direction);
+		if (MathF.Abs(denominator) <= 0.0001f)
+			return;
+
+		float t = Vector3.Dot(planeOrigin - ray.Position, planeNormal) / denominator;
+		if (t < 0)
+			return;
+
+		int modelUniform = meshShader.GetUniformLocation("model");
+		ShaderUniformUtils.Set(modelUniform, Matrix4x4.CreateTranslation(Camera3d.Position + ray.Direction * t));
+		Gl.BindVertexArray(mesh.Value.Vao);
+		fixed (uint* i = &mesh.Value.Mesh.Indices[0])
+			Gl.DrawElements(PrimitiveType.Triangles, (uint)mesh.Value.Mesh.Indices.Length, DrawElementsType.UnsignedInt, i);
 	}
 
 	private static (Mesh Mesh, uint Vao)? GetMesh(int meshId)
