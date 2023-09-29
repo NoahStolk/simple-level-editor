@@ -240,27 +240,60 @@ public static class LevelEditorWindow
 			return;
 
 		Vector2 mousePosition = Input.GetMousePosition() - origin;
-		Ray ray = Camera3d.ScreenToWorldPoint(mousePosition, size);
-		DebugWindow.Warnings.Clear();
-		DebugWindow.Warnings.Add(ray.Position.ToString("0.00"));
-		DebugWindow.Warnings.Add(ray.Direction.ToString("0.00"));
-
-		Vector3 planeNormal = Vector3.UnitY;
-		Vector3 planeOrigin = Vector3.Zero;
-
-		float denominator = Vector3.Dot(planeNormal, ray.Direction);
-		if (MathF.Abs(denominator) <= 0.0001f)
-			return;
-
-		float t = Vector3.Dot(planeOrigin - ray.Position, planeNormal) / denominator;
-		if (t < 0)
-			return;
+		Vector2 normalizedMousePosition = new Vector2(mousePosition.X / size.X - 0.5f, -(mousePosition.Y / size.Y - 0.5f)) * 2;
+		Vector3 point = GetMouseWorldPosition(normalizedMousePosition);
 
 		int modelUniform = meshShader.GetUniformLocation("model");
-		ShaderUniformUtils.Set(modelUniform, Matrix4x4.CreateTranslation(Camera3d.Position + ray.Direction * t));
+		ShaderUniformUtils.Set(modelUniform, Matrix4x4.CreateTranslation(point));
 		Gl.BindVertexArray(mesh.Value.Vao);
 		fixed (uint* i = &mesh.Value.Mesh.Indices[0])
 			Gl.DrawElements(PrimitiveType.Triangles, (uint)mesh.Value.Mesh.Indices.Length, DrawElementsType.UnsignedInt, i);
+	}
+
+	private static Vector3 GetMouseWorldPosition(Vector2 normalizedMousePosition)
+	{
+		Vector3 nearSource = new(normalizedMousePosition.X, normalizedMousePosition.Y, 0f);
+		Vector3 farSource = new(normalizedMousePosition.X, normalizedMousePosition.Y, 1f);
+		Vector3 nearPoint = UnProject(nearSource, Camera3d.Projection, Camera3d.ViewMatrix, Matrix4x4.Identity);
+		Vector3 farPoint = UnProject(farSource, Camera3d.Projection, Camera3d.ViewMatrix, Matrix4x4.Identity);
+
+		// Create a ray from the near clip plane to the far clip plane.
+		Vector3 direction = Vector3.Normalize(farPoint - nearPoint);
+
+		// Create a ray.
+		Ray ray = new(nearPoint, direction);
+
+		DebugWindow.Warnings.Clear();
+		DebugWindow.Warnings.Add(ray.Direction.ToString("0.00"));
+
+		// Calculate the ray-plane intersection point.
+		Vector3 n = new(0f, 1f, 0f);
+		Plane p = new(n, 0f);
+
+		// Calculate distance of intersection point from r.origin.
+		float denominator = Vector3.Dot(p.Normal, ray.Direction);
+		float numerator = Vector3.Dot(p.Normal, ray.Position) + p.D;
+		float t = -(numerator / denominator);
+
+		// Calculate the picked position on the y = 0 plane.
+		return nearPoint + direction * t;
+	}
+
+	private static Vector3 UnProject(Vector3 source, Matrix4x4 projection, Matrix4x4 view, Matrix4x4 world)
+	{
+		Matrix4x4.Invert(Matrix4x4.Multiply(Matrix4x4.Multiply(world, view), projection), out Matrix4x4 matrix);
+		Vector3 vector = Vector3.Transform(source, matrix);
+		float a = source.X * matrix.M14 + source.Y * matrix.M24 + source.Z * matrix.M34 + matrix.M44;
+		if (WithinEpsilon(a, 1f))
+			return vector;
+
+		return vector / a;
+
+		static bool WithinEpsilon(float a, float b)
+		{
+			float num = a - b;
+			return num is >= -float.Epsilon and <= float.Epsilon;
+		}
 	}
 
 	private static (Mesh Mesh, uint Vao)? GetMesh(int meshId)

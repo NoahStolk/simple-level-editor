@@ -141,8 +141,6 @@ public static class Camera3d
 
 	public static Ray ScreenToWorldPoint(Vector2 mousePosition, Vector2 windowSize)
 	{
-		float aspectRatio = windowSize.X / windowSize.Y;
-
 		// Remap so (0, 0) is the center of the window and the edges are at -0.5 and +0.5.
 		Vector2 relative = -new Vector2(mousePosition.X / windowSize.X - 0.5f, mousePosition.Y / windowSize.Y - 0.5f);
 
@@ -154,6 +152,7 @@ public static class Camera3d
 
 		// Convert relative position to world units.
 		Vector2 temp = relative * worldHeight;
+		float aspectRatio = windowSize.X / windowSize.Y;
 		Vector3 worldUnits = new(temp.X * aspectRatio, temp.Y, 1);
 
 		// Rotate to match camera orientation.
