@@ -1,8 +1,10 @@
 using ImGuiNET;
+using Silk.NET.GLFW;
 using Silk.NET.OpenGL;
 using SimpleLevelEditor.Content;
 using SimpleLevelEditor.Content.Data;
 using SimpleLevelEditor.Formats.Level3d;
+using SimpleLevelEditor.Formats.Level3d.Enums;
 using SimpleLevelEditor.Rendering;
 using SimpleLevelEditor.State;
 using SimpleLevelEditor.Utils;
@@ -20,6 +22,7 @@ public static class LevelEditorWindow
 	private static uint _framebuffer;
 
 	private static float _gridSnap = 1;
+	private static Vector3 _targetPosition;
 
 #pragma warning disable S3963
 	static unsafe LevelEditorWindow()
@@ -93,14 +96,14 @@ public static class LevelEditorWindow
 
 			Camera3d.AspectRatio = framebufferSize.X / framebufferSize.Y;
 			Vector2 cursorScreenPos = ImGui.GetCursorScreenPos();
-			RenderFramebuffer(cursorScreenPos, framebufferSize);
+			RenderFramebuffer(framebufferSize);
+
+			CalculateTargetPosition(cursorScreenPos, framebufferSize);
 
 			ImDrawListPtr drawList = ImGui.GetWindowDrawList();
 			drawList.AddImage((IntPtr)_textureHandle, cursorScreenPos, cursorScreenPos + framebufferSize, Vector2.UnitY, Vector2.UnitX);
 
 			Vector2 cursorPosition = ImGui.GetCursorPos();
-			if (ImGui.Button("Set test level"))
-				LevelState.SetTestLevel();
 
 			ImGui.Text("Snap");
 			for (int i = 0; i < _snapPoints.Length; i++)
@@ -118,12 +121,43 @@ public static class LevelEditorWindow
 			ImGui.InvisibleButton("3d_view", framebufferSize);
 			bool isFocused = ImGui.IsItemHovered();
 			Camera3d.Update(ImGui.GetIO().DeltaTime, isFocused);
+
+			if (isFocused && ObjectCreatorState.SelectedMeshName != null && Input.IsButtonPressed(MouseButton.Left) && !LevelState.Level.WorldObjects.Exists(wo => wo.Position == _targetPosition))
+			{
+				WorldObject worldObject = new()
+				{
+					Position = _targetPosition,
+					MeshId = LevelState.Level.Meshes.IndexOf(ObjectCreatorState.SelectedMeshName),
+					TextureId = 0,
+					Scale = new(1),
+					Rotation = new(0),
+					BoundingMeshId = -1,
+					Values = WorldObjectValues.None,
+				};
+				LevelState.Level.WorldObjects.Add(worldObject);
+			}
 		}
 
 		ImGui.EndChild(); // End Level Editor
 	}
 
-	private static unsafe void RenderFramebuffer(Vector2 origin, Vector2 size)
+	private static void CalculateTargetPosition(Vector2 origin, Vector2 size)
+	{
+		Vector2 mousePosition = Input.GetMousePosition() - origin;
+		Vector2 normalizedMousePosition = new Vector2(mousePosition.X / size.X - 0.5f, -(mousePosition.Y / size.Y - 0.5f)) * 2;
+		Vector3 point = Camera3d.GetMouseWorldPosition(normalizedMousePosition, new(Vector3.UnitY, 0f));
+
+		if (_gridSnap > 0)
+		{
+			point.X = MathF.Round(point.X / _gridSnap) * _gridSnap;
+			point.Y = MathF.Round(point.Y / _gridSnap) * _gridSnap;
+			point.Z = MathF.Round(point.Z / _gridSnap) * _gridSnap;
+		}
+
+		_targetPosition = point;
+	}
+
+	private static unsafe void RenderFramebuffer(Vector2 size)
 	{
 		Gl.BindFramebuffer(FramebufferTarget.Framebuffer, _framebuffer);
 
@@ -139,13 +173,13 @@ public static class LevelEditorWindow
 		Gl.Enable(EnableCap.CullFace);
 		Gl.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
 
-		RenderScene(origin, size);
+		RenderScene();
 
 		Gl.Viewport(originalViewport[0], originalViewport[1], (uint)originalViewport[2], (uint)originalViewport[3]);
 		Gl.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
 	}
 
-	private static void RenderScene(Vector2 origin, Vector2 size)
+	private static void RenderScene()
 	{
 		ShaderCacheEntry lineShader = ShaderContainer.Shaders["Line"];
 		Gl.UseProgram(lineShader.Id);
@@ -162,7 +196,7 @@ public static class LevelEditorWindow
 		ShaderUniformUtils.Set(projectionUniform, Camera3d.Projection);
 
 		RenderWorldObjects(meshShader);
-		RenderSelection(meshShader, origin, size);
+		RenderSelection(meshShader);
 	}
 
 	private static void RenderLines(ShaderCacheEntry lineShader)
@@ -233,7 +267,7 @@ public static class LevelEditorWindow
 		}
 	}
 
-	private static unsafe void RenderSelection(ShaderCacheEntry meshShader, Vector2 origin, Vector2 size)
+	private static unsafe void RenderSelection(ShaderCacheEntry meshShader)
 	{
 		if (ObjectCreatorState.SelectedMeshName == null)
 			return;
@@ -243,19 +277,8 @@ public static class LevelEditorWindow
 		if (mesh == null)
 			return;
 
-		Vector2 mousePosition = Input.GetMousePosition() - origin;
-		Vector2 normalizedMousePosition = new Vector2(mousePosition.X / size.X - 0.5f, -(mousePosition.Y / size.Y - 0.5f)) * 2;
-		Vector3 point = Camera3d.GetMouseWorldPosition(normalizedMousePosition, new(Vector3.UnitY, 0f));
-
-		if (_gridSnap > 0)
-		{
-			point.X = MathF.Round(point.X / _gridSnap) * _gridSnap;
-			point.Y = MathF.Round(point.Y / _gridSnap) * _gridSnap;
-			point.Z = MathF.Round(point.Z / _gridSnap) * _gridSnap;
-		}
-
 		int modelUniform = meshShader.GetUniformLocation("model");
-		ShaderUniformUtils.Set(modelUniform, Matrix4x4.CreateTranslation(point));
+		ShaderUniformUtils.Set(modelUniform, Matrix4x4.CreateTranslation(_targetPosition));
 		Gl.BindVertexArray(mesh.Value.Vao);
 		fixed (uint* i = &mesh.Value.Mesh.Indices[0])
 			Gl.DrawElements(PrimitiveType.Triangles, (uint)mesh.Value.Mesh.Indices.Length, DrawElementsType.UnsignedInt, i);
