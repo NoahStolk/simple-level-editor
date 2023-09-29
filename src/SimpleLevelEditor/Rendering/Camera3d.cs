@@ -139,26 +139,40 @@ public static class Camera3d
 		_lookEnabled = false;
 	}
 
-	public static Ray ScreenToWorldPoint(Vector2 mousePosition, Vector2 windowSize)
+	public static Vector3 GetMouseWorldPosition(Vector2 normalizedMousePosition, Plane plane)
 	{
-		// Remap so (0, 0) is the center of the window and the edges are at -0.5 and +0.5.
-		Vector2 relative = -new Vector2(mousePosition.X / windowSize.X - 0.5f, mousePosition.Y / windowSize.Y - 0.5f);
+		Vector3 nearSource = new(normalizedMousePosition.X, normalizedMousePosition.Y, 0f);
+		Vector3 farSource = new(normalizedMousePosition.X, normalizedMousePosition.Y, 1f);
+		Vector3 nearPoint = UnProject(nearSource, Projection, ViewMatrix, Matrix4x4.Identity);
+		Vector3 farPoint = UnProject(farSource, Projection, ViewMatrix, Matrix4x4.Identity);
 
-		// Angle in radians from the view axis to the top plane of the view pyramid.
-		float verticalAngle = 0.5f * MathUtils.ToRadians(_fieldOfView);
+		// Create a ray from the near clip plane to the far clip plane.
+		Vector3 direction = Vector3.Normalize(farPoint - nearPoint);
+		Ray ray = new(nearPoint, direction);
 
-		// World space height of the view pyramid measured at 1m depth from the camera.
-		float worldHeight = 2f * MathF.Tan(verticalAngle);
+		// Calculate distance of intersection point from ray.Position.
+		float denominator = Vector3.Dot(plane.Normal, ray.Direction);
+		float numerator = Vector3.Dot(plane.Normal, ray.Position) + plane.D;
+		float t = -(numerator / denominator);
 
-		// Convert relative position to world units.
-		Vector2 temp = relative * worldHeight;
-		float aspectRatio = windowSize.X / windowSize.Y;
-		Vector3 worldUnits = new(temp.X * aspectRatio, temp.Y, 1);
+		// Calculate the picked position on the y = 0 plane.
+		return nearPoint + direction * t;
+	}
 
-		// Rotate to match camera orientation.
-		Vector3 direction = Vector3.Transform(worldUnits, _rotation);
+	private static Vector3 UnProject(Vector3 source, Matrix4x4 projection, Matrix4x4 view, Matrix4x4 world)
+	{
+		Matrix4x4.Invert(Matrix4x4.Multiply(Matrix4x4.Multiply(world, view), projection), out Matrix4x4 matrix);
+		Vector3 vector = Vector3.Transform(source, matrix);
+		float a = source.X * matrix.M14 + source.Y * matrix.M24 + source.Z * matrix.M34 + matrix.M44;
+		if (WithinEpsilon(a, 1f))
+			return vector;
 
-		// Output a ray from camera position, along this direction.
-		return new(Position, direction);
+		return vector / a;
+
+		static bool WithinEpsilon(float a, float b)
+		{
+			float num = a - b;
+			return num is >= -float.Epsilon and <= float.Epsilon;
+		}
 	}
 }
