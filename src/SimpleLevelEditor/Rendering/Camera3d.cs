@@ -6,7 +6,7 @@ namespace SimpleLevelEditor.Rendering;
 public static class Camera3d
 {
 	private static Vector2 _originalCursor = Input.GetMousePosition();
-	private static bool _mouseEnabled;
+	private static bool _lookEnabled;
 
 	private static Vector3 _axisAlignedSpeed;
 	private static float _yaw;
@@ -25,6 +25,8 @@ public static class Camera3d
 
 		if (isFocused)
 			HandleMouse();
+		else
+			StopLook();
 
 		const float moveSpeed = 10;
 
@@ -105,21 +107,20 @@ public static class Camera3d
 
 		Vector2 cursor = Input.GetMousePosition();
 
-		if (!_mouseEnabled && Input.IsButtonHeld(lookButton))
+		if (!_lookEnabled && Input.IsButtonHeld(lookButton))
 		{
 			Graphics.Glfw.SetInputMode(Graphics.Window, CursorStateAttribute.Cursor, CursorModeValue.CursorHidden);
 			_originalCursor = cursor;
-			_mouseEnabled = true;
+			_lookEnabled = true;
 		}
-		else if (_mouseEnabled && !Input.IsButtonHeld(lookButton))
+		else if (_lookEnabled && !Input.IsButtonHeld(lookButton))
 		{
-			Graphics.Glfw.SetInputMode(Graphics.Window, CursorStateAttribute.Cursor, CursorModeValue.CursorNormal);
-			_mouseEnabled = false;
+			StopLook();
 		}
 
 		Vector2 delta = cursor - _originalCursor;
 
-		if (!_mouseEnabled)
+		if (!_lookEnabled)
 			return;
 
 		_yaw -= lookSpeed * delta.X * 0.0001f;
@@ -129,5 +130,11 @@ public static class Camera3d
 		_rotation = Quaternion.CreateFromYawPitchRoll(_yaw, -_pitch, 0);
 
 		Graphics.Glfw.SetCursorPos(Graphics.Window, _originalCursor.X, _originalCursor.Y);
+	}
+
+	private static unsafe void StopLook()
+	{
+		Graphics.Glfw.SetInputMode(Graphics.Window, CursorStateAttribute.Cursor, CursorModeValue.CursorNormal);
+		_lookEnabled = false;
 	}
 }
