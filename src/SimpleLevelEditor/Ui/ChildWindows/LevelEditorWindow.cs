@@ -3,6 +3,7 @@ using Silk.NET.OpenGL;
 using SimpleLevelEditor.Content;
 using SimpleLevelEditor.Content.Data;
 using SimpleLevelEditor.Formats.Level3d;
+using SimpleLevelEditor.Maths;
 using SimpleLevelEditor.Rendering;
 using SimpleLevelEditor.State;
 using SimpleLevelEditor.Utils;
@@ -134,16 +135,16 @@ public static class LevelEditorWindow
 		Gl.Enable(EnableCap.CullFace);
 		Gl.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
 
-		RenderScene();
+		RenderScene(size);
 
 		Gl.Viewport(originalViewport[0], originalViewport[1], (uint)originalViewport[2], (uint)originalViewport[3]);
 		Gl.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
 	}
 
-	private static void RenderScene()
+	private static void RenderScene(Vector2 size)
 	{
 		RenderLines();
-		RenderWorldObjects();
+		RenderWorldObjects(size);
 	}
 
 	private static void RenderLines()
@@ -193,7 +194,7 @@ public static class LevelEditorWindow
 		}
 	}
 
-	private static unsafe void RenderWorldObjects()
+	private static unsafe void RenderWorldObjects(Vector2 size)
 	{
 		ShaderCacheEntry meshShader = ShaderContainer.Shaders["Mesh"];
 		Gl.UseProgram(meshShader.Id);
@@ -232,10 +233,17 @@ public static class LevelEditorWindow
 			(Mesh Mesh, uint Vao)? mesh = GetMesh(index);
 			if (mesh != null)
 			{
-				ShaderUniformUtils.Set(model, Matrix4x4.CreateTranslation(Vector3.Zero));
-				Gl.BindVertexArray(mesh.Value.Vao);
-				fixed (uint* i = &mesh.Value.Mesh.Indices[0])
-					Gl.DrawElements(PrimitiveType.Triangles, (uint)mesh.Value.Mesh.Indices.Length, DrawElementsType.UnsignedInt, i);
+				Ray ray = Camera3d.ScreenToWorldPoint(Input.GetMousePosition(), size);
+				Vector3 min = new(float.NegativeInfinity, 0, float.NegativeInfinity);
+				Vector3 max = new(float.PositiveInfinity, 0, float.PositiveInfinity);
+				float? distance = ray.Intersects(min, max);
+				if (distance.HasValue)
+				{
+					ShaderUniformUtils.Set(model, Matrix4x4.CreateTranslation(ray.Position + ray.Direction * distance.Value));
+					Gl.BindVertexArray(mesh.Value.Vao);
+					fixed (uint* i = &mesh.Value.Mesh.Indices[0])
+						Gl.DrawElements(PrimitiveType.Triangles, (uint)mesh.Value.Mesh.Indices.Length, DrawElementsType.UnsignedInt, i);
+				}
 			}
 		}
 	}

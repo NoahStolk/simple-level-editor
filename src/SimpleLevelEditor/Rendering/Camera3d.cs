@@ -1,10 +1,12 @@
 using Silk.NET.GLFW;
+using SimpleLevelEditor.Maths;
 using SimpleLevelEditor.Utils;
 
 namespace SimpleLevelEditor.Rendering;
 
 public static class Camera3d
 {
+	private const int _fieldOfView = 2;
 	private static Vector2 _originalCursor = Input.GetMousePosition();
 	private static bool _lookEnabled;
 
@@ -38,10 +40,9 @@ public static class Camera3d
 		Vector3 lookDirection = Vector3.Transform(Vector3.UnitZ, _rotation);
 		ViewMatrix = Matrix4x4.CreateLookAt(Position, Position + lookDirection, upDirection);
 
-		const int fieldOfView = 2;
 		const float nearPlaneDistance = 0.05f;
 		const float farPlaneDistance = 10000f;
-		Projection = Matrix4x4.CreatePerspectiveFieldOfView(MathF.PI / 4 * fieldOfView, AspectRatio, nearPlaneDistance, farPlaneDistance);
+		Projection = Matrix4x4.CreatePerspectiveFieldOfView(MathF.PI / 4 * _fieldOfView, AspectRatio, nearPlaneDistance, farPlaneDistance);
 
 		static Vector3 RotateVector(Vector3 vector, Matrix4x4 rotationMatrix)
 		{
@@ -136,5 +137,29 @@ public static class Camera3d
 	{
 		Graphics.Glfw.SetInputMode(Graphics.Window, CursorStateAttribute.Cursor, CursorModeValue.CursorNormal);
 		_lookEnabled = false;
+	}
+
+	public static Ray ScreenToWorldPoint(Vector2 mousePosition, Vector2 windowSize)
+	{
+		float aspectRatio = windowSize.X / windowSize.Y;
+
+		// Remap so (0, 0) is the center of the window and the edges are at -0.5 and +0.5.
+		Vector2 relative = -new Vector2(mousePosition.X / windowSize.X - 0.5f, mousePosition.Y / windowSize.Y - 0.5f);
+
+		// Angle in radians from the view axis to the top plane of the view pyramid.
+		float verticalAngle = 0.5f * MathUtils.ToRadians(_fieldOfView);
+
+		// World space height of the view pyramid measured at 1m depth from the camera.
+		float worldHeight = 2f * MathF.Tan(verticalAngle);
+
+		// Convert relative position to world units.
+		Vector2 temp = relative * worldHeight;
+		Vector3 worldUnits = new(temp.X * aspectRatio, temp.Y, 1);
+
+		// Rotate to match camera orientation.
+		Vector3 direction = Vector3.Transform(worldUnits, _rotation);
+
+		// Output a ray from camera position, along this direction.
+		return new(Position, direction);
 	}
 }
