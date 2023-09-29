@@ -172,12 +172,12 @@ public class ImGuiController
 		ImGui.NewFrame();
 	}
 
-	private void SetPerFrameImGuiData(float dt)
+	private void SetPerFrameImGuiData(float deltaSeconds)
 	{
 		ImGuiIOPtr io = ImGui.GetIO();
 		io.DisplaySize = new(_windowWidth, _windowHeight);
 		io.DisplayFramebufferScale = Vector2.One;
-		io.DeltaTime = dt;
+		io.DeltaTime = deltaSeconds;
 	}
 
 	private void UpdateImGuiInput()

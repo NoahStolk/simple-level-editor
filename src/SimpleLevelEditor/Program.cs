@@ -1,6 +1,6 @@
 using ImGuiNET;
 using SimpleLevelEditor;
-using SimpleLevelEditor.Content.Containers;
+using SimpleLevelEditor.Content;
 using SimpleLevelEditor.Utils;
 
 Graphics.CreateWindow(new("Simple Level Editor", Constants.WindowWidth, Constants.WindowHeight, false));
@@ -36,5 +36,5 @@ Graphics.OnChangeWindowSize = (w, h) =>
 	imGuiController.WindowResized(w, h);
 };
 
-Game game = new(imGuiController);
-game.Run();
+App.Instance = new(imGuiController);
+App.Instance.Run();

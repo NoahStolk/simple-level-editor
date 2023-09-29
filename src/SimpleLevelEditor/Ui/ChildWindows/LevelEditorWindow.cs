@@ -1,6 +1,6 @@
 using ImGuiNET;
 using Silk.NET.OpenGL;
-using SimpleLevelEditor.Content.Containers;
+using SimpleLevelEditor.Content;
 using SimpleLevelEditor.Formats.Level3d;
 using SimpleLevelEditor.Rendering;
 using SimpleLevelEditor.State;

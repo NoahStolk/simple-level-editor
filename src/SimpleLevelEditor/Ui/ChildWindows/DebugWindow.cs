@@ -14,21 +14,28 @@ public static class DebugWindow
 		{
 			ImGui.SeparatorText("Debug");
 
-			long allocatedBytes = GC.GetAllocatedBytesForCurrentThread();
-			ImGui.Text(Inline.Span($"Allocated: {allocatedBytes:N0} bytes"));
-			ImGui.Text(Inline.Span($"Since last update: {allocatedBytes - _previousAllocatedBytes:N0} bytes"));
-			_previousAllocatedBytes = allocatedBytes;
+			ImGui.Text(Inline.Span($"{App.Instance.Fps} FPS"));
 
-			for (int i = 0; i < GC.MaxGeneration + 1; i++)
-				ImGui.Text(Inline.Span($"Gen{i}: {GC.CollectionCount(i)} times"));
+			ImGui.SetNextItemOpen(true);
+			if (ImGui.CollapsingHeader("Allocations"))
+			{
+				long allocatedBytes = GC.GetAllocatedBytesForCurrentThread();
+				ImGui.Text(Inline.Span($"Allocated: {allocatedBytes:N0} bytes"));
+				ImGui.Text(Inline.Span($"Since last update: {allocatedBytes - _previousAllocatedBytes:N0} bytes"));
+				_previousAllocatedBytes = allocatedBytes;
 
-			ImGui.Text(Inline.Span($"Total memory: {GC.GetTotalMemory(false):N0} bytes"));
-			ImGui.Text(Inline.Span($"Total pause duration: {GC.GetTotalPauseDuration().TotalSeconds:0.000} s"));
+				for (int i = 0; i < GC.MaxGeneration + 1; i++)
+					ImGui.Text(Inline.Span($"Gen{i}: {GC.CollectionCount(i)} times"));
 
-			ImGui.Text("Debug stack:");
+				ImGui.Text(Inline.Span($"Total memory: {GC.GetTotalMemory(false):N0} bytes"));
+				ImGui.Text(Inline.Span($"Total pause duration: {GC.GetTotalPauseDuration().TotalSeconds:0.000} s"));
+			}
 
-			for (int i = 0; i < Warnings.Count; i++)
-				ImGui.Text(Warnings[i]);
+			if (ImGui.CollapsingHeader("Debug stack"))
+			{
+				for (int i = 0; i < Warnings.Count; i++)
+					ImGui.Text(Warnings[i]);
+			}
 		}
 
 		ImGui.EndChild(); // End Debug
