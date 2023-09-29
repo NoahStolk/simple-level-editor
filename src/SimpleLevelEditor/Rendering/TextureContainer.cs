@@ -18,13 +18,17 @@ public static class TextureContainer
 		return null;
 	}
 
-	public static void Rebuild(string workingDirectory)
+	public static void Rebuild(string levelFilePath)
 	{
 		_textures.Clear();
 
+		string? levelDirectory = Path.GetDirectoryName(levelFilePath);
+		if (levelDirectory == null)
+			return;
+
 		foreach (string texturePath in LevelState.Level.Textures)
 		{
-			string absolutePath = Path.Combine(workingDirectory, texturePath);
+			string absolutePath = Path.Combine(levelDirectory, texturePath);
 
 			if (!File.Exists(absolutePath))
 				continue;

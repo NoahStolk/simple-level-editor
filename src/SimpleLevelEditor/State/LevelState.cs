@@ -19,6 +19,7 @@ public static class LevelState
 		TextureContainer.Rebuild(levelFilePath);
 	}
 
+	[Obsolete("This method is only used for testing purposes")]
 	public static void SetTestLevel()
 	{
 		DebugWindow.Warnings.Add("Created test level");

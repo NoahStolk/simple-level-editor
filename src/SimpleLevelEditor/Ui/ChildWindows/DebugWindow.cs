@@ -33,6 +33,9 @@ public static class DebugWindow
 
 			if (ImGui.CollapsingHeader("Debug stack"))
 			{
+				if (ImGui.Button("Clear"))
+					Warnings.Clear();
+
 				for (int i = 0; i < Warnings.Count; i++)
 					ImGui.Text(Warnings[i]);
 			}

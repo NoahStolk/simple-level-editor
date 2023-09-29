@@ -1,0 +1,7 @@
+- Add mesh to level
+- Control grid snap when adding
+- Control target height
+- Render bounding box for mesh and use as selectable region
+- Select mesh to change properties or delete it
+- Drag mesh to move it
+- List meshes in object creator as selectable tiles

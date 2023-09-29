@@ -1,6 +1,7 @@
 using ImGuiNET;
 using Silk.NET.OpenGL;
 using SimpleLevelEditor.Content;
+using SimpleLevelEditor.Content.Data;
 using SimpleLevelEditor.Formats.Level3d;
 using SimpleLevelEditor.Rendering;
 using SimpleLevelEditor.State;
@@ -209,33 +210,13 @@ public static class LevelEditorWindow
 			WorldObject worldObject = LevelState.Level.WorldObjects[i];
 			ShaderUniformUtils.Set(model, Matrix4x4.CreateScale(worldObject.Scale) * Matrix4x4.CreateFromYawPitchRoll(worldObject.Rotation.X, worldObject.Rotation.Y, worldObject.Rotation.Z) * Matrix4x4.CreateTranslation(worldObject.Position));
 
-			string? meshName = LevelState.Level.Meshes.Count > worldObject.MeshId ? LevelState.Level.Meshes[worldObject.MeshId] : null;
-			if (meshName == null)
-			{
-				DebugWindow.Warnings.Add("Cannot find mesh name.");
+			(Mesh Mesh, uint Vao)? mesh = GetMesh(worldObject.MeshId);
+			if (mesh == null)
 				continue;
-			}
 
-			(Content.Data.Mesh Mesh, uint Vao)? mesh = MeshContainer.GetMesh(meshName);
-			if (!mesh.HasValue)
-			{
-				DebugWindow.Warnings.Add("Cannot find mesh.");
+			uint? textureId = GetTexture(worldObject.TextureId);
+			if (textureId == null)
 				continue;
-			}
-
-			string? textureName = LevelState.Level.Textures.Count > worldObject.TextureId ? LevelState.Level.Textures[worldObject.TextureId] : null;
-			if (textureName == null)
-			{
-				DebugWindow.Warnings.Add("Cannot find texture name.");
-				continue;
-			}
-
-			uint? textureId = TextureContainer.GetTexture(textureName);
-			if (!textureId.HasValue)
-			{
-				DebugWindow.Warnings.Add("Cannot find texture.");
-				continue;
-			}
 
 			Gl.BindTexture(TextureTarget.Texture2D, textureId.Value);
 
@@ -243,5 +224,51 @@ public static class LevelEditorWindow
 			fixed (uint* index = &mesh.Value.Mesh.Indices[0])
 				Gl.DrawElements(PrimitiveType.Triangles, (uint)mesh.Value.Mesh.Indices.Length, DrawElementsType.UnsignedInt, index);
 		}
+
+		// Selection
+		if (ObjectCreatorState.SelectedMeshName != null)
+		{
+			int index = LevelState.Level.Meshes.IndexOf(ObjectCreatorState.SelectedMeshName);
+			(Mesh Mesh, uint Vao)? mesh = GetMesh(index);
+			if (mesh != null)
+			{
+				ShaderUniformUtils.Set(model, Matrix4x4.CreateTranslation(Vector3.Zero));
+				Gl.BindVertexArray(mesh.Value.Vao);
+				fixed (uint* i = &mesh.Value.Mesh.Indices[0])
+					Gl.DrawElements(PrimitiveType.Triangles, (uint)mesh.Value.Mesh.Indices.Length, DrawElementsType.UnsignedInt, i);
+			}
+		}
+	}
+
+	private static (Mesh Mesh, uint Vao)? GetMesh(int meshId)
+	{
+		string? meshName = meshId >= 0 && LevelState.Level.Meshes.Count > meshId ? LevelState.Level.Meshes[meshId] : null;
+		if (meshName == null)
+		{
+			DebugWindow.Warnings.Add("Cannot find mesh name.");
+			return null;
+		}
+
+		(Mesh Mesh, uint Vao)? mesh = MeshContainer.GetMesh(meshName);
+		if (!mesh.HasValue)
+			DebugWindow.Warnings.Add("Cannot find mesh.");
+
+		return mesh;
+	}
+
+	private static uint? GetTexture(int textureId)
+	{
+		string? textureName = LevelState.Level.Textures.Count > textureId ? LevelState.Level.Textures[textureId] : null;
+		if (textureName == null)
+		{
+			DebugWindow.Warnings.Add("Cannot find texture name.");
+			return null;
+		}
+
+		uint? glTextureId = TextureContainer.GetTexture(textureName);
+		if (!glTextureId.HasValue)
+			DebugWindow.Warnings.Add("Cannot find texture.");
+
+		return glTextureId;
 	}
 }

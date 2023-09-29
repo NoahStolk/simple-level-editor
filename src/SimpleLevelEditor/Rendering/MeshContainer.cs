@@ -19,13 +19,17 @@ public static class MeshContainer
 		return null;
 	}
 
-	public static void Rebuild(string workingDirectory)
+	public static void Rebuild(string levelFilePath)
 	{
 		_meshes.Clear();
 
+		string? levelDirectory = Path.GetDirectoryName(levelFilePath);
+		if (levelDirectory == null)
+			return;
+
 		foreach (string modelPath in LevelState.Level.Meshes)
 		{
-			string absolutePath = Path.Combine(workingDirectory, modelPath);
+			string absolutePath = Path.Combine(levelDirectory, modelPath);
 
 			if (!File.Exists(absolutePath))
 				continue;
