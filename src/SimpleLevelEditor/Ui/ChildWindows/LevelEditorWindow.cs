@@ -12,11 +12,12 @@ namespace SimpleLevelEditor.Ui.ChildWindows;
 
 public static class LevelEditorWindow
 {
+	private static readonly float[] _snapPoints = { 0, 0.125f, 0.25f, 0.5f, 1, 2, 4, 8 };
+	private static readonly uint _lineVao;
+
 	private static Vector2 _cachedSize;
 	private static uint _textureHandle;
 	private static uint _framebuffer;
-
-	private static readonly uint _lineVao;
 
 	private static float _gridSnap = 1;
 
@@ -101,11 +102,15 @@ public static class LevelEditorWindow
 			if (ImGui.Button("Set test level"))
 				LevelState.SetTestLevel();
 
-			ImGui.PushItemWidth(128);
-			if (ImGui.SliderFloat("Grid Snap", ref _gridSnap, 1, 16, "%.0f"))
-				_gridSnap = MathF.Max(_gridSnap, 0.1f);
+			ImGui.Text("Snap");
+			for (int i = 0; i < _snapPoints.Length; i++)
+			{
+				if (i != 0)
+					ImGui.SameLine();
 
-			ImGui.PopItemWidth();
+				if (ImGui.RadioButton(Inline.Span(_snapPoints[i]), Math.Abs(_gridSnap - _snapPoints[i]) < 0.001f))
+					_gridSnap = _snapPoints[i];
+			}
 
 			ImGui.Text(Inline.Span(Camera3d.Position, "0.00"));
 
@@ -241,6 +246,13 @@ public static class LevelEditorWindow
 		Vector2 mousePosition = Input.GetMousePosition() - origin;
 		Vector2 normalizedMousePosition = new Vector2(mousePosition.X / size.X - 0.5f, -(mousePosition.Y / size.Y - 0.5f)) * 2;
 		Vector3 point = Camera3d.GetMouseWorldPosition(normalizedMousePosition, new(Vector3.UnitY, 0f));
+
+		if (_gridSnap > 0)
+		{
+			point.X = MathF.Round(point.X / _gridSnap) * _gridSnap;
+			point.Y = MathF.Round(point.Y / _gridSnap) * _gridSnap;
+			point.Z = MathF.Round(point.Z / _gridSnap) * _gridSnap;
+		}
 
 		int modelUniform = meshShader.GetUniformLocation("model");
 		ShaderUniformUtils.Set(modelUniform, Matrix4x4.CreateTranslation(point));
