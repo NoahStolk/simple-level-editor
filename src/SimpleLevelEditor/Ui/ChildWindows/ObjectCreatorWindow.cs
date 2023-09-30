@@ -17,16 +17,16 @@ public static class ObjectCreatorWindow
 				{
 					ImGui.SeparatorText("World Object");
 
-					const int rowLength = 7;
 					Vector2 tileSize = new(160);
+					int rowLength = (int)MathF.Floor(size.X / tileSize.X);
 					for (int i = 0; i < LevelState.Level.Meshes.Count; i++)
 					{
+						if (i % rowLength != 0)
+							ImGui.SameLine();
+
 						string meshName = LevelState.Level.Meshes[i];
 						if (ImGui.Selectable(meshName, ObjectCreatorState.SelectedMeshName == meshName, ImGuiSelectableFlags.None, tileSize))
 							ObjectCreatorState.SelectedMeshName = meshName;
-
-						if (i == 0 || i % (rowLength - 1) != 0)
-							ImGui.SameLine();
 					}
 
 					ImGui.EndTabItem();

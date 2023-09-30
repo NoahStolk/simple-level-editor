@@ -99,7 +99,7 @@ public static class MainWindow
 			const int rightWidth = 512;
 			float middleWidth = viewportSize.X - leftWidth - rightWidth;
 
-			const int bottomHeight = 384;
+			const int bottomHeight = 448;
 			float levelEditorHeight = viewportSize.Y - bottomHeight;
 
 			if (ImGui.BeginChild("Left", new(leftWidth, 0)))
