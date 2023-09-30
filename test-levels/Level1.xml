@@ -27,7 +27,13 @@
     <WorldObject Mesh="mesh\ActivatorButton.obj" Texture="tex\BricksGreen.tga" BoundingMesh="" Position="-3 0 4" Rotation="0 0 0" Scale="1 1 1" Values="None" />
     <WorldObject Mesh="mesh\Weapon.obj" Texture="tex\TilesGray.tga" BoundingMesh="" Position="-4 0 3" Rotation="0 0 0" Scale="1 1 1" Values="None" />
     <WorldObject Mesh="mesh\ActivatorButton.obj" Texture="tex\BricksGreen.tga" BoundingMesh="" Position="-4 0 5" Rotation="0 0 0" Scale="1 1 1" Values="None" />
-    <WorldObject Mesh="mesh\ActivatorButton.obj" Texture="tex\BricksGreen.tga" BoundingMesh="" Position="-8 0 -1" Rotation="0 0 45" Scale="1 1 1" Values="None" />
+    <WorldObject Mesh="mesh\ActivatorButton.obj" Texture="tex\BricksGreen.tga" BoundingMesh="" Position="-8 0 -1" Rotation="0 0 90" Scale="1 1 1" Values="None" />
+    <WorldObject Mesh="mesh\Base.obj" Texture="tex\BricksGreen.tga" BoundingMesh="" Position="10 0 2" Rotation="0 0 0" Scale="1 1 1" Values="None" />
+    <WorldObject Mesh="mesh\Base.obj" Texture="tex\BricksGreen.tga" BoundingMesh="" Position="-9 0 -2" Rotation="0 0 0" Scale="1 1 1" Values="None" />
+    <WorldObject Mesh="mesh\Base.obj" Texture="tex\BricksGreen.tga" BoundingMesh="" Position="-7 0 -2" Rotation="0 0 0" Scale="1 1 1" Values="None" />
+    <WorldObject Mesh="mesh\Base.obj" Texture="tex\BricksGreen.tga" BoundingMesh="" Position="-7 0 -0" Rotation="0 0 0" Scale="1 1 1" Values="None" />
+    <WorldObject Mesh="mesh\Base.obj" Texture="tex\BricksGreen.tga" BoundingMesh="" Position="-9 0 0" Rotation="0 0 0" Scale="1 1 1" Values="None" />
+    <WorldObject Mesh="mesh\Plane.obj" Texture="tex\TilesGray.tga" BoundingMesh="" Position="-12 0 0" Rotation="0 -90 0" Scale="20 20 1" Values="None" />
   </WorldObjects>
   <Entities />
 </Level>

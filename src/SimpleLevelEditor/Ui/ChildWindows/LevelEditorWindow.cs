@@ -295,17 +295,19 @@ public static class LevelEditorWindow
 		ShaderUniformUtils.Set(colorUniform, new Vector4(0.8f, 0.8f, 0.8f, 1));
 		Gl.LineWidth(1);
 
-		const int min = -10;
-		const int max = 10;
+		const int min = -32;
+		const int max = 32;
 		const float height = 0;
 		Vector3 scale = new(1, 1, max - min);
 		Matrix4x4 scaleMat = Matrix4x4.CreateScale(scale);
 		for (int i = min; i <= max; i++)
 		{
-			ShaderUniformUtils.Set(modelUniform, scaleMat * Matrix4x4.CreateTranslation(i, height, min));
+			Vector3 offset = new(MathF.Round(Camera3d.Position.X), 0, MathF.Round(Camera3d.Position.Z));
+
+			ShaderUniformUtils.Set(modelUniform, scaleMat * Matrix4x4.CreateTranslation(new Vector3(i, height, min) + offset));
 			Gl.DrawArrays(PrimitiveType.Lines, 0, 6);
 
-			ShaderUniformUtils.Set(modelUniform, scaleMat * Matrix4x4.CreateFromAxisAngle(Vector3.UnitY, MathF.PI / 2) * Matrix4x4.CreateTranslation(min, height, i));
+			ShaderUniformUtils.Set(modelUniform, scaleMat * Matrix4x4.CreateFromAxisAngle(Vector3.UnitY, MathF.PI / 2) * Matrix4x4.CreateTranslation(new Vector3(min, height, i) + offset));
 			Gl.DrawArrays(PrimitiveType.Lines, 0, 6);
 		}
 
