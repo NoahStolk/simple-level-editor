@@ -40,8 +40,15 @@ public static class ObjectEditorWindow
 				ObjectEditorState.SelectedWorldObject.Rotation = Rotation("Rotation Z", ObjectEditorState.SelectedWorldObject.Rotation, r => r.Z, (r, f) => r with { Z = f });
 
 				Vector3 scale = ObjectEditorState.SelectedWorldObject.Scale;
-				if (ImGui.InputFloat3("Scale", ref scale, "%.3f", ImGuiInputTextFlags.CharsDecimal))
+				if (ImGui.SliderFloat3("Scale", ref scale, 0.01f, 20f, "%.3f", ImGuiSliderFlags.Logarithmic))
 					ObjectEditorState.SelectedWorldObject.Scale = scale;
+
+				ImGui.SameLine();
+				ImGui.PushID(Inline.Span("Scale_reset"));
+				if (ImGui.Button("Reset"))
+					ObjectEditorState.SelectedWorldObject.Scale = Vector3.One;
+
+				ImGui.PopID();
 
 				ImGui.Separator();
 
