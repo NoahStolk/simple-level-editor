@@ -195,15 +195,27 @@ public static class LevelEditorWindow
 			Vector3 bbOffset = (mesh.BoundingMax + mesh.BoundingMin) / 2;
 			float maxScale = Math.Max(bbScale.X, Math.Max(bbScale.Y, bbScale.Z));
 			Sphere sphere = new(worldObject.Position + bbOffset, maxScale);
-			Vector3? intersection = ray.Intersects(sphere);
-			if (intersection == null)
+			Vector3? sphereIntersection = ray.Intersects(sphere);
+			if (sphereIntersection == null)
 				continue;
 
-			if (closestIntersection != null && Vector3.DistanceSquared(Camera3d.Position, intersection.Value) >= Vector3.DistanceSquared(Camera3d.Position, closestIntersection.Value))
-				continue;
+			Matrix4x4 modelMatrix = Matrix4x4.CreateScale(worldObject.Scale) * MathUtils.CreateRotationMatrixFromEulerAngles(worldObject.Rotation) * Matrix4x4.CreateTranslation(worldObject.Position);
+			for (int j = 0; j < mesh.Mesh.Indices.Length; j += 3)
+			{
+				Vector3 p1 = Vector3.Transform(mesh.Mesh.Vertices[mesh.Mesh.Indices[j]].Position, modelMatrix);
+				Vector3 p2 = Vector3.Transform(mesh.Mesh.Vertices[mesh.Mesh.Indices[j + 1]].Position, modelMatrix);
+				Vector3 p3 = Vector3.Transform(mesh.Mesh.Vertices[mesh.Mesh.Indices[j + 2]].Position, modelMatrix);
 
-			closestIntersection = intersection.Value;
-			_highlightedObject = worldObject;
+				Vector3? triangleIntersection = ray.Intersects(p1, p2, p3);
+				if (triangleIntersection == null)
+					continue;
+
+				if (closestIntersection == null || Vector3.DistanceSquared(Camera3d.Position, triangleIntersection.Value) < Vector3.DistanceSquared(Camera3d.Position, closestIntersection.Value))
+				{
+					closestIntersection = triangleIntersection.Value;
+					_highlightedObject = worldObject;
+				}
+			}
 		}
 	}
 
