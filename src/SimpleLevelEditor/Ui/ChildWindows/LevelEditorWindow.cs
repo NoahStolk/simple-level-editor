@@ -125,8 +125,10 @@ public static class LevelEditorWindow
 			bool isFocused = ImGui.IsItemHovered();
 			Camera3d.Update(ImGui.GetIO().DeltaTime, isFocused);
 
-			CalculateTargetPosition(cursorScreenPos, framebufferSize);
-			CalculateHighlightedObject(isFocused);
+			Vector2 mousePosition = Input.GetMousePosition() - cursorScreenPos;
+			Vector2 normalizedMousePosition = new Vector2(mousePosition.X / framebufferSize.X - 0.5f, -(mousePosition.Y / framebufferSize.Y - 0.5f)) * 2;
+			CalculateTargetPosition(normalizedMousePosition);
+			CalculateHighlightedObject(normalizedMousePosition, isFocused);
 
 			if (isFocused && Input.IsButtonPressed(MouseButton.Left))
 				OnLeftClick();
@@ -159,10 +161,8 @@ public static class LevelEditorWindow
 		}
 	}
 
-	private static void CalculateTargetPosition(Vector2 origin, Vector2 size)
+	private static void CalculateTargetPosition(Vector2 normalizedMousePosition)
 	{
-		Vector2 mousePosition = Input.GetMousePosition() - origin;
-		Vector2 normalizedMousePosition = new Vector2(mousePosition.X / size.X - 0.5f, -(mousePosition.Y / size.Y - 0.5f)) * 2;
 		_targetPosition = Camera3d.GetMouseWorldPosition(normalizedMousePosition, new(Vector3.UnitY, 0f));
 		if (_gridSnap > 0)
 		{
@@ -172,9 +172,12 @@ public static class LevelEditorWindow
 		}
 	}
 
-	private static void CalculateHighlightedObject(bool isFocused)
+	private static void CalculateHighlightedObject(Vector2 normalizedMousePosition, bool isFocused)
 	{
-		Ray ray = new(Camera3d.Position, Vector3.Normalize(_targetPosition - Camera3d.Position));
+		Matrix4x4 viewProjection = Camera3d.ViewMatrix * Camera3d.Projection;
+		Plane farPlane = new(viewProjection.M13 - viewProjection.M14, viewProjection.M23 - viewProjection.M24, viewProjection.M33 - viewProjection.M34, viewProjection.M43 - viewProjection.M44);
+		Vector3 rayEndPosition = Camera3d.GetMouseWorldPosition(normalizedMousePosition, farPlane);
+		Ray ray = new(Camera3d.Position, Vector3.Normalize(rayEndPosition - Camera3d.Position));
 		Vector3? closestIntersection = null;
 		_highlightedObject = null;
 
