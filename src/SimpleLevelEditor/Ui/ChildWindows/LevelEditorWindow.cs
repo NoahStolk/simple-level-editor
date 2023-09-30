@@ -77,7 +77,7 @@ public static class LevelEditorWindow
 		Gl.FramebufferRenderbuffer(FramebufferTarget.Framebuffer, FramebufferAttachment.DepthAttachment, RenderbufferTarget.Renderbuffer, rbo);
 
 		if (Gl.CheckFramebufferStatus(FramebufferTarget.Framebuffer) != GLEnum.FramebufferComplete)
-			DebugWindow.Warnings.Add("Framebuffer is not complete.");
+			DebugState.AddWarning("Framebuffer is not complete");
 
 		Gl.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
 		Gl.DeleteRenderbuffer(rbo);
@@ -287,7 +287,7 @@ public static class LevelEditorWindow
 	{
 		(Mesh Mesh, uint Vao)? mesh = MeshContainer.GetMesh(meshName);
 		if (!mesh.HasValue)
-			DebugWindow.Warnings.Add("Cannot find mesh.");
+			DebugState.AddWarning($"Cannot find mesh '{meshName}'");
 
 		return mesh;
 	}
@@ -296,7 +296,7 @@ public static class LevelEditorWindow
 	{
 		uint? glTextureId = TextureContainer.GetTexture(textureName);
 		if (!glTextureId.HasValue)
-			DebugWindow.Warnings.Add("Cannot find texture.");
+			DebugState.AddWarning($"Cannot find texture '{textureName}'");
 
 		return glTextureId;
 	}

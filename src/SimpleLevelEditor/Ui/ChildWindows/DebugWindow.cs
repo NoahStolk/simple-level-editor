@@ -1,12 +1,11 @@
 using ImGuiNET;
+using SimpleLevelEditor.State;
 
 namespace SimpleLevelEditor.Ui.ChildWindows;
 
 public static class DebugWindow
 {
 	private static long _previousAllocatedBytes;
-
-	public static List<string> Warnings { get; } = new();
 
 	public static void Render(Vector2 size)
 	{
@@ -34,10 +33,10 @@ public static class DebugWindow
 			if (ImGui.CollapsingHeader("Debug stack"))
 			{
 				if (ImGui.Button("Clear"))
-					Warnings.Clear();
+					DebugState.ClearWarnings();
 
-				for (int i = 0; i < Warnings.Count; i++)
-					ImGui.Text(Warnings[i]);
+				foreach (KeyValuePair<string, int> kvp in DebugState.Warnings)
+					ImGui.Text(Inline.Span($"{kvp.Key}: {kvp.Value}"));
 			}
 		}
 
