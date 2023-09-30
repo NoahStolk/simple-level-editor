@@ -99,13 +99,15 @@ public static class MainWindow
 			const int rightWidth = 512;
 			float middleWidth = viewportSize.X - leftWidth - rightWidth;
 
-			const float levelInfoHeight = 720;
-			const int objectCreatorHeight = 384;
-			float levelEditorHeight = viewportSize.Y - objectCreatorHeight;
+			const int bottomHeight = 384;
+			float levelEditorHeight = viewportSize.Y - bottomHeight;
 
 			if (ImGui.BeginChild("Left", new(leftWidth, 0)))
 			{
+				const int levelInfoHeight = 192;
+				const int padding = 4; // TODO: Get from ImGui style.
 				LevelInfoWindow.Render(new(leftWidth, levelInfoHeight));
+				AddAssetsWindow.Render(new(leftWidth, viewportSize.Y - bottomHeight - levelInfoHeight - padding));
 				DebugWindow.Render(new(leftWidth, 0));
 			}
 
