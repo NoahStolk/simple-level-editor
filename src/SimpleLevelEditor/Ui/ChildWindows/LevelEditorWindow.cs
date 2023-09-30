@@ -52,7 +52,6 @@ public static class LevelEditorWindow
 
 	private static float _gridSnap = 1;
 	private static Vector3 _targetPosition;
-	private static Ray _ray;
 	private static WorldObject? _highlightedObject;
 
 	private static unsafe void Initialize(Vector2 size)
@@ -163,18 +162,15 @@ public static class LevelEditorWindow
 	{
 		Vector2 mousePosition = Input.GetMousePosition() - origin;
 		Vector2 normalizedMousePosition = new Vector2(mousePosition.X / size.X - 0.5f, -(mousePosition.Y / size.Y - 0.5f)) * 2;
-		Vector3 point = Camera3d.GetMouseWorldPosition(normalizedMousePosition, new(Vector3.UnitY, 0f));
-
+		_targetPosition = Camera3d.GetMouseWorldPosition(normalizedMousePosition, new(Vector3.UnitY, 0f));
 		if (_gridSnap > 0)
 		{
-			point.X = MathF.Round(point.X / _gridSnap) * _gridSnap;
-			point.Y = MathF.Round(point.Y / _gridSnap) * _gridSnap;
-			point.Z = MathF.Round(point.Z / _gridSnap) * _gridSnap;
+			_targetPosition.X = MathF.Round(_targetPosition.X / _gridSnap) * _gridSnap;
+			_targetPosition.Y = MathF.Round(_targetPosition.Y / _gridSnap) * _gridSnap;
+			_targetPosition.Z = MathF.Round(_targetPosition.Z / _gridSnap) * _gridSnap;
 		}
 
-		_targetPosition = point;
-		_ray = new(Camera3d.Position, Vector3.Normalize(point - Camera3d.Position));
-
+		Ray ray = new(Camera3d.Position, Vector3.Normalize(_targetPosition - Camera3d.Position));
 		Vector3? closestIntersection = null;
 		_highlightedObject = null;
 		for (int i = 0; i < LevelState.Level.WorldObjects.Count; i++)
@@ -188,7 +184,7 @@ public static class LevelEditorWindow
 			Vector3 bbOffset = (mesh.BoundingMax + mesh.BoundingMin) / 2;
 			float maxScale = Math.Max(bbScale.X, Math.Max(bbScale.Y, bbScale.Z));
 			Sphere sphere = new(worldObject.Position + bbOffset, maxScale);
-			Vector3? intersection = _ray.Intersects(sphere);
+			Vector3? intersection = ray.Intersects(sphere);
 			if (intersection == null)
 				continue;
 
@@ -239,7 +235,7 @@ public static class LevelEditorWindow
 		ShaderUniformUtils.Set(projectionUniform, Camera3d.Projection);
 
 		RenderWorldObjects(meshShader);
-		RenderSelection(meshShader);
+		RenderMeshPreview(meshShader);
 	}
 
 	private static void RenderLines(ShaderCacheEntry lineShader)
@@ -297,12 +293,14 @@ public static class LevelEditorWindow
 				continue;
 
 			Vector4 color;
-			if (worldObject == ObjectEditorState.SelectedWorldObject)
-				color = new(0, 1, 0, 1);
+			if (worldObject == ObjectEditorState.SelectedWorldObject && worldObject == _highlightedObject)
+				color = new(0.5f, 1, 0.5f, 1);
+			else if (worldObject == ObjectEditorState.SelectedWorldObject)
+				color = new(0, 0.75f, 0, 1);
 			else if (worldObject == _highlightedObject)
-				color = new(1, 1, 0, 1);
+				color = new(1, 0.5f, 1, 1);
 			else
-				color = new(1, 0, 0.8f, 1);
+				color = new(0.75f, 0, 0.75f, 1);
 
 			ShaderUniformUtils.Set(colorUniform, color);
 
@@ -339,7 +337,7 @@ public static class LevelEditorWindow
 		}
 	}
 
-	private static unsafe void RenderSelection(ShaderCacheEntry meshShader)
+	private static unsafe void RenderMeshPreview(ShaderCacheEntry meshShader)
 	{
 		if (ObjectCreatorState.SelectedMeshName == null)
 			return;
