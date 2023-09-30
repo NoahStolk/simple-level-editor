@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Level Version="1">
+  <Meshes>
+    <Mesh Path="mesh\Plane.obj" />
+  </Meshes>
+  <Textures>
+    <Texture Path="tex\Bricks.tga" />
+  </Textures>
+  <WorldObjects>
+    <WorldObject Mesh="mesh\Plane.obj" Texture="tex\Bricks.tga" BoundingMesh="" Position="0 -0 -0" Rotation="0 0 0" Scale="1 1 1" Values="None" />
+  </WorldObjects>
+  <Entities />
+</Level>
