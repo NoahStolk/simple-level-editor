@@ -15,12 +15,16 @@ public static class TextureContainer
 		if (_textures.TryGetValue(path, out uint textureId))
 			return textureId;
 
+		DebugState.AddWarning($"Cannot find texture '{path}'");
 		return null;
 	}
 
 	public static void Rebuild(string levelFilePath)
 	{
 		_textures.Clear();
+
+		uint defaultTextureId = CreateFromTexture(1, 1, new byte[] { 0xFF, 0xFF, 0xFF, 0xFF });
+		_textures.Add(string.Empty, defaultTextureId);
 
 		string? levelDirectory = Path.GetDirectoryName(levelFilePath);
 		if (levelDirectory == null)

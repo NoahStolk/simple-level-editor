@@ -9,13 +9,14 @@ namespace SimpleLevelEditor.Rendering;
 
 public static class MeshContainer
 {
-	private static readonly Dictionary<string, (Mesh Mesh, uint Vao)> _meshes = new();
+	private static readonly Dictionary<string, Entry> _meshes = new();
 
-	public static (Mesh Mesh, uint Vao)? GetMesh(string name)
+	public static Entry? GetMesh(string path)
 	{
-		if (_meshes.TryGetValue(name, out (Mesh Mesh, uint Vao) data))
+		if (_meshes.TryGetValue(path, out Entry? data))
 			return data;
 
+		DebugState.AddWarning($"Cannot find mesh '{path}'");
 		return null;
 	}
 
@@ -40,7 +41,16 @@ public static class MeshContainer
 
 			Mesh mainMesh = GetMesh(modelData, modelData.Meshes[0]);
 			uint vao = CreateFromMesh(mainMesh);
-			_meshes.Add(modelPath, (mainMesh, vao));
+
+			Vector3 boundingMin = new(float.MaxValue);
+			Vector3 boundingMax = new(float.MinValue);
+			foreach (Vector3 position in mainMesh.Vertices.Select(v => v.Position))
+			{
+				boundingMin = Vector3.Min(boundingMin, position);
+				boundingMax = Vector3.Max(boundingMax, position);
+			}
+
+			_meshes.Add(modelPath, new(mainMesh, vao, boundingMin, boundingMax));
 		}
 	}
 
@@ -84,4 +94,6 @@ public static class MeshContainer
 
 		return vao;
 	}
+
+	public record Entry(Mesh Mesh, uint Vao, Vector3 BoundingMin, Vector3 BoundingMax);
 }

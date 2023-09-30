@@ -2,7 +2,7 @@ using ImGuiNET;
 using Silk.NET.GLFW;
 using Silk.NET.OpenGL;
 using SimpleLevelEditor.Content;
-using SimpleLevelEditor.Content.Data;
+using SimpleLevelEditor.Maths;
 using SimpleLevelEditor.Model;
 using SimpleLevelEditor.Model.Enums;
 using SimpleLevelEditor.Rendering;
@@ -15,7 +15,36 @@ namespace SimpleLevelEditor.Ui.ChildWindows;
 public static class LevelEditorWindow
 {
 	private static readonly float[] _snapPoints = { 0, 0.125f, 0.25f, 0.5f, 1, 2, 4, 8 };
-	private static readonly uint _lineVao;
+	private static readonly uint _lineVao = VaoUtils.CreateLineVao(new[] { Vector3.Zero, Vector3.UnitZ });
+	private static readonly uint _cubeVao = VaoUtils.CreateLineVao(new Vector3[]
+	{
+		new(-0.5f, -0.5f, -0.5f),
+		new(-0.5f, -0.5f, 0.5f),
+		new(-0.5f, 0.5f, -0.5f),
+		new(-0.5f, 0.5f, 0.5f),
+		new(0.5f, -0.5f, -0.5f),
+		new(0.5f, -0.5f, 0.5f),
+		new(0.5f, 0.5f, -0.5f),
+		new(0.5f, 0.5f, 0.5f),
+
+		new(-0.5f, -0.5f, -0.5f),
+		new(-0.5f, 0.5f, -0.5f),
+		new(-0.5f, -0.5f, 0.5f),
+		new(-0.5f, 0.5f, 0.5f),
+		new(0.5f, -0.5f, -0.5f),
+		new(0.5f, 0.5f, -0.5f),
+		new(0.5f, -0.5f, 0.5f),
+		new(0.5f, 0.5f, 0.5f),
+
+		new(-0.5f, -0.5f, -0.5f),
+		new(0.5f, -0.5f, -0.5f),
+		new(-0.5f, -0.5f, 0.5f),
+		new(0.5f, -0.5f, 0.5f),
+		new(-0.5f, 0.5f, -0.5f),
+		new(0.5f, 0.5f, -0.5f),
+		new(-0.5f, 0.5f, 0.5f),
+		new(0.5f, 0.5f, 0.5f),
+	});
 
 	private static Vector2 _cachedSize;
 	private static uint _textureHandle;
@@ -23,31 +52,7 @@ public static class LevelEditorWindow
 
 	private static float _gridSnap = 1;
 	private static Vector3 _targetPosition;
-
-#pragma warning disable S3963
-	static unsafe LevelEditorWindow()
-#pragma warning restore S3963
-	{
-		_lineVao = Gl.GenVertexArray();
-		Gl.BindVertexArray(_lineVao);
-
-		uint vbo = Gl.GenBuffer();
-		Gl.BindBuffer(BufferTargetARB.ArrayBuffer, vbo);
-
-		float[] vertices =
-		{
-			0, 0, 0,
-			0, 0, 1,
-		};
-		GlUtils.BufferData(BufferTargetARB.ArrayBuffer, vertices, BufferUsageARB.StaticDraw);
-
-		Gl.EnableVertexAttribArray(0);
-		Gl.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, (uint)sizeof(Vector3), (void*)0);
-
-		Gl.BindVertexArray(0);
-		Gl.BindBuffer(BufferTargetARB.ArrayBuffer, 0);
-		Gl.DeleteBuffer(vbo);
-	}
+	private static Ray _ray;
 
 	private static unsafe void Initialize(Vector2 size)
 	{
@@ -155,6 +160,7 @@ public static class LevelEditorWindow
 		}
 
 		_targetPosition = point;
+		_ray = Camera3d.GetMouseRay(normalizedMousePosition);
 	}
 
 	private static unsafe void RenderFramebuffer(Vector2 size)
@@ -201,45 +207,73 @@ public static class LevelEditorWindow
 
 	private static void RenderLines(ShaderCacheEntry lineShader)
 	{
-		int view = lineShader.GetUniformLocation("view");
-		int projection = lineShader.GetUniformLocation("projection");
-		int model = lineShader.GetUniformLocation("model");
-		int color = lineShader.GetUniformLocation("color");
+		int viewUniform = lineShader.GetUniformLocation("view");
+		int projectionUniform = lineShader.GetUniformLocation("projection");
+		int modelUniform = lineShader.GetUniformLocation("model");
+		int colorUniform = lineShader.GetUniformLocation("color");
 
-		ShaderUniformUtils.Set(view, Camera3d.ViewMatrix);
-		ShaderUniformUtils.Set(projection, Camera3d.Projection);
+		ShaderUniformUtils.Set(viewUniform, Camera3d.ViewMatrix);
+		ShaderUniformUtils.Set(projectionUniform, Camera3d.Projection);
 		Gl.BindVertexArray(_lineVao);
+		Gl.LineWidth(4);
 
 		// X axis
-		ShaderUniformUtils.Set(model, Matrix4x4.CreateFromAxisAngle(Vector3.UnitY, MathF.PI / 2));
-		ShaderUniformUtils.Set(color, new Vector4(1, 0, 0, 1));
+		ShaderUniformUtils.Set(modelUniform, Matrix4x4.CreateFromAxisAngle(Vector3.UnitY, MathF.PI / 2));
+		ShaderUniformUtils.Set(colorUniform, new Vector4(1, 0, 0, 1));
 		Gl.DrawArrays(PrimitiveType.Lines, 0, 6);
 
 		// Y axis
-		ShaderUniformUtils.Set(model, Matrix4x4.CreateFromAxisAngle(Vector3.UnitX, MathF.PI * 1.5f));
-		ShaderUniformUtils.Set(color, new Vector4(0, 1, 0, 1));
+		ShaderUniformUtils.Set(modelUniform, Matrix4x4.CreateFromAxisAngle(Vector3.UnitX, MathF.PI * 1.5f));
+		ShaderUniformUtils.Set(colorUniform, new Vector4(0, 1, 0, 1));
 		Gl.DrawArrays(PrimitiveType.Lines, 0, 6);
 
 		// Z axis
-		ShaderUniformUtils.Set(model, Matrix4x4.Identity);
-		ShaderUniformUtils.Set(color, new Vector4(0, 0, 1, 1));
+		ShaderUniformUtils.Set(modelUniform, Matrix4x4.Identity);
+		ShaderUniformUtils.Set(colorUniform, new Vector4(0, 0, 1, 1));
 		Gl.DrawArrays(PrimitiveType.Lines, 0, 6);
 
 		// Grid
-		ShaderUniformUtils.Set(color, new Vector4(0.8f, 0.8f, 0.8f, 1));
+		ShaderUniformUtils.Set(colorUniform, new Vector4(0.8f, 0.8f, 0.8f, 1));
+		Gl.LineWidth(1);
 
 		const int min = -10;
 		const int max = 10;
-		const float height = 0.01f;
+		const float height = 0;
 		Vector3 scale = new(1, 1, max - min);
 		Matrix4x4 scaleMat = Matrix4x4.CreateScale(scale);
 		for (int i = min; i <= max; i++)
 		{
-			ShaderUniformUtils.Set(model, scaleMat * Matrix4x4.CreateTranslation(i, height, min));
+			ShaderUniformUtils.Set(modelUniform, scaleMat * Matrix4x4.CreateTranslation(i, height, min));
 			Gl.DrawArrays(PrimitiveType.Lines, 0, 6);
 
-			ShaderUniformUtils.Set(model, scaleMat * Matrix4x4.CreateFromAxisAngle(Vector3.UnitY, MathF.PI / 2) * Matrix4x4.CreateTranslation(min, height, i));
+			ShaderUniformUtils.Set(modelUniform, scaleMat * Matrix4x4.CreateFromAxisAngle(Vector3.UnitY, MathF.PI / 2) * Matrix4x4.CreateTranslation(min, height, i));
 			Gl.DrawArrays(PrimitiveType.Lines, 0, 6);
+		}
+
+		// Bounding boxes
+		Gl.BindVertexArray(_cubeVao);
+		ShaderUniformUtils.Set(colorUniform, new Vector4(1, 0, 0.8f, 1));
+		for (int i = 0; i < LevelState.Level.WorldObjects.Count; i++)
+		{
+			WorldObject worldObject = LevelState.Level.WorldObjects[i];
+			MeshContainer.Entry? mesh = MeshContainer.GetMesh(worldObject.Mesh);
+			if (mesh == null)
+				continue;
+
+			Vector3 bbScale = worldObject.Scale * (mesh.BoundingMax - mesh.BoundingMin);
+			float maxScale = Math.Max(bbScale.X, Math.Max(bbScale.Y, bbScale.Z));
+			Sphere sphere = new(worldObject.Position, maxScale);
+			Vector3? intersection = _ray.Intersects(sphere);
+			if (intersection.HasValue)
+				ShaderUniformUtils.Set(colorUniform, new Vector4(1, 1, 0, 1));
+			else
+				ShaderUniformUtils.Set(colorUniform, new Vector4(1, 0, 0.8f, 1));
+
+			Vector3 bbOffset = (mesh.BoundingMax + mesh.BoundingMin) / 2;
+
+			Matrix4x4 modelMatrix = Matrix4x4.CreateScale(bbScale) * MathUtils.CreateRotationMatrixFromEulerAngles(worldObject.Rotation) * Matrix4x4.CreateTranslation(worldObject.Position + bbOffset);
+			ShaderUniformUtils.Set(modelUniform, modelMatrix);
+			Gl.DrawArrays(PrimitiveType.Lines, 0, 24);
 		}
 	}
 
@@ -249,21 +283,21 @@ public static class LevelEditorWindow
 		for (int i = 0; i < LevelState.Level.WorldObjects.Count; i++)
 		{
 			WorldObject worldObject = LevelState.Level.WorldObjects[i];
-			ShaderUniformUtils.Set(modelUniform, Matrix4x4.CreateScale(worldObject.Scale) * Matrix4x4.CreateFromYawPitchRoll(worldObject.Rotation.X, worldObject.Rotation.Y, worldObject.Rotation.Z) * Matrix4x4.CreateTranslation(worldObject.Position));
+			ShaderUniformUtils.Set(modelUniform, Matrix4x4.CreateScale(worldObject.Scale) * MathUtils.CreateRotationMatrixFromEulerAngles(worldObject.Rotation) * Matrix4x4.CreateTranslation(worldObject.Position));
 
-			(Mesh Mesh, uint Vao)? mesh = GetMesh(worldObject.Mesh);
+			MeshContainer.Entry? mesh = MeshContainer.GetMesh(worldObject.Mesh);
 			if (mesh == null)
 				continue;
 
-			uint? textureId = GetTexture(worldObject.Texture);
+			uint? textureId = TextureContainer.GetTexture(worldObject.Texture);
 			if (textureId == null)
 				continue;
 
 			Gl.BindTexture(TextureTarget.Texture2D, textureId.Value);
 
-			Gl.BindVertexArray(mesh.Value.Vao);
-			fixed (uint* index = &mesh.Value.Mesh.Indices[0])
-				Gl.DrawElements(PrimitiveType.Triangles, (uint)mesh.Value.Mesh.Indices.Length, DrawElementsType.UnsignedInt, index);
+			Gl.BindVertexArray(mesh.Vao);
+			fixed (uint* index = &mesh.Mesh.Indices[0])
+				Gl.DrawElements(PrimitiveType.Triangles, (uint)mesh.Mesh.Indices.Length, DrawElementsType.UnsignedInt, index);
 		}
 	}
 
@@ -272,32 +306,14 @@ public static class LevelEditorWindow
 		if (ObjectCreatorState.SelectedMeshName == null)
 			return;
 
-		(Mesh Mesh, uint Vao)? mesh = GetMesh(ObjectCreatorState.SelectedMeshName);
+		MeshContainer.Entry? mesh = MeshContainer.GetMesh(ObjectCreatorState.SelectedMeshName);
 		if (mesh == null)
 			return;
 
 		int modelUniform = meshShader.GetUniformLocation("model");
 		ShaderUniformUtils.Set(modelUniform, Matrix4x4.CreateTranslation(_targetPosition));
-		Gl.BindVertexArray(mesh.Value.Vao);
-		fixed (uint* i = &mesh.Value.Mesh.Indices[0])
-			Gl.DrawElements(PrimitiveType.Triangles, (uint)mesh.Value.Mesh.Indices.Length, DrawElementsType.UnsignedInt, i);
-	}
-
-	private static (Mesh Mesh, uint Vao)? GetMesh(string meshName)
-	{
-		(Mesh Mesh, uint Vao)? mesh = MeshContainer.GetMesh(meshName);
-		if (!mesh.HasValue)
-			DebugState.AddWarning($"Cannot find mesh '{meshName}'");
-
-		return mesh;
-	}
-
-	private static uint? GetTexture(string textureName)
-	{
-		uint? glTextureId = TextureContainer.GetTexture(textureName);
-		if (!glTextureId.HasValue)
-			DebugState.AddWarning($"Cannot find texture '{textureName}'");
-
-		return glTextureId;
+		Gl.BindVertexArray(mesh.Vao);
+		fixed (uint* i = &mesh.Mesh.Indices[0])
+			Gl.DrawElements(PrimitiveType.Triangles, (uint)mesh.Mesh.Indices.Length, DrawElementsType.UnsignedInt, i);
 	}
 }
