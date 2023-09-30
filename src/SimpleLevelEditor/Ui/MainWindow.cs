@@ -99,14 +99,14 @@ public static class MainWindow
 			const int rightWidth = 512;
 			float middleWidth = viewportSize.X - leftWidth - rightWidth;
 
-			const int debugHeight = 256;
+			const float levelInfoHeight = 720;
 			const int objectCreatorHeight = 384;
 			float levelEditorHeight = viewportSize.Y - objectCreatorHeight;
 
 			if (ImGui.BeginChild("Left", new(leftWidth, 0)))
 			{
-				DebugWindow.Render(new(leftWidth, debugHeight));
-				LevelInfoWindow.Render(new(leftWidth, 0));
+				LevelInfoWindow.Render(new(leftWidth, levelInfoHeight));
+				DebugWindow.Render(new(leftWidth, 0));
 			}
 
 			ImGui.EndChild(); // End Left
