@@ -82,6 +82,8 @@ public sealed class App
 		Render();
 		_renders++;
 
+		Input.PostUpdate();
+
 		Graphics.Glfw.SwapBuffers(Graphics.Window);
 	}
 

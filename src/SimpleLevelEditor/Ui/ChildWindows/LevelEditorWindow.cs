@@ -53,6 +53,7 @@ public static class LevelEditorWindow
 	private static float _gridSnap = 1;
 	private static Vector3 _targetPosition;
 	private static Ray _ray;
+	private static WorldObject? _highlightedObject;
 
 	private static unsafe void Initialize(Vector2 size)
 	{
@@ -103,7 +104,7 @@ public static class LevelEditorWindow
 			Vector2 cursorScreenPos = ImGui.GetCursorScreenPos();
 			RenderFramebuffer(framebufferSize);
 
-			CalculateTargetPosition(cursorScreenPos, framebufferSize);
+			CalculateTargetPositionAndObject(cursorScreenPos, framebufferSize);
 
 			ImDrawListPtr drawList = ImGui.GetWindowDrawList();
 			drawList.AddImage((IntPtr)_textureHandle, cursorScreenPos, cursorScreenPos + framebufferSize, Vector2.UnitY, Vector2.UnitX);
@@ -127,26 +128,38 @@ public static class LevelEditorWindow
 			bool isFocused = ImGui.IsItemHovered();
 			Camera3d.Update(ImGui.GetIO().DeltaTime, isFocused);
 
-			if (isFocused && ObjectCreatorState.SelectedMeshName != null && Input.IsButtonPressed(MouseButton.Left) && !LevelState.Level.WorldObjects.Exists(wo => wo.Position == _targetPosition))
-			{
-				WorldObject worldObject = new()
-				{
-					Position = _targetPosition,
-					Mesh = ObjectCreatorState.SelectedMeshName,
-					Texture = string.Empty,
-					Scale = new(1),
-					Rotation = new(0),
-					BoundingMesh = string.Empty,
-					Values = WorldObjectValues.None,
-				};
-				LevelState.Level.WorldObjects.Add(worldObject);
-			}
+			if (isFocused && Input.IsButtonPressed(MouseButton.Left))
+				OnLeftClick();
 		}
 
 		ImGui.EndChild(); // End Level Editor
 	}
 
-	private static void CalculateTargetPosition(Vector2 origin, Vector2 size)
+	private static void OnLeftClick()
+	{
+		if (_highlightedObject != null)
+		{
+			ObjectEditorState.SelectedWorldObject = ObjectEditorState.SelectedWorldObject == _highlightedObject ? null : _highlightedObject;
+			return;
+		}
+
+		if (ObjectCreatorState.SelectedMeshName != null && !LevelState.Level.WorldObjects.Exists(wo => wo.Position == _targetPosition))
+		{
+			WorldObject worldObject = new()
+			{
+				Position = _targetPosition,
+				Mesh = ObjectCreatorState.SelectedMeshName,
+				Texture = string.Empty,
+				Scale = new(1),
+				Rotation = new(0),
+				BoundingMesh = string.Empty,
+				Values = WorldObjectValues.None,
+			};
+			LevelState.Level.WorldObjects.Add(worldObject);
+		}
+	}
+
+	private static void CalculateTargetPositionAndObject(Vector2 origin, Vector2 size)
 	{
 		Vector2 mousePosition = Input.GetMousePosition() - origin;
 		Vector2 normalizedMousePosition = new Vector2(mousePosition.X / size.X - 0.5f, -(mousePosition.Y / size.Y - 0.5f)) * 2;
@@ -160,7 +173,31 @@ public static class LevelEditorWindow
 		}
 
 		_targetPosition = point;
-		_ray = Camera3d.GetMouseRay(normalizedMousePosition);
+		_ray = new(Camera3d.Position, Vector3.Normalize(point - Camera3d.Position));
+
+		Vector3? closestIntersection = null;
+		_highlightedObject = null;
+		for (int i = 0; i < LevelState.Level.WorldObjects.Count; i++)
+		{
+			WorldObject worldObject = LevelState.Level.WorldObjects[i];
+			MeshContainer.Entry? mesh = MeshContainer.GetMesh(worldObject.Mesh);
+			if (mesh == null)
+				continue;
+
+			Vector3 bbScale = worldObject.Scale * (mesh.BoundingMax - mesh.BoundingMin);
+			Vector3 bbOffset = (mesh.BoundingMax + mesh.BoundingMin) / 2;
+			float maxScale = Math.Max(bbScale.X, Math.Max(bbScale.Y, bbScale.Z));
+			Sphere sphere = new(worldObject.Position + bbOffset, maxScale);
+			Vector3? intersection = _ray.Intersects(sphere);
+			if (intersection == null)
+				continue;
+
+			if (closestIntersection != null && Vector3.DistanceSquared(Camera3d.Position, intersection.Value) >= Vector3.DistanceSquared(Camera3d.Position, closestIntersection.Value))
+				continue;
+
+			closestIntersection = intersection.Value;
+			_highlightedObject = worldObject;
+		}
 	}
 
 	private static unsafe void RenderFramebuffer(Vector2 size)
@@ -252,7 +289,6 @@ public static class LevelEditorWindow
 
 		// Bounding boxes
 		Gl.BindVertexArray(_cubeVao);
-		ShaderUniformUtils.Set(colorUniform, new Vector4(1, 0, 0.8f, 1));
 		for (int i = 0; i < LevelState.Level.WorldObjects.Count; i++)
 		{
 			WorldObject worldObject = LevelState.Level.WorldObjects[i];
@@ -260,15 +296,17 @@ public static class LevelEditorWindow
 			if (mesh == null)
 				continue;
 
-			Vector3 bbScale = worldObject.Scale * (mesh.BoundingMax - mesh.BoundingMin);
-			float maxScale = Math.Max(bbScale.X, Math.Max(bbScale.Y, bbScale.Z));
-			Sphere sphere = new(worldObject.Position, maxScale);
-			Vector3? intersection = _ray.Intersects(sphere);
-			if (intersection.HasValue)
-				ShaderUniformUtils.Set(colorUniform, new Vector4(1, 1, 0, 1));
+			Vector4 color;
+			if (worldObject == ObjectEditorState.SelectedWorldObject)
+				color = new(0, 1, 0, 1);
+			else if (worldObject == _highlightedObject)
+				color = new(1, 1, 0, 1);
 			else
-				ShaderUniformUtils.Set(colorUniform, new Vector4(1, 0, 0.8f, 1));
+				color = new(1, 0, 0.8f, 1);
 
+			ShaderUniformUtils.Set(colorUniform, color);
+
+			Vector3 bbScale = worldObject.Scale * (mesh.BoundingMax - mesh.BoundingMin);
 			Vector3 bbOffset = (mesh.BoundingMax + mesh.BoundingMin) / 2;
 
 			Matrix4x4 modelMatrix = Matrix4x4.CreateScale(bbScale) * MathUtils.CreateRotationMatrixFromEulerAngles(worldObject.Rotation) * Matrix4x4.CreateTranslation(worldObject.Position + bbOffset);

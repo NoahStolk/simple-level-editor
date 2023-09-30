@@ -175,23 +175,4 @@ public static class Camera3d
 			return num is >= -float.Epsilon and <= float.Epsilon;
 		}
 	}
-
-	public static Ray GetMouseRay(Vector2 normalizedMousePosition)
-	{
-		// Angle in radians from the view axis to the top plane of the view pyramid.
-		float verticalAngle = 0.5f * MathUtils.ToRadians(_fieldOfView);
-
-		// World space height of the view pyramid measured at 1m depth from the camera.
-		float worldHeight = 2f * MathF.Tan(verticalAngle);
-
-		// Convert relative position to world units.
-		Vector2 temp = normalizedMousePosition * worldHeight;
-		Vector3 worldUnits = new(temp.X * AspectRatio, temp.Y, 1);
-
-		// Rotate to match camera orientation.
-		Vector3 direction = Vector3.Transform(worldUnits, _rotation);
-
-		// Output a ray from camera position, along this direction.
-		return new(Position, direction);
-	}
 }

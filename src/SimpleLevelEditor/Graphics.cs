@@ -83,7 +83,6 @@ public static class Graphics
 		_glfw.SetKeyCallback(Window, (_, keys, _, state, _) => Input.KeyCallback(keys, state));
 		_glfw.SetMouseButtonCallback(Window, (_, button, state, _) => Input.ButtonCallback(button, state));
 		_glfw.SetScrollCallback(Window, (_, _, y) => Input.MouseWheelCallback(y));
-		_glfw.SetJoystickCallback(Input.JoystickCallback);
 		_glfw.SetFramebufferSizeCallback(Window, (_, w, h) => SetWindowSize(w, h));
 		_glfw.SetWindowFocusCallback(Window, (_, focusing) => WindowIsActive = focusing);
 

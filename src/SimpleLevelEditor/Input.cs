@@ -6,7 +6,6 @@ public static class Input
 {
 	private const int _maxKeys = 1024;
 	private const int _maxMouseButtons = 8;
-	private const int _maxJoystickButtons = 16;
 
 	#region States
 
@@ -17,16 +16,6 @@ public static class Input
 	private static readonly bool[] _mouseButtonsCurrent = new bool[_maxMouseButtons];
 
 	private static double _mouseWheel;
-
-	private static readonly bool[] _joystickButtonsPrevious = new bool[_maxJoystickButtons];
-	private static readonly bool[] _joystickButtonsCurrent = new bool[_maxJoystickButtons];
-
-	public static int LastConnectedJoystick { get; private set; }
-
-	public static Vector2 LeftStick { get; private set; }
-	public static Vector2 RightStick { get; private set; }
-	public static float LeftTrigger { get; private set; }
-	public static float RightTrigger { get; private set; }
 
 	#endregion States
 
@@ -46,12 +35,6 @@ public static class Input
 		{
 			_mouseButtonsCurrent[(int)mouseButton] = inputState == InputAction.Press;
 		}
-	}
-
-	public static void JoystickCallback(int joystick, ConnectedState state)
-	{
-		if (state == ConnectedState.Connected)
-			LastConnectedJoystick = joystick;
 	}
 
 	#endregion Callbacks
@@ -105,52 +88,12 @@ public static class Input
 
 	#endregion Mouse
 
-	internal static unsafe void PreUpdate()
-	{
-		float* axes = Graphics.Glfw.GetJoystickAxes(LastConnectedJoystick, out int axesCount);
-		if (axes == null)
-		{
-			LeftStick = Vector2.Zero;
-			RightStick = Vector2.Zero;
-			LeftTrigger = 0;
-			RightTrigger = 0;
-		}
-		else
-		{
-			if (axesCount >= 2)
-				LeftStick = new(axes[0], axes[1]);
-
-			if (axesCount >= 4)
-				RightStick = new(axes[2], axes[3]);
-
-			if (axesCount >= 6)
-			{
-				LeftTrigger = axes[4];
-				RightTrigger = axes[5];
-			}
-		}
-
-		byte* buttons = Graphics.Glfw.GetJoystickButtons(LastConnectedJoystick, out int buttonsCount);
-		if (buttons == null)
-		{
-			for (int i = 0; i < _maxJoystickButtons; i++)
-				_joystickButtonsCurrent[i] = false;
-		}
-		else
-		{
-			for (int i = 0; i < _maxJoystickButtons; i++)
-				_joystickButtonsCurrent[i] = i < buttonsCount && buttons[i] == 1;
-		}
-	}
-
 	internal static void PostUpdate()
 	{
 		for (int i = 0; i < _maxKeys; i++)
 			_keysPrevious[i] = _keysCurrent[i];
 		for (int i = 0; i < _maxMouseButtons; i++)
 			_mouseButtonsPrevious[i] = _mouseButtonsCurrent[i];
-		for (int i = 0; i < _maxJoystickButtons; i++)
-			_joystickButtonsPrevious[i] = _joystickButtonsCurrent[i];
 
 		_mouseWheel = 0;
 	}

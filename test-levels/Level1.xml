@@ -20,11 +20,11 @@
     <Texture Path="tex\TilesGray.tga" />
   </Textures>
   <WorldObjects>
-    <WorldObject Mesh="mesh\Bullet.obj" Texture="tex\Blue.tga" BoundingMesh="-1" Position="-1 0 2" Rotation="0 0 0" Scale="1 1 1" Values="None" />
-    <WorldObject Mesh="mesh\Bullet.obj" Texture="tex\Blue.tga" BoundingMesh="-1" Position="2 0 -2" Rotation="0 0 0" Scale="1 1 1" Values="None" />
-    <WorldObject Mesh="mesh\DebugArrow.obj" Texture="tex\Blue.tga" BoundingMesh="-1" Position="3 0 -0" Rotation="0 0 0" Scale="1 1 1" Values="None" />
-    <WorldObject Mesh="mesh\Weapon.obj" Texture="tex\Blue.tga" BoundingMesh="-1" Position="-1.676903 0 -1.7849853" Rotation="0 0 0" Scale="1 1 1" Values="None" />
-    <WorldObject Mesh="mesh\Sphere.obj" Texture="tex\Blue.tga" BoundingMesh="-1" Position="-0 0 8" Rotation="0 0 0" Scale="1 1 1" Values="None" />
+    <WorldObject Mesh="mesh\Bullet.obj" Texture="tex\Blue.tga" BoundingMesh="" Position="-1 0 2" Rotation="0 0 0" Scale="1 1 1" Values="None" />
+    <WorldObject Mesh="mesh\Bullet.obj" Texture="tex\Blue.tga" BoundingMesh="" Position="2 0 -2" Rotation="0 0 0" Scale="1 1 1" Values="None" />
+    <WorldObject Mesh="mesh\DebugArrow.obj" Texture="tex\Blue.tga" BoundingMesh="" Position="3 0 -0" Rotation="0 0 0" Scale="1 1 1" Values="None" />
+    <WorldObject Mesh="mesh\Weapon.obj" Texture="tex\Blue.tga" BoundingMesh="" Position="-1.676903 0 -1.7849853" Rotation="0 0 0" Scale="1 1 1" Values="None" />
+    <WorldObject Mesh="mesh\Sphere.obj" Texture="tex\Blue.tga" BoundingMesh="" Position="-0 0 8" Rotation="0 0 0" Scale="1 1 1" Values="None" />
     <WorldObject Mesh="mesh\ActivatorButton.obj" Texture="" BoundingMesh="" Position="-3 0 4" Rotation="0 0 0" Scale="1 1 1" Values="None" />
     <WorldObject Mesh="mesh\ActivatorButton.obj" Texture="" BoundingMesh="" Position="-4 0 3" Rotation="0 45 0" Scale="1 1 1" Values="None" />
     <WorldObject Mesh="mesh\ActivatorButton.obj" Texture="" BoundingMesh="" Position="-4 0 5" Rotation="0 0 0" Scale="1 1 1" Values="None" />
