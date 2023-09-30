@@ -10,6 +10,12 @@ public static class MathUtils
 		return degrees * MathF.PI / 180;
 	}
 
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static float ToDegrees(float radians)
+	{
+		return radians * 180 / MathF.PI;
+	}
+
 	public static Matrix4x4 CreateRotationMatrixFromEulerAngles(Vector3 eulerAngles)
 	{
 		return Matrix4x4.CreateFromYawPitchRoll(ToRadians(eulerAngles.X), ToRadians(eulerAngles.Y), ToRadians(eulerAngles.Z));

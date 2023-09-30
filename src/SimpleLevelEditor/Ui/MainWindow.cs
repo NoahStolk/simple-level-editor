@@ -107,7 +107,7 @@ public static class MainWindow
 				const int levelInfoHeight = 192;
 				const int padding = 4; // TODO: Get from ImGui style.
 				LevelInfoWindow.Render(new(leftWidth, levelInfoHeight));
-				AddAssetsWindow.Render(new(leftWidth, viewportSize.Y - bottomHeight - levelInfoHeight - padding));
+				LevelAssetsWindow.Render(new(leftWidth, viewportSize.Y - bottomHeight - levelInfoHeight - padding));
 				DebugWindow.Render(new(leftWidth, 0));
 			}
 

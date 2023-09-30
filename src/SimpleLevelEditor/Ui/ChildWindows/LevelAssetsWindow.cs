@@ -6,15 +6,15 @@ using System.Diagnostics;
 
 namespace SimpleLevelEditor.Ui.ChildWindows;
 
-public static class AddAssetsWindow
+public static class LevelAssetsWindow
 {
 	public static void Render(Vector2 size)
 	{
-		if (ImGui.BeginChild("Add New", size, true))
+		if (ImGui.BeginChild("Level Assets", size, true))
 		{
 			ImGui.BeginDisabled(LevelState.LevelFilePath == null);
 
-			ImGui.SeparatorText("Add New");
+			ImGui.SeparatorText("Level Assets");
 
 			float height = MathF.Floor(size.Y / 2f - 40f) - 1;
 			RenderAssetPaths(height, "Meshes", "obj", l => l.Meshes, (l, d) => l.Meshes = d);
