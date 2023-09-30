@@ -103,8 +103,6 @@ public static class LevelEditorWindow
 			Vector2 cursorScreenPos = ImGui.GetCursorScreenPos();
 			RenderFramebuffer(framebufferSize);
 
-			CalculateTargetPositionAndObject(cursorScreenPos, framebufferSize);
-
 			ImDrawListPtr drawList = ImGui.GetWindowDrawList();
 			drawList.AddImage((IntPtr)_textureHandle, cursorScreenPos, cursorScreenPos + framebufferSize, Vector2.UnitY, Vector2.UnitX);
 
@@ -126,6 +124,9 @@ public static class LevelEditorWindow
 			ImGui.InvisibleButton("3d_view", framebufferSize);
 			bool isFocused = ImGui.IsItemHovered();
 			Camera3d.Update(ImGui.GetIO().DeltaTime, isFocused);
+
+			CalculateTargetPosition(cursorScreenPos, framebufferSize);
+			CalculateHighlightedObject(isFocused);
 
 			if (isFocused && Input.IsButtonPressed(MouseButton.Left))
 				OnLeftClick();
@@ -158,7 +159,7 @@ public static class LevelEditorWindow
 		}
 	}
 
-	private static void CalculateTargetPositionAndObject(Vector2 origin, Vector2 size)
+	private static void CalculateTargetPosition(Vector2 origin, Vector2 size)
 	{
 		Vector2 mousePosition = Input.GetMousePosition() - origin;
 		Vector2 normalizedMousePosition = new Vector2(mousePosition.X / size.X - 0.5f, -(mousePosition.Y / size.Y - 0.5f)) * 2;
@@ -169,10 +170,20 @@ public static class LevelEditorWindow
 			_targetPosition.Y = MathF.Round(_targetPosition.Y / _gridSnap) * _gridSnap;
 			_targetPosition.Z = MathF.Round(_targetPosition.Z / _gridSnap) * _gridSnap;
 		}
+	}
 
+	private static void CalculateHighlightedObject(bool isFocused)
+	{
 		Ray ray = new(Camera3d.Position, Vector3.Normalize(_targetPosition - Camera3d.Position));
 		Vector3? closestIntersection = null;
 		_highlightedObject = null;
+
+		if (!isFocused)
+			return;
+
+		if (Input.IsButtonHeld(Camera3d.LookButton))
+			return;
+
 		for (int i = 0; i < LevelState.Level.WorldObjects.Count; i++)
 		{
 			WorldObject worldObject = LevelState.Level.WorldObjects[i];
@@ -285,6 +296,7 @@ public static class LevelEditorWindow
 
 		// Bounding boxes
 		Gl.BindVertexArray(_cubeVao);
+		Gl.LineWidth(2);
 		for (int i = 0; i < LevelState.Level.WorldObjects.Count; i++)
 		{
 			WorldObject worldObject = LevelState.Level.WorldObjects[i];
@@ -292,13 +304,16 @@ public static class LevelEditorWindow
 			if (mesh == null)
 				continue;
 
+			float timeAddition = MathF.Sin((float)Graphics.Glfw.GetTime() * 10) * 0.5f + 0.5f;
+			timeAddition *= 0.5f;
+
 			Vector4 color;
 			if (worldObject == ObjectEditorState.SelectedWorldObject && worldObject == _highlightedObject)
-				color = new(0.5f, 1, 0.5f, 1);
+				color = new(0.5f + timeAddition, 1, 0.5f + timeAddition, 1);
 			else if (worldObject == ObjectEditorState.SelectedWorldObject)
 				color = new(0, 0.75f, 0, 1);
 			else if (worldObject == _highlightedObject)
-				color = new(1, 0.5f, 1, 1);
+				color = new(1, 0.5f + timeAddition, 1, 1);
 			else
 				color = new(0.75f, 0, 0.75f, 1);
 
@@ -306,8 +321,9 @@ public static class LevelEditorWindow
 
 			Vector3 bbScale = worldObject.Scale * (mesh.BoundingMax - mesh.BoundingMin);
 			Vector3 bbOffset = (mesh.BoundingMax + mesh.BoundingMin) / 2;
+			Matrix4x4 rotationMatrix = MathUtils.CreateRotationMatrixFromEulerAngles(worldObject.Rotation);
 
-			Matrix4x4 modelMatrix = Matrix4x4.CreateScale(bbScale) * MathUtils.CreateRotationMatrixFromEulerAngles(worldObject.Rotation) * Matrix4x4.CreateTranslation(worldObject.Position + bbOffset);
+			Matrix4x4 modelMatrix = Matrix4x4.CreateScale(bbScale) * rotationMatrix * Matrix4x4.CreateTranslation(worldObject.Position + Vector3.Transform(bbOffset, rotationMatrix));
 			ShaderUniformUtils.Set(modelUniform, modelMatrix);
 			Gl.DrawArrays(PrimitiveType.Lines, 0, 24);
 		}

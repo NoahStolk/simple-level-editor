@@ -6,6 +6,8 @@ namespace SimpleLevelEditor.Rendering;
 
 public static class Camera3d
 {
+	public const MouseButton LookButton = MouseButton.Right;
+
 	private const int _fieldOfView = 2;
 	private static Vector2 _originalCursor = Input.GetMousePosition();
 	private static bool _lookEnabled;
@@ -103,18 +105,17 @@ public static class Camera3d
 
 	private static unsafe void HandleMouse()
 	{
-		const MouseButton lookButton = MouseButton.Right;
 		const float lookSpeed = 20;
 
 		Vector2 cursor = Input.GetMousePosition();
 
-		if (!_lookEnabled && Input.IsButtonHeld(lookButton))
+		if (!_lookEnabled && Input.IsButtonHeld(LookButton))
 		{
 			Graphics.Glfw.SetInputMode(Graphics.Window, CursorStateAttribute.Cursor, CursorModeValue.CursorHidden);
 			_originalCursor = cursor;
 			_lookEnabled = true;
 		}
-		else if (_lookEnabled && !Input.IsButtonHeld(lookButton))
+		else if (_lookEnabled && !Input.IsButtonHeld(LookButton))
 		{
 			StopLook();
 		}
