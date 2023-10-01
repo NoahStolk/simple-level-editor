@@ -1,13 +1,11 @@
 using ImGuiNET;
 using Silk.NET.GLFW;
-using Silk.NET.OpenGL;
 using SimpleLevelEditor.Maths;
 using SimpleLevelEditor.Model;
 using SimpleLevelEditor.Model.Enums;
 using SimpleLevelEditor.Rendering;
 using SimpleLevelEditor.State;
 using SimpleLevelEditor.Utils;
-using static SimpleLevelEditor.Graphics;
 
 namespace SimpleLevelEditor.Ui.ChildWindows;
 
@@ -16,72 +14,42 @@ public static class LevelEditorWindow
 	private static readonly float[] _gridSnapPoints = { 0, 0.125f, 0.25f, 0.5f, 1, 2, 4, 8 };
 	private static int _gridSnapIndex = 4;
 
-	private static Vector2 _cachedFramebufferSize;
-	private static uint _framebufferTextureId;
-	private static uint _framebufferId;
-
 	private static float GridSnap => _gridSnapIndex >= 0 && _gridSnapIndex < _gridSnapPoints.Length ? _gridSnapPoints[_gridSnapIndex] : 0;
-
-	private static unsafe void Initialize(Vector2 framebufferSize)
-	{
-		if (_cachedFramebufferSize == framebufferSize)
-			return;
-
-		if (_framebufferId != 0)
-			Gl.DeleteFramebuffer(_framebufferId);
-
-		if (_framebufferTextureId != 0)
-			Gl.DeleteTexture(_framebufferTextureId);
-
-		_framebufferId = Gl.GenFramebuffer();
-		Gl.BindFramebuffer(FramebufferTarget.Framebuffer, _framebufferId);
-
-		_framebufferTextureId = Gl.GenTexture();
-		Gl.BindTexture(TextureTarget.Texture2D, _framebufferTextureId);
-		Gl.TexImage2D(TextureTarget.Texture2D, 0, InternalFormat.Rgb, (uint)framebufferSize.X, (uint)framebufferSize.Y, 0, PixelFormat.Rgb, PixelType.UnsignedByte, null);
-		Gl.TexParameterI(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)GLEnum.Linear);
-		Gl.TexParameterI(TextureTarget.Texture2D, GLEnum.TextureMagFilter, (int)GLEnum.Linear);
-		Gl.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0, TextureTarget.Texture2D, _framebufferTextureId, 0);
-
-		uint rbo = Gl.GenRenderbuffer();
-		Gl.BindRenderbuffer(RenderbufferTarget.Renderbuffer, rbo);
-
-		Gl.RenderbufferStorage(RenderbufferTarget.Renderbuffer, InternalFormat.DepthComponent24, (uint)framebufferSize.X, (uint)framebufferSize.Y);
-		Gl.FramebufferRenderbuffer(FramebufferTarget.Framebuffer, FramebufferAttachment.DepthAttachment, RenderbufferTarget.Renderbuffer, rbo);
-
-		if (Gl.CheckFramebufferStatus(FramebufferTarget.Framebuffer) != GLEnum.FramebufferComplete)
-			DebugState.AddWarning("Framebuffer is not complete");
-
-		Gl.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
-		Gl.DeleteRenderbuffer(rbo);
-
-		_cachedFramebufferSize = framebufferSize;
-	}
 
 	public static void Render(Vector2 size)
 	{
 		Vector2 framebufferSize = size - new Vector2(0, 32);
 
-		Initialize(framebufferSize);
+		SceneFramebuffer.Initialize(framebufferSize);
+		Camera3d.AspectRatio = framebufferSize.X / framebufferSize.Y;
+
 		if (ImGui.BeginChild("Level Editor", size, true))
 		{
 			ImGui.SeparatorText("Level Editor");
 
-			Camera3d.AspectRatio = framebufferSize.X / framebufferSize.Y;
 			Vector2 cursorScreenPos = ImGui.GetCursorScreenPos();
-			RenderFramebuffer(framebufferSize);
+			SceneFramebuffer.RenderFramebuffer(framebufferSize);
 
 			ImDrawListPtr drawList = ImGui.GetWindowDrawList();
-			drawList.AddImage((IntPtr)_framebufferTextureId, cursorScreenPos, cursorScreenPos + framebufferSize, Vector2.UnitY, Vector2.UnitX);
+			drawList.AddImage((IntPtr)SceneFramebuffer.FramebufferTextureId, cursorScreenPos, cursorScreenPos + framebufferSize, Vector2.UnitY, Vector2.UnitX);
 
 			Vector2 cursorPosition = ImGui.GetCursorPos();
 
-			ImGui.PushItemWidth(160);
-			ImGui.SliderInt("Grid Snap", ref _gridSnapIndex, 0, _gridSnapPoints.Length - 1, Inline.Span(GridSnap));
-			ImGui.InputFloat("Height", ref LevelEditorState.TargetHeight, 0.25f, 1, "%.2f");
-			ImGui.SliderInt("Cells per side", ref LevelEditorState.GridCellCount, 1, 64);
-			ImGui.SliderInt("Cell size", ref LevelEditorState.GridCellSize, 1, 4);
-			ImGui.PopItemWidth();
+			ImGui.PushStyleColor(ImGuiCol.ChildBg, new Vector4(0, 0, 0, 0.2f));
+			if (ImGui.BeginChild("Level Editor Menu", new(360, 360), true))
+			{
+				ImGui.SeparatorText("Level Editor Menu");
+
+				ImGui.PushItemWidth(160);
+				ImGui.SliderInt("Grid Snap", ref _gridSnapIndex, 0, _gridSnapPoints.Length - 1, Inline.Span(GridSnap));
+				ImGui.InputFloat("Height", ref LevelEditorState.TargetHeight, 0.25f, 1, "%.2f");
+				ImGui.SliderInt("Cells per side", ref LevelEditorState.GridCellCount, 1, 64);
+				ImGui.SliderInt("Cell size", ref LevelEditorState.GridCellSize, 1, 4);
+				ImGui.PopItemWidth();
+			}
+
+			ImGui.EndChild(); // End Level Editor Menu
+			ImGui.PopStyleColor();
 
 			ImGui.SetCursorPos(cursorPosition);
 			ImGui.InvisibleButton("3d_view", framebufferSize);
@@ -182,27 +150,5 @@ public static class LevelEditorWindow
 				}
 			}
 		}
-	}
-
-	private static unsafe void RenderFramebuffer(Vector2 size)
-	{
-		Gl.BindFramebuffer(FramebufferTarget.Framebuffer, _framebufferId);
-
-		// Keep track of the original viewport so we can restore it later.
-		Span<int> originalViewport = stackalloc int[4];
-		Gl.GetInteger(GLEnum.Viewport, originalViewport);
-		Gl.Viewport(0, 0, (uint)size.X, (uint)size.Y);
-
-		Gl.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-
-		Gl.Enable(EnableCap.DepthTest);
-		Gl.Enable(EnableCap.Blend);
-		Gl.Enable(EnableCap.CullFace);
-		Gl.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
-
-		SceneRenderer.RenderScene();
-
-		Gl.Viewport(originalViewport[0], originalViewport[1], (uint)originalViewport[2], (uint)originalViewport[3]);
-		Gl.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
 	}
 }
