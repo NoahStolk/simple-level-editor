@@ -386,6 +386,13 @@ public static class LevelEditorWindow
 		if (mesh == null)
 			return;
 
+		// Show mesh preview using default texture.
+		uint? textureId = TextureContainer.GetTexture(string.Empty);
+		if (textureId == null)
+			return;
+
+		Gl.BindTexture(TextureTarget.Texture2D, textureId.Value);
+
 		int modelUniform = meshShader.GetUniformLocation("model");
 		ShaderUniformUtils.Set(modelUniform, Matrix4x4.CreateTranslation(_targetPosition));
 		Gl.BindVertexArray(mesh.Vao);

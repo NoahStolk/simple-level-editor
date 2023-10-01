@@ -1,2 +1,20 @@
-- Drag mesh to move it
+HIGH PRIORITY
+- Use different editor modes
+	- Add world object
+	- Edit world object
+- Control rotation and scale in level editor when creating objects
+	- Rotation
+		- Hold R
+		- Grab handle and drag around axis
+	- Scale
+		- Hold S
+		- Grab handle and drag around axis
+
+MEDIUM PRIORITY
+- When selected, drag mesh to move it
+	- Apply for rotation and scale as well
+- Multiple selection
+	- Hold shift to select multiple meshes
+
+BACKLOG
 - List meshes in object creator as selectable tiles

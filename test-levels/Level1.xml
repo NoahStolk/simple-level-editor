@@ -33,7 +33,8 @@
     <WorldObject Mesh="mesh\Base.obj" Texture="tex\BricksGreen.tga" BoundingMesh="" Position="-7 0 -2" Rotation="0 0 0" Scale="1 1 1" Values="None" />
     <WorldObject Mesh="mesh\Base.obj" Texture="tex\BricksGreen.tga" BoundingMesh="" Position="-7 0 -0" Rotation="0 0 0" Scale="1 1 1" Values="None" />
     <WorldObject Mesh="mesh\Base.obj" Texture="tex\BricksGreen.tga" BoundingMesh="" Position="-9 0 0" Rotation="0 0 0" Scale="1 1 1" Values="None" />
-    <WorldObject Mesh="mesh\Plane.obj" Texture="tex\TilesGray.tga" BoundingMesh="" Position="-12 -0.5 0" Rotation="0 -90 0" Scale="20 20 1" Values="None" />
+    <WorldObject Mesh="mesh\Plane.obj" Texture="tex\TilesGray.tga" BoundingMesh="" Position="-12 0 0" Rotation="0 -90 0" Scale="20 20 1" Values="None" />
+    <WorldObject Mesh="mesh\Relic.obj" Texture="" BoundingMesh="" Position="1 0 4" Rotation="0 0 0" Scale="1 1 1" Values="None" />
   </WorldObjects>
   <Entities />
 </Level>
