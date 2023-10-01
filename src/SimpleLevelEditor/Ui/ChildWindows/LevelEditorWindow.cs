@@ -50,6 +50,7 @@ public static class LevelEditorWindow
 	private static uint _textureHandle;
 	private static uint _framebuffer;
 
+	private static float _targetHeight;
 	private static float _gridSnap = 1;
 	private static Vector3 _targetPosition;
 	private static WorldObject? _highlightedObject;
@@ -118,7 +119,9 @@ public static class LevelEditorWindow
 					_gridSnap = _snapPoints[i];
 			}
 
-			ImGui.Text(Inline.Span(Camera3d.Position, "0.00"));
+			ImGui.PushItemWidth(160);
+			ImGui.InputFloat("Height", ref _targetHeight, 0.25f, 5, "%.2f");
+			ImGui.PopItemWidth();
 
 			ImGui.SetCursorPos(cursorPosition);
 			ImGui.InvisibleButton("3d_view", framebufferSize);
@@ -163,11 +166,10 @@ public static class LevelEditorWindow
 
 	private static void CalculateTargetPosition(Vector2 normalizedMousePosition)
 	{
-		_targetPosition = Camera3d.GetMouseWorldPosition(normalizedMousePosition, new(Vector3.UnitY, 0f));
+		_targetPosition = Camera3d.GetMouseWorldPosition(normalizedMousePosition, new(Vector3.UnitY, -_targetHeight));
 		if (_gridSnap > 0)
 		{
 			_targetPosition.X = MathF.Round(_targetPosition.X / _gridSnap) * _gridSnap;
-			_targetPosition.Y = MathF.Round(_targetPosition.Y / _gridSnap) * _gridSnap;
 			_targetPosition.Z = MathF.Round(_targetPosition.Z / _gridSnap) * _gridSnap;
 		}
 	}
@@ -297,17 +299,16 @@ public static class LevelEditorWindow
 
 		const int min = -32;
 		const int max = 32;
-		const float height = 0;
 		Vector3 scale = new(1, 1, max - min);
 		Matrix4x4 scaleMat = Matrix4x4.CreateScale(scale);
 		for (int i = min; i <= max; i++)
 		{
 			Vector3 offset = new(MathF.Round(Camera3d.Position.X), 0, MathF.Round(Camera3d.Position.Z));
 
-			ShaderUniformUtils.Set(modelUniform, scaleMat * Matrix4x4.CreateTranslation(new Vector3(i, height, min) + offset));
+			ShaderUniformUtils.Set(modelUniform, scaleMat * Matrix4x4.CreateTranslation(new Vector3(i, _targetHeight, min) + offset));
 			Gl.DrawArrays(PrimitiveType.Lines, 0, 6);
 
-			ShaderUniformUtils.Set(modelUniform, scaleMat * Matrix4x4.CreateFromAxisAngle(Vector3.UnitY, MathF.PI / 2) * Matrix4x4.CreateTranslation(new Vector3(min, height, i) + offset));
+			ShaderUniformUtils.Set(modelUniform, scaleMat * Matrix4x4.CreateFromAxisAngle(Vector3.UnitY, MathF.PI / 2) * Matrix4x4.CreateTranslation(new Vector3(min, _targetHeight, i) + offset));
 			Gl.DrawArrays(PrimitiveType.Lines, 0, 6);
 		}
 
