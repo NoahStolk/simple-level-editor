@@ -80,7 +80,6 @@ public static class Graphics
 		if (Window == (WindowHandle*)0)
 			throw new InvalidOperationException("Could not create window.");
 
-		_glfw.SetKeyCallback(Window, (_, keys, _, state, _) => Input.KeyCallback(keys, state));
 		_glfw.SetMouseButtonCallback(Window, (_, button, state, _) => Input.ButtonCallback(button, state));
 		_glfw.SetScrollCallback(Window, (_, _, y) => Input.MouseWheelCallback(y));
 		_glfw.SetFramebufferSizeCallback(Window, (_, w, h) => SetWindowSize(w, h));

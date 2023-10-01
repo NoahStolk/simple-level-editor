@@ -26,13 +26,13 @@ public sealed class App
 
 		Graphics.Glfw.SetKeyCallback(Graphics.Window, (_, keys, _, state, _) =>
 		{
-			// We overwrite the key callback, so we need to call this method again.
 			Input.KeyCallback(keys, state);
 			imGuiController.PressKey(keys, state);
 		});
 	}
 
 	public int Fps { get; private set; }
+	public float FrameTime => (float)_frameTime;
 
 	public static App Instance
 	{

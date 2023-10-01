@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 
 namespace SimpleLevelEditor;
 
-public class ImGuiController
+public sealed class ImGuiController
 {
 	private static readonly IReadOnlyList<Keys> _allKeys = (Keys[])Enum.GetValues(typeof(Keys));
 	private static readonly IEnumerable<Keys> _controlKeys = new List<Keys>
@@ -38,8 +38,6 @@ public class ImGuiController
 	private int _windowHeight;
 	private readonly Action<Matrix4x4> _useShader;
 
-	private bool _frameBegun;
-
 	private readonly IntPtr _context;
 
 	public ImGuiController(int windowWidth, int windowHeight, Action<Matrix4x4> useShader)
@@ -60,14 +58,10 @@ public class ImGuiController
 
 		RecreateFontDeviceTexture();
 		SetKeyMappings();
-
-		SetPerFrameImGuiData(1f / 60f);
-		BeginFrame();
 	}
 
-	/// <summary>
-	/// Creates the texture used to render text.
-	/// </summary>
+	#region Initialization
+
 	private static void RecreateFontDeviceTexture()
 	{
 		// Build texture atlas
@@ -90,14 +84,13 @@ public class ImGuiController
 
 		GlUtils.TexImageRgba2D((uint)width, (uint)height, data);
 
-		// Store our identifier
 		io.Fonts.SetTexID((IntPtr)textureId);
 	}
 
 	private static void SetKeyMappings()
 	{
 		ImGuiIOPtr io = ImGui.GetIO();
-		io.KeyRepeatRate = 1f / 120f;
+		io.KeyRepeatRate = 1f / 30f;
 		io.KeyRepeatDelay = 0.05f;
 		io.KeyMap[(int)ImGuiKey.Tab] = (int)Keys.Tab;
 		io.KeyMap[(int)ImGuiKey.LeftArrow] = (int)Keys.Left;
@@ -123,9 +116,8 @@ public class ImGuiController
 		}
 	}
 
-	/// <summary>
-	/// Frees all graphics resources used by the renderer.
-	/// </summary>
+	#endregion Initialization
+
 	public void Destroy()
 	{
 		Graphics.Gl.DeleteBuffer(_vbo);
@@ -133,12 +125,6 @@ public class ImGuiController
 		Graphics.Gl.DeleteVertexArray(_vao);
 
 		ImGui.DestroyContext(_context);
-	}
-
-	private void BeginFrame()
-	{
-		ImGui.NewFrame();
-		_frameBegun = true;
 	}
 
 	public void WindowResized(int width, int height)
@@ -149,47 +135,34 @@ public class ImGuiController
 
 	public void Render()
 	{
-		if (!_frameBegun)
-			return;
-
-		_frameBegun = false;
 		ImGui.Render();
 		RenderImDrawData(ImGui.GetDrawData());
 	}
 
-	/// <summary>
-	/// Updates ImGui input and IO configuration state.
-	/// </summary>
 	public void Update(float deltaSeconds)
-	{
-		if (_frameBegun)
-			ImGui.Render();
-
-		SetPerFrameImGuiData(deltaSeconds);
-		UpdateImGuiInput();
-
-		_frameBegun = true;
-		ImGui.NewFrame();
-	}
-
-	private void SetPerFrameImGuiData(float deltaSeconds)
 	{
 		ImGuiIOPtr io = ImGui.GetIO();
 		io.DisplaySize = new(_windowWidth, _windowHeight);
 		io.DisplayFramebufferScale = Vector2.One;
 		io.DeltaTime = deltaSeconds;
+		UpdateMouse(io);
+		UpdateKeyboard(io);
+
+		ImGui.NewFrame();
 	}
 
-	private void UpdateImGuiInput()
+	private void UpdateMouse(ImGuiIOPtr io)
 	{
-		ImGuiIOPtr io = ImGui.GetIO();
+		io.MousePos = Input.GetMousePosition();
+		io.MouseWheel = Input.GetScroll();
 
 		io.MouseDown[0] = Input.IsButtonHeld(MouseButton.Left);
 		io.MouseDown[1] = Input.IsButtonHeld(MouseButton.Right);
 		io.MouseDown[2] = Input.IsButtonHeld(MouseButton.Middle);
-		io.MousePos = Input.GetMousePosition();
-		io.MouseWheel = Input.GetScroll();
+	}
 
+	private void UpdateKeyboard(ImGuiIOPtr io)
+	{
 		for (int i = 0; i < _allKeys.Count; i++)
 		{
 			Keys key = _allKeys[i];
@@ -235,6 +208,8 @@ public class ImGuiController
 				_pressedChars.Add(c.Value);
 		}
 	}
+
+	#region Rendering
 
 	private unsafe void SetUpRenderState(ImDrawDataPtr drawDataPtr)
 	{
@@ -333,4 +308,6 @@ public class ImGuiController
 		// Restore scissors
 		Graphics.Gl.Disable(EnableCap.ScissorTest);
 	}
+
+	#endregion Rendering
 }

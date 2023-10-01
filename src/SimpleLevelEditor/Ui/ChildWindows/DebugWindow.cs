@@ -14,6 +14,7 @@ public static class DebugWindow
 			ImGui.SeparatorText("Debug");
 
 			ImGui.Text(Inline.Span($"{App.Instance.Fps} FPS"));
+			ImGui.Text(Inline.Span($"Frame time: {App.Instance.FrameTime:0.0000} s"));
 
 			ImGui.SetNextItemOpen(true);
 			if (ImGui.CollapsingHeader("Allocations"))
