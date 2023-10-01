@@ -12,15 +12,12 @@ public static class LevelAssetsWindow
 	{
 		if (ImGui.BeginChild("Level Assets", size, true))
 		{
-			ImGui.BeginDisabled(LevelState.LevelFilePath == null);
-
 			ImGui.SeparatorText("Level Assets");
 
 			float height = MathF.Floor(size.Y / 2f - 40f) - 1;
+
 			RenderAssetPaths(height, "Meshes", "obj", l => l.Meshes, (l, d) => l.Meshes = d);
 			RenderAssetPaths(height, "Textures", "tga", l => l.Textures, (l, d) => l.Textures = d);
-
-			ImGui.EndDisabled();
 		}
 
 		ImGui.EndChild(); // End Add New
@@ -30,6 +27,7 @@ public static class LevelAssetsWindow
 	{
 		List<string> list = selector(LevelState.Level);
 
+		ImGui.BeginDisabled(LevelState.LevelFilePath == null);
 		if (ImGui.Button(Inline.Span($"Add {name}")))
 		{
 			Debug.Assert(LevelState.LevelFilePath != null, "Cannot click this button because it should be disabled.");
@@ -47,6 +45,17 @@ public static class LevelAssetsWindow
 			}
 		}
 
+		ImGui.EndDisabled();
+
+		if (LevelState.LevelFilePath == null)
+		{
+			ImGui.SameLine();
+			ImGui.Text("(?)");
+			if (ImGui.IsItemHovered())
+				ImGui.SetTooltip("You must save the level before you can add assets.");
+		}
+
+		ImGui.BeginDisabled(LevelState.LevelFilePath == null);
 		if (ImGui.BeginChild(Inline.Span($"{name}List"), new(0, windowHeight), true))
 		{
 			string? toRemove = null;
@@ -67,5 +76,6 @@ public static class LevelAssetsWindow
 		}
 
 		ImGui.EndChild();
+		ImGui.EndDisabled();
 	}
 }

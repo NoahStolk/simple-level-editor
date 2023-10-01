@@ -18,7 +18,7 @@ public static class LevelState
 	public static void New()
 	{
 		Level3dData level = Level3dData.Default.DeepCopy();
-		SetLevel(string.Empty, level);
+		SetLevel(null, level);
 	}
 
 	public static void Load()
@@ -62,7 +62,7 @@ public static class LevelState
 		SetLevel(path, Level);
 	}
 
-	private static void SetLevel(string levelFilePath, Level3dData level)
+	private static void SetLevel(string? levelFilePath, Level3dData level)
 	{
 		LevelFilePath = levelFilePath;
 		Level = level;

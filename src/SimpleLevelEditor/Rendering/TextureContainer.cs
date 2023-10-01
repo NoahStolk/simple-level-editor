@@ -19,7 +19,7 @@ public static class TextureContainer
 		return null;
 	}
 
-	public static void Rebuild(string levelFilePath)
+	public static void Rebuild(string? levelFilePath)
 	{
 		_textures.Clear();
 
