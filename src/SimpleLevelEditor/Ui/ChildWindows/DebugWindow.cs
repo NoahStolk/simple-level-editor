@@ -16,31 +16,31 @@ public static class DebugWindow
 			ImGui.Text(Inline.Span($"{App.Instance.Fps} FPS"));
 			ImGui.Text(Inline.Span($"Frame time: {App.Instance.FrameTime:0.0000} s"));
 
-			ImGui.SetNextItemOpen(true);
-			if (ImGui.CollapsingHeader("Allocations"))
+			ImGui.SeparatorText("Allocations");
+
+			long allocatedBytes = GC.GetAllocatedBytesForCurrentThread();
+			ImGui.Text(Inline.Span($"Allocated: {allocatedBytes:N0} bytes"));
+			ImGui.Text(Inline.Span($"Since last update: {allocatedBytes - _previousAllocatedBytes:N0} bytes"));
+			_previousAllocatedBytes = allocatedBytes;
+
+			for (int i = 0; i < GC.MaxGeneration + 1; i++)
+				ImGui.Text(Inline.Span($"Gen{i}: {GC.CollectionCount(i)} times"));
+
+			ImGui.Text(Inline.Span($"Total memory: {GC.GetTotalMemory(false):N0} bytes"));
+			ImGui.Text(Inline.Span($"Total pause duration: {GC.GetTotalPauseDuration().TotalSeconds:0.000} s"));
+
+			ImGui.SeparatorText("Warnings");
+
+			ImGui.BeginDisabled(DebugState.Warnings.Count == 0);
+			if (ImGui.Button("Clear"))
+				DebugState.ClearWarnings();
+
+			ImGui.EndDisabled();
+
+			if (DebugState.Warnings.Count > 0)
 			{
-				long allocatedBytes = GC.GetAllocatedBytesForCurrentThread();
-				ImGui.Text(Inline.Span($"Allocated: {allocatedBytes:N0} bytes"));
-				ImGui.Text(Inline.Span($"Since last update: {allocatedBytes - _previousAllocatedBytes:N0} bytes"));
-				_previousAllocatedBytes = allocatedBytes;
-
-				for (int i = 0; i < GC.MaxGeneration + 1; i++)
-					ImGui.Text(Inline.Span($"Gen{i}: {GC.CollectionCount(i)} times"));
-
-				ImGui.Text(Inline.Span($"Total memory: {GC.GetTotalMemory(false):N0} bytes"));
-				ImGui.Text(Inline.Span($"Total pause duration: {GC.GetTotalPauseDuration().TotalSeconds:0.000} s"));
-			}
-
-			if (ImGui.CollapsingHeader("Debug stack"))
-			{
-				if (ImGui.Button("Clear"))
-					DebugState.ClearWarnings();
-
-				if (DebugState.Warnings.Count > 0)
-				{
-					foreach (KeyValuePair<string, int> kvp in DebugState.Warnings)
-						ImGui.Text(Inline.Span($"{kvp.Key}: {kvp.Value}"));
-				}
+				foreach (KeyValuePair<string, int> kvp in DebugState.Warnings)
+					ImGui.Text(Inline.Span($"{kvp.Key}: {kvp.Value}"));
 			}
 		}
 
