@@ -70,21 +70,41 @@ public static class SceneRenderer
 		int lineColorUniform = lineShader.GetUniformLocation("color");
 
 		Gl.BindVertexArray(_lineVao);
+
+		Matrix4x4 scaleMatrix = Matrix4x4.CreateScale(1, 1, 256);
+
 		Gl.LineWidth(4);
 
 		// X axis
-		ShaderUniformUtils.Set(lineModelUniform, Matrix4x4.CreateFromAxisAngle(Vector3.UnitY, MathF.PI / 2));
+		ShaderUniformUtils.Set(lineModelUniform, scaleMatrix * Matrix4x4.CreateFromAxisAngle(Vector3.UnitY, MathF.PI / 2));
 		ShaderUniformUtils.Set(lineColorUniform, new Vector4(1, 0, 0, 1));
 		Gl.DrawArrays(PrimitiveType.Lines, 0, 6);
 
 		// Y axis
-		ShaderUniformUtils.Set(lineModelUniform, Matrix4x4.CreateFromAxisAngle(Vector3.UnitX, MathF.PI * 1.5f));
+		ShaderUniformUtils.Set(lineModelUniform, scaleMatrix * Matrix4x4.CreateFromAxisAngle(Vector3.UnitX, MathF.PI * 1.5f));
 		ShaderUniformUtils.Set(lineColorUniform, new Vector4(0, 1, 0, 1));
 		Gl.DrawArrays(PrimitiveType.Lines, 0, 6);
 
 		// Z axis
-		ShaderUniformUtils.Set(lineModelUniform, Matrix4x4.Identity);
+		ShaderUniformUtils.Set(lineModelUniform, scaleMatrix);
 		ShaderUniformUtils.Set(lineColorUniform, new Vector4(0, 0, 1, 1));
+		Gl.DrawArrays(PrimitiveType.Lines, 0, 6);
+
+		Gl.LineWidth(2);
+
+		// X axis (negative)
+		ShaderUniformUtils.Set(lineModelUniform, scaleMatrix * Matrix4x4.CreateFromAxisAngle(Vector3.UnitY, -MathF.PI / 2));
+		ShaderUniformUtils.Set(lineColorUniform, new Vector4(1, 0, 0, 0.5f));
+		Gl.DrawArrays(PrimitiveType.Lines, 0, 6);
+
+		// Y axis (negative)
+		ShaderUniformUtils.Set(lineModelUniform, scaleMatrix * Matrix4x4.CreateFromAxisAngle(Vector3.UnitX, MathF.PI / 2));
+		ShaderUniformUtils.Set(lineColorUniform, new Vector4(0, 1, 0, 0.5f));
+		Gl.DrawArrays(PrimitiveType.Lines, 0, 6);
+
+		// Z axis (negative)
+		ShaderUniformUtils.Set(lineModelUniform, scaleMatrix * Matrix4x4.CreateFromAxisAngle(Vector3.UnitY, MathF.PI));
+		ShaderUniformUtils.Set(lineColorUniform, new Vector4(0, 0, 1, 0.5f));
 		Gl.DrawArrays(PrimitiveType.Lines, 0, 6);
 	}
 
@@ -93,7 +113,7 @@ public static class SceneRenderer
 		int lineModelUniform = lineShader.GetUniformLocation("model");
 		int lineColorUniform = lineShader.GetUniformLocation("color");
 
-		ShaderUniformUtils.Set(lineColorUniform, new Vector4(0.8f, 0.8f, 0.8f, 1));
+		ShaderUniformUtils.Set(lineColorUniform, new Vector4(0.5f, 0.5f, 0.5f, 1));
 		Gl.LineWidth(1);
 
 		int min = -LevelEditorState.GridCellCount;
@@ -106,11 +126,18 @@ public static class SceneRenderer
 
 		for (int i = min; i <= max; i++)
 		{
-			ShaderUniformUtils.Set(lineModelUniform, scaleMat * Matrix4x4.CreateTranslation(new Vector3(i * LevelEditorState.GridCellSize, LevelEditorState.TargetHeight, min * LevelEditorState.GridCellSize) + offset));
-			Gl.DrawArrays(PrimitiveType.Lines, 0, 6);
+			// Prevent rendering grid lines on top of origin lines (Z-fighting).
+			if (LevelEditorState.TargetHeight != 0 || i * LevelEditorState.GridCellSize + offset.X != 0)
+			{
+				ShaderUniformUtils.Set(lineModelUniform, scaleMat * Matrix4x4.CreateTranslation(new Vector3(i * LevelEditorState.GridCellSize, LevelEditorState.TargetHeight, min * LevelEditorState.GridCellSize) + offset));
+				Gl.DrawArrays(PrimitiveType.Lines, 0, 6);
+			}
 
-			ShaderUniformUtils.Set(lineModelUniform, scaleMat * Matrix4x4.CreateFromAxisAngle(Vector3.UnitY, MathF.PI / 2) * Matrix4x4.CreateTranslation(new Vector3(min * LevelEditorState.GridCellSize, LevelEditorState.TargetHeight, i * LevelEditorState.GridCellSize) + offset));
-			Gl.DrawArrays(PrimitiveType.Lines, 0, 6);
+			if (LevelEditorState.TargetHeight != 0 || i * LevelEditorState.GridCellSize + offset.Z != 0)
+			{
+				ShaderUniformUtils.Set(lineModelUniform, scaleMat * Matrix4x4.CreateFromAxisAngle(Vector3.UnitY, MathF.PI / 2) * Matrix4x4.CreateTranslation(new Vector3(min * LevelEditorState.GridCellSize, LevelEditorState.TargetHeight, i * LevelEditorState.GridCellSize) + offset));
+				Gl.DrawArrays(PrimitiveType.Lines, 0, 6);
+			}
 		}
 	}
 
