@@ -1,6 +1,7 @@
 using ImGuiNET;
 using SimpleLevelEditor.Model.Enums;
 using SimpleLevelEditor.State;
+using SimpleLevelEditor.Ui.Components;
 using SimpleLevelEditor.Utils;
 
 namespace SimpleLevelEditor.Ui.ChildWindows;
@@ -69,26 +70,14 @@ public static class ObjectEditorWindow
 				ImGui.SeparatorText("Mesh");
 
 				if (ImGui.BeginChild("Mesh", new(0, 256), true))
-				{
-					foreach (string item in LevelState.Level.Meshes)
-					{
-						if (ImGui.Button(item))
-							ObjectEditorState.SelectedWorldObject.Mesh = item;
-					}
-				}
+					AssetTiles.Render(LevelState.Level.Meshes, ObjectEditorState.SelectedWorldObject.Mesh, s => ObjectEditorState.SelectedWorldObject.Mesh = s, new(160), size);
 
 				ImGui.EndChild(); // End Mesh
 
 				ImGui.SeparatorText("Texture");
 
 				if (ImGui.BeginChild("Texture", new(0, 256), true))
-				{
-					foreach (string item in LevelState.Level.Textures)
-					{
-						if (ImGui.Button(item))
-							ObjectEditorState.SelectedWorldObject.Texture = item;
-					}
-				}
+					AssetTiles.Render(LevelState.Level.Textures, ObjectEditorState.SelectedWorldObject.Texture, s => ObjectEditorState.SelectedWorldObject.Texture = s, new(160), size);
 
 				ImGui.EndChild(); // End Texture
 

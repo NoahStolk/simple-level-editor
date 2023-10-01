@@ -1,11 +1,6 @@
 using ImGuiNET;
-using NativeFileDialogSharp;
-using SimpleLevelEditor.Formats;
-using SimpleLevelEditor.Model;
 using SimpleLevelEditor.State;
 using SimpleLevelEditor.Ui.ChildWindows;
-using System.Text;
-using System.Xml;
 
 namespace SimpleLevelEditor.Ui;
 
@@ -68,10 +63,8 @@ public static class MainWindow
 
 			const int leftWidth = 256;
 			const int rightWidth = 512;
-			float middleWidth = viewportSize.X - leftWidth - rightWidth;
-
 			const int bottomHeight = 448;
-			float levelEditorHeight = viewportSize.Y - bottomHeight;
+			float middleWidth = viewportSize.X - leftWidth - rightWidth;
 
 			if (ImGui.BeginChild("Left", new(leftWidth, 0)))
 			{
@@ -88,8 +81,7 @@ public static class MainWindow
 
 			if (ImGui.BeginChild("Middle", new(middleWidth, 0)))
 			{
-				LevelEditorWindow.Render(new(middleWidth, levelEditorHeight));
-				ObjectCreatorWindow.Render(new(middleWidth, 0));
+				LevelEditorWindow.Render(new(middleWidth, viewportSize.Y - 28));
 			}
 
 			ImGui.EndChild(); // End Middle
@@ -98,7 +90,16 @@ public static class MainWindow
 
 			if (ImGui.BeginChild("Right", new(0, 0)))
 			{
-				ObjectEditorWindow.Render(new(0, 0));
+				const int padding = 4; // TODO: Get from ImGui style.
+				switch (LevelEditorState.Mode)
+				{
+					case LevelEditorMode.AddWorldObjects:
+						ObjectCreatorWindow.Render(new(rightWidth - padding * 4, 0));
+						break;
+					case LevelEditorMode.EditWorldObjects:
+						ObjectEditorWindow.Render(new(rightWidth - padding * 4, 0));
+						break;
+				}
 			}
 
 			ImGui.EndChild(); // End Right

@@ -1,11 +1,13 @@
 HIGH PRIORITY
-- Control rotation and scale in level editor when creating objects
+- Control world object data in level editor when creating objects
 	- Rotation
 		- Hold R
 		- Grab handle and drag around axis
 	- Scale
 		- Hold S
 		- Grab handle and drag around axis
+	- Texture
+	- Flags
 
 MEDIUM PRIORITY
 - When selected, drag mesh to move it

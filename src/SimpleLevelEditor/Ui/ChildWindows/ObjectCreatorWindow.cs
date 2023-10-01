@@ -1,5 +1,6 @@
 using ImGuiNET;
 using SimpleLevelEditor.State;
+using SimpleLevelEditor.Ui.Components;
 
 namespace SimpleLevelEditor.Ui.ChildWindows;
 
@@ -17,17 +18,7 @@ public static class ObjectCreatorWindow
 				{
 					ImGui.SeparatorText("World Object");
 
-					Vector2 tileSize = new(160);
-					int rowLength = (int)MathF.Floor(size.X / tileSize.X);
-					for (int i = 0; i < LevelState.Level.Meshes.Count; i++)
-					{
-						if (i % rowLength != 0)
-							ImGui.SameLine();
-
-						string meshName = LevelState.Level.Meshes[i];
-						if (ImGui.Selectable(meshName, ObjectCreatorState.SelectedMeshName == meshName, ImGuiSelectableFlags.None, tileSize))
-							ObjectCreatorState.SelectedMeshName = meshName;
-					}
+					AssetTiles.Render(LevelState.Level.Meshes, ObjectCreatorState.SelectedMeshName, s => ObjectCreatorState.SelectedMeshName = s, new(160), size);
 
 					ImGui.EndTabItem();
 				}
