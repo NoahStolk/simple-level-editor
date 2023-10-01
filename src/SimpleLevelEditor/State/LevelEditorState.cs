@@ -10,6 +10,7 @@ public static class LevelEditorState
 	public static int GridCellSize = 1;
 	public static Vector3 TargetPosition;
 	public static WorldObject? HighlightedObject;
+	public static LevelEditorMode Mode = LevelEditorMode.AddWorldObjects;
 }
 
 #pragma warning restore CA2211, SA1401, S2223, S1104 // Public fields

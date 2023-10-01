@@ -36,19 +36,47 @@ public static class LevelEditorWindow
 			Vector2 cursorPosition = ImGui.GetCursorPos();
 
 			ImGui.PushStyleColor(ImGuiCol.ChildBg, new Vector4(0, 0, 0, 0.2f));
-			if (ImGui.BeginChild("Level Editor Menu", new(360, 360), true))
+			if (ImGui.BeginChild("Level Editor Menu", new(280, 160), true))
 			{
-				ImGui.SeparatorText("Level Editor Menu");
+				const int itemWidth = 160;
 
-				ImGui.PushItemWidth(160);
+				ImGui.SeparatorText("Grid");
+
+				ImGui.PushItemWidth(itemWidth);
 				ImGui.SliderInt("Grid Snap", ref _gridSnapIndex, 0, _gridSnapPoints.Length - 1, Inline.Span(GridSnap));
-				ImGui.InputFloat("Height", ref LevelEditorState.TargetHeight, 0.25f, 1, "%.2f");
 				ImGui.SliderInt("Cells per side", ref LevelEditorState.GridCellCount, 1, 64);
 				ImGui.SliderInt("Cell size", ref LevelEditorState.GridCellSize, 1, 4);
+				ImGui.PopItemWidth();
+
+				ImGui.SeparatorText("Height");
+
+				ImGui.PushItemWidth(itemWidth);
+				ImGui.InputFloat("Height", ref LevelEditorState.TargetHeight, 0.25f, 1, "%.2f");
 				ImGui.PopItemWidth();
 			}
 
 			ImGui.EndChild(); // End Level Editor Menu
+
+			if (ImGui.BeginChild("Mode", new(32, 96), true))
+			{
+				for (int i = 0; i < EnumUtils.LevelEditorModeArray.Count; i++)
+				{
+					LevelEditorMode mode = EnumUtils.LevelEditorModeArray[i];
+					ImGui.PushStyleColor(ImGuiCol.Button, mode == LevelEditorState.Mode ? new Vector4(0.5f, 0.2f, 0.2f, 1) : new(0.1f, 0.1f, 0.1f, 1));
+
+					// TODO: Use images instead of a single letter.
+					if (ImGui.Button(Inline.Span(EnumUtils.LevelEditorModeNames[mode][0]), new(24)))
+						LevelEditorState.Mode = mode;
+
+					if (ImGui.IsItemHovered(ImGuiHoveredFlags.DelayNone))
+						ImGui.SetTooltip(EnumUtils.LevelEditorModeNames[mode]);
+
+					ImGui.PopStyleColor();
+				}
+			}
+
+			ImGui.EndChild(); // End Mode
+
 			ImGui.PopStyleColor();
 
 			ImGui.SetCursorPos(cursorPosition);
@@ -70,25 +98,32 @@ public static class LevelEditorWindow
 
 	private static void OnLeftClick()
 	{
-		if (LevelEditorState.HighlightedObject != null)
+		switch (LevelEditorState.Mode)
 		{
-			ObjectEditorState.SelectedWorldObject = ObjectEditorState.SelectedWorldObject == LevelEditorState.HighlightedObject ? null : LevelEditorState.HighlightedObject;
-			return;
-		}
+			case LevelEditorMode.AddWorldObjects:
+				if (ObjectCreatorState.SelectedMeshName != null && !LevelState.Level.WorldObjects.Exists(wo => wo.Position == LevelEditorState.TargetPosition))
+				{
+					WorldObject worldObject = new()
+					{
+						Position = LevelEditorState.TargetPosition,
+						Mesh = ObjectCreatorState.SelectedMeshName,
+						Texture = string.Empty,
+						Scale = new(1),
+						Rotation = new(0),
+						BoundingMesh = string.Empty,
+						Values = WorldObjectValues.None,
+					};
+					LevelState.Level.WorldObjects.Add(worldObject);
+				}
 
-		if (ObjectCreatorState.SelectedMeshName != null && !LevelState.Level.WorldObjects.Exists(wo => wo.Position == LevelEditorState.TargetPosition))
-		{
-			WorldObject worldObject = new()
-			{
-				Position = LevelEditorState.TargetPosition,
-				Mesh = ObjectCreatorState.SelectedMeshName,
-				Texture = string.Empty,
-				Scale = new(1),
-				Rotation = new(0),
-				BoundingMesh = string.Empty,
-				Values = WorldObjectValues.None,
-			};
-			LevelState.Level.WorldObjects.Add(worldObject);
+				break;
+			case LevelEditorMode.EditWorldObjects:
+				if (LevelEditorState.HighlightedObject != null)
+				{
+					ObjectEditorState.SelectedWorldObject = ObjectEditorState.SelectedWorldObject == LevelEditorState.HighlightedObject ? null : LevelEditorState.HighlightedObject;
+				}
+
+				break;
 		}
 	}
 
