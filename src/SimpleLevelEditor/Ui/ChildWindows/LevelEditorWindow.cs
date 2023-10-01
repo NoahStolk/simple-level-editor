@@ -54,6 +54,8 @@ public static class LevelEditorWindow
 	private static float _gridSnap = 1;
 	private static Vector3 _targetPosition;
 	private static WorldObject? _highlightedObject;
+	private static int _gridCellCount = 16;
+	private static int _gridCellSize = 1;
 
 	private static unsafe void Initialize(Vector2 size)
 	{
@@ -120,7 +122,9 @@ public static class LevelEditorWindow
 			}
 
 			ImGui.PushItemWidth(160);
-			ImGui.InputFloat("Height", ref _targetHeight, 0.25f, 5, "%.2f");
+			ImGui.InputFloat("Height", ref _targetHeight, 0.25f, 1, "%.2f");
+			ImGui.SliderInt("Cell per side", ref _gridCellCount, 1, 64);
+			ImGui.SliderInt("Cell size", ref _gridCellSize, 1, 4);
 			ImGui.PopItemWidth();
 
 			ImGui.SetCursorPos(cursorPosition);
@@ -297,18 +301,20 @@ public static class LevelEditorWindow
 		ShaderUniformUtils.Set(colorUniform, new Vector4(0.8f, 0.8f, 0.8f, 1));
 		Gl.LineWidth(1);
 
-		const int min = -32;
-		const int max = 32;
-		Vector3 scale = new(1, 1, max - min);
+		int min = -_gridCellCount;
+		int max = _gridCellCount;
+		Vector3 scale = new(1, 1, (max - min) * _gridCellSize);
 		Matrix4x4 scaleMat = Matrix4x4.CreateScale(scale);
+		Vector3 offset = new(MathF.Round(Camera3d.Position.X), 0, MathF.Round(Camera3d.Position.Z));
+		offset.X = MathF.Round(offset.X / _gridCellSize) * _gridCellSize;
+		offset.Z = MathF.Round(offset.Z / _gridCellSize) * _gridCellSize;
+
 		for (int i = min; i <= max; i++)
 		{
-			Vector3 offset = new(MathF.Round(Camera3d.Position.X), 0, MathF.Round(Camera3d.Position.Z));
-
-			ShaderUniformUtils.Set(modelUniform, scaleMat * Matrix4x4.CreateTranslation(new Vector3(i, _targetHeight, min) + offset));
+			ShaderUniformUtils.Set(modelUniform, scaleMat * Matrix4x4.CreateTranslation(new Vector3(i * _gridCellSize, _targetHeight, min * _gridCellSize) + offset));
 			Gl.DrawArrays(PrimitiveType.Lines, 0, 6);
 
-			ShaderUniformUtils.Set(modelUniform, scaleMat * Matrix4x4.CreateFromAxisAngle(Vector3.UnitY, MathF.PI / 2) * Matrix4x4.CreateTranslation(new Vector3(min, _targetHeight, i) + offset));
+			ShaderUniformUtils.Set(modelUniform, scaleMat * Matrix4x4.CreateFromAxisAngle(Vector3.UnitY, MathF.PI / 2) * Matrix4x4.CreateTranslation(new Vector3(min * _gridCellSize, _targetHeight, i * _gridCellSize) + offset));
 			Gl.DrawArrays(PrimitiveType.Lines, 0, 6);
 		}
 
