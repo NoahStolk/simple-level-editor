@@ -1,5 +1,4 @@
 using ImGuiNET;
-using SimpleLevelEditor.Extensions;
 
 namespace SimpleLevelEditor.Ui;
 
@@ -17,13 +16,13 @@ public static class ShortcutsWindow
 				ImGui.TableHeadersRow();
 
 				ImGui.TableNextRow();
-				foreach (KeyValuePair<string, Shortcut> shortcut in Shortcuts.ShortcutsDictionary)
+				foreach (Shortcut shortcut in Shortcuts.ShortcutsDictionary.Values)
 				{
 					ImGui.TableNextColumn();
-					ImGui.Text(shortcut.Key);
+					ImGui.Text(shortcut.Description);
 
 					ImGui.TableNextColumn();
-					ImGui.Text(Inline.Span($"{(shortcut.Value.Ctrl ? "CTRL " : string.Empty)}{(shortcut.Value.Shift ? "SHIFT " : string.Empty)}{shortcut.Value.Key.GetChar(false) ?? '?'}"));
+					ImGui.Text(Inline.Span(shortcut.KeyDescription));
 				}
 
 				ImGui.EndTable();

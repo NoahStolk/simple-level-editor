@@ -11,8 +11,6 @@ namespace SimpleLevelEditor.Ui;
 
 public static class MainWindow
 {
-	private const string _fileExtension = "xml";
-	private static readonly XmlWriterSettings _xmlWriterSettings = new() { Indent = true, Encoding = new UTF8Encoding(false) };
 	private static bool _showDemoWindow;
 	private static bool _showShortcutsWindow;
 
@@ -34,56 +32,17 @@ public static class MainWindow
 			{
 				if (ImGui.BeginMenu("File"))
 				{
-					if (ImGui.MenuItem("New"))
-					{
-						DialogResult dialogResult = Dialog.FileSave(_fileExtension);
-						if (dialogResult is { IsOk: true })
-						{
-							using MemoryStream ms = new();
-							using XmlWriter writer = XmlWriter.Create(ms, _xmlWriterSettings);
+					if (ImGui.MenuItem("New", Shortcuts.GetKeyDescription(Shortcuts.New)))
+						LevelState.New();
 
-							Level3dData level = Level3dData.Default.DeepCopy();
+					if (ImGui.MenuItem("Open", Shortcuts.GetKeyDescription(Shortcuts.Open)))
+						LevelState.Load();
 
-							XmlFormatSerializer.WriteLevel(level, writer);
-							File.WriteAllBytes(dialogResult.Path, ms.ToArray());
+					if (ImGui.MenuItem("Save", Shortcuts.GetKeyDescription(Shortcuts.Save)))
+						LevelState.Save();
 
-							LevelState.SetLevel(dialogResult.Path, level);
-						}
-					}
-
-					if (ImGui.MenuItem("Open"))
-					{
-						DialogResult dialogResult = Dialog.FileOpen(_fileExtension);
-						if (dialogResult is { IsOk: true })
-						{
-							Load(dialogResult.Path);
-						}
-					}
-
-					if (ImGui.MenuItem("Save"))
-					{
-						if (LevelState.LevelFilePath != null)
-						{
-							Save(LevelState.LevelFilePath);
-						}
-						else
-						{
-							DialogResult dialogResult = Dialog.FileSave(_fileExtension);
-							if (dialogResult is { IsOk: true })
-							{
-								Save(dialogResult.Path);
-							}
-						}
-					}
-
-					if (ImGui.MenuItem("Save As"))
-					{
-						DialogResult dialogResult = Dialog.FileSave(_fileExtension);
-						if (dialogResult is { IsOk: true })
-						{
-							Save(dialogResult.Path);
-						}
-					}
+					if (ImGui.MenuItem("Save As", Shortcuts.GetKeyDescription(Shortcuts.SaveAs)))
+						LevelState.SaveAs();
 
 					ImGui.EndMenu();
 				}
@@ -146,27 +105,5 @@ public static class MainWindow
 		}
 
 		ImGui.End(); // End 3D Level Editor
-	}
-
-	private static void Load(string path)
-	{
-		using FileStream fs = new(path, FileMode.Open);
-		using XmlReader reader = XmlReader.Create(fs);
-		Level3dData level = XmlFormatSerializer.ReadLevel(reader);
-
-		LevelState.SetLevel(path, level);
-	}
-
-	private static void Save(string path)
-	{
-		using MemoryStream ms = new();
-		using XmlWriter writer = XmlWriter.Create(ms, _xmlWriterSettings);
-		XmlFormatSerializer.WriteLevel(LevelState.Level, writer);
-		writer.Flush();
-
-		ms.Write("\n"u8);
-
-		File.WriteAllBytes(path, ms.ToArray());
-		LevelState.SetLevel(path, LevelState.Level);
 	}
 }

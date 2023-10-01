@@ -69,7 +69,10 @@ public static class LevelEditorWindow
 						LevelEditorState.Mode = mode;
 
 					if (ImGui.IsItemHovered(ImGuiHoveredFlags.DelayNone))
-						ImGui.SetTooltip(EnumUtils.LevelEditorModeNames[mode]);
+					{
+						string shortcut = EnumUtils.LevelEditorModeShortcuts[mode];
+						ImGui.SetTooltip(Inline.Span($"{Shortcuts.GetDescription(shortcut)} - shortcut: {Shortcuts.GetKeyDescription(shortcut)}"));
+					}
 
 					ImGui.PopStyleColor();
 				}

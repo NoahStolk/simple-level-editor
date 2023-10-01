@@ -17,7 +17,7 @@ public static class Camera3d
 	private static float _pitch;
 
 	private static Quaternion _rotation = Quaternion.Identity;
-	public static Vector3 Position { get; private set; } = new(3, 3, 3);
+	public static Vector3 Position { get; private set; } = new(-3, 3, -3);
 
 	public static Matrix4x4 Projection { get; private set; }
 	public static Matrix4x4 ViewMatrix { get; private set; }

@@ -1,7 +1,4 @@
 HIGH PRIORITY
-- Use different editor modes
-	- Add world object
-	- Edit world object
 - Control rotation and scale in level editor when creating objects
 	- Rotation
 		- Hold R
