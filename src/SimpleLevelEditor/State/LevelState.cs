@@ -36,7 +36,7 @@ public static class LevelState
 
 	public static void Save()
 	{
-		if (LevelFilePath != null)
+		if (LevelFilePath != null && File.Exists(LevelFilePath))
 			Save(LevelFilePath);
 		else
 			SaveAs();

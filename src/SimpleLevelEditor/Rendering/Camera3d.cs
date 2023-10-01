@@ -56,6 +56,9 @@ public static class Camera3d
 
 	private static void HandleKeys(float dt)
 	{
+		// Prevent moving camera when CTRL is pressed for shortcuts.
+		bool ctrl = Input.IsKeyHeld(Keys.ControlLeft) || Input.IsKeyHeld(Keys.ControlRight);
+
 		const float acceleration = 20;
 		const float friction = 20;
 		const Keys forwardInput = Keys.W;
@@ -64,12 +67,12 @@ public static class Camera3d
 		const Keys rightInput = Keys.D;
 		const Keys upInput = Keys.Space;
 		const Keys downInput = Keys.ShiftLeft;
-		bool forwardHold = Input.IsKeyHeld(forwardInput);
-		bool leftHold = Input.IsKeyHeld(leftInput);
-		bool backwardHold = Input.IsKeyHeld(backwardInput);
-		bool rightHold = Input.IsKeyHeld(rightInput);
-		bool upHold = Input.IsKeyHeld(upInput);
-		bool downHold = Input.IsKeyHeld(downInput);
+		bool forwardHold = !ctrl && Input.IsKeyHeld(forwardInput);
+		bool leftHold = !ctrl && Input.IsKeyHeld(leftInput);
+		bool backwardHold = !ctrl && Input.IsKeyHeld(backwardInput);
+		bool rightHold = !ctrl && Input.IsKeyHeld(rightInput);
+		bool upHold = !ctrl && Input.IsKeyHeld(upInput);
+		bool downHold = !ctrl && Input.IsKeyHeld(downInput);
 
 		float accelerationDt = acceleration * dt;
 		float frictionDt = friction * dt;

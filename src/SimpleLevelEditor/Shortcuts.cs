@@ -39,12 +39,6 @@ public static class Shortcuts
 		bool ctrl = Input.IsKeyHeld(Keys.ControlLeft) || Input.IsKeyHeld(Keys.ControlRight);
 		bool shift = Input.IsKeyHeld(Keys.ShiftLeft) || Input.IsKeyHeld(Keys.ShiftRight);
 
-		if (ctrl)
-			DebugState.AddWarning("ctrl");
-
-		if (shift)
-			DebugState.AddWarning("shift");
-
 		foreach (Shortcut shortcut in _shortcuts.Values)
 		{
 			if (Input.IsKeyPressed(shortcut.Key) && shift == shortcut.Shift && ctrl == shortcut.Ctrl)
