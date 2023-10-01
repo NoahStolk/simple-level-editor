@@ -14,12 +14,13 @@ namespace SimpleLevelEditor.Ui.ChildWindows;
 public static class LevelEditorWindow
 {
 	private static readonly float[] _gridSnapPoints = { 0, 0.125f, 0.25f, 0.5f, 1, 2, 4, 8 };
-
-	private static float _gridSnap = 1;
+	private static int _gridSnapIndex = 4;
 
 	private static Vector2 _cachedFramebufferSize;
 	private static uint _framebufferTextureId;
 	private static uint _framebufferId;
+
+	private static float GridSnap => _gridSnapIndex >= 0 && _gridSnapIndex < _gridSnapPoints.Length ? _gridSnapPoints[_gridSnapIndex] : 0;
 
 	private static unsafe void Initialize(Vector2 framebufferSize)
 	{
@@ -75,19 +76,10 @@ public static class LevelEditorWindow
 
 			Vector2 cursorPosition = ImGui.GetCursorPos();
 
-			ImGui.Text("Snap");
-			for (int i = 0; i < _gridSnapPoints.Length; i++)
-			{
-				if (i != 0)
-					ImGui.SameLine();
-
-				if (ImGui.RadioButton(Inline.Span(_gridSnapPoints[i]), Math.Abs(_gridSnap - _gridSnapPoints[i]) < 0.001f))
-					_gridSnap = _gridSnapPoints[i];
-			}
-
 			ImGui.PushItemWidth(160);
+			ImGui.SliderInt("Grid Snap", ref _gridSnapIndex, 0, _gridSnapPoints.Length - 1, Inline.Span(GridSnap));
 			ImGui.InputFloat("Height", ref LevelEditorState.TargetHeight, 0.25f, 1, "%.2f");
-			ImGui.SliderInt("Cell per side", ref LevelEditorState.GridCellCount, 1, 64);
+			ImGui.SliderInt("Cells per side", ref LevelEditorState.GridCellCount, 1, 64);
 			ImGui.SliderInt("Cell size", ref LevelEditorState.GridCellSize, 1, 4);
 			ImGui.PopItemWidth();
 
@@ -135,10 +127,10 @@ public static class LevelEditorWindow
 	private static void CalculateTargetPosition(Vector2 normalizedMousePosition)
 	{
 		LevelEditorState.TargetPosition = Camera3d.GetMouseWorldPosition(normalizedMousePosition, new(Vector3.UnitY, -LevelEditorState.TargetHeight));
-		if (_gridSnap > 0)
+		if (GridSnap > 0)
 		{
-			LevelEditorState.TargetPosition.X = MathF.Round(LevelEditorState.TargetPosition.X / _gridSnap) * _gridSnap;
-			LevelEditorState.TargetPosition.Z = MathF.Round(LevelEditorState.TargetPosition.Z / _gridSnap) * _gridSnap;
+			LevelEditorState.TargetPosition.X = MathF.Round(LevelEditorState.TargetPosition.X / GridSnap) * GridSnap;
+			LevelEditorState.TargetPosition.Z = MathF.Round(LevelEditorState.TargetPosition.Z / GridSnap) * GridSnap;
 		}
 	}
 
