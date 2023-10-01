@@ -93,6 +93,8 @@ public sealed class App
 
 		Graphics.Gl.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit);
 
+		Shortcuts.Handle();
+
 		MainWindow.Render();
 
 		_imGuiController.Render();

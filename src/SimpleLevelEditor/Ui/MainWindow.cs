@@ -14,11 +14,15 @@ public static class MainWindow
 	private const string _fileExtension = "xml";
 	private static readonly XmlWriterSettings _xmlWriterSettings = new() { Indent = true, Encoding = new UTF8Encoding(false) };
 	private static bool _showDemoWindow;
+	private static bool _showShortcutsWindow;
 
 	public static void Render()
 	{
 		if (_showDemoWindow)
 			ImGui.ShowDemoWindow(ref _showDemoWindow);
+
+		if (_showShortcutsWindow)
+			ShortcutsWindow.Render(ref _showShortcutsWindow);
 
 		Vector2 viewportSize = ImGui.GetMainViewport().Size;
 		ImGui.SetNextWindowSize(viewportSize);
@@ -88,6 +92,14 @@ public static class MainWindow
 				{
 					if (ImGui.MenuItem("Show ImGui Demo"))
 						_showDemoWindow = true;
+
+					ImGui.EndMenu();
+				}
+
+				if (ImGui.BeginMenu("Help"))
+				{
+					if (ImGui.MenuItem("Shortcuts"))
+						_showShortcutsWindow = true;
 
 					ImGui.EndMenu();
 				}
