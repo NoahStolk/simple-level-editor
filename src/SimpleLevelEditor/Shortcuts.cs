@@ -18,8 +18,8 @@ public static class Shortcuts
 		[Open] = new(Keys.O, true, false, LevelState.Load, "Open level"),
 		[Save] = new(Keys.S, true, false, LevelState.Save, "Save level"),
 		[SaveAs] = new(Keys.S, true, true, LevelState.SaveAs, "Save level as"),
-		[AddWorldObjectsMode] = new(Keys.Number1, false, false, () => LevelEditorState.Mode = LevelEditorMode.AddWorldObjects, "Add world objects"),
-		[EditWorldObjectsMode] = new(Keys.Number2, false, false, () => LevelEditorState.Mode = LevelEditorMode.EditWorldObjects, "Edit world objects"),
+		[AddWorldObjectsMode] = new(Keys.F1, false, false, () => LevelEditorState.Mode = LevelEditorMode.AddWorldObjects, "Add world objects"),
+		[EditWorldObjectsMode] = new(Keys.F2, false, false, () => LevelEditorState.Mode = LevelEditorMode.EditWorldObjects, "Edit world objects"),
 	};
 
 	public static IReadOnlyDictionary<string, Shortcut> ShortcutsDictionary => _shortcuts;

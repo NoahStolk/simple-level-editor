@@ -94,7 +94,7 @@ public static class MainWindow
 				switch (LevelEditorState.Mode)
 				{
 					case LevelEditorMode.AddWorldObjects:
-						ObjectCreatorWindow.Render(new(rightWidth - padding * 4, 0));
+						WorldObjectCreatorWindow.Render(new(rightWidth - padding * 4, 0));
 						break;
 					case LevelEditorMode.EditWorldObjects:
 						ObjectEditorWindow.Render(new(rightWidth - padding * 4, 0));

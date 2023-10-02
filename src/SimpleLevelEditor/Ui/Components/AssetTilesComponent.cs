@@ -2,7 +2,7 @@ using ImGuiNET;
 
 namespace SimpleLevelEditor.Ui.Components;
 
-public static class AssetTiles
+public static class AssetTilesComponent
 {
 	public static void Render(IReadOnlyList<string> items, ref string selectedItem, Vector2 tileSize, Vector2 totalSize)
 	{

@@ -64,14 +64,14 @@ public static class WorldObjectDataComponent
 		ImGui.SeparatorText("Mesh");
 
 		if (ImGui.BeginChild("Mesh", new(0, 256), true))
-			AssetTiles.Render(LevelState.Level.Meshes, ref worldObject.Mesh, new(160), size);
+			AssetTilesComponent.Render(LevelState.Level.Meshes, ref worldObject.Mesh, new(160), size);
 
 		ImGui.EndChild(); // End Mesh
 
 		ImGui.SeparatorText("Texture");
 
 		if (ImGui.BeginChild("Texture", new(0, 256), true))
-			AssetTiles.Render(LevelState.Level.Textures, ref worldObject.Texture, new(160), size);
+			AssetTilesComponent.Render(LevelState.Level.Textures, ref worldObject.Texture, new(160), size);
 
 		ImGui.EndChild(); // End Texture
 	}
