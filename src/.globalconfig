@@ -228,6 +228,9 @@ dotnet_diagnostic.S101.severity                                               = 
 # 'System.Exception' should not be thrown by user code.
 dotnet_diagnostic.S112.severity                                               = none
 
+# Make this field 'private' and encapsulate it in a 'public' property.
+dotnet_diagnostic.S1104.severity                                              = none
+
 # Extract the assignment from this expression. (C# 9)
 dotnet_diagnostic.S1121.severity                                              = none
 
@@ -296,6 +299,9 @@ dotnet_diagnostic.SA1309.severity                                             = 
 
 # Static readonly fields should begin with upper-case letter.
 dotnet_diagnostic.SA1311.severity                                             = none
+
+# Field should be private.
+dotnet_diagnostic.SA1401.severity                                             = none
 
 # Arithmetic expressions should declare precedence.
 dotnet_diagnostic.SA1407.severity                                             = none

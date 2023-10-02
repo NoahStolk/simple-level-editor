@@ -2,15 +2,11 @@ namespace SimpleLevelEditor.Model;
 
 public record Level3dData
 {
-	public required int Version { get; set; }
-
-	public required List<string> Meshes { get; set; }
-
-	public required List<string> Textures { get; set; }
-
-	public required List<WorldObject> WorldObjects { get; set; }
-
-	public required List<Entity> Entities { get; set; }
+	public required int Version;
+	public required List<string> Meshes;
+	public required List<string> Textures;
+	public required List<WorldObject> WorldObjects;
+	public required List<Entity> Entities;
 
 	public static Level3dData Default => new()
 	{
