@@ -3,7 +3,7 @@ using SimpleLevelEditor.Model.EntityTypes;
 
 namespace SimpleLevelEditor.Model;
 
-public class Entity
+public record Entity
 {
 	public required string Name { get; set; }
 

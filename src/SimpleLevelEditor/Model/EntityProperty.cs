@@ -2,7 +2,7 @@ using OneOf;
 
 namespace SimpleLevelEditor.Model;
 
-public class EntityProperty
+public record EntityProperty
 {
 	public required string Key { get; set; }
 

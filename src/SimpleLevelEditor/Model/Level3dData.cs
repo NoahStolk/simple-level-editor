@@ -1,6 +1,6 @@
 namespace SimpleLevelEditor.Model;
 
-public class Level3dData
+public record Level3dData
 {
 	public required int Version { get; set; }
 
