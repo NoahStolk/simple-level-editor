@@ -1,6 +1,5 @@
 using ImGuiNET;
 using NativeFileDialogSharp;
-using SimpleLevelEditor.Model;
 using SimpleLevelEditor.State;
 using System.Diagnostics;
 
@@ -16,17 +15,15 @@ public static class LevelAssetsWindow
 
 			float height = MathF.Floor(size.Y / 2f - 40f) - 1;
 
-			RenderAssetPaths(height, "Meshes", "obj", l => l.Meshes, (l, d) => l.Meshes = d);
-			RenderAssetPaths(height, "Textures", "tga", l => l.Textures, (l, d) => l.Textures = d);
+			RenderAssetPaths(height, "Meshes", "obj", ref LevelState.Level.Meshes);
+			RenderAssetPaths(height, "Textures", "tga", ref LevelState.Level.Textures);
 		}
 
 		ImGui.EndChild(); // End Level Assets
 	}
 
-	private static void RenderAssetPaths(float windowHeight, string name, string dialogFilterList, Func<Level3dData, List<string>> selector, Action<Level3dData, List<string>> setter)
+	private static void RenderAssetPaths(float windowHeight, string name, string dialogFilterList, ref List<string> list)
 	{
-		List<string> list = selector(LevelState.Level);
-
 		ImGui.BeginDisabled(LevelState.LevelFilePath == null);
 		if (ImGui.Button(Inline.Span($"Add {name}")))
 		{
@@ -41,7 +38,7 @@ public static class LevelAssetsWindow
 				string[] relativePaths = dialogResult.Paths.Select(path => Path.GetRelativePath(parentDirectory, path)).ToArray();
 
 				list.AddRange(relativePaths);
-				setter(LevelState.Level, list.Order().Distinct().ToList());
+				list = list.Order().Distinct().ToList();
 			}
 		}
 
