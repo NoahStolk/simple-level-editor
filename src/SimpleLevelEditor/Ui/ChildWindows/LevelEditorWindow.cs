@@ -57,29 +57,6 @@ public static class LevelEditorWindow
 
 			ImGui.EndChild(); // End Level Editor Menu
 
-			if (ImGui.BeginChild("Mode", new(32, 96), true))
-			{
-				for (int i = 0; i < EnumUtils.LevelEditorModeArray.Count; i++)
-				{
-					LevelEditorMode mode = EnumUtils.LevelEditorModeArray[i];
-					ImGui.PushStyleColor(ImGuiCol.Button, mode == LevelEditorState.Mode ? new Vector4(0.5f, 0.2f, 0.2f, 1) : new(0.1f, 0.1f, 0.1f, 1));
-
-					// TODO: Use images instead of a single letter.
-					if (ImGui.Button(Inline.Span(EnumUtils.LevelEditorModeNames[mode][0]), new(24)))
-						LevelEditorState.Mode = mode;
-
-					if (ImGui.IsItemHovered(ImGuiHoveredFlags.DelayNone))
-					{
-						string shortcut = EnumUtils.LevelEditorModeShortcuts[mode];
-						ImGui.SetTooltip(Inline.Span($"{Shortcuts.GetDescription(shortcut)} - shortcut: {Shortcuts.GetKeyDescription(shortcut)}"));
-					}
-
-					ImGui.PopStyleColor();
-				}
-			}
-
-			ImGui.EndChild(); // End Mode
-
 			ImGui.PopStyleColor();
 
 			ImGui.SetCursorPos(cursorPosition);

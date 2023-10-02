@@ -1,6 +1,7 @@
 using ImGuiNET;
 using SimpleLevelEditor.State;
 using SimpleLevelEditor.Ui.ChildWindows;
+using SimpleLevelEditor.Utils;
 
 namespace SimpleLevelEditor.Ui;
 
@@ -69,9 +70,8 @@ public static class MainWindow
 			if (ImGui.BeginChild("Left", new(leftWidth, 0)))
 			{
 				const int levelInfoHeight = 192;
-				const int padding = 4; // TODO: Get from ImGui style.
 				LevelInfoWindow.Render(new(leftWidth, levelInfoHeight));
-				LevelAssetsWindow.Render(new(leftWidth, viewportSize.Y - bottomHeight - levelInfoHeight - padding));
+				LevelAssetsWindow.Render(new(leftWidth, viewportSize.Y - bottomHeight - levelInfoHeight));
 				DebugWindow.Render(new(leftWidth, 0));
 			}
 
@@ -81,7 +81,7 @@ public static class MainWindow
 
 			if (ImGui.BeginChild("Middle", new(middleWidth, 0)))
 			{
-				LevelEditorWindow.Render(new(middleWidth, viewportSize.Y - 28));
+				LevelEditorWindow.Render(new(middleWidth, viewportSize.Y - 27));
 			}
 
 			ImGui.EndChild(); // End Middle
@@ -90,14 +90,39 @@ public static class MainWindow
 
 			if (ImGui.BeginChild("Right", new(0, 0)))
 			{
-				const int padding = 4; // TODO: Get from ImGui style.
+				if (ImGui.BeginChild("Mode", new(0, 32), true))
+				{
+					for (int i = 0; i < EnumUtils.LevelEditorModeArray.Count; i++)
+					{
+						if (i > 0)
+							ImGui.SameLine();
+
+						LevelEditorMode mode = EnumUtils.LevelEditorModeArray[i];
+						ImGui.PushStyleColor(ImGuiCol.Button, mode == LevelEditorState.Mode ? new Vector4(0.5f, 0.2f, 0.2f, 1) : new(0.1f, 0.1f, 0.1f, 1));
+
+						// TODO: Use images instead of a single letter.
+						if (ImGui.Button(Inline.Span(EnumUtils.LevelEditorModeNames[mode][0]), new(24)))
+							LevelEditorState.Mode = mode;
+
+						if (ImGui.IsItemHovered(ImGuiHoveredFlags.DelayNone))
+						{
+							string shortcut = EnumUtils.LevelEditorModeShortcuts[mode];
+							ImGui.SetTooltip(Inline.Span($"{Shortcuts.GetDescription(shortcut)} - shortcut: {Shortcuts.GetKeyDescription(shortcut)}"));
+						}
+
+						ImGui.PopStyleColor();
+					}
+				}
+
+				ImGui.EndChild(); // End Mode
+
 				switch (LevelEditorState.Mode)
 				{
 					case LevelEditorMode.AddWorldObjects:
-						WorldObjectCreatorWindow.Render(new(rightWidth - padding * 4, 0));
+						WorldObjectCreatorWindow.Render(new(0, 0));
 						break;
 					case LevelEditorMode.EditWorldObjects:
-						ObjectEditorWindow.Render(new(rightWidth - padding * 4, 0));
+						ObjectEditorWindow.Render(new(0, 0));
 						break;
 				}
 			}

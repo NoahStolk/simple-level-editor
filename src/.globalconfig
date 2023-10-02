@@ -213,6 +213,9 @@ dotnet_diagnostic.S1135.severity                                              = 
 # Diagnostics: None #
 #####################
 
+# Non-constant fields should not be visible
+dotnet_diagnostic.CA2211.severity                                             = none
+
 # Missing XML comment for publicly visible type or member.
 dotnet_diagnostic.CS1591.severity                                             = none
 
@@ -236,6 +239,9 @@ dotnet_diagnostic.S1121.severity                                              = 
 
 # Unused private types or members should be removed. (C# 9)
 dotnet_diagnostic.S1144.severity                                              = none
+
+# Change the visibility of 'TargetHeight' or make it 'const' or 'readonly'.
+dotnet_diagnostic.S2223.severity                                              = none
 
 # Make this method private or simplify its parameters to not use multidimensional arrays.
 dotnet_diagnostic.S2368.severity                                              = none
