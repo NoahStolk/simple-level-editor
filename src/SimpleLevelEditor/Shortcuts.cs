@@ -12,26 +12,28 @@ public static class Shortcuts
 	public const string AddWorldObjectsMode = nameof(AddWorldObjectsMode);
 	public const string EditWorldObjectsMode = nameof(EditWorldObjectsMode);
 
-	private static readonly Dictionary<string, Shortcut> _shortcuts = new()
+	private static readonly List<Shortcut> _shortcuts = new()
 	{
-		[New] = new(Keys.N, true, false, LevelState.New, "New level"),
-		[Open] = new(Keys.O, true, false, LevelState.Load, "Open level"),
-		[Save] = new(Keys.S, true, false, LevelState.Save, "Save level"),
-		[SaveAs] = new(Keys.S, true, true, LevelState.SaveAs, "Save level as"),
-		[AddWorldObjectsMode] = new(Keys.F1, false, false, () => LevelEditorState.Mode = LevelEditorMode.AddWorldObjects, "Add world objects"),
-		[EditWorldObjectsMode] = new(Keys.F2, false, false, () => LevelEditorState.Mode = LevelEditorMode.EditWorldObjects, "Edit world objects"),
+		new(New, Keys.N, true, false, LevelState.New, "New level"),
+		new(Open, Keys.O, true, false, LevelState.Load, "Open level"),
+		new(Save, Keys.S, true, false, LevelState.Save, "Save level"),
+		new(SaveAs, Keys.S, true, true, LevelState.SaveAs, "Save level as"),
+		new(AddWorldObjectsMode, Keys.F1, false, false, () => LevelEditorState.Mode = LevelEditorMode.AddWorldObjects, "Add world objects"),
+		new(EditWorldObjectsMode, Keys.F2, false, false, () => LevelEditorState.Mode = LevelEditorMode.EditWorldObjects, "Edit world objects"),
 	};
 
-	public static IReadOnlyDictionary<string, Shortcut> ShortcutsDictionary => _shortcuts;
+	public static IReadOnlyList<Shortcut> ShortcutsList => _shortcuts;
 
 	public static string GetDescription(string shortcutName)
 	{
-		return _shortcuts.TryGetValue(shortcutName, out Shortcut? shortcut) ? shortcut.Description : "?";
+		Shortcut? shortcut = _shortcuts.Find(s => s.Id == shortcutName);
+		return shortcut?.Description ?? "?";
 	}
 
 	public static string GetKeyDescription(string shortcutName)
 	{
-		return _shortcuts.TryGetValue(shortcutName, out Shortcut? shortcut) ? shortcut.KeyDescription : "?";
+		Shortcut? shortcut = _shortcuts.Find(s => s.Id == shortcutName);
+		return shortcut?.KeyDescription ?? "?";
 	}
 
 	public static void Handle()
@@ -39,8 +41,9 @@ public static class Shortcuts
 		bool ctrl = Input.IsKeyHeld(Keys.ControlLeft) || Input.IsKeyHeld(Keys.ControlRight);
 		bool shift = Input.IsKeyHeld(Keys.ShiftLeft) || Input.IsKeyHeld(Keys.ShiftRight);
 
-		foreach (Shortcut shortcut in _shortcuts.Values)
+		for (int i = 0; i < _shortcuts.Count; i++)
 		{
+			Shortcut shortcut = _shortcuts[i];
 			if (Input.IsKeyPressed(shortcut.Key) && shift == shortcut.Shift && ctrl == shortcut.Ctrl)
 			{
 				shortcut.Action();

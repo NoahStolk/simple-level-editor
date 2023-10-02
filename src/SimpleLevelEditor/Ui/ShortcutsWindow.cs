@@ -16,8 +16,10 @@ public static class ShortcutsWindow
 				ImGui.TableHeadersRow();
 
 				ImGui.TableNextRow();
-				foreach (Shortcut shortcut in Shortcuts.ShortcutsDictionary.Values)
+				for (int i = 0; i < Shortcuts.ShortcutsList.Count; i++)
 				{
+					Shortcut shortcut = Shortcuts.ShortcutsList[i];
+
 					ImGui.TableNextColumn();
 					ImGui.Text(shortcut.Description);
 
