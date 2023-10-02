@@ -18,7 +18,7 @@ public static class ObjectCreatorWindow
 				{
 					ImGui.SeparatorText("World Object");
 
-					AssetTiles.Render(LevelState.Level.Meshes, ObjectCreatorState.SelectedMeshName, s => ObjectCreatorState.SelectedMeshName = s, new(160), size);
+					WorldObjectDataComponent.Render(size, ObjectCreatorState.NewWorldObject, false);
 
 					ImGui.EndTabItem();
 				}

@@ -104,17 +104,11 @@ public static class LevelEditorWindow
 		switch (LevelEditorState.Mode)
 		{
 			case LevelEditorMode.AddWorldObjects:
-				if (ObjectCreatorState.SelectedMeshName != null && !LevelState.Level.WorldObjects.Exists(wo => wo.Position == LevelEditorState.TargetPosition))
+				if (ObjectCreatorState.IsValid() && !LevelState.Level.WorldObjects.Exists(wo => wo.Position == LevelEditorState.TargetPosition))
 				{
-					WorldObject worldObject = new()
+					WorldObject worldObject = ObjectCreatorState.NewWorldObject.DeepCopy() with
 					{
 						Position = LevelEditorState.TargetPosition,
-						Mesh = ObjectCreatorState.SelectedMeshName,
-						Texture = string.Empty,
-						Scale = new(1),
-						Rotation = new(0),
-						BoundingMesh = string.Empty,
-						Values = WorldObjectValues.None,
 					};
 					LevelState.Level.WorldObjects.Add(worldObject);
 				}

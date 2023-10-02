@@ -206,22 +206,21 @@ public static class SceneRenderer
 
 	private static unsafe void RenderMeshPreview(ShaderCacheEntry meshShader)
 	{
-		if (ObjectCreatorState.SelectedMeshName == null)
+		if (!ObjectCreatorState.IsValid())
 			return;
 
-		MeshContainer.Entry? mesh = MeshContainer.GetMesh(ObjectCreatorState.SelectedMeshName);
+		MeshContainer.Entry? mesh = MeshContainer.GetMesh(ObjectCreatorState.NewWorldObject.Mesh);
 		if (mesh == null)
 			return;
 
-		// Show mesh preview using default texture.
-		uint? textureId = TextureContainer.GetTexture(string.Empty);
+		uint? textureId = TextureContainer.GetTexture(ObjectCreatorState.NewWorldObject.Texture);
 		if (textureId == null)
 			return;
 
 		Gl.BindTexture(TextureTarget.Texture2D, textureId.Value);
 
 		int modelUniform = meshShader.GetUniformLocation("model");
-		ShaderUniformUtils.Set(modelUniform, Matrix4x4.CreateTranslation(LevelEditorState.TargetPosition));
+		ShaderUniformUtils.Set(modelUniform, Matrix4x4.CreateScale(ObjectCreatorState.NewWorldObject.Scale) * MathUtils.CreateRotationMatrixFromEulerAngles(ObjectCreatorState.NewWorldObject.Rotation) * Matrix4x4.CreateTranslation(LevelEditorState.TargetPosition));
 		Gl.BindVertexArray(mesh.Vao);
 		fixed (uint* i = &mesh.Mesh.Indices[0])
 			Gl.DrawElements(PrimitiveType.Triangles, (uint)mesh.Mesh.Indices.Length, DrawElementsType.UnsignedInt, i);

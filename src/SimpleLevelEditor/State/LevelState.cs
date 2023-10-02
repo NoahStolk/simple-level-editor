@@ -68,7 +68,7 @@ public static class LevelState
 		Level = level;
 
 		ObjectEditorState.SelectedWorldObject = null;
-		ObjectCreatorState.SelectedMeshName = null;
+		ObjectCreatorState.Reset();
 
 		MeshContainer.Rebuild(levelFilePath);
 		TextureContainer.Rebuild(levelFilePath);

@@ -20,7 +20,7 @@ public static class LevelAssetsWindow
 			RenderAssetPaths(height, "Textures", "tga", l => l.Textures, (l, d) => l.Textures = d);
 		}
 
-		ImGui.EndChild(); // End Add New
+		ImGui.EndChild(); // End Level Assets
 	}
 
 	private static void RenderAssetPaths(float windowHeight, string name, string dialogFilterList, Func<Level3dData, List<string>> selector, Action<Level3dData, List<string>> setter)
