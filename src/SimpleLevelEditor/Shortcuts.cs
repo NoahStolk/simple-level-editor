@@ -26,14 +26,26 @@ public static class Shortcuts
 
 	public static string GetDescription(string shortcutName)
 	{
-		Shortcut? shortcut = _shortcuts.Find(s => s.Id == shortcutName);
-		return shortcut?.Description ?? "?";
+		for (int i = 0; i < _shortcuts.Count; i++)
+		{
+			Shortcut shortcut = _shortcuts[i];
+			if (shortcut.Id == shortcutName)
+				return shortcut.Description;
+		}
+
+		return "?";
 	}
 
 	public static string GetKeyDescription(string shortcutName)
 	{
-		Shortcut? shortcut = _shortcuts.Find(s => s.Id == shortcutName);
-		return shortcut?.KeyDescription ?? "?";
+		for (int i = 0; i < _shortcuts.Count; i++)
+		{
+			Shortcut shortcut = _shortcuts[i];
+			if (shortcut.Id == shortcutName)
+				return shortcut.KeyDescription;
+		}
+
+		return "?";
 	}
 
 	public static void Handle()

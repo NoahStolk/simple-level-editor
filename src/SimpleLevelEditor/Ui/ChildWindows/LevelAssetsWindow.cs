@@ -29,7 +29,7 @@ public static class LevelAssetsWindow
 		{
 			Debug.Assert(LevelState.LevelFilePath != null, "Cannot click this button because it should be disabled.");
 
-			DialogResult dialogResult = Dialog.FileOpenMultiple(dialogFilterList);
+			DialogResult dialogResult = DialogWrapper.FileOpenMultiple(dialogFilterList);
 			if (dialogResult is { IsOk: true })
 			{
 				string? parentDirectory = Path.GetDirectoryName(LevelState.LevelFilePath);

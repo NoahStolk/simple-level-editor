@@ -17,3 +17,7 @@ MEDIUM PRIORITY
 
 BACKLOG
 - List meshes in object creator as selectable tiles
+
+FIRST ALPHA
+- Public repo
+- GitHub releases

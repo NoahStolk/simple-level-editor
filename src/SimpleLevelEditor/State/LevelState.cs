@@ -23,7 +23,7 @@ public static class LevelState
 
 	public static void Load()
 	{
-		DialogResult dialogResult = Dialog.FileOpen(_fileExtension);
+		DialogResult dialogResult = DialogWrapper.FileOpen(_fileExtension);
 		if (dialogResult is not { IsOk: true })
 			return;
 
@@ -44,7 +44,7 @@ public static class LevelState
 
 	public static void SaveAs()
 	{
-		DialogResult dialogResult = Dialog.FileSave(_fileExtension);
+		DialogResult dialogResult = DialogWrapper.FileSave(_fileExtension);
 		if (dialogResult is { IsOk: true })
 			Save(dialogResult.Path);
 	}

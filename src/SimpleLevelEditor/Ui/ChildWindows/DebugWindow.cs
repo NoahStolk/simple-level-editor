@@ -1,4 +1,5 @@
 using ImGuiNET;
+using Silk.NET.GLFW;
 using SimpleLevelEditor.State;
 
 namespace SimpleLevelEditor.Ui.ChildWindows;
@@ -37,11 +38,22 @@ public static class DebugWindow
 
 			ImGui.EndDisabled();
 
-			if (DebugState.Warnings.Count > 0)
+			if (ImGui.BeginChild("Warnings", new(0, 96)))
 			{
-				foreach (KeyValuePair<string, int> kvp in DebugState.Warnings)
-					ImGui.Text(Inline.Span($"{kvp.Key}: {kvp.Value}"));
+				if (DebugState.Warnings.Count > 0)
+				{
+					foreach (KeyValuePair<string, int> kvp in DebugState.Warnings)
+						ImGui.Text(Inline.Span($"{kvp.Key}: {kvp.Value}"));
+				}
 			}
+
+			ImGui.EndChild(); // End Warnings
+
+			if (Input.IsKeyHeld(Keys.ControlLeft) || Input.IsKeyHeld(Keys.ControlRight))
+				ImGui.Text("CTRL");
+
+			if (Input.IsKeyHeld(Keys.ShiftLeft) || Input.IsKeyHeld(Keys.ShiftRight))
+				ImGui.Text("SHIFT");
 		}
 
 		ImGui.EndChild(); // End Debug
