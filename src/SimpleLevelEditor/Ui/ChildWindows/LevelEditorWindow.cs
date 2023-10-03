@@ -73,10 +73,18 @@ public static class LevelEditorWindow
 
 			if (ObjectEditorState.SelectedWorldObject != null)
 			{
-				Vector2 pos = Camera3d.GetScreenPositionFrom3dPoint(ObjectEditorState.SelectedWorldObject.Position, framebufferSize);
-				if (pos.X > 0 && pos.X < framebufferSize.X && pos.Y > 0 && pos.Y < framebufferSize.Y)
+				Vector3 position3d = ObjectEditorState.SelectedWorldObject.Position;
+				Matrix4x4 viewProjection = Camera3d.ViewMatrix * Camera3d.Projection;
+				Plane nearPlane = new(-viewProjection.M13, -viewProjection.M23, -viewProjection.M33, -viewProjection.M43);
+
+				// Only render if the object is in front of the camera.
+				if (Vector3.Dot(position3d, nearPlane.Normal) + nearPlane.D < 0)
 				{
-					drawList.AddText(cursorScreenPos + pos, ImGui.GetColorU32(0xffffffff), Inline.Span(pos, "0.00"));
+					Vector2 position2d = Camera3d.GetScreenPositionFrom3dPoint(position3d, framebufferSize);
+					if (position2d.X > 0 && position2d.X < framebufferSize.X && position2d.Y > 0 && position2d.Y < framebufferSize.Y)
+					{
+						drawList.AddText(cursorScreenPos + position2d, ImGui.GetColorU32(0xffffffff), Inline.Span(position2d, "0.00"));
+					}
 				}
 			}
 		}
