@@ -70,6 +70,15 @@ public static class LevelEditorWindow
 
 			if (isFocused && Input.IsButtonPressed(MouseButton.Left))
 				OnLeftClick();
+
+			if (ObjectEditorState.SelectedWorldObject != null)
+			{
+				Vector2 pos = Camera3d.GetScreenPositionFrom3dPoint(ObjectEditorState.SelectedWorldObject.Position, framebufferSize);
+				if (pos.X > 0 && pos.X < framebufferSize.X && pos.Y > 0 && pos.Y < framebufferSize.Y)
+				{
+					drawList.AddText(cursorScreenPos + pos, ImGui.GetColorU32(0xffffffff), Inline.Span(pos, "0.00"));
+				}
+			}
 		}
 
 		ImGui.EndChild(); // End Level Editor

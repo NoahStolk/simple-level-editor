@@ -179,4 +179,17 @@ public static class Camera3d
 			return num is >= -float.Epsilon and <= float.Epsilon;
 		}
 	}
+
+	public static Vector2 GetScreenPositionFrom3dPoint(Vector3 position, Vector2 framebufferSize)
+	{
+		Vector3 clipSpace = Vector3.Transform(position, ViewMatrix * Projection);
+		return ToScreenSpace(clipSpace, framebufferSize);
+	}
+
+	private static Vector2 ToScreenSpace(Vector3 position, Vector2 framebufferSize)
+	{
+		float x = framebufferSize.X * 0.5f + position.X * framebufferSize.X * 0.5f / position.Z;
+		float y = framebufferSize.Y * 0.5f + position.Y * framebufferSize.Y * 0.5f / position.Z;
+		return new(x, framebufferSize.Y - y);
+	}
 }
