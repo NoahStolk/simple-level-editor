@@ -8,7 +8,7 @@ public static class WorldObjectCreatorWindow
 {
 	public static void Render(Vector2 size)
 	{
-		if (ImGui.BeginChild("World Object Creator", size, true))
+		if (ImGui.BeginChild("Create World Object", size, true))
 		{
 			ImGui.SeparatorText("Create World Object");
 

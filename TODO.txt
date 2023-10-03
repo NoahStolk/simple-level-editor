@@ -4,7 +4,7 @@ HIGH PRIORITY
 		- Hold R
 		- Grab handle and drag around axis
 	- Scale
-		- Hold E
+		- Hold G
 		- Grab handle and drag around axis
 
 MEDIUM PRIORITY

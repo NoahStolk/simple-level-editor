@@ -4,13 +4,13 @@ using SimpleLevelEditor.Ui.Components;
 
 namespace SimpleLevelEditor.Ui.ChildWindows;
 
-public static class ObjectEditorWindow
+public static class WorldObjectEditorWindow
 {
 	public static void Render(Vector2 size)
 	{
-		if (ImGui.BeginChild("Object Editor", size, true))
+		if (ImGui.BeginChild("Edit World Object", size, true))
 		{
-			ImGui.SeparatorText("Object Editor");
+			ImGui.SeparatorText("Edit World Object");
 
 			if (ObjectEditorState.SelectedWorldObject != null)
 			{

@@ -122,7 +122,7 @@ public static class MainWindow
 						WorldObjectCreatorWindow.Render(new(0, 0));
 						break;
 					case LevelEditorMode.EditWorldObjects:
-						ObjectEditorWindow.Render(new(0, 0));
+						WorldObjectEditorWindow.Render(new(0, 0));
 						break;
 				}
 			}
