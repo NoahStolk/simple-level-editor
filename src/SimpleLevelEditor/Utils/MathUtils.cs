@@ -18,6 +18,6 @@ public static class MathUtils
 
 	public static Matrix4x4 CreateRotationMatrixFromEulerAngles(Vector3 eulerAngles)
 	{
-		return Matrix4x4.CreateFromYawPitchRoll(ToRadians(eulerAngles.X), ToRadians(eulerAngles.Y), ToRadians(eulerAngles.Z));
+		return Matrix4x4.CreateFromYawPitchRoll(ToRadians(eulerAngles.Y), ToRadians(eulerAngles.X), ToRadians(eulerAngles.Z));
 	}
 }

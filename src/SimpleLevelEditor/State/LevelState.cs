@@ -19,6 +19,7 @@ public static class LevelState
 	{
 		Level3dData level = Level3dData.Default.DeepCopy();
 		SetLevel(null, level);
+		ClearStateAndReloadAssets(null);
 	}
 
 	public static void Load()
@@ -32,6 +33,7 @@ public static class LevelState
 		Level3dData level = XmlFormatSerializer.ReadLevel(reader);
 
 		SetLevel(dialogResult.Path, level);
+		ClearStateAndReloadAssets(dialogResult.Path);
 	}
 
 	public static void Save()
@@ -66,7 +68,10 @@ public static class LevelState
 	{
 		LevelFilePath = levelFilePath;
 		Level = level;
+	}
 
+	private static void ClearStateAndReloadAssets(string? levelFilePath)
+	{
 		ObjectEditorState.SelectedWorldObject = null;
 		ObjectCreatorState.Reset();
 

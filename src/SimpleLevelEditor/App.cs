@@ -6,7 +6,7 @@ namespace SimpleLevelEditor;
 public sealed class App
 {
 	private const double _maxMainDelta = 0.25;
-	private const double _mainLoopLength = 1 / 144.0;
+	private const double _mainLoopLength = 1 / 300.0;
 
 	private static App? _instance;
 

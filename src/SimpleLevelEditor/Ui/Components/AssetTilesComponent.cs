@@ -4,17 +4,25 @@ namespace SimpleLevelEditor.Ui.Components;
 
 public static class AssetTilesComponent
 {
-	public static void Render(IReadOnlyList<string> items, ref string selectedItem, Vector2 tileSize, Vector2 totalSize)
+	public static void Render(IReadOnlyList<string> items, ref string selectedItem)
 	{
-		int rowLength = (int)Math.Max(1, MathF.Floor(totalSize.X / tileSize.X));
-		for (int i = 0; i < items.Count; i++)
-		{
-			if (i % rowLength != 0)
-				ImGui.SameLine();
+		const int rowLength = 4;
 
-			string meshName = items[i];
-			if (ImGui.Selectable(meshName, selectedItem == meshName, ImGuiSelectableFlags.None, tileSize))
-				selectedItem = meshName;
+		if (ImGui.BeginTable("Grid", rowLength))
+		{
+			for (int i = 0; i < items.Count; i++)
+			{
+				if (i % rowLength == 0)
+					ImGui.TableNextRow();
+
+				ImGui.TableNextColumn();
+				string meshName = items[i];
+
+				if (ImGui.Selectable(Inline.Span(meshName), selectedItem == meshName, ImGuiSelectableFlags.None, new(0, 128)))
+					selectedItem = meshName;
+			}
+
+			ImGui.EndTable();
 		}
 	}
 }

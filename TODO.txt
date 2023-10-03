@@ -4,10 +4,8 @@ HIGH PRIORITY
 		- Hold R
 		- Grab handle and drag around axis
 	- Scale
-		- Hold S
+		- Hold E
 		- Grab handle and drag around axis
-	- Texture
-	- Flags
 
 MEDIUM PRIORITY
 - When selected, drag mesh to move it
