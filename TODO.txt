@@ -6,15 +6,17 @@ HIGH PRIORITY
 	- Scale
 		- Hold G
 		- Grab handle and drag around axis
+- Press DEL to delete selected world objects
 
 MEDIUM PRIORITY
-- When selected, drag mesh to move it
-	- Apply for rotation and scale as well
 - Multiple selection
 	- Hold shift to select multiple meshes
 
 BACKLOG
 - List meshes in object creator as selectable tiles
+- Save state indicated by asterisk in title bar
+- CTRL Z to undo
+- CTRL Y to redo
 
 FIRST ALPHA
 - Public repo

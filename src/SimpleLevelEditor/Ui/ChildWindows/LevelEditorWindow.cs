@@ -59,7 +59,9 @@ public static class LevelEditorWindow
 
 			ImGui.PopStyleColor();
 
-			RenderSelectionMenu(framebufferSize, drawList, cursorScreenPos);
+			Matrix4x4 viewProjection = Camera3d.ViewMatrix * Camera3d.Projection;
+			Plane nearPlane = new(-viewProjection.M13, -viewProjection.M23, -viewProjection.M33, -viewProjection.M43);
+			RenderSelectionMenu(framebufferSize, drawList, cursorScreenPos, nearPlane);
 
 			ImGui.SetCursorPos(cursorPosition);
 			ImGui.InvisibleButton("3d_view", framebufferSize);
@@ -68,7 +70,7 @@ public static class LevelEditorWindow
 
 			Vector2 mousePosition = Input.GetMousePosition() - cursorScreenPos;
 			Vector2 normalizedMousePosition = new Vector2(mousePosition.X / framebufferSize.X - 0.5f, -(mousePosition.Y / framebufferSize.Y - 0.5f)) * 2;
-			CalculateTargetPosition(normalizedMousePosition);
+			CalculateTargetPosition(normalizedMousePosition, nearPlane);
 			CalculateHighlightedObject(normalizedMousePosition, isFocused);
 
 			if (isFocused && Input.IsButtonPressed(MouseButton.Left))
@@ -78,13 +80,11 @@ public static class LevelEditorWindow
 		ImGui.EndChild(); // End Level Editor
 	}
 
-	private static void RenderSelectionMenu(Vector2 framebufferSize, ImDrawListPtr drawList, Vector2 cursorScreenPos)
+	private static void RenderSelectionMenu(Vector2 framebufferSize, ImDrawListPtr drawList, Vector2 cursorScreenPos, Plane nearPlane)
 	{
 		if (ObjectEditorState.SelectedWorldObject == null)
 			return;
 
-		Matrix4x4 viewProjection = Camera3d.ViewMatrix * Camera3d.Projection;
-		Plane nearPlane = new(-viewProjection.M13, -viewProjection.M23, -viewProjection.M33, -viewProjection.M43);
 		Vector2? posOrigin = GetPosition2d(ObjectEditorState.SelectedWorldObject.Position);
 		if (!posOrigin.HasValue)
 			return;
@@ -96,28 +96,51 @@ public static class LevelEditorWindow
 
 		const Keys rotationKey = Keys.R;
 		const Keys scaleKey = Keys.G;
+
+		if (!Input.IsKeyHeld(rotationKey) && !Input.IsKeyHeld(scaleKey))
+		{
+			const string text = "Move";
+			const int padding = 6;
+			Vector2 size = ImGui.CalcTextSize(text) + new Vector2(padding * 2);
+
+			ImGui.SetCursorScreenPos(posOrigin.Value);
+			ImGui.InvisibleButton(text, size);
+			bool isActive = ImGui.IsItemActive();
+			bool isHovered = ImGui.IsItemHovered();
+			bool shouldHighlight = !isActive && isHovered;
+
+			drawList.AddRectFilled(posOrigin.Value, posOrigin.Value + size, shouldHighlight ? 0xff444444 : 0xff222222);
+			drawList.AddRect(posOrigin.Value, posOrigin.Value + size, ImGui.GetColorU32(ImGuiCol.Text));
+			drawList.AddText(posOrigin.Value + new Vector2(padding), ImGui.GetColorU32(ImGuiCol.Text), text);
+
+			if (isActive && LevelEditorState.TargetPosition.HasValue)
+			{
+				ObjectEditorState.SelectedWorldObject.Position = LevelEditorState.TargetPosition.Value;
+			}
+		}
+
 		if (posX.HasValue)
 		{
 			drawList.AddLine(posOrigin.Value, posX.Value, 0xff0000ff);
 			ImGui.SetCursorScreenPos(posX.Value);
-			Controls('X', ref ObjectEditorState.SelectedWorldObject.Rotation.X, ref ObjectEditorState.SelectedWorldObject.Scale.X);
+			RenderControls('X', ref ObjectEditorState.SelectedWorldObject.Rotation.X, ref ObjectEditorState.SelectedWorldObject.Scale.X);
 		}
 
 		if (posY.HasValue)
 		{
 			drawList.AddLine(posOrigin.Value, posY.Value, 0xff00ff00);
 			ImGui.SetCursorScreenPos(posY.Value);
-			Controls('Y', ref ObjectEditorState.SelectedWorldObject.Rotation.Y, ref ObjectEditorState.SelectedWorldObject.Scale.Y);
+			RenderControls('Y', ref ObjectEditorState.SelectedWorldObject.Rotation.Y, ref ObjectEditorState.SelectedWorldObject.Scale.Y);
 		}
 
 		if (posZ.HasValue)
 		{
 			drawList.AddLine(posOrigin.Value, posZ.Value, 0xffff0000);
 			ImGui.SetCursorScreenPos(posZ.Value);
-			Controls('Z', ref ObjectEditorState.SelectedWorldObject.Rotation.Z, ref ObjectEditorState.SelectedWorldObject.Scale.Z);
+			RenderControls('Z', ref ObjectEditorState.SelectedWorldObject.Rotation.Z, ref ObjectEditorState.SelectedWorldObject.Scale.Z);
 		}
 
-		static void Controls(char axis, ref float rotation, ref float scale)
+		static void RenderControls(char axis, ref float rotation, ref float scale)
 		{
 			if (Input.IsKeyHeld(rotationKey))
 			{
@@ -150,11 +173,11 @@ public static class LevelEditorWindow
 		switch (LevelEditorState.Mode)
 		{
 			case LevelEditorMode.AddWorldObjects:
-				if (ObjectCreatorState.IsValid() && !LevelState.Level.WorldObjects.Exists(wo => wo.Position == LevelEditorState.TargetPosition))
+				if (ObjectCreatorState.IsValid() && LevelEditorState.TargetPosition.HasValue && !LevelState.Level.WorldObjects.Exists(wo => wo.Position == LevelEditorState.TargetPosition))
 				{
 					WorldObject worldObject = ObjectCreatorState.NewWorldObject.DeepCopy() with
 					{
-						Position = LevelEditorState.TargetPosition,
+						Position = LevelEditorState.TargetPosition.Value,
 					};
 					LevelState.Level.WorldObjects.Add(worldObject);
 				}
@@ -170,14 +193,21 @@ public static class LevelEditorWindow
 		}
 	}
 
-	private static void CalculateTargetPosition(Vector2 normalizedMousePosition)
+	private static void CalculateTargetPosition(Vector2 normalizedMousePosition, Plane nearPlane)
 	{
-		LevelEditorState.TargetPosition = Camera3d.GetMouseWorldPosition(normalizedMousePosition, new(Vector3.UnitY, -LevelEditorState.TargetHeight));
-		if (GridSnap > 0)
+		Vector3 targetPosition = Camera3d.GetMouseWorldPosition(normalizedMousePosition, new(Vector3.UnitY, -LevelEditorState.TargetHeight));
+		if (Vector3.Dot(targetPosition, nearPlane.Normal) + nearPlane.D >= 0)
 		{
-			LevelEditorState.TargetPosition.X = MathF.Round(LevelEditorState.TargetPosition.X / GridSnap) * GridSnap;
-			LevelEditorState.TargetPosition.Z = MathF.Round(LevelEditorState.TargetPosition.Z / GridSnap) * GridSnap;
+			LevelEditorState.TargetPosition = null;
+			return;
 		}
+
+		LevelEditorState.TargetPosition = new Vector3
+		{
+			X = GridSnap > 0 ? MathF.Round(targetPosition.X / GridSnap) * GridSnap : targetPosition.X,
+			Y = targetPosition.Y,
+			Z = GridSnap > 0 ? MathF.Round(targetPosition.Z / GridSnap) * GridSnap : targetPosition.Z,
+		};
 	}
 
 	private static void CalculateHighlightedObject(Vector2 normalizedMousePosition, bool isFocused)

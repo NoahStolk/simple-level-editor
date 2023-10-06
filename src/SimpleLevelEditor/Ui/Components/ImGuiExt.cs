@@ -1,5 +1,4 @@
 using ImGuiNET;
-using Silk.NET.GLFW;
 using SimpleLevelEditor.Utils;
 
 namespace SimpleLevelEditor.Ui.Components;
@@ -19,7 +18,7 @@ public static class ImGuiExt
 		ImGui.InvisibleButton(label, new(radiusOuter * 2, radiusOuter * 2 + lineHeight + style.ItemInnerSpacing.Y));
 		bool valueChanged = false;
 		bool isActive = ImGui.IsItemActive();
-		bool isHovered = ImGui.IsItemActive();
+		bool isHovered = ImGui.IsItemHovered();
 		if (isActive)
 		{
 			// Calculate angle from mouse to center of knob.
