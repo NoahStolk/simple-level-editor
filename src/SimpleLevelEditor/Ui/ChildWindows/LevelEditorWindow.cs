@@ -61,15 +61,16 @@ public static class LevelEditorWindow
 
 			Matrix4x4 viewProjection = Camera3d.ViewMatrix * Camera3d.Projection;
 			Plane nearPlane = new(-viewProjection.M13, -viewProjection.M23, -viewProjection.M33, -viewProjection.M43);
-			RenderSelectionMenu(framebufferSize, drawList, cursorScreenPos, nearPlane);
+			Vector2 mousePosition = Input.GetMousePosition() - cursorScreenPos;
+			Vector2 normalizedMousePosition = new Vector2(mousePosition.X / framebufferSize.X - 0.5f, -(mousePosition.Y / framebufferSize.Y - 0.5f)) * 2;
+
+			RenderSelectionMenu(framebufferSize, drawList, cursorScreenPos, nearPlane, normalizedMousePosition);
 
 			ImGui.SetCursorPos(cursorPosition);
 			ImGui.InvisibleButton("3d_view", framebufferSize);
 			bool isFocused = ImGui.IsItemHovered();
 			Camera3d.Update(ImGui.GetIO().DeltaTime, isFocused);
 
-			Vector2 mousePosition = Input.GetMousePosition() - cursorScreenPos;
-			Vector2 normalizedMousePosition = new Vector2(mousePosition.X / framebufferSize.X - 0.5f, -(mousePosition.Y / framebufferSize.Y - 0.5f)) * 2;
 			CalculateTargetPosition(normalizedMousePosition, nearPlane);
 			CalculateHighlightedObject(normalizedMousePosition, isFocused);
 
@@ -80,7 +81,7 @@ public static class LevelEditorWindow
 		ImGui.EndChild(); // End Level Editor
 	}
 
-	private static void RenderSelectionMenu(Vector2 framebufferSize, ImDrawListPtr drawList, Vector2 cursorScreenPos, Plane nearPlane)
+	private static void RenderSelectionMenu(Vector2 framebufferSize, ImDrawListPtr drawList, Vector2 cursorScreenPos, Plane nearPlane, Vector2 normalizedMousePosition)
 	{
 		if (ObjectEditorState.SelectedWorldObject == null)
 			return;
@@ -99,23 +100,42 @@ public static class LevelEditorWindow
 
 		if (!Input.IsKeyHeld(rotationKey) && !Input.IsKeyHeld(scaleKey))
 		{
-			const string text = "Move";
-			const int padding = 6;
-			Vector2 size = ImGui.CalcTextSize(text) + new Vector2(padding * 2);
-
-			ImGui.SetCursorScreenPos(posOrigin.Value);
-			ImGui.InvisibleButton(text, size);
-			bool isActive = ImGui.IsItemActive();
-			bool isHovered = ImGui.IsItemHovered();
-			bool shouldHighlight = !isActive && isHovered;
-
-			drawList.AddRectFilled(posOrigin.Value, posOrigin.Value + size, shouldHighlight ? 0xff444444 : 0xff222222);
-			drawList.AddRect(posOrigin.Value, posOrigin.Value + size, ImGui.GetColorU32(ImGuiCol.Text));
-			drawList.AddText(posOrigin.Value + new Vector2(padding), ImGui.GetColorU32(ImGuiCol.Text), text);
-
-			if (isActive && LevelEditorState.TargetPosition.HasValue)
+			bool isActiveXz = RenderMoveButton("Move XZ", drawList, posOrigin.Value);
+			if (isActiveXz && LevelEditorState.TargetPosition.HasValue)
 			{
-				ObjectEditorState.SelectedWorldObject.Position = LevelEditorState.TargetPosition.Value;
+				ObjectEditorState.SelectedWorldObject.Position.X = LevelEditorState.TargetPosition.Value.X;
+				ObjectEditorState.SelectedWorldObject.Position.Z = LevelEditorState.TargetPosition.Value.Z;
+			}
+
+			if (posY.HasValue)
+			{
+				bool isActiveY = RenderMoveButton("Move Y", drawList, posY.Value);
+
+				Plane plane = new Plane(); // TODO: Calculate vertical plane oriented towards camera and located at the object's position.
+				Vector3 targetPosition = Camera3d.GetMouseWorldPosition(normalizedMousePosition, plane);
+				Vector3? snappedTargetPosition = Vector3.Dot(targetPosition, nearPlane.Normal) + nearPlane.D >= 0 ? null : targetPosition with
+				{
+					Y = GridSnap > 0 ? MathF.Round(targetPosition.Y / GridSnap) * GridSnap : targetPosition.Y,
+				};
+
+				if (isActiveY && snappedTargetPosition.HasValue)
+				{
+					ObjectEditorState.SelectedWorldObject.Position.Y = snappedTargetPosition.Value.Y;
+				}
+			}
+
+			static bool RenderMoveButton(string text, ImDrawListPtr drawList, Vector2 posOrigin)
+			{
+				const int padding = 6;
+				Vector2 size = ImGui.CalcTextSize(text) + new Vector2(padding * 2);
+
+				ImGui.SetCursorScreenPos(posOrigin);
+				ImGui.InvisibleButton(text, size);
+				bool isActive = ImGui.IsItemActive();
+				drawList.AddRectFilled(posOrigin, posOrigin + size, !isActive && ImGui.IsItemHovered() ? 0xff444444 : 0xff222222);
+				drawList.AddRect(posOrigin, posOrigin + size, ImGui.GetColorU32(ImGuiCol.Text));
+				drawList.AddText(posOrigin + new Vector2(padding), ImGui.GetColorU32(ImGuiCol.Text), text);
+				return isActive;
 			}
 		}
 
@@ -196,13 +216,7 @@ public static class LevelEditorWindow
 	private static void CalculateTargetPosition(Vector2 normalizedMousePosition, Plane nearPlane)
 	{
 		Vector3 targetPosition = Camera3d.GetMouseWorldPosition(normalizedMousePosition, new(Vector3.UnitY, -LevelEditorState.TargetHeight));
-		if (Vector3.Dot(targetPosition, nearPlane.Normal) + nearPlane.D >= 0)
-		{
-			LevelEditorState.TargetPosition = null;
-			return;
-		}
-
-		LevelEditorState.TargetPosition = new Vector3
+		LevelEditorState.TargetPosition = Vector3.Dot(targetPosition, nearPlane.Normal) + nearPlane.D >= 0 ? null : new Vector3
 		{
 			X = GridSnap > 0 ? MathF.Round(targetPosition.X / GridSnap) * GridSnap : targetPosition.X,
 			Y = targetPosition.Y,
