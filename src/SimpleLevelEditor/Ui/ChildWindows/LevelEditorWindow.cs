@@ -4,6 +4,7 @@ using SimpleLevelEditor.Maths;
 using SimpleLevelEditor.Model;
 using SimpleLevelEditor.Rendering;
 using SimpleLevelEditor.State;
+using SimpleLevelEditor.Ui.Components;
 using SimpleLevelEditor.Utils;
 
 namespace SimpleLevelEditor.Ui.ChildWindows;
@@ -58,6 +59,8 @@ public static class LevelEditorWindow
 
 			ImGui.PopStyleColor();
 
+			RenderSelectionMenu(framebufferSize, drawList, cursorScreenPos);
+
 			ImGui.SetCursorPos(cursorPosition);
 			ImGui.InvisibleButton("3d_view", framebufferSize);
 			bool isFocused = ImGui.IsItemHovered();
@@ -70,26 +73,76 @@ public static class LevelEditorWindow
 
 			if (isFocused && Input.IsButtonPressed(MouseButton.Left))
 				OnLeftClick();
-
-			if (ObjectEditorState.SelectedWorldObject != null)
-			{
-				Vector3 position3d = ObjectEditorState.SelectedWorldObject.Position;
-				Matrix4x4 viewProjection = Camera3d.ViewMatrix * Camera3d.Projection;
-				Plane nearPlane = new(-viewProjection.M13, -viewProjection.M23, -viewProjection.M33, -viewProjection.M43);
-
-				// Only render if the object is in front of the camera.
-				if (Vector3.Dot(position3d, nearPlane.Normal) + nearPlane.D < 0)
-				{
-					Vector2 position2d = Camera3d.GetScreenPositionFrom3dPoint(position3d, framebufferSize);
-					if (position2d.X > 0 && position2d.X < framebufferSize.X && position2d.Y > 0 && position2d.Y < framebufferSize.Y)
-					{
-						drawList.AddText(cursorScreenPos + position2d, ImGui.GetColorU32(0xffffffff), Inline.Span(position2d, "0.00"));
-					}
-				}
-			}
 		}
 
 		ImGui.EndChild(); // End Level Editor
+	}
+
+	private static void RenderSelectionMenu(Vector2 framebufferSize, ImDrawListPtr drawList, Vector2 cursorScreenPos)
+	{
+		if (ObjectEditorState.SelectedWorldObject == null)
+			return;
+
+		Matrix4x4 viewProjection = Camera3d.ViewMatrix * Camera3d.Projection;
+		Plane nearPlane = new(-viewProjection.M13, -viewProjection.M23, -viewProjection.M33, -viewProjection.M43);
+		Vector2? posOrigin = GetPosition2d(ObjectEditorState.SelectedWorldObject.Position);
+		if (!posOrigin.HasValue)
+			return;
+
+		Matrix4x4 rotationMatrix = MathUtils.CreateRotationMatrixFromEulerAngles(ObjectEditorState.SelectedWorldObject.Rotation);
+		Vector2? posX = GetPosition2d(ObjectEditorState.SelectedWorldObject.Position + Vector3.Transform(Vector3.UnitX, rotationMatrix));
+		Vector2? posY = GetPosition2d(ObjectEditorState.SelectedWorldObject.Position + Vector3.Transform(Vector3.UnitY, rotationMatrix));
+		Vector2? posZ = GetPosition2d(ObjectEditorState.SelectedWorldObject.Position + Vector3.Transform(Vector3.UnitZ, rotationMatrix));
+
+		const Keys rotationKey = Keys.R;
+		const Keys scaleKey = Keys.G;
+		if (posX.HasValue)
+		{
+			drawList.AddLine(posOrigin.Value, posX.Value, 0xff0000ff);
+			ImGui.SetCursorScreenPos(posX.Value);
+			Controls('X', ref ObjectEditorState.SelectedWorldObject.Rotation.X, ref ObjectEditorState.SelectedWorldObject.Scale.X);
+		}
+
+		if (posY.HasValue)
+		{
+			drawList.AddLine(posOrigin.Value, posY.Value, 0xff00ff00);
+			ImGui.SetCursorScreenPos(posY.Value);
+			Controls('Y', ref ObjectEditorState.SelectedWorldObject.Rotation.Y, ref ObjectEditorState.SelectedWorldObject.Scale.Y);
+		}
+
+		if (posZ.HasValue)
+		{
+			drawList.AddLine(posOrigin.Value, posZ.Value, 0xffff0000);
+			ImGui.SetCursorScreenPos(posZ.Value);
+			Controls('Z', ref ObjectEditorState.SelectedWorldObject.Rotation.Z, ref ObjectEditorState.SelectedWorldObject.Scale.Z);
+		}
+
+		static void Controls(char axis, ref float rotation, ref float scale)
+		{
+			if (Input.IsKeyHeld(rotationKey))
+			{
+				ImGuiExt.KnobAngle(Inline.Span($"Rotation {axis}"), ref rotation);
+			}
+			else if (Input.IsKeyHeld(scaleKey))
+			{
+				ImGui.PushItemWidth(80);
+				ImGui.SliderFloat(Inline.Span($"Scale {axis}"), ref scale, 0.01f, 20f, "%.3f", ImGuiSliderFlags.Logarithmic);
+				ImGui.PopItemWidth();
+			}
+		}
+
+		Vector2? GetPosition2d(Vector3 position3d)
+		{
+			// Only render if the object is in front of the camera.
+			if (Vector3.Dot(position3d, nearPlane.Normal) + nearPlane.D >= 0)
+				return null;
+
+			Vector2 position2d = Camera3d.GetScreenPositionFrom3dPoint(position3d, framebufferSize);
+			if (position2d.X > 0 && position2d.X < framebufferSize.X && position2d.Y > 0 && position2d.Y < framebufferSize.Y)
+				return cursorScreenPos + position2d;
+
+			return null;
+		}
 	}
 
 	private static void OnLeftClick()

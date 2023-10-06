@@ -10,9 +10,9 @@ public static class WorldObjectDataComponent
 {
 	private static Vector3 Rotation(ReadOnlySpan<char> label, Vector3 rotation, Func<Vector3, float> selector, Func<Vector3, float, Vector3> setter)
 	{
-		float rotationInRadians = MathUtils.ToRadians(selector(rotation));
+		float rotationInRadians = selector(rotation);
 		if (ImGui.SliderAngle(label, ref rotationInRadians, -180f, 180f))
-			rotation = setter(rotation, MathUtils.ToDegrees(rotationInRadians));
+			rotation = setter(rotation, rotationInRadians);
 
 		ImGui.SameLine();
 		ImGui.PushID(Inline.Span($"{label}_reset"));
@@ -24,7 +24,7 @@ public static class WorldObjectDataComponent
 		return rotation;
 	}
 
-	public static void Render(Vector2 size, WorldObject worldObject, bool includePosition)
+	public static void Render(WorldObject worldObject, bool includePosition)
 	{
 		if (includePosition)
 		{

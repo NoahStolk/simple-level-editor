@@ -2,6 +2,7 @@ using OneOf;
 using SimpleLevelEditor.Model;
 using SimpleLevelEditor.Model.EntityTypes;
 using SimpleLevelEditor.Model.Enums;
+using SimpleLevelEditor.Utils;
 using System.Xml;
 
 namespace SimpleLevelEditor.Formats;
@@ -90,7 +91,7 @@ public static class XmlFormatSerializer
 					Texture = reader.GetAttribute("Texture") ?? throw _invalidFormat,
 					BoundingMesh = reader.GetAttribute("BoundingMesh") ?? throw _invalidFormat,
 					Position = ReadVector3(reader.GetAttribute("Position") ?? throw _invalidFormat),
-					Rotation = ReadVector3(reader.GetAttribute("Rotation") ?? throw _invalidFormat),
+					Rotation = MathUtils.ToRadians(ReadVector3(reader.GetAttribute("Rotation") ?? throw _invalidFormat)),
 					Scale = ReadVector3(reader.GetAttribute("Scale") ?? throw _invalidFormat),
 					Values = Enum.Parse<WorldObjectValues>(reader.GetAttribute("Values") ?? throw _invalidFormat),
 				};
@@ -209,7 +210,7 @@ public static class XmlFormatSerializer
 			writer.WriteAttributeString("Texture", worldObject.Texture);
 			writer.WriteAttributeString("BoundingMesh", worldObject.BoundingMesh);
 			writer.WriteVector3("Position", worldObject.Position);
-			writer.WriteVector3("Rotation", worldObject.Rotation);
+			writer.WriteVector3("Rotation", MathUtils.ToDegrees(worldObject.Rotation));
 			writer.WriteVector3("Scale", worldObject.Scale);
 			writer.WriteAttributeString("Values", worldObject.Values.ToString());
 			writer.WriteEndElement();

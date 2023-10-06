@@ -14,7 +14,7 @@ public static class WorldObjectEditorWindow
 
 			if (ObjectEditorState.SelectedWorldObject != null)
 			{
-				WorldObjectDataComponent.Render(size, ObjectEditorState.SelectedWorldObject, true);
+				WorldObjectDataComponent.Render(ObjectEditorState.SelectedWorldObject, true);
 
 				ImGui.Separator();
 

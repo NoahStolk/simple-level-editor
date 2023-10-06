@@ -12,7 +12,7 @@ public static class WorldObjectCreatorWindow
 		{
 			ImGui.SeparatorText("Create World Object");
 
-			WorldObjectDataComponent.Render(size, ObjectCreatorState.NewWorldObject, false);
+			WorldObjectDataComponent.Render(ObjectCreatorState.NewWorldObject, false);
 		}
 
 		ImGui.EndChild(); // End Object Creator
