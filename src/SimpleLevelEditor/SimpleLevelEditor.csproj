@@ -20,7 +20,6 @@
     <PackageReference Include="OneOf" Version="3.0.263" />
     <PackageReference Include="OneOf.Extended" Version="3.0.263" />
     <PackageReference Include="Silk.NET.GLFW" Version="2.17.1" />
-    <PackageReference Include="Silk.NET.OpenAL" Version="2.17.1" />
     <PackageReference Include="Silk.NET.OpenGL" Version="2.17.1" />
   </ItemGroup>
 

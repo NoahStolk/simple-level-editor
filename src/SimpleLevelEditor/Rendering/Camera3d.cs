@@ -16,7 +16,7 @@ public static class Camera3d
 	private static float _yaw;
 	private static float _pitch;
 
-	public static Quaternion Rotation { get; set; } = Quaternion.Identity;
+	public static Quaternion Rotation { get; private set; } = Quaternion.Identity;
 	public static Vector3 Position { get; private set; } = new(-3, 3, -3);
 
 	public static Matrix4x4 Projection { get; private set; }

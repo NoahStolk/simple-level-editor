@@ -17,7 +17,3 @@ BACKLOG
 - Save state indicated by asterisk in title bar
 - CTRL Z to undo
 - CTRL Y to redo
-
-FIRST ALPHA
-- Public repo
-- GitHub releases
