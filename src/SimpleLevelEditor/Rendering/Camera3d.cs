@@ -16,7 +16,7 @@ public static class Camera3d
 	private static float _yaw;
 	private static float _pitch;
 
-	private static Quaternion _rotation = Quaternion.Identity;
+	public static Quaternion Rotation { get; set; } = Quaternion.Identity;
 	public static Vector3 Position { get; private set; } = new(-3, 3, -3);
 
 	public static Matrix4x4 Projection { get; private set; }
@@ -34,12 +34,12 @@ public static class Camera3d
 
 		const float moveSpeed = 10;
 
-		Matrix4x4 rotationMatrix = Matrix4x4.CreateFromQuaternion(_rotation);
+		Matrix4x4 rotationMatrix = Matrix4x4.CreateFromQuaternion(Rotation);
 		Vector3 transformed = RotateVector(_axisAlignedSpeed, rotationMatrix) + new Vector3(0, _axisAlignedSpeed.Y, 0);
 		Position += transformed * moveSpeed * dt;
 
-		Vector3 upDirection = Vector3.Transform(Vector3.UnitY, _rotation);
-		Vector3 lookDirection = Vector3.Transform(Vector3.UnitZ, _rotation);
+		Vector3 upDirection = Vector3.Transform(Vector3.UnitY, Rotation);
+		Vector3 lookDirection = Vector3.Transform(Vector3.UnitZ, Rotation);
 		ViewMatrix = Matrix4x4.CreateLookAt(Position, Position + lookDirection, upDirection);
 
 		const float nearPlaneDistance = 0.05f;
@@ -132,7 +132,7 @@ public static class Camera3d
 		_pitch -= lookSpeed * delta.Y * 0.0001f;
 
 		_pitch = Math.Clamp(_pitch, MathUtils.ToRadians(-89.9f), MathUtils.ToRadians(89.9f));
-		_rotation = Quaternion.CreateFromYawPitchRoll(_yaw, -_pitch, 0);
+		Rotation = Quaternion.CreateFromYawPitchRoll(_yaw, -_pitch, 0);
 
 		Graphics.Glfw.SetCursorPos(Graphics.Window, _originalCursor.X, _originalCursor.Y);
 	}

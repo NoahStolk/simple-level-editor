@@ -101,26 +101,35 @@ public static class LevelEditorWindow
 		if (!Input.IsKeyHeld(rotationKey) && !Input.IsKeyHeld(scaleKey))
 		{
 			bool isActiveXz = RenderMoveButton("Move XZ", drawList, posOrigin.Value);
-			if (isActiveXz && LevelEditorState.TargetPosition.HasValue)
+			if (isActiveXz)
 			{
-				ObjectEditorState.SelectedWorldObject.Position.X = LevelEditorState.TargetPosition.Value.X;
-				ObjectEditorState.SelectedWorldObject.Position.Z = LevelEditorState.TargetPosition.Value.Z;
+				Vector3 targetPosition = Camera3d.GetMouseWorldPosition(normalizedMousePosition, new(Vector3.UnitY, -ObjectEditorState.SelectedWorldObject.Position.Y));
+				if (Vector3.Dot(targetPosition, nearPlane.Normal) + nearPlane.D < 0)
+				{
+					ObjectEditorState.SelectedWorldObject.Position.X = GridSnap > 0 ? MathF.Round(targetPosition.X / GridSnap) * GridSnap : targetPosition.X;
+					ObjectEditorState.SelectedWorldObject.Position.Z = GridSnap > 0 ? MathF.Round(targetPosition.Z / GridSnap) * GridSnap : targetPosition.Z;
+				}
 			}
 
 			if (posY.HasValue)
 			{
 				bool isActiveY = RenderMoveButton("Move Y", drawList, posY.Value);
-
-				Plane plane = new Plane(); // TODO: Calculate vertical plane oriented towards camera and located at the object's position.
-				Vector3 targetPosition = Camera3d.GetMouseWorldPosition(normalizedMousePosition, plane);
-				Vector3? snappedTargetPosition = Vector3.Dot(targetPosition, nearPlane.Normal) + nearPlane.D >= 0 ? null : targetPosition with
+				if (isActiveY)
 				{
-					Y = GridSnap > 0 ? MathF.Round(targetPosition.Y / GridSnap) * GridSnap : targetPosition.Y,
-				};
+					Vector3 point1 = ObjectEditorState.SelectedWorldObject.Position;
+					Vector3 point2 = point1 + Vector3.Transform(Vector3.UnitX, Camera3d.Rotation);
+					Vector3 point3 = point1 + Vector3.Transform(Vector3.UnitY, Camera3d.Rotation);
+					Plane plane = Plane.CreateFromVertices(point1, point2, point3);
+					Vector3 targetPosition = Camera3d.GetMouseWorldPosition(normalizedMousePosition, plane);
+					Vector3? snappedTargetPosition = Vector3.Dot(targetPosition, nearPlane.Normal) + nearPlane.D >= 0 ? null : targetPosition with
+					{
+						Y = GridSnap > 0 ? MathF.Round(targetPosition.Y / GridSnap) * GridSnap : targetPosition.Y,
+					};
 
-				if (isActiveY && snappedTargetPosition.HasValue)
-				{
-					ObjectEditorState.SelectedWorldObject.Position.Y = snappedTargetPosition.Value.Y;
+					if (snappedTargetPosition.HasValue)
+					{
+						ObjectEditorState.SelectedWorldObject.Position.Y = snappedTargetPosition.Value.Y;
+					}
 				}
 			}
 

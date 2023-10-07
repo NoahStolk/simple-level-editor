@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup Label="Build properties">
-    <OutputType>WinExe</OutputType> <!-- TODO: Use Exe on non-Windows platforms. -->
+    <OutputType>Exe</OutputType>
     <ImplicitUsings>enable</ImplicitUsings>
     <TargetFramework>net7.0</TargetFramework>
     <Nullable>enable</Nullable>
@@ -11,7 +11,7 @@
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <Version>0.1.0</Version>
+    <Version>0.1.1</Version>
   </PropertyGroup>
 
   <ItemGroup Label="External dependencies">
