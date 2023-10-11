@@ -50,7 +50,10 @@ public static class LevelState
 	{
 		DialogResult dialogResult = DialogWrapper.FileSave(_fileExtension);
 		if (dialogResult is { IsOk: true })
-			Save(dialogResult.Path);
+		{
+			string path = dialogResult.Path.EndsWith(".xml") ? dialogResult.Path : dialogResult.Path + ".xml";
+			Save(path);
+		}
 	}
 
 	private static void Save(string path)
