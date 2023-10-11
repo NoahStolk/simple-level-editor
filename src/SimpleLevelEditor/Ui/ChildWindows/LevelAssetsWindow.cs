@@ -39,6 +39,7 @@ public static class LevelAssetsWindow
 
 				list.AddRange(relativePaths);
 				list = list.Order().Distinct().ToList();
+				LevelState.ReloadAssets(LevelState.LevelFilePath);
 			}
 		}
 
@@ -69,7 +70,10 @@ public static class LevelAssetsWindow
 			}
 
 			if (toRemove != null)
+			{
 				list.Remove(toRemove);
+				LevelState.ReloadAssets(LevelState.LevelFilePath);
+			}
 		}
 
 		ImGui.EndChild();
