@@ -104,6 +104,7 @@ public sealed class ImGuiController
 		io.KeyMap[(int)ImGuiKey.Delete] = (int)Keys.Delete;
 		io.KeyMap[(int)ImGuiKey.Backspace] = (int)Keys.Backspace;
 		io.KeyMap[(int)ImGuiKey.Enter] = (int)Keys.Enter;
+		io.KeyMap[(int)ImGuiKey.KeypadEnter] = (int)Keys.KeypadEnter;
 		io.KeyMap[(int)ImGuiKey.Escape] = (int)Keys.Escape;
 
 		for (int i = 0; i < 26; i++)
