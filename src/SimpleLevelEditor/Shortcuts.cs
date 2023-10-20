@@ -14,6 +14,8 @@ public static class Shortcuts
 	public const string AddNewObject = nameof(AddNewObject);
 	public const string FocusOnCurrentObject = nameof(FocusOnCurrentObject);
 	public const string DeleteSelectedObjects = nameof(DeleteSelectedObjects);
+	public const string Undo = nameof(Undo);
+	public const string Redo = nameof(Redo);
 
 	private static readonly List<Shortcut> _shortcuts = new()
 	{
@@ -35,6 +37,8 @@ public static class Shortcuts
 			if (LevelEditorState.SelectedWorldObject != null)
 				Camera3d.SetFocusPoint(LevelEditorState.SelectedWorldObject.Position);
 		}),
+		new(Undo, Keys.Z, true, false, () => LevelState.SetHistoryIndex(LevelState.CurrentHistoryIndex - 1), "Undo"),
+		new(Redo, Keys.Y, true, false, () => LevelState.SetHistoryIndex(LevelState.CurrentHistoryIndex + 1), "Redo"),
 	};
 
 	public static IReadOnlyList<Shortcut> ShortcutsList => _shortcuts;
