@@ -215,6 +215,7 @@ public static class LevelEditorWindow
 			case LevelEditorMode.EditWorldObjects:
 				if (LevelEditorState.HighlightedObject != null)
 				{
+					Camera3d.SetFocusPoint(LevelEditorState.HighlightedObject.Position);
 					ObjectEditorState.SelectedWorldObject = ObjectEditorState.SelectedWorldObject == LevelEditorState.HighlightedObject ? null : LevelEditorState.HighlightedObject;
 				}
 
