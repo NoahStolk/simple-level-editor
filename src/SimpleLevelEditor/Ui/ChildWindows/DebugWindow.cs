@@ -49,6 +49,8 @@ public static class DebugWindow
 
 			ImGui.EndChild(); // End Warnings
 
+			ImGui.SeparatorText("Input");
+
 			if (Input.IsKeyHeld(Keys.ControlLeft) || Input.IsKeyHeld(Keys.ControlRight))
 				ImGui.Text("CTRL");
 
