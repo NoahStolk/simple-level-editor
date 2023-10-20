@@ -1,6 +1,5 @@
 using Silk.NET.GLFW;
 using SimpleLevelEditor.Maths;
-using SimpleLevelEditor.Utils;
 
 namespace SimpleLevelEditor.Rendering;
 
@@ -79,8 +78,6 @@ public static class Camera3d
 
 		_yaw -= lookSpeed * delta.X * 0.0001f;
 		_pitch -= lookSpeed * delta.Y * 0.0001f;
-
-		_pitch = Math.Clamp(_pitch, MathUtils.ToRadians(-89.9f), MathUtils.ToRadians(89.9f));
 		Rotation = Quaternion.CreateFromYawPitchRoll(_yaw, -_pitch, 0);
 
 		Graphics.Glfw.SetCursorPos(Graphics.Window, _originalCursor.X, _originalCursor.Y);

@@ -8,7 +8,7 @@ Build levels using .obj meshes and .tga textures. More formats will be supported
 
 Levels are saved as XML for readability and ease of use. More output formats will be supported later.
 
-Currently there is only a Windows build, but it will be easy to create builds for Mac and Linux.
+Currently there is only a Windows build, but it should be easy to create builds for Mac and Linux.
 
 ## Controls
 

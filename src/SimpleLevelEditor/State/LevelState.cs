@@ -2,7 +2,6 @@ using NativeFileDialogSharp;
 using SimpleLevelEditor.Formats;
 using SimpleLevelEditor.Model;
 using SimpleLevelEditor.Rendering;
-using System.Text;
 using System.Xml;
 
 namespace SimpleLevelEditor.State;
@@ -10,7 +9,6 @@ namespace SimpleLevelEditor.State;
 public static class LevelState
 {
 	private const string _fileExtension = "xml";
-	private static readonly XmlWriterSettings _xmlWriterSettings = new() { Indent = true, Encoding = new UTF8Encoding(false) };
 
 	public static string? LevelFilePath { get; private set; }
 	public static Level3dData Level { get; private set; } = Level3dData.Default;
@@ -59,12 +57,7 @@ public static class LevelState
 	private static void Save(string path)
 	{
 		using MemoryStream ms = new();
-		using XmlWriter writer = XmlWriter.Create(ms, _xmlWriterSettings);
-		XmlFormatSerializer.WriteLevel(Level, writer);
-		writer.Flush();
-
-		ms.Write("\n"u8);
-
+		XmlFormatSerializer.WriteLevel(ms, Level, false);
 		File.WriteAllBytes(path, ms.ToArray());
 		SetLevel(path, Level);
 	}

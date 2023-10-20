@@ -3,6 +3,7 @@ using SimpleLevelEditor.Model;
 using SimpleLevelEditor.Model.EntityTypes;
 using SimpleLevelEditor.Model.Enums;
 using SimpleLevelEditor.Utils;
+using System.Text;
 using System.Xml;
 
 namespace SimpleLevelEditor.Formats;
@@ -10,6 +11,8 @@ namespace SimpleLevelEditor.Formats;
 public static class XmlFormatSerializer
 {
 	private static readonly Exception _invalidFormat = new("Invalid format");
+	private static readonly XmlWriterSettings _xmlWriterSettings = new() { Indent = true, Encoding = new UTF8Encoding(false) };
+	private static readonly XmlWriterSettings _xmlWriterSettingsCompact = new() { Indent = false, Encoding = new UTF8Encoding(false) };
 
 	public static Level3dData ReadLevel(XmlReader reader)
 	{
@@ -177,7 +180,15 @@ public static class XmlFormatSerializer
 		return new(float.Parse(parts[0]), float.Parse(parts[1]), float.Parse(parts[2]));
 	}
 
-	public static void WriteLevel(Level3dData level, XmlWriter writer)
+	public static void WriteLevel(MemoryStream ms, Level3dData level, bool writeCompact)
+	{
+		using XmlWriter writer = XmlWriter.Create(ms, writeCompact ? _xmlWriterSettingsCompact : _xmlWriterSettings);
+		WriteLevel(level, writer);
+		writer.Flush();
+		ms.Write("\n"u8);
+	}
+
+	private static void WriteLevel(Level3dData level, XmlWriter writer)
 	{
 		writer.WriteStartElement("Level");
 		writer.WriteAttributeString("Version", level.Version.ToString());
