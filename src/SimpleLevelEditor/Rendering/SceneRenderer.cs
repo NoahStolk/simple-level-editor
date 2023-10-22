@@ -50,8 +50,7 @@ public static class SceneRenderer
 
 		RenderOrigin(lineShader);
 		RenderGrid(lineShader);
-		if (LevelEditorState.Mode == LevelEditorMode.EditWorldObjects)
-			RenderBoundingBoxes(lineShader);
+		RenderBoundingBoxes(lineShader);
 
 		ShaderCacheEntry meshShader = ShaderContainer.Shaders["Mesh"];
 		Gl.UseProgram(meshShader.Id);
@@ -143,41 +142,54 @@ public static class SceneRenderer
 
 	private static void RenderBoundingBoxes(ShaderCacheEntry lineShader)
 	{
+		Gl.BindVertexArray(_cubeVao);
+		Gl.LineWidth(2);
+
+		if (LevelEditorState.Mode == LevelEditorMode.EditWorldObjects)
+		{
+			for (int i = 0; i < LevelState.Level.WorldObjects.Count; i++)
+			{
+				WorldObject worldObject = LevelState.Level.WorldObjects[i];
+				RenderBoundingBox(lineShader, worldObject);
+			}
+		}
+		else if (LevelEditorState.Mode == LevelEditorMode.AddWorldObjects)
+		{
+			RenderBoundingBox(lineShader, ObjectCreatorState.NewWorldObject);
+		}
+	}
+
+	private static void RenderBoundingBox(ShaderCacheEntry lineShader, WorldObject worldObject)
+	{
+		MeshContainer.Entry? mesh = MeshContainer.GetMesh(worldObject.Mesh);
+		if (mesh == null)
+			return;
+
 		int lineModelUniform = lineShader.GetUniformLocation("model");
 		int lineColorUniform = lineShader.GetUniformLocation("color");
 
-		Gl.BindVertexArray(_cubeVao);
-		Gl.LineWidth(2);
-		for (int i = 0; i < LevelState.Level.WorldObjects.Count; i++)
-		{
-			WorldObject worldObject = LevelState.Level.WorldObjects[i];
-			MeshContainer.Entry? mesh = MeshContainer.GetMesh(worldObject.Mesh);
-			if (mesh == null)
-				continue;
+		float timeAddition = MathF.Sin((float)Glfw.GetTime() * 10) * 0.5f + 0.5f;
+		timeAddition *= 0.5f;
 
-			float timeAddition = MathF.Sin((float)Glfw.GetTime() * 10) * 0.5f + 0.5f;
-			timeAddition *= 0.5f;
+		Vector4 color;
+		if (worldObject == ObjectEditorState.SelectedWorldObject && worldObject == LevelEditorState.HighlightedObject)
+			color = new(0.5f + timeAddition, 1, 0.5f + timeAddition, 1);
+		else if (worldObject == ObjectEditorState.SelectedWorldObject)
+			color = new(0, 0.75f, 0, 1);
+		else if (worldObject == LevelEditorState.HighlightedObject)
+			color = new(1, 0.5f + timeAddition, 1, 1);
+		else
+			color = new(0.75f, 0, 0.75f, 1);
 
-			Vector4 color;
-			if (worldObject == ObjectEditorState.SelectedWorldObject && worldObject == LevelEditorState.HighlightedObject)
-				color = new(0.5f + timeAddition, 1, 0.5f + timeAddition, 1);
-			else if (worldObject == ObjectEditorState.SelectedWorldObject)
-				color = new(0, 0.75f, 0, 1);
-			else if (worldObject == LevelEditorState.HighlightedObject)
-				color = new(1, 0.5f + timeAddition, 1, 1);
-			else
-				color = new(0.75f, 0, 0.75f, 1);
+		ShaderUniformUtils.Set(lineColorUniform, color);
 
-			ShaderUniformUtils.Set(lineColorUniform, color);
+		Vector3 bbScale = worldObject.Scale * (mesh.BoundingMax - mesh.BoundingMin);
+		Vector3 bbOffset = (mesh.BoundingMax + mesh.BoundingMin) / 2;
+		Matrix4x4 rotationMatrix = MathUtils.CreateRotationMatrixFromEulerAngles(worldObject.Rotation);
 
-			Vector3 bbScale = worldObject.Scale * (mesh.BoundingMax - mesh.BoundingMin);
-			Vector3 bbOffset = (mesh.BoundingMax + mesh.BoundingMin) / 2;
-			Matrix4x4 rotationMatrix = MathUtils.CreateRotationMatrixFromEulerAngles(worldObject.Rotation);
-
-			Matrix4x4 modelMatrix = Matrix4x4.CreateScale(bbScale) * rotationMatrix * Matrix4x4.CreateTranslation(worldObject.Position + Vector3.Transform(bbOffset, rotationMatrix));
-			ShaderUniformUtils.Set(lineModelUniform, modelMatrix);
-			Gl.DrawArrays(PrimitiveType.Lines, 0, 24);
-		}
+		Matrix4x4 modelMatrix = Matrix4x4.CreateScale(bbScale) * rotationMatrix * Matrix4x4.CreateTranslation(worldObject.Position + Vector3.Transform(bbOffset, rotationMatrix));
+		ShaderUniformUtils.Set(lineModelUniform, modelMatrix);
+		Gl.DrawArrays(PrimitiveType.Lines, 0, 24);
 	}
 
 	private static unsafe void RenderWorldObjects(ShaderCacheEntry meshShader)
@@ -186,7 +198,7 @@ public static class SceneRenderer
 		for (int i = 0; i < LevelState.Level.WorldObjects.Count; i++)
 		{
 			WorldObject worldObject = LevelState.Level.WorldObjects[i];
-			ShaderUniformUtils.Set(modelUniform, Matrix4x4.CreateScale(worldObject.Scale) * MathUtils.CreateRotationMatrixFromEulerAngles(worldObject.Rotation) * Matrix4x4.CreateTranslation(worldObject.Position));
+			ShaderUniformUtils.Set(modelUniform, worldObject.GetModelMatrix());
 
 			MeshContainer.Entry? mesh = MeshContainer.GetMesh(worldObject.Mesh);
 			if (mesh == null)
@@ -220,7 +232,7 @@ public static class SceneRenderer
 		Gl.BindTexture(TextureTarget.Texture2D, textureId.Value);
 
 		int modelUniform = meshShader.GetUniformLocation("model");
-		ShaderUniformUtils.Set(modelUniform, Matrix4x4.CreateScale(ObjectCreatorState.NewWorldObject.Scale) * MathUtils.CreateRotationMatrixFromEulerAngles(ObjectCreatorState.NewWorldObject.Rotation) * Matrix4x4.CreateTranslation(LevelEditorState.TargetPosition.Value));
+		ShaderUniformUtils.Set(modelUniform, ObjectCreatorState.NewWorldObject.GetModelMatrix());
 		Gl.BindVertexArray(mesh.Vao);
 		fixed (uint* i = &mesh.Mesh.Indices[0])
 			Gl.DrawElements(PrimitiveType.Triangles, (uint)mesh.Mesh.Indices.Length, DrawElementsType.UnsignedInt, i);

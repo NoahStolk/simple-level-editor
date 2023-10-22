@@ -1,4 +1,5 @@
 using SimpleLevelEditor.Model.Enums;
+using SimpleLevelEditor.Utils;
 
 namespace SimpleLevelEditor.Model;
 
@@ -24,5 +25,10 @@ public record WorldObject
 			BoundingMesh = BoundingMesh,
 			Values = Values,
 		};
+	}
+
+	public Matrix4x4 GetModelMatrix()
+	{
+		return Matrix4x4.CreateScale(Scale) * MathUtils.CreateRotationMatrixFromEulerAngles(Rotation) * Matrix4x4.CreateTranslation(Position);
 	}
 }

@@ -96,7 +96,7 @@ public static class Camera3d
 		}
 		else if (_cameraMode == CameraMode.Pan)
 		{
-			const float multiplier = 0.025f;
+			const float multiplier = 0.0125f;
 			_focusPointTarget -= Vector3.Transform(new(-delta.X * multiplier, -delta.Y * multiplier, 0), Rotation);
 			_focusPoint = _focusPointTarget;
 
