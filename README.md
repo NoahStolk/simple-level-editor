@@ -12,14 +12,15 @@ Currently there is only a Windows build, but it should be easy to create builds 
 
 ## Controls
 
-| Input        | Context             | Action                   |
-|--------------|---------------------|--------------------------|
-| Scroll wheel | 3D view             | Zoom in/out              |
-| RMB          | 3D view             | Look around              |
-| LMB          | 3D view / Add mode  | Add object               |
-| LMB          | 3D view / Edit mode | Select object            |
-| Hold R       | Edit mode           | Open rotate menu         |
-| Hold G       | Edit mode           | Open scale menu          |
+| Input        | Context             | Action           |
+|--------------|---------------------|------------------|
+| Scroll wheel | 3D view             | Zoom in/out      |
+| RMB          | 3D view             | Look around      |
+| MMB          | 3D view             | Move camera      |
+| LMB          | 3D view / Add mode  | Add object       |
+| LMB          | 3D view / Edit mode | Select object    |
+| Hold R       | Edit mode           | Open rotate menu |
+| Hold G       | Edit mode           | Open scale menu  |
 
 ## Shortcuts
 

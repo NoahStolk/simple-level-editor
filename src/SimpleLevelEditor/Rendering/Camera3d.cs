@@ -6,10 +6,11 @@ namespace SimpleLevelEditor.Rendering;
 public static class Camera3d
 {
 	public const MouseButton LookButton = MouseButton.Right;
+	public const MouseButton PanButton = MouseButton.Middle;
 
 	private const int _fieldOfView = 2;
 	private static Vector2 _originalCursor = Input.GetMousePosition();
-	private static bool _lookEnabled;
+	private static CameraMode _cameraMode;
 
 	private static float _yaw;
 	private static float _pitch;
@@ -18,6 +19,13 @@ public static class Camera3d
 
 	private static Vector3 _focusPointTarget;
 	private static Vector3 _focusPoint;
+
+	private enum CameraMode
+	{
+		None,
+		Look,
+		Pan,
+	}
 
 	public static Quaternion Rotation { get; private set; } = Quaternion.Identity;
 	public static Vector3 Position { get; private set; }
@@ -34,13 +42,17 @@ public static class Camera3d
 	public static void Update(float dt, bool isFocused)
 	{
 		if (isFocused)
+		{
 			HandleMouse();
-		else
-			StopLook();
 
-		float scroll = Input.GetScroll();
-		if (scroll != 0)
-			_zoom = Math.Clamp(_zoom - scroll, 1, 30);
+			float scroll = Input.GetScroll();
+			if (scroll != 0)
+				_zoom = Math.Clamp(_zoom - scroll, 1, 30);
+		}
+		else
+		{
+			ResetCameraMode();
+		}
 
 		_focusPoint = Vector3.Lerp(_focusPoint, _focusPointTarget, dt * 10);
 		Position = _focusPoint + Vector3.Transform(new(0, 0, -_zoom), Rotation);
@@ -56,37 +68,46 @@ public static class Camera3d
 
 	private static unsafe void HandleMouse()
 	{
-		const float lookSpeed = 20;
-
 		Vector2 cursor = Input.GetMousePosition();
 
-		if (!_lookEnabled && Input.IsButtonHeld(LookButton))
+		if (_cameraMode == CameraMode.None && (Input.IsButtonHeld(LookButton) || Input.IsButtonHeld(PanButton)))
 		{
 			Graphics.Glfw.SetInputMode(Graphics.Window, CursorStateAttribute.Cursor, CursorModeValue.CursorHidden);
 			_originalCursor = cursor;
-			_lookEnabled = true;
+			_cameraMode = Input.IsButtonHeld(LookButton) ? CameraMode.Look : CameraMode.Pan;
 		}
-		else if (_lookEnabled && !Input.IsButtonHeld(LookButton))
+		else if (_cameraMode != CameraMode.None && !Input.IsButtonHeld(LookButton) && !Input.IsButtonHeld(PanButton))
 		{
-			StopLook();
+			ResetCameraMode();
 		}
 
-		Vector2 delta = cursor - _originalCursor;
-
-		if (!_lookEnabled)
+		if (_cameraMode == CameraMode.None)
 			return;
 
-		_yaw -= lookSpeed * delta.X * 0.0001f;
-		_pitch -= lookSpeed * delta.Y * 0.0001f;
-		Rotation = Quaternion.CreateFromYawPitchRoll(_yaw, -_pitch, 0);
+		Vector2 delta = cursor - _originalCursor;
+		if (_cameraMode == CameraMode.Look)
+		{
+			const float lookSpeed = 20;
+			_yaw -= lookSpeed * delta.X * 0.0001f;
+			_pitch -= lookSpeed * delta.Y * 0.0001f;
+			Rotation = Quaternion.CreateFromYawPitchRoll(_yaw, -_pitch, 0);
 
-		Graphics.Glfw.SetCursorPos(Graphics.Window, _originalCursor.X, _originalCursor.Y);
+			Graphics.Glfw.SetCursorPos(Graphics.Window, _originalCursor.X, _originalCursor.Y);
+		}
+		else if (_cameraMode == CameraMode.Pan)
+		{
+			const float multiplier = 0.025f;
+			_focusPointTarget -= Vector3.Transform(new(-delta.X * multiplier, -delta.Y * multiplier, 0), Rotation);
+			_focusPoint = _focusPointTarget;
+
+			Graphics.Glfw.SetCursorPos(Graphics.Window, _originalCursor.X, _originalCursor.Y);
+		}
 	}
 
-	private static unsafe void StopLook()
+	private static unsafe void ResetCameraMode()
 	{
 		Graphics.Glfw.SetInputMode(Graphics.Window, CursorStateAttribute.Cursor, CursorModeValue.CursorNormal);
-		_lookEnabled = false;
+		_cameraMode = CameraMode.None;
 	}
 
 	public static Vector3 GetMouseWorldPosition(Vector2 normalizedMousePosition, Plane plane)
