@@ -24,14 +24,11 @@ public static class WorldObjectDataComponent
 		return rotation;
 	}
 
-	public static void Render(WorldObject worldObject, bool includePosition)
+	public static void Render(WorldObject worldObject)
 	{
-		if (includePosition)
-		{
-			Vector3 position = worldObject.Position;
-			if (ImGui.InputFloat3("Position", ref position, "%.3f", ImGuiInputTextFlags.CharsDecimal))
-				worldObject.Position = position;
-		}
+		Vector3 position = worldObject.Position;
+		if (ImGui.InputFloat3("Position", ref position, "%.3f", ImGuiInputTextFlags.CharsDecimal))
+			worldObject.Position = position;
 
 		worldObject.Rotation = Rotation("Rotation X", worldObject.Rotation, static r => r.X, static (r, f) => r with { X = f });
 		worldObject.Rotation = Rotation("Rotation Y", worldObject.Rotation, static r => r.Y, static (r, f) => r with { Y = f });

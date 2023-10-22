@@ -2,6 +2,7 @@ using NativeFileDialogSharp;
 using SimpleLevelEditor.Formats;
 using SimpleLevelEditor.Model;
 using SimpleLevelEditor.Rendering;
+using SimpleLevelEditor.Ui.ChildWindows;
 using System.Xml;
 
 namespace SimpleLevelEditor.State;
@@ -71,7 +72,7 @@ public static class LevelState
 	private static void ClearState()
 	{
 		ObjectEditorState.SelectedWorldObject = null;
-		ObjectCreatorState.Reset();
+		WorldObjectEditorWindow.Reset();
 	}
 
 	public static void ReloadAssets(string? levelFilePath)

@@ -1,4 +1,5 @@
 using Silk.NET.GLFW;
+using SimpleLevelEditor.Logic;
 using SimpleLevelEditor.Rendering;
 using SimpleLevelEditor.State;
 
@@ -10,8 +11,7 @@ public static class Shortcuts
 	public const string Open = nameof(Open);
 	public const string Save = nameof(Save);
 	public const string SaveAs = nameof(SaveAs);
-	public const string AddWorldObjectsMode = nameof(AddWorldObjectsMode);
-	public const string EditWorldObjectsMode = nameof(EditWorldObjectsMode);
+	public const string AddNewObject = nameof(AddNewObject);
 	public const string FocusOnCurrentObject = nameof(FocusOnCurrentObject);
 	public const string DeleteSelectedObjects = nameof(DeleteSelectedObjects);
 
@@ -21,8 +21,7 @@ public static class Shortcuts
 		new(Open, Keys.O, true, false, "Open level", LevelState.Load),
 		new(Save, Keys.S, true, false, "Save level", LevelState.Save),
 		new(SaveAs, Keys.S, true, true, "Save level as", LevelState.SaveAs),
-		new(AddWorldObjectsMode, Keys.F1, false, false, "Add world objects", () => LevelEditorState.Mode = LevelEditorMode.AddWorldObjects),
-		new(EditWorldObjectsMode, Keys.F2, false, false, "Edit world objects", () => LevelEditorState.Mode = LevelEditorMode.EditWorldObjects),
+		new(AddNewObject, Keys.Space, false, false, "Add new object", MainLogic.AddNewWorldObject),
 		new(FocusOnCurrentObject, Keys.A, false, false, "Focus on current object", () =>
 		{
 			if (ObjectEditorState.SelectedWorldObject != null)
@@ -39,18 +38,6 @@ public static class Shortcuts
 	};
 
 	public static IReadOnlyList<Shortcut> ShortcutsList => _shortcuts;
-
-	public static string GetDescription(string shortcutName)
-	{
-		for (int i = 0; i < _shortcuts.Count; i++)
-		{
-			Shortcut shortcut = _shortcuts[i];
-			if (shortcut.Id == shortcutName)
-				return shortcut.Description;
-		}
-
-		return "?";
-	}
 
 	public static string GetKeyDescription(string shortcutName)
 	{

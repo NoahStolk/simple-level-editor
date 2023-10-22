@@ -3,6 +3,7 @@ using SimpleLevelEditor.Maths;
 using SimpleLevelEditor.Model;
 using SimpleLevelEditor.Rendering;
 using SimpleLevelEditor.State;
+using SimpleLevelEditor.Ui.ChildWindows;
 
 namespace SimpleLevelEditor.Logic;
 
@@ -13,9 +14,6 @@ public static class MainLogic
 		CalculateTargetPosition(normalizedMousePosition, nearPlane, gridSnap);
 		CalculateHighlightedObject(normalizedMousePosition, isFocused);
 
-		if (LevelEditorState.TargetPosition.HasValue)
-			ObjectCreatorState.NewWorldObject.Position = LevelEditorState.TargetPosition.Value;
-
 		if (Input.IsKeyHeld(Keys.ControlLeft) || Input.IsKeyHeld(Keys.ControlRight))
 		{
 			float scroll = Input.GetScroll();
@@ -23,30 +21,27 @@ public static class MainLogic
 				LevelEditorState.TargetHeight = Math.Clamp(LevelEditorState.TargetHeight - scroll, -512, 512);
 		}
 
-		if (isFocused && Input.IsButtonPressed(MouseButton.Left))
-			OnLeftClick();
+		if (isFocused && Input.IsButtonPressed(MouseButton.Left) && LevelEditorState.HighlightedObject != null)
+			ObjectEditorState.SelectedWorldObject = ObjectEditorState.SelectedWorldObject == LevelEditorState.HighlightedObject ? null : LevelEditorState.HighlightedObject;
 	}
 
-	private static void OnLeftClick()
+	public static void AddNewWorldObject()
 	{
-		switch (LevelEditorState.Mode)
+		if (!LevelEditorState.TargetPosition.HasValue)
+			return;
+
+		WorldObject reference = ObjectEditorState.SelectedWorldObject ?? WorldObjectEditorWindow.DefaultObject;
+		if (reference.Mesh.Length == 0 || reference.Texture.Length == 0)
+			return;
+
+		WorldObject worldObject = reference with
 		{
-			case LevelEditorMode.AddWorldObjects:
-				if (ObjectCreatorState.IsValid() && LevelEditorState.TargetPosition.HasValue && !LevelState.Level.WorldObjects.Exists(wo => wo.Position == ObjectCreatorState.NewWorldObject.Position && wo.Mesh == ObjectCreatorState.NewWorldObject.Mesh))
-				{
-					WorldObject worldObject = ObjectCreatorState.NewWorldObject.DeepCopy();
-					LevelState.Level.WorldObjects.Add(worldObject);
-				}
+			Position = LevelEditorState.TargetPosition.Value,
+		};
+		LevelState.Level.WorldObjects.Add(worldObject);
 
-				break;
-			case LevelEditorMode.EditWorldObjects:
-				if (LevelEditorState.HighlightedObject != null)
-				{
-					ObjectEditorState.SelectedWorldObject = ObjectEditorState.SelectedWorldObject == LevelEditorState.HighlightedObject ? null : LevelEditorState.HighlightedObject;
-				}
-
-				break;
-		}
+		ObjectEditorState.SelectedWorldObject = worldObject;
+		LevelEditorState.HighlightedObject = worldObject;
 	}
 
 	private static void CalculateTargetPosition(Vector2 normalizedMousePosition, Plane nearPlane, float gridSnap)
