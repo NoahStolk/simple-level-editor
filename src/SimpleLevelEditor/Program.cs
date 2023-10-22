@@ -1,6 +1,9 @@
 using ImGuiNET;
 using SimpleLevelEditor;
 using SimpleLevelEditor.Content;
+using SimpleLevelEditor.Content.Parsers.Texture;
+using SimpleLevelEditor.Content.Parsers.Texture.TgaFormat;
+using SimpleLevelEditor.Rendering;
 using SimpleLevelEditor.Utils;
 
 Graphics.CreateWindow(new("Simple Level Editor", Constants.WindowWidth, Constants.WindowHeight, false));
@@ -11,12 +14,19 @@ foreach (string filePath in Directory.GetFiles(Path.Combine("Resources", "Shader
 	string shaderName = Path.GetFileNameWithoutExtension(filePath);
 	string vertexCode = File.ReadAllText(Path.Combine("Resources", "Shaders", $"{shaderName}.vert"));
 	string fragmentCode = File.ReadAllText(Path.Combine("Resources", "Shaders", $"{shaderName}.frag"));
-	ShaderContainer.Add(shaderName, vertexCode, fragmentCode);
+	InternalContent.AddShader(shaderName, vertexCode, fragmentCode);
+}
+
+foreach (string filePath in Directory.GetFiles(Path.Combine("Resources", "Textures")).DistinctBy(Path.GetFileNameWithoutExtension))
+{
+	string textureName = Path.GetFileNameWithoutExtension(filePath);
+	TextureData texture = TgaParser.Parse(File.ReadAllBytes(filePath));
+	InternalContent.AddTexture(textureName, texture);
 }
 
 ImGuiController imGuiController = new(Constants.WindowWidth, Constants.WindowHeight, static orthoProjection =>
 {
-	ShaderCacheEntry uiShader = ShaderContainer.Shaders["Ui"];
+	ShaderCacheEntry uiShader = InternalContent.Shaders["Ui"];
 	Graphics.Gl.UseProgram(uiShader.Id);
 
 	int texture = uiShader.GetUniformLocation("Texture");

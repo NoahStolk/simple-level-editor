@@ -17,3 +17,9 @@ BACKLOG
 - Save state indicated by asterisk in title bar
 - CTRL Z to undo
 - CTRL Y to redo
+- Settings
+	- FOV
+	- Look speed
+	- Pan speed
+	- Invert pan X
+	- Invert pan Y

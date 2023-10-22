@@ -1,5 +1,6 @@
 using ImGuiNET;
 using Silk.NET.GLFW;
+using SimpleLevelEditor.Content;
 using SimpleLevelEditor.Logic;
 using SimpleLevelEditor.Rendering;
 using SimpleLevelEditor.State;
@@ -31,6 +32,10 @@ public static class LevelEditorWindow
 
 			ImDrawListPtr drawList = ImGui.GetWindowDrawList();
 			drawList.AddImage((IntPtr)SceneFramebuffer.FramebufferTextureId, cursorScreenPos, cursorScreenPos + framebufferSize, Vector2.UnitY, Vector2.UnitX);
+
+			Vector2 focusPointIconSize = new(16, 16);
+			Vector2 focusPointIconPosition = cursorScreenPos + Camera3d.GetScreenPositionFrom3dPoint(Camera3d.FocusPointTarget, framebufferSize) - focusPointIconSize / 2;
+			drawList.AddImage((IntPtr)InternalContent.Textures["FocusPoint"], focusPointIconPosition, focusPointIconPosition + focusPointIconSize);
 
 			Vector2 cursorPosition = ImGui.GetCursorPos();
 

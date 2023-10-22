@@ -42,7 +42,7 @@ public static class SceneRenderer
 
 	public static void RenderScene()
 	{
-		ShaderCacheEntry lineShader = ShaderContainer.Shaders["Line"];
+		ShaderCacheEntry lineShader = InternalContent.Shaders["Line"];
 		Gl.UseProgram(lineShader.Id);
 
 		ShaderUniformUtils.Set(lineShader.GetUniformLocation("view"), Camera3d.ViewMatrix);
@@ -52,7 +52,7 @@ public static class SceneRenderer
 		RenderGrid(lineShader);
 		RenderBoundingBoxes(lineShader);
 
-		ShaderCacheEntry meshShader = ShaderContainer.Shaders["Mesh"];
+		ShaderCacheEntry meshShader = InternalContent.Shaders["Mesh"];
 		Gl.UseProgram(meshShader.Id);
 
 		ShaderUniformUtils.Set(meshShader.GetUniformLocation("view"), Camera3d.ViewMatrix);

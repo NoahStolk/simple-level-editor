@@ -25,8 +25,8 @@ public static class Shortcuts
 		new(EditWorldObjectsMode, Keys.F2, false, false, "Edit world objects", () => LevelEditorState.Mode = LevelEditorMode.EditWorldObjects),
 		new(FocusOnCurrentObject, Keys.A, false, false, "Focus on current object", () =>
 		{
-			if (LevelEditorState.Mode == LevelEditorMode.EditWorldObjects && LevelEditorState.HighlightedObject != null)
-				Camera3d.SetFocusPoint(LevelEditorState.HighlightedObject.Position);
+			if (ObjectEditorState.SelectedWorldObject != null)
+				Camera3d.SetFocusPoint(ObjectEditorState.SelectedWorldObject.Position);
 		}),
 		new(DeleteSelectedObjects, Keys.Delete, false, false, "Delete selected objects", () =>
 		{

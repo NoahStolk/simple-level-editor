@@ -6,7 +6,7 @@ namespace SimpleLevelEditor.Rendering;
 public static class Camera3d
 {
 	public const MouseButton LookButton = MouseButton.Right;
-	public const MouseButton PanButton = MouseButton.Middle;
+	private const MouseButton _panButton = MouseButton.Middle;
 
 	private const int _fieldOfView = 2;
 	private static Vector2 _originalCursor = Input.GetMousePosition();
@@ -16,7 +16,6 @@ public static class Camera3d
 
 	private static float _zoom = 5;
 
-	private static Vector3 _focusPointTarget;
 	private static Vector3 _focusPoint;
 
 	public static Quaternion Rotation { get; private set; } = Quaternion.Identity;
@@ -26,10 +25,11 @@ public static class Camera3d
 	public static Matrix4x4 ViewMatrix { get; private set; }
 	public static float AspectRatio { get; set; }
 	public static CameraMode Mode { get; private set; }
+	public static Vector3 FocusPointTarget { get; private set; }
 
 	public static void SetFocusPoint(Vector3 focusPoint)
 	{
-		_focusPointTarget = focusPoint;
+		FocusPointTarget = focusPoint;
 	}
 
 	public static void Update(float dt, bool isFocused)
@@ -47,7 +47,7 @@ public static class Camera3d
 			ResetCameraMode();
 		}
 
-		_focusPoint = Vector3.Lerp(_focusPoint, _focusPointTarget, dt * 10);
+		_focusPoint = Vector3.Lerp(_focusPoint, FocusPointTarget, dt * 10);
 		Position = _focusPoint + Vector3.Transform(new(0, 0, -_zoom), Rotation);
 
 		Vector3 upDirection = Vector3.Transform(Vector3.UnitY, Rotation);
@@ -63,13 +63,13 @@ public static class Camera3d
 	{
 		Vector2 cursor = Input.GetMousePosition();
 
-		if (Mode == CameraMode.None && (Input.IsButtonHeld(LookButton) || Input.IsButtonHeld(PanButton)))
+		if (Mode == CameraMode.None && (Input.IsButtonHeld(LookButton) || Input.IsButtonHeld(_panButton)))
 		{
 			Graphics.Glfw.SetInputMode(Graphics.Window, CursorStateAttribute.Cursor, CursorModeValue.CursorHidden);
 			_originalCursor = cursor;
 			Mode = Input.IsButtonHeld(LookButton) ? CameraMode.Look : CameraMode.Pan;
 		}
-		else if (Mode != CameraMode.None && !Input.IsButtonHeld(LookButton) && !Input.IsButtonHeld(PanButton))
+		else if (Mode != CameraMode.None && !Input.IsButtonHeld(LookButton) && !Input.IsButtonHeld(_panButton))
 		{
 			ResetCameraMode();
 		}
@@ -90,8 +90,8 @@ public static class Camera3d
 		else if (Mode == CameraMode.Pan)
 		{
 			const float multiplier = 0.0125f;
-			_focusPointTarget -= Vector3.Transform(new(-delta.X * multiplier, -delta.Y * multiplier, 0), Rotation);
-			_focusPoint = _focusPointTarget;
+			FocusPointTarget -= Vector3.Transform(new(-delta.X * multiplier, -delta.Y * multiplier, 0), Rotation);
+			_focusPoint = FocusPointTarget;
 
 			Graphics.Glfw.SetCursorPos(Graphics.Window, _originalCursor.X, _originalCursor.Y);
 		}
