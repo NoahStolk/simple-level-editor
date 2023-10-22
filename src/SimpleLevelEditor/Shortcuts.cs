@@ -1,4 +1,5 @@
 using Silk.NET.GLFW;
+using SimpleLevelEditor.Rendering;
 using SimpleLevelEditor.State;
 
 namespace SimpleLevelEditor;
@@ -11,15 +12,21 @@ public static class Shortcuts
 	public const string SaveAs = nameof(SaveAs);
 	public const string AddWorldObjectsMode = nameof(AddWorldObjectsMode);
 	public const string EditWorldObjectsMode = nameof(EditWorldObjectsMode);
+	public const string FocusOnCurrentObject = nameof(FocusOnCurrentObject);
 
 	private static readonly List<Shortcut> _shortcuts = new()
 	{
-		new(New, Keys.N, true, false, LevelState.New, "New level"),
-		new(Open, Keys.O, true, false, LevelState.Load, "Open level"),
-		new(Save, Keys.S, true, false, LevelState.Save, "Save level"),
-		new(SaveAs, Keys.S, true, true, LevelState.SaveAs, "Save level as"),
-		new(AddWorldObjectsMode, Keys.F1, false, false, () => LevelEditorState.Mode = LevelEditorMode.AddWorldObjects, "Add world objects"),
-		new(EditWorldObjectsMode, Keys.F2, false, false, () => LevelEditorState.Mode = LevelEditorMode.EditWorldObjects, "Edit world objects"),
+		new(New, Keys.N, true, false, "New level", LevelState.New),
+		new(Open, Keys.O, true, false, "Open level", LevelState.Load),
+		new(Save, Keys.S, true, false, "Save level", LevelState.Save),
+		new(SaveAs, Keys.S, true, true, "Save level as", LevelState.SaveAs),
+		new(AddWorldObjectsMode, Keys.F1, false, false, "Add world objects", () => LevelEditorState.Mode = LevelEditorMode.AddWorldObjects),
+		new(EditWorldObjectsMode, Keys.F2, false, false, "Edit world objects", () => LevelEditorState.Mode = LevelEditorMode.EditWorldObjects),
+		new(FocusOnCurrentObject, Keys.A, false, false, "Focus on current object", () =>
+		{
+			if (LevelEditorState.Mode == LevelEditorMode.EditWorldObjects && LevelEditorState.HighlightedObject != null)
+				Camera3d.SetFocusPoint(LevelEditorState.HighlightedObject.Position);
+		}),
 	};
 
 	public static IReadOnlyList<Shortcut> ShortcutsList => _shortcuts;

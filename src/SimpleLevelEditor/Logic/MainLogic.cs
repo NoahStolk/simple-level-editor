@@ -3,7 +3,6 @@ using SimpleLevelEditor.Maths;
 using SimpleLevelEditor.Model;
 using SimpleLevelEditor.Rendering;
 using SimpleLevelEditor.State;
-using SimpleLevelEditor.Utils;
 
 namespace SimpleLevelEditor.Logic;
 
@@ -26,12 +25,9 @@ public static class MainLogic
 		switch (LevelEditorState.Mode)
 		{
 			case LevelEditorMode.AddWorldObjects:
-				if (ObjectCreatorState.IsValid() && LevelEditorState.TargetPosition.HasValue && !LevelState.Level.WorldObjects.Exists(wo => wo.Position == LevelEditorState.TargetPosition && wo.Mesh == ObjectCreatorState.NewWorldObject.Mesh))
+				if (ObjectCreatorState.IsValid() && LevelEditorState.TargetPosition.HasValue && !LevelState.Level.WorldObjects.Exists(wo => wo.Position == ObjectCreatorState.NewWorldObject.Position && wo.Mesh == ObjectCreatorState.NewWorldObject.Mesh))
 				{
-					WorldObject worldObject = ObjectCreatorState.NewWorldObject.DeepCopy() with
-					{
-						Position = LevelEditorState.TargetPosition.Value,
-					};
+					WorldObject worldObject = ObjectCreatorState.NewWorldObject.DeepCopy();
 					LevelState.Level.WorldObjects.Add(worldObject);
 				}
 
@@ -39,7 +35,6 @@ public static class MainLogic
 			case LevelEditorMode.EditWorldObjects:
 				if (LevelEditorState.HighlightedObject != null)
 				{
-					Camera3d.SetFocusPoint(LevelEditorState.HighlightedObject.Position);
 					ObjectEditorState.SelectedWorldObject = ObjectEditorState.SelectedWorldObject == LevelEditorState.HighlightedObject ? null : LevelEditorState.HighlightedObject;
 				}
 

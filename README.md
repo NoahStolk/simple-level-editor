@@ -22,17 +22,6 @@ Currently there is only a Windows build, but it should be easy to create builds 
 | Hold R       | Edit mode           | Open rotate menu |
 | Hold G       | Edit mode           | Open scale menu  |
 
-## Shortcuts
-
-| Key          | Action          |
-|--------------|-----------------|
-| CTRL N       | New level       |
-| CTRL O       | Open level      |
-| CTRL S       | Save level      |
-| CTRL SHIFT S | Save level as   |
-| F1           | Go to add mode  |
-| F2           | Go to edit mode |
-
 ## Dependencies
 
 ### Bindings

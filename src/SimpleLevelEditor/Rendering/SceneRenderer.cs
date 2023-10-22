@@ -153,7 +153,7 @@ public static class SceneRenderer
 				RenderBoundingBox(lineShader, worldObject);
 			}
 		}
-		else if (LevelEditorState.Mode == LevelEditorMode.AddWorldObjects)
+		else if (LevelEditorState.Mode == LevelEditorMode.AddWorldObjects && LevelEditorState.TargetPosition.HasValue)
 		{
 			RenderBoundingBox(lineShader, ObjectCreatorState.NewWorldObject);
 		}

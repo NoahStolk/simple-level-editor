@@ -6,7 +6,7 @@ public static class ShortcutsWindow
 {
 	public static void Render(ref bool showWindow)
 	{
-		ImGui.SetNextWindowSize(new(384, 160));
+		ImGui.SetNextWindowSize(new(384, 384));
 		if (ImGui.Begin("Shortcuts", ref showWindow, ImGuiWindowFlags.NoResize))
 		{
 			if (ImGui.BeginTable("Table", 2))

@@ -1,8 +1,6 @@
 using ImGuiNET;
 using Silk.NET.GLFW;
 using SimpleLevelEditor.Logic;
-using SimpleLevelEditor.Maths;
-using SimpleLevelEditor.Model;
 using SimpleLevelEditor.Rendering;
 using SimpleLevelEditor.State;
 using SimpleLevelEditor.Ui.Components;
