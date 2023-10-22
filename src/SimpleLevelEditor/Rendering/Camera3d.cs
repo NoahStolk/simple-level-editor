@@ -10,7 +10,6 @@ public static class Camera3d
 
 	private const int _fieldOfView = 2;
 	private static Vector2 _originalCursor = Input.GetMousePosition();
-	private static CameraMode _cameraMode;
 
 	private static float _yaw;
 	private static float _pitch;
@@ -20,19 +19,13 @@ public static class Camera3d
 	private static Vector3 _focusPointTarget;
 	private static Vector3 _focusPoint;
 
-	private enum CameraMode
-	{
-		None,
-		Look,
-		Pan,
-	}
-
 	public static Quaternion Rotation { get; private set; } = Quaternion.Identity;
 	public static Vector3 Position { get; private set; }
 
 	public static Matrix4x4 Projection { get; private set; }
 	public static Matrix4x4 ViewMatrix { get; private set; }
 	public static float AspectRatio { get; set; }
+	public static CameraMode Mode { get; private set; }
 
 	public static void SetFocusPoint(Vector3 focusPoint)
 	{
@@ -70,22 +63,22 @@ public static class Camera3d
 	{
 		Vector2 cursor = Input.GetMousePosition();
 
-		if (_cameraMode == CameraMode.None && (Input.IsButtonHeld(LookButton) || Input.IsButtonHeld(PanButton)))
+		if (Mode == CameraMode.None && (Input.IsButtonHeld(LookButton) || Input.IsButtonHeld(PanButton)))
 		{
 			Graphics.Glfw.SetInputMode(Graphics.Window, CursorStateAttribute.Cursor, CursorModeValue.CursorHidden);
 			_originalCursor = cursor;
-			_cameraMode = Input.IsButtonHeld(LookButton) ? CameraMode.Look : CameraMode.Pan;
+			Mode = Input.IsButtonHeld(LookButton) ? CameraMode.Look : CameraMode.Pan;
 		}
-		else if (_cameraMode != CameraMode.None && !Input.IsButtonHeld(LookButton) && !Input.IsButtonHeld(PanButton))
+		else if (Mode != CameraMode.None && !Input.IsButtonHeld(LookButton) && !Input.IsButtonHeld(PanButton))
 		{
 			ResetCameraMode();
 		}
 
-		if (_cameraMode == CameraMode.None)
+		if (Mode == CameraMode.None)
 			return;
 
 		Vector2 delta = cursor - _originalCursor;
-		if (_cameraMode == CameraMode.Look)
+		if (Mode == CameraMode.Look)
 		{
 			const float lookSpeed = 20;
 			_yaw -= lookSpeed * delta.X * 0.0001f;
@@ -94,7 +87,7 @@ public static class Camera3d
 
 			Graphics.Glfw.SetCursorPos(Graphics.Window, _originalCursor.X, _originalCursor.Y);
 		}
-		else if (_cameraMode == CameraMode.Pan)
+		else if (Mode == CameraMode.Pan)
 		{
 			const float multiplier = 0.0125f;
 			_focusPointTarget -= Vector3.Transform(new(-delta.X * multiplier, -delta.Y * multiplier, 0), Rotation);
@@ -107,7 +100,7 @@ public static class Camera3d
 	private static unsafe void ResetCameraMode()
 	{
 		Graphics.Glfw.SetInputMode(Graphics.Window, CursorStateAttribute.Cursor, CursorModeValue.CursorNormal);
-		_cameraMode = CameraMode.None;
+		Mode = CameraMode.None;
 	}
 
 	public static Vector3 GetMouseWorldPosition(Vector2 normalizedMousePosition, Plane plane)

@@ -172,11 +172,11 @@ public static class SceneRenderer
 		timeAddition *= 0.5f;
 
 		Vector4 color;
-		if (worldObject == ObjectEditorState.SelectedWorldObject && worldObject == LevelEditorState.HighlightedObject)
+		if (worldObject == ObjectEditorState.SelectedWorldObject && worldObject == LevelEditorState.HighlightedObject && Camera3d.Mode == CameraMode.None)
 			color = new(0.5f + timeAddition, 1, 0.5f + timeAddition, 1);
 		else if (worldObject == ObjectEditorState.SelectedWorldObject)
 			color = new(0, 0.75f, 0, 1);
-		else if (worldObject == LevelEditorState.HighlightedObject)
+		else if (worldObject == LevelEditorState.HighlightedObject && Camera3d.Mode == CameraMode.None)
 			color = new(1, 0.5f + timeAddition, 1, 1);
 		else
 			color = new(0.75f, 0, 0.75f, 1);
