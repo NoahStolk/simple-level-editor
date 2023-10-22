@@ -42,6 +42,7 @@ public static class MainLogic
 
 		LevelEditorState.SelectedWorldObject = worldObject;
 		LevelEditorState.HighlightedObject = worldObject;
+		LevelState.Track("Added object");
 	}
 
 	private static void CalculateTargetPosition(Vector2 normalizedMousePosition, Plane nearPlane, float gridSnap)

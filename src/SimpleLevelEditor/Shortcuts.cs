@@ -31,14 +31,15 @@ public static class Shortcuts
 
 			LevelState.Level.WorldObjects.Remove(LevelEditorState.SelectedWorldObject);
 			LevelEditorState.SelectedWorldObject = null;
+			LevelState.Track("Delete world object");
 		}),
 		new(FocusOnCurrentObject, Keys.A, false, false, "Focus on current object", () =>
 		{
 			if (LevelEditorState.SelectedWorldObject != null)
 				Camera3d.SetFocusPoint(LevelEditorState.SelectedWorldObject.Position);
 		}),
-		new(Undo, Keys.Z, true, false, () => LevelState.SetHistoryIndex(LevelState.CurrentHistoryIndex - 1), "Undo"),
-		new(Redo, Keys.Y, true, false, () => LevelState.SetHistoryIndex(LevelState.CurrentHistoryIndex + 1), "Redo"),
+		new(Undo, Keys.Z, true, false, "Undo", () => LevelState.SetHistoryIndex(LevelState.CurrentHistoryIndex - 1)),
+		new(Redo, Keys.Y, true, false, "Redo", () => LevelState.SetHistoryIndex(LevelState.CurrentHistoryIndex + 1)),
 	};
 
 	public static IReadOnlyList<Shortcut> ShortcutsList => _shortcuts;
