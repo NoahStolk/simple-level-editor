@@ -82,17 +82,17 @@ public static class LevelEditorWindow
 
 	private static void RenderSelectionMenu(Vector2 framebufferSize, ImDrawListPtr drawList, Vector2 cursorScreenPos, Plane nearPlane, Vector2 normalizedMousePosition)
 	{
-		if (ObjectEditorState.SelectedWorldObject == null)
+		if (LevelEditorState.SelectedWorldObject == null)
 			return;
 
-		Vector2? posOrigin = GetPosition2d(ObjectEditorState.SelectedWorldObject.Position);
+		Vector2? posOrigin = GetPosition2d(LevelEditorState.SelectedWorldObject.Position);
 		if (!posOrigin.HasValue)
 			return;
 
-		Matrix4x4 rotationMatrix = MathUtils.CreateRotationMatrixFromEulerAngles(ObjectEditorState.SelectedWorldObject.Rotation);
-		Vector2? posX = GetPosition2d(ObjectEditorState.SelectedWorldObject.Position + Vector3.Transform(Vector3.UnitX, rotationMatrix));
-		Vector2? posY = GetPosition2d(ObjectEditorState.SelectedWorldObject.Position + Vector3.Transform(Vector3.UnitY, rotationMatrix));
-		Vector2? posZ = GetPosition2d(ObjectEditorState.SelectedWorldObject.Position + Vector3.Transform(Vector3.UnitZ, rotationMatrix));
+		Matrix4x4 rotationMatrix = MathUtils.CreateRotationMatrixFromEulerAngles(LevelEditorState.SelectedWorldObject.Rotation);
+		Vector2? posX = GetPosition2d(LevelEditorState.SelectedWorldObject.Position + Vector3.Transform(Vector3.UnitX, rotationMatrix));
+		Vector2? posY = GetPosition2d(LevelEditorState.SelectedWorldObject.Position + Vector3.Transform(Vector3.UnitY, rotationMatrix));
+		Vector2? posZ = GetPosition2d(LevelEditorState.SelectedWorldObject.Position + Vector3.Transform(Vector3.UnitZ, rotationMatrix));
 
 		const Keys rotationKey = Keys.R;
 		const Keys scaleKey = Keys.G;
@@ -102,11 +102,11 @@ public static class LevelEditorWindow
 			bool isActiveXz = RenderMoveButton("Move XZ", drawList, posOrigin.Value);
 			if (isActiveXz)
 			{
-				Vector3 targetPosition = Camera3d.GetMouseWorldPosition(normalizedMousePosition, new(Vector3.UnitY, -ObjectEditorState.SelectedWorldObject.Position.Y));
+				Vector3 targetPosition = Camera3d.GetMouseWorldPosition(normalizedMousePosition, new(Vector3.UnitY, -LevelEditorState.SelectedWorldObject.Position.Y));
 				if (Vector3.Dot(targetPosition, nearPlane.Normal) + nearPlane.D < 0)
 				{
-					ObjectEditorState.SelectedWorldObject.Position.X = GridSnap > 0 ? MathF.Round(targetPosition.X / GridSnap) * GridSnap : targetPosition.X;
-					ObjectEditorState.SelectedWorldObject.Position.Z = GridSnap > 0 ? MathF.Round(targetPosition.Z / GridSnap) * GridSnap : targetPosition.Z;
+					LevelEditorState.SelectedWorldObject.Position.X = GridSnap > 0 ? MathF.Round(targetPosition.X / GridSnap) * GridSnap : targetPosition.X;
+					LevelEditorState.SelectedWorldObject.Position.Z = GridSnap > 0 ? MathF.Round(targetPosition.Z / GridSnap) * GridSnap : targetPosition.Z;
 				}
 			}
 
@@ -115,7 +115,7 @@ public static class LevelEditorWindow
 				bool isActiveY = RenderMoveButton("Move Y", drawList, posY.Value);
 				if (isActiveY)
 				{
-					Vector3 point1 = ObjectEditorState.SelectedWorldObject.Position;
+					Vector3 point1 = LevelEditorState.SelectedWorldObject.Position;
 					Vector3 point2 = point1 + Vector3.Transform(Vector3.UnitX, Camera3d.Rotation);
 					Vector3 point3 = point1 + Vector3.Transform(Vector3.UnitY, Camera3d.Rotation);
 					Plane plane = Plane.CreateFromVertices(point1, point2, point3);
@@ -127,7 +127,7 @@ public static class LevelEditorWindow
 
 					if (snappedTargetPosition.HasValue)
 					{
-						ObjectEditorState.SelectedWorldObject.Position.Y = snappedTargetPosition.Value.Y;
+						LevelEditorState.SelectedWorldObject.Position.Y = snappedTargetPosition.Value.Y;
 					}
 				}
 			}
@@ -151,21 +151,21 @@ public static class LevelEditorWindow
 		{
 			drawList.AddLine(posOrigin.Value, posX.Value, 0xff0000ff);
 			ImGui.SetCursorScreenPos(posX.Value);
-			RenderControls('X', ref ObjectEditorState.SelectedWorldObject.Rotation.X, ref ObjectEditorState.SelectedWorldObject.Scale.X);
+			RenderControls('X', ref LevelEditorState.SelectedWorldObject.Rotation.X, ref LevelEditorState.SelectedWorldObject.Scale.X);
 		}
 
 		if (posY.HasValue)
 		{
 			drawList.AddLine(posOrigin.Value, posY.Value, 0xff00ff00);
 			ImGui.SetCursorScreenPos(posY.Value);
-			RenderControls('Y', ref ObjectEditorState.SelectedWorldObject.Rotation.Y, ref ObjectEditorState.SelectedWorldObject.Scale.Y);
+			RenderControls('Y', ref LevelEditorState.SelectedWorldObject.Rotation.Y, ref LevelEditorState.SelectedWorldObject.Scale.Y);
 		}
 
 		if (posZ.HasValue)
 		{
 			drawList.AddLine(posOrigin.Value, posZ.Value, 0xffff0000);
 			ImGui.SetCursorScreenPos(posZ.Value);
-			RenderControls('Z', ref ObjectEditorState.SelectedWorldObject.Rotation.Z, ref ObjectEditorState.SelectedWorldObject.Scale.Z);
+			RenderControls('Z', ref LevelEditorState.SelectedWorldObject.Rotation.Z, ref LevelEditorState.SelectedWorldObject.Scale.Z);
 		}
 
 		static void RenderControls(char axis, ref float rotation, ref float scale)

@@ -24,16 +24,16 @@ public static class Shortcuts
 		new(AddNewObject, Keys.Space, false, false, "Add new object", MainLogic.AddNewWorldObject),
 		new(FocusOnCurrentObject, Keys.A, false, false, "Focus on current object", () =>
 		{
-			if (ObjectEditorState.SelectedWorldObject != null)
-				Camera3d.SetFocusPoint(ObjectEditorState.SelectedWorldObject.Position);
+			if (LevelEditorState.SelectedWorldObject != null)
+				Camera3d.SetFocusPoint(LevelEditorState.SelectedWorldObject.Position);
 		}),
 		new(DeleteSelectedObjects, Keys.Delete, false, false, "Delete selected objects", () =>
 		{
-			if (ObjectEditorState.SelectedWorldObject == null)
+			if (LevelEditorState.SelectedWorldObject == null)
 				return;
 
-			LevelState.Level.WorldObjects.Remove(ObjectEditorState.SelectedWorldObject);
-			ObjectEditorState.SelectedWorldObject = null;
+			LevelState.Level.WorldObjects.Remove(LevelEditorState.SelectedWorldObject);
+			LevelEditorState.SelectedWorldObject = null;
 		}),
 	};
 

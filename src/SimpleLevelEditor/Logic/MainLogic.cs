@@ -22,7 +22,7 @@ public static class MainLogic
 		}
 
 		if (isFocused && Input.IsButtonPressed(MouseButton.Left) && LevelEditorState.HighlightedObject != null)
-			ObjectEditorState.SelectedWorldObject = ObjectEditorState.SelectedWorldObject == LevelEditorState.HighlightedObject ? null : LevelEditorState.HighlightedObject;
+			LevelEditorState.SelectedWorldObject = LevelEditorState.SelectedWorldObject == LevelEditorState.HighlightedObject ? null : LevelEditorState.HighlightedObject;
 	}
 
 	public static void AddNewWorldObject()
@@ -30,7 +30,7 @@ public static class MainLogic
 		if (!LevelEditorState.TargetPosition.HasValue)
 			return;
 
-		WorldObject reference = ObjectEditorState.SelectedWorldObject ?? WorldObjectEditorWindow.DefaultObject;
+		WorldObject reference = LevelEditorState.SelectedWorldObject ?? WorldObjectEditorWindow.DefaultObject;
 		if (reference.Mesh.Length == 0 || reference.Texture.Length == 0)
 			return;
 
@@ -40,7 +40,7 @@ public static class MainLogic
 		};
 		LevelState.Level.WorldObjects.Add(worldObject);
 
-		ObjectEditorState.SelectedWorldObject = worldObject;
+		LevelEditorState.SelectedWorldObject = worldObject;
 		LevelEditorState.HighlightedObject = worldObject;
 	}
 

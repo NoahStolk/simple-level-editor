@@ -26,7 +26,7 @@ public static class WorldObjectEditorWindow
 		{
 			ImGui.SeparatorText("Edit World Object");
 
-			RenderWorldObjectInputs(ObjectEditorState.SelectedWorldObject ?? DefaultObject);
+			RenderWorldObjectInputs(LevelEditorState.SelectedWorldObject ?? DefaultObject);
 		}
 
 		ImGui.EndChild(); // End Object Editor

@@ -9,4 +9,5 @@ public static class LevelEditorState
 	public static int GridCellSize = 1;
 	public static Vector3? TargetPosition;
 	public static WorldObject? HighlightedObject;
+	public static WorldObject? SelectedWorldObject;
 }

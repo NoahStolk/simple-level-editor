@@ -71,7 +71,7 @@ public static class LevelState
 
 	private static void ClearState()
 	{
-		ObjectEditorState.SelectedWorldObject = null;
+		LevelEditorState.SelectedWorldObject = null;
 		WorldObjectEditorWindow.Reset();
 	}
 
