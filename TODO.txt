@@ -1,27 +1,20 @@
 HIGH PRIORITY
-- Control world object data in level editor when creating objects
-	- Rotation
-		- Hold R
-		- Grab handle and drag around axis
-	- Scale
-		- Hold G
-		- Grab handle and drag around axis
 - Auto-snap scale to integers but allow for decimal input
 - Auto-snap rotation to 5 degree increments but allow for decimal input
 - Fix z-fighting with grid lines
+- CTRL Z to undo
+- CTRL Y to redo
+- Save state indicated by asterisk in title bar
 
 MEDIUM PRIORITY
 - Multiple selection
 	- Hold shift to select multiple meshes
-
-BACKLOG
-- List meshes in object creator as selectable tiles
-- Save state indicated by asterisk in title bar
-- CTRL Z to undo
-- CTRL Y to redo
 - Settings
 	- FOV
 	- Look speed
 	- Pan speed
 	- Invert pan X
 	- Invert pan Y
+
+BACKLOG
+- List meshes in object creator as selectable tiles

@@ -106,6 +106,9 @@ public static class LevelState
 
 	public static void SetHistoryIndex(int index)
 	{
+		LevelEditorState.SelectedWorldObject = null;
+		LevelEditorState.HighlightedObject = null;
+
 		CurrentHistoryIndex = Math.Clamp(index, 0, History.Count - 1);
 		Level = History[CurrentHistoryIndex].Object.DeepCopy();
 	}
