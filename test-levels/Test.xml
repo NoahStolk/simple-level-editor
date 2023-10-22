@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Level Version="1">
+  <Meshes>
+    <Mesh Path="mesh\Cone.obj" />
+  </Meshes>
+  <Textures>
+    <Texture Path="tex\BricksGreen.tga" />
+  </Textures>
+  <WorldObjects>
+    <WorldObject Mesh="mesh\Cone.obj" Texture="tex\BricksGreen.tga" BoundingMesh="" Position="1 0 -1" Rotation="0 0 0" Scale="1 1 1" Values="None" />
+  </WorldObjects>
+  <Entities />
+</Level>

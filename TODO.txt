@@ -6,7 +6,9 @@ HIGH PRIORITY
 	- Scale
 		- Hold G
 		- Grab handle and drag around axis
-- Press DEL to delete selected world objects
+- Auto-snap scale to integers but allow for decimal input
+- Auto-snap rotation to 5 degree increments but allow for decimal input
+- Fix z-fighting with grid lines
 
 MEDIUM PRIORITY
 - Multiple selection

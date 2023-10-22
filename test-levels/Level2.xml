@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Level Version="1">
+  <Meshes>
+    <Mesh Path="mesh\Cone.obj" />
+    <Mesh Path="mesh\Cube.obj" />
+    <Mesh Path="mesh\Cylinder.obj" />
+    <Mesh Path="mesh\PillarBase.obj" />
+    <Mesh Path="mesh\Plane.obj" />
+    <Mesh Path="mesh\Ramp.obj" />
+  </Meshes>
+  <Textures>
+    <Texture Path="tex\Bricks.tga" />
+    <Texture Path="tex\Dirt.tga" />
+    <Texture Path="tex\Grass1.tga" />
+    <Texture Path="tex\Gravel.tga" />
+    <Texture Path="tex\TilesGray.tga" />
+  </Textures>
+  <WorldObjects>
+    <WorldObject Mesh="mesh\PillarBase.obj" Texture="tex\Bricks.tga" BoundingMesh="" Position="-0 0 0" Rotation="0 0 0" Scale="1 1 1" Values="None" />
+    <WorldObject Mesh="mesh\Cylinder.obj" Texture="tex\Bricks.tga" BoundingMesh="" Position="-0 1.75 -0" Rotation="0 0 0" Scale="1 3 1" Values="None" />
+    <WorldObject Mesh="mesh\Plane.obj" Texture="tex\Grass1.tga" BoundingMesh="" Position="-2 0 -0" Rotation="-90 0 0" Scale="2 2 2" Values="None" />
+    <WorldObject Mesh="mesh\Plane.obj" Texture="tex\Grass1.tga" BoundingMesh="" Position="-0 0 2" Rotation="-90 0 0" Scale="2 2 2" Values="None" />
+    <WorldObject Mesh="mesh\Plane.obj" Texture="tex\Grass1.tga" BoundingMesh="" Position="-2 0 2" Rotation="-90 0 0" Scale="2 2 2" Values="None" />
+    <WorldObject Mesh="mesh\Plane.obj" Texture="tex\Grass1.tga" BoundingMesh="" Position="2 0 0" Rotation="-90 0 0" Scale="2 2 2" Values="None" />
+    <WorldObject Mesh="mesh\Plane.obj" Texture="tex\Grass1.tga" BoundingMesh="" Position="2 0 2" Rotation="-90 0 0" Scale="2 2 2" Values="None" />
+    <WorldObject Mesh="mesh\Plane.obj" Texture="tex\Grass1.tga" BoundingMesh="" Position="2 0 -2" Rotation="-90 0 0" Scale="2 2 2" Values="None" />
+    <WorldObject Mesh="mesh\Plane.obj" Texture="tex\Grass1.tga" BoundingMesh="" Position="-0 0 -2" Rotation="-90 0 0" Scale="2 2 2" Values="None" />
+    <WorldObject Mesh="mesh\Plane.obj" Texture="tex\Grass1.tga" BoundingMesh="" Position="-2 0 -2" Rotation="-90 0 0" Scale="2 2 2" Values="None" />
+    <WorldObject Mesh="mesh\Plane.obj" Texture="tex\Grass1.tga" BoundingMesh="" Position="-2 0 -4" Rotation="-90 0 0" Scale="2 2 2" Values="None" />
+    <WorldObject Mesh="mesh\Plane.obj" Texture="tex\Grass1.tga" BoundingMesh="" Position="-0 0 -4" Rotation="-90 0 0" Scale="2 2 2" Values="None" />
+    <WorldObject Mesh="mesh\Plane.obj" Texture="tex\Grass1.tga" BoundingMesh="" Position="2 0 -4" Rotation="-90 0 0" Scale="2 2 2" Values="None" />
+    <WorldObject Mesh="mesh\Plane.obj" Texture="tex\Grass1.tga" BoundingMesh="" Position="4 0 -4" Rotation="-90 0 0" Scale="2 2 2" Values="None" />
+    <WorldObject Mesh="mesh\Plane.obj" Texture="tex\Grass1.tga" BoundingMesh="" Position="4 0 -2" Rotation="-90 0 0" Scale="2 2 2" Values="None" />
+    <WorldObject Mesh="mesh\Plane.obj" Texture="tex\Grass1.tga" BoundingMesh="" Position="4 0 0" Rotation="-90 0 0" Scale="2 2 2" Values="None" />
+    <WorldObject Mesh="mesh\Plane.obj" Texture="tex\Grass1.tga" BoundingMesh="" Position="4 0 2" Rotation="-90 0 0" Scale="2 2 2" Values="None" />
+    <WorldObject Mesh="mesh\Plane.obj" Texture="tex\Grass1.tga" BoundingMesh="" Position="4 0 4" Rotation="-90 0 0" Scale="2 2 2" Values="None" />
+    <WorldObject Mesh="mesh\Plane.obj" Texture="tex\Grass1.tga" BoundingMesh="" Position="2 0 4" Rotation="-90 0 0" Scale="2 2 2" Values="None" />
+    <WorldObject Mesh="mesh\Plane.obj" Texture="tex\Grass1.tga" BoundingMesh="" Position="-0 0 4" Rotation="-90 0 0" Scale="2 2 2" Values="None" />
+    <WorldObject Mesh="mesh\Plane.obj" Texture="tex\Grass1.tga" BoundingMesh="" Position="-2 0 4" Rotation="-90 0 0" Scale="2 2 2" Values="None" />
+    <WorldObject Mesh="mesh\Plane.obj" Texture="tex\Grass1.tga" BoundingMesh="" Position="-4 0 -4" Rotation="-90 0 0" Scale="2 2 2" Values="None" />
+    <WorldObject Mesh="mesh\Plane.obj" Texture="tex\Grass1.tga" BoundingMesh="" Position="-4 0 -2" Rotation="-90 0 0" Scale="2 2 2" Values="None" />
+    <WorldObject Mesh="mesh\Plane.obj" Texture="tex\Grass1.tga" BoundingMesh="" Position="-4 0 0" Rotation="-90 0 0" Scale="2 2 2" Values="None" />
+    <WorldObject Mesh="mesh\Plane.obj" Texture="tex\Grass1.tga" BoundingMesh="" Position="-4 0 2" Rotation="-90 0 0" Scale="2 2 2" Values="None" />
+    <WorldObject Mesh="mesh\Plane.obj" Texture="tex\Grass1.tga" BoundingMesh="" Position="-4 0 4" Rotation="-90 0 0" Scale="2 2 2" Values="None" />
+    <WorldObject Mesh="mesh\PillarBase.obj" Texture="tex\Bricks.tga" BoundingMesh="" Position="0 3.5 -0" Rotation="0 0 180" Scale="1 1 1" Values="None" />
+    <WorldObject Mesh="mesh\Ramp.obj" Texture="tex\Bricks.tga" BoundingMesh="" Position="5.5 0.5 -0" Rotation="0 -90 0" Scale="10 1 1" Values="None" />
+    <WorldObject Mesh="mesh\Cone.obj" Texture="tex\Dirt.tga" BoundingMesh="" Position="-4 0 -0" Rotation="0 0 0" Scale="1 1 1" Values="None" />
+    <WorldObject Mesh="mesh\Cone.obj" Texture="tex\Dirt.tga" BoundingMesh="" Position="-4 0 -4" Rotation="0 0 0" Scale="1 1 1" Values="None" />
+  </WorldObjects>
+  <Entities />
+</Level>
