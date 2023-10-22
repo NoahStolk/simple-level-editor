@@ -1,7 +1,7 @@
 using ImGuiNET;
 using SimpleLevelEditor.Utils;
 
-namespace SimpleLevelEditor.Ui.Components;
+namespace SimpleLevelEditor.Ui;
 
 public static class ImGuiExt
 {

@@ -4,7 +4,6 @@ using SimpleLevelEditor.Content;
 using SimpleLevelEditor.Logic;
 using SimpleLevelEditor.Rendering;
 using SimpleLevelEditor.State;
-using SimpleLevelEditor.Ui.Components;
 using SimpleLevelEditor.Utils;
 
 namespace SimpleLevelEditor.Ui.ChildWindows;
