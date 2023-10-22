@@ -46,7 +46,7 @@ public static class Camera3d
 			HandleMouse();
 
 			float scroll = Input.GetScroll();
-			if (scroll != 0)
+			if (scroll != 0 && !Input.IsKeyHeld(Keys.ControlLeft) && !Input.IsKeyHeld(Keys.ControlRight))
 				_zoom = Math.Clamp(_zoom - scroll, 1, 30);
 		}
 		else

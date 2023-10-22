@@ -16,6 +16,13 @@ public static class MainLogic
 		if (LevelEditorState.TargetPosition.HasValue)
 			ObjectCreatorState.NewWorldObject.Position = LevelEditorState.TargetPosition.Value;
 
+		if (Input.IsKeyHeld(Keys.ControlLeft) || Input.IsKeyHeld(Keys.ControlRight))
+		{
+			float scroll = Input.GetScroll();
+			if (scroll != 0)
+				LevelEditorState.TargetHeight = Math.Clamp(LevelEditorState.TargetHeight - scroll, -512, 512);
+		}
+
 		if (isFocused && Input.IsButtonPressed(MouseButton.Left))
 			OnLeftClick();
 	}
