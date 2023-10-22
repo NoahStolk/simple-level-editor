@@ -15,17 +15,6 @@ public static class WorldObjectEditorWindow
 			if (ObjectEditorState.SelectedWorldObject != null)
 			{
 				WorldObjectDataComponent.Render(ObjectEditorState.SelectedWorldObject, true);
-
-				ImGui.Separator();
-
-				ImGui.PushStyleColor(ImGuiCol.Button, new Vector4(1, 0, 0, 1));
-				if (ImGui.Button("Delete"))
-				{
-					LevelState.Level.WorldObjects.Remove(ObjectEditorState.SelectedWorldObject);
-					ObjectEditorState.SelectedWorldObject = null;
-				}
-
-				ImGui.PopStyleColor();
 			}
 			else
 			{

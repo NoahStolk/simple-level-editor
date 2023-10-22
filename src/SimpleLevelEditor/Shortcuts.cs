@@ -13,6 +13,7 @@ public static class Shortcuts
 	public const string AddWorldObjectsMode = nameof(AddWorldObjectsMode);
 	public const string EditWorldObjectsMode = nameof(EditWorldObjectsMode);
 	public const string FocusOnCurrentObject = nameof(FocusOnCurrentObject);
+	public const string DeleteSelectedObjects = nameof(DeleteSelectedObjects);
 
 	private static readonly List<Shortcut> _shortcuts = new()
 	{
@@ -26,6 +27,14 @@ public static class Shortcuts
 		{
 			if (LevelEditorState.Mode == LevelEditorMode.EditWorldObjects && LevelEditorState.HighlightedObject != null)
 				Camera3d.SetFocusPoint(LevelEditorState.HighlightedObject.Position);
+		}),
+		new(DeleteSelectedObjects, Keys.Delete, false, false, "Delete selected objects", () =>
+		{
+			if (ObjectEditorState.SelectedWorldObject == null)
+				return;
+
+			LevelState.Level.WorldObjects.Remove(ObjectEditorState.SelectedWorldObject);
+			ObjectEditorState.SelectedWorldObject = null;
 		}),
 	};
 

@@ -31,6 +31,7 @@ public static class KeysExtensions
 
 		[Keys.Enter] = "Enter",
 		[Keys.Space] = "Space",
+		[Keys.Delete] = "Delete",
 		[Keys.Comma] = ",",
 		[Keys.Period] = ".",
 		[Keys.Slash] = "/",
@@ -99,6 +100,7 @@ public static class KeysExtensions
 
 		[Keys.Enter] = "Enter",
 		[Keys.Space] = "Space",
+		[Keys.Delete] = "Delete",
 		[Keys.Comma] = "<",
 		[Keys.Period] = ">",
 		[Keys.Slash] = "?",
