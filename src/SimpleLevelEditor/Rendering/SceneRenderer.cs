@@ -140,6 +140,9 @@ public static class SceneRenderer
 
 	private static void RenderBoundingBoxes(ShaderCacheEntry lineShader)
 	{
+		if (!LevelEditorState.RenderBoundingBoxes)
+			return;
+
 		Gl.BindVertexArray(_cubeVao);
 		Gl.LineWidth(2);
 

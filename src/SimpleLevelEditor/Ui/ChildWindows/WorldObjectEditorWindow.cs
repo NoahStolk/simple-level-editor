@@ -52,7 +52,7 @@ public static class WorldObjectEditorWindow
 			worldObject.Scale = scale;
 
 		ImGui.SameLine();
-		ImGui.PushID(Inline.Span("Scale_reset"));
+		ImGui.PushID("Scale_reset");
 		if (ImGui.Button("Reset"))
 			worldObject.Scale = Vector3.One;
 

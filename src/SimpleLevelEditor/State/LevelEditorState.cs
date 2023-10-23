@@ -10,4 +10,5 @@ public static class LevelEditorState
 	public static Vector3? TargetPosition;
 	public static WorldObject? HighlightedObject;
 	public static WorldObject? SelectedWorldObject;
+	public static bool RenderBoundingBoxes = true;
 }

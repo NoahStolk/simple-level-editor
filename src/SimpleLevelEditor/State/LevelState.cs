@@ -28,11 +28,13 @@ public static class LevelState
 		if (dialogResult is not { IsOk: true })
 			return;
 
-		using FileStream fs = new(dialogResult.Path, FileMode.Open);
-		using XmlReader reader = XmlReader.Create(fs);
-		Level3dData level = XmlFormatSerializer.ReadLevel(reader);
+		using (FileStream fs = new(dialogResult.Path, FileMode.Open))
+		using (XmlReader reader = XmlReader.Create(fs))
+		{
+			Level3dData level = XmlFormatSerializer.ReadLevel(reader);
+			SetLevel(dialogResult.Path, level);
+		}
 
-		SetLevel(dialogResult.Path, level);
 		ClearState();
 		ReloadAssets(dialogResult.Path);
 	}
@@ -48,11 +50,11 @@ public static class LevelState
 	public static void SaveAs()
 	{
 		DialogResult dialogResult = DialogWrapper.FileSave(_fileExtension);
-		if (dialogResult is { IsOk: true })
-		{
-			string path = Path.ChangeExtension(dialogResult.Path, ".xml");
-			Save(path);
-		}
+		if (dialogResult is not { IsOk: true })
+			return;
+
+		string path = Path.ChangeExtension(dialogResult.Path, $".{_fileExtension}");
+		Save(path);
 	}
 
 	private static void Save(string path)
