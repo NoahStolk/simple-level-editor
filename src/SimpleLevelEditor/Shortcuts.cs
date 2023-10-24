@@ -31,7 +31,7 @@ public static class Shortcuts
 
 			LevelState.Level.WorldObjects.Remove(LevelEditorState.SelectedWorldObject);
 			LevelEditorState.SelectedWorldObject = null;
-			LevelState.Track("Delete world object");
+			LevelState.Track("Deleted world object");
 		}),
 		new(FocusOnCurrentObject, Keys.A, false, false, "Focus on current object", () =>
 		{

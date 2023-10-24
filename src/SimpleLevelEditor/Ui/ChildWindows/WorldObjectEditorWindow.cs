@@ -43,6 +43,9 @@ public static class WorldObjectEditorWindow
 		if (ImGui.InputFloat3("Position", ref position, "%.3f", ImGuiInputTextFlags.CharsDecimal))
 			worldObject.Position = position;
 
+		if (ImGui.IsItemDeactivatedAfterEdit())
+			LevelState.Track("Changed object position");
+
 		worldObject.Rotation = RenderRotationInputs("Rotation X", worldObject.Rotation, static r => r.X, static (r, f) => r with { X = f });
 		worldObject.Rotation = RenderRotationInputs("Rotation Y", worldObject.Rotation, static r => r.Y, static (r, f) => r with { Y = f });
 		worldObject.Rotation = RenderRotationInputs("Rotation Z", worldObject.Rotation, static r => r.Z, static (r, f) => r with { Z = f });
@@ -51,10 +54,16 @@ public static class WorldObjectEditorWindow
 		if (ImGui.SliderFloat3("Scale", ref scale, 0.01f, 20f, "%.3f", ImGuiSliderFlags.Logarithmic))
 			worldObject.Scale = scale;
 
+		if (ImGui.IsItemDeactivatedAfterEdit())
+			LevelState.Track("Changed object scale");
+
 		ImGui.SameLine();
 		ImGui.PushID("Scale_reset");
 		if (ImGui.Button("Reset"))
+		{
 			worldObject.Scale = Vector3.One;
+			LevelState.Track("Changed object scale");
+		}
 
 		ImGui.PopID();
 
@@ -68,7 +77,10 @@ public static class WorldObjectEditorWindow
 
 			uint values = (uint)worldObject.Values;
 			if (ImGui.CheckboxFlags(EnumUtils.WorldObjectValuesNames[value], ref values, (uint)value))
+			{
 				worldObject.Values = (WorldObjectValues)values;
+				LevelState.Track("Changed object values");
+			}
 		}
 
 		ImGui.SeparatorText("Mesh");
@@ -92,10 +104,16 @@ public static class WorldObjectEditorWindow
 		if (ImGui.SliderAngle(label, ref rotationInRadians, -180f, 180f))
 			rotation = setter(rotation, rotationInRadians);
 
+		if (ImGui.IsItemDeactivatedAfterEdit())
+			LevelState.Track("Changed object rotation");
+
 		ImGui.SameLine();
 		ImGui.PushID(Inline.Span($"{label}_reset"));
 		if (ImGui.Button("Reset"))
+		{
 			rotation = setter(rotation, 0f);
+			LevelState.Track("Changed object rotation");
+		}
 
 		ImGui.PopID();
 
@@ -114,10 +132,13 @@ public static class WorldObjectEditorWindow
 					ImGui.TableNextRow();
 
 				ImGui.TableNextColumn();
-				string meshName = items[i];
+				string assetName = items[i];
 
-				if (ImGui.Selectable(Inline.Span(meshName), selectedItem == meshName, ImGuiSelectableFlags.None, new(0, 128)))
-					selectedItem = meshName;
+				if (ImGui.Selectable(Inline.Span(assetName), selectedItem == assetName, ImGuiSelectableFlags.None, new(0, 128)))
+				{
+					selectedItem = assetName;
+					LevelState.Track("Changed object asset");
+				}
 			}
 
 			ImGui.EndTable();
