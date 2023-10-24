@@ -8,15 +8,15 @@ namespace SimpleLevelEditor.Ui;
 public static class MainWindow
 {
 	private static bool _showDemoWindow;
-	private static bool _showShortcutsWindow;
+	private static bool _showControlsWindow;
 
 	public static void Render()
 	{
 		if (_showDemoWindow)
 			ImGui.ShowDemoWindow(ref _showDemoWindow);
 
-		if (_showShortcutsWindow)
-			ShortcutsWindow.Render(ref _showShortcutsWindow);
+		if (_showControlsWindow)
+			ControlsWindow.Render(ref _showControlsWindow);
 
 		Vector2 viewportSize = ImGui.GetMainViewport().Size;
 		ImGui.SetNextWindowSize(viewportSize);
@@ -53,8 +53,8 @@ public static class MainWindow
 
 				if (ImGui.BeginMenu("Help"))
 				{
-					if (ImGui.MenuItem("Shortcuts"))
-						_showShortcutsWindow = true;
+					if (ImGui.MenuItem("Controls & Shortcuts"))
+						_showControlsWindow = true;
 
 					ImGui.EndMenu();
 				}

@@ -22,11 +22,6 @@ public static class Shortcuts
 		new(Save, Keys.S, true, false, "Save level", LevelState.Save),
 		new(SaveAs, Keys.S, true, true, "Save level as", LevelState.SaveAs),
 		new(AddNewObject, Keys.Space, false, false, "Add new object", MainLogic.AddNewWorldObject),
-		new(FocusOnCurrentObject, Keys.A, false, false, "Focus on current object", () =>
-		{
-			if (LevelEditorState.SelectedWorldObject != null)
-				Camera3d.SetFocusPoint(LevelEditorState.SelectedWorldObject.Position);
-		}),
 		new(DeleteSelectedObjects, Keys.Delete, false, false, "Delete selected objects", () =>
 		{
 			if (LevelEditorState.SelectedWorldObject == null)
@@ -34,6 +29,11 @@ public static class Shortcuts
 
 			LevelState.Level.WorldObjects.Remove(LevelEditorState.SelectedWorldObject);
 			LevelEditorState.SelectedWorldObject = null;
+		}),
+		new(FocusOnCurrentObject, Keys.A, false, false, "Focus on current object", () =>
+		{
+			if (LevelEditorState.SelectedWorldObject != null)
+				Camera3d.SetFocusPoint(LevelEditorState.SelectedWorldObject.Position);
 		}),
 	};
 

@@ -10,19 +10,6 @@ Levels are saved as XML for readability and ease of use. More output formats wil
 
 Currently there is only a Windows build, but it should be easy to create builds for Mac and Linux.
 
-## Controls
-
-| Input               | Context             | Action               |
-|---------------------|---------------------|----------------------|
-| Scroll wheel        | 3D view             | Zoom in/out          |
-| Scroll wheel + CTRL | 3D view             | Change target height |
-| RMB                 | 3D view             | Look around          |
-| MMB                 | 3D view             | Move camera          |
-| LMB                 | 3D view / Add mode  | Add object           |
-| LMB                 | 3D view / Edit mode | Select object        |
-| Hold R              | Edit mode           | Open rotate menu     |
-| Hold G              | Edit mode           | Open scale menu      |
-
 ## Dependencies
 
 ### Bindings
