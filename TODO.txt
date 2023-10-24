@@ -2,8 +2,6 @@ HIGH PRIORITY
 - Auto-snap scale to integers but allow for decimal input
 - Auto-snap rotation to 5 degree increments but allow for decimal input
 - Fix z-fighting with grid lines
-- CTRL Z to undo
-- CTRL Y to redo
 - Save state indicated by asterisk in title bar
 
 MEDIUM PRIORITY
