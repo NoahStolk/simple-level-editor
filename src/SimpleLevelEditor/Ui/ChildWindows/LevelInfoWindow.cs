@@ -12,7 +12,7 @@ public static class LevelInfoWindow
 			ImGui.SeparatorText("Level Info");
 
 			ImGui.TextWrapped(LevelState.LevelFilePath ?? "<None>");
-			ImGui.Text(LevelState.IsModified ? "(unsaved changes)" : "(saved)");
+			ImGui.Text(LevelState.LevelFilePath == null ? string.Empty : LevelState.IsModified ? "(unsaved changes)" : "(saved)");
 			ImGui.Separator();
 			ImGui.Text(Inline.Span($"Version: {LevelState.Level.Version}"));
 			ImGui.Text(Inline.Span($"Meshes: {LevelState.Level.Meshes.Count}"));
