@@ -12,6 +12,8 @@ public static class LevelEditorWindow
 {
 	private static readonly float[] _gridSnapPoints = { 0, 0.125f, 0.25f, 0.5f, 1, 2, 4, 8 };
 	private static int _gridSnapIndex = 4;
+	private static bool _isMoveXzButtonActive;
+	private static bool _isMoveYButtonActive;
 
 	private static float GridSnap => _gridSnapIndex >= 0 && _gridSnapIndex < _gridSnapPoints.Length ? _gridSnapPoints[_gridSnapIndex] : 0;
 
@@ -105,8 +107,8 @@ public static class LevelEditorWindow
 
 		if (!Input.IsKeyHeld(rotationKey) && !Input.IsKeyHeld(scaleKey))
 		{
-			bool isActiveXz = RenderMoveButton("Move XZ", drawList, posOrigin.Value);
-			if (isActiveXz)
+			bool wasActiveXz = RenderMoveButton("Move XZ", drawList, posOrigin.Value, ref _isMoveXzButtonActive);
+			if (_isMoveXzButtonActive)
 			{
 				Vector3 targetPosition = Camera3d.GetMouseWorldPosition(normalizedMousePosition, new(Vector3.UnitY, -LevelEditorState.SelectedWorldObject.Position.Y));
 				if (Vector3.Dot(targetPosition, nearPlane.Normal) + nearPlane.D < 0)
@@ -116,10 +118,13 @@ public static class LevelEditorWindow
 				}
 			}
 
+			if (wasActiveXz)
+				LevelState.Track("Moved world object (hor)");
+
 			if (posY.HasValue)
 			{
-				bool isActiveY = RenderMoveButton("Move Y", drawList, posY.Value);
-				if (isActiveY)
+				bool wasActiveY = RenderMoveButton("Move Y", drawList, posY.Value, ref _isMoveYButtonActive);
+				if (_isMoveYButtonActive)
 				{
 					Vector3 point1 = LevelEditorState.SelectedWorldObject.Position;
 					Vector3 point2 = point1 + Vector3.Transform(Vector3.UnitX, Camera3d.Rotation);
@@ -136,20 +141,24 @@ public static class LevelEditorWindow
 						LevelEditorState.SelectedWorldObject.Position.Y = snappedTargetPosition.Value.Y;
 					}
 				}
+
+				if (wasActiveY)
+					LevelState.Track("Moved world object (ver)");
 			}
 
-			static bool RenderMoveButton(string text, ImDrawListPtr drawList, Vector2 posOrigin)
+			static bool RenderMoveButton(string text, ImDrawListPtr drawList, Vector2 posOrigin, ref bool isActive)
 			{
 				const int padding = 6;
 				Vector2 size = ImGui.CalcTextSize(text) + new Vector2(padding * 2);
 
 				ImGui.SetCursorScreenPos(posOrigin);
 				ImGui.InvisibleButton(text, size);
-				bool isActive = ImGui.IsItemActive();
+				bool wasActive = isActive && ImGui.IsMouseReleased(ImGuiMouseButton.Left);
+				isActive = ImGui.IsItemActive();
 				drawList.AddRectFilled(posOrigin, posOrigin + size, !isActive && ImGui.IsItemHovered() ? 0xff444444 : 0xff222222);
 				drawList.AddRect(posOrigin, posOrigin + size, ImGui.GetColorU32(ImGuiCol.Text));
 				drawList.AddText(posOrigin + new Vector2(padding), ImGui.GetColorU32(ImGuiCol.Text), text);
-				return isActive;
+				return wasActive;
 			}
 		}
 
@@ -157,24 +166,24 @@ public static class LevelEditorWindow
 		{
 			drawList.AddLine(posOrigin.Value, posX.Value, 0xff0000ff);
 			ImGui.SetCursorScreenPos(posX.Value);
-			RenderControls('X', ref LevelEditorState.SelectedWorldObject.Rotation.X, ref LevelEditorState.SelectedWorldObject.Scale.X);
+			RenderRotationAndScaleControls('X', ref LevelEditorState.SelectedWorldObject.Rotation.X, ref LevelEditorState.SelectedWorldObject.Scale.X);
 		}
 
 		if (posY.HasValue)
 		{
 			drawList.AddLine(posOrigin.Value, posY.Value, 0xff00ff00);
 			ImGui.SetCursorScreenPos(posY.Value);
-			RenderControls('Y', ref LevelEditorState.SelectedWorldObject.Rotation.Y, ref LevelEditorState.SelectedWorldObject.Scale.Y);
+			RenderRotationAndScaleControls('Y', ref LevelEditorState.SelectedWorldObject.Rotation.Y, ref LevelEditorState.SelectedWorldObject.Scale.Y);
 		}
 
 		if (posZ.HasValue)
 		{
 			drawList.AddLine(posOrigin.Value, posZ.Value, 0xffff0000);
 			ImGui.SetCursorScreenPos(posZ.Value);
-			RenderControls('Z', ref LevelEditorState.SelectedWorldObject.Rotation.Z, ref LevelEditorState.SelectedWorldObject.Scale.Z);
+			RenderRotationAndScaleControls('Z', ref LevelEditorState.SelectedWorldObject.Rotation.Z, ref LevelEditorState.SelectedWorldObject.Scale.Z);
 		}
 
-		static void RenderControls(char axis, ref float rotation, ref float scale)
+		static void RenderRotationAndScaleControls(char axis, ref float rotation, ref float scale)
 		{
 			if (Input.IsKeyHeld(rotationKey))
 			{
