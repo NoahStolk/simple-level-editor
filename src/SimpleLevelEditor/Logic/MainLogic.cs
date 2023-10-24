@@ -22,7 +22,7 @@ public static class MainLogic
 		}
 
 		if (isFocused && Input.IsButtonPressed(MouseButton.Left) && LevelEditorState.HighlightedObject != null)
-			LevelEditorState.SelectedWorldObject = LevelEditorState.SelectedWorldObject == LevelEditorState.HighlightedObject ? null : LevelEditorState.HighlightedObject;
+			LevelEditorState.SetSelectedWorldObject(LevelEditorState.SelectedWorldObject == LevelEditorState.HighlightedObject ? null : LevelEditorState.HighlightedObject);
 	}
 
 	public static void AddNewWorldObject()
@@ -36,13 +36,24 @@ public static class MainLogic
 
 		WorldObject worldObject = reference with
 		{
+			Id = LevelState.Level.WorldObjects.Count > 0 ? LevelState.Level.WorldObjects.Max(o => o.Id) + 1 : 0,
 			Position = LevelEditorState.TargetPosition.Value,
 		};
 		LevelState.Level.WorldObjects.Add(worldObject);
 
-		LevelEditorState.SelectedWorldObject = worldObject;
+		LevelEditorState.SetSelectedWorldObject(worldObject);
 		LevelEditorState.HighlightedObject = worldObject;
 		LevelState.Track("Added object");
+	}
+
+	public static void RemoveWorldObject()
+	{
+		if (LevelEditorState.SelectedWorldObject == null)
+			return;
+
+		LevelState.Level.WorldObjects.Remove(LevelEditorState.SelectedWorldObject);
+		LevelEditorState.SetSelectedWorldObject(null);
+		LevelState.Track("Deleted world object");
 	}
 
 	private static void CalculateTargetPosition(Vector2 normalizedMousePosition, Plane nearPlane, float gridSnap)

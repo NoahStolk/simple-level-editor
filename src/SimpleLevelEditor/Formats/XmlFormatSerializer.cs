@@ -83,13 +83,16 @@ public static class XmlFormatSerializer
 
 	private static List<WorldObject> ReadWorldObjects(XmlReader reader)
 	{
+		int worldObjectIndex = 0;
 		List<WorldObject> worldObjects = new();
 		while (reader.Read())
 		{
 			if (reader is { NodeType: XmlNodeType.Element, Name: "WorldObject" })
 			{
+				worldObjectIndex++; // 0 is reserved for the default object.
 				WorldObject worldObject = new()
 				{
+					Id = worldObjectIndex,
 					Mesh = reader.GetAttribute("Mesh") ?? throw _invalidFormat,
 					Texture = reader.GetAttribute("Texture") ?? throw _invalidFormat,
 					BoundingMesh = reader.GetAttribute("BoundingMesh") ?? throw _invalidFormat,

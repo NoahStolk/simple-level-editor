@@ -10,6 +10,7 @@ public static class WorldObjectEditorWindow
 {
 	private static readonly WorldObject _default = new()
 	{
+		Id = 0,
 		Mesh = string.Empty,
 		Position = default,
 		Rotation = default,
@@ -120,7 +121,7 @@ public static class WorldObjectEditorWindow
 		return rotation;
 	}
 
-	public static void RenderAssetsGrid(IReadOnlyList<string> items, ref string selectedItem)
+	private static void RenderAssetsGrid(IReadOnlyList<string> items, ref string selectedItem)
 	{
 		const int rowLength = 4;
 

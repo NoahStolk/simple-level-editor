@@ -98,6 +98,7 @@ public static class Input
 		_mouseWheel = 0;
 	}
 
+	// TODO: Remove this hack and use a separate thread for native dialogs.
 	internal static void ForceClear()
 	{
 		Array.Clear(_keysCurrent);

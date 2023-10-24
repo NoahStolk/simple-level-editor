@@ -5,6 +5,10 @@ namespace SimpleLevelEditor.Model;
 
 public record WorldObject
 {
+	/// <summary>
+	/// The Id is only used to keep track of the object in the editor.
+	/// </summary>
+	public required int Id;
 	public required string Mesh;
 	public required string Texture;
 	public required string BoundingMesh;
@@ -17,6 +21,7 @@ public record WorldObject
 	{
 		return new()
 		{
+			Id = Id,
 			Mesh = Mesh,
 			Position = Position,
 			Scale = Scale,

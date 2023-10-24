@@ -106,11 +106,14 @@ public static class LevelState
 
 	public static void SetHistoryIndex(int index)
 	{
-		LevelEditorState.SelectedWorldObject = null;
-		LevelEditorState.HighlightedObject = null;
+		if (index < 0 || index >= History.Count)
+			return;
 
 		CurrentHistoryIndex = Math.Clamp(index, 0, History.Count - 1);
 		Level = History[CurrentHistoryIndex].Object.DeepCopy();
+
+		LevelEditorState.HighlightedObject = null;
+		LevelEditorState.UpdateSelectedWorldObject();
 	}
 
 	public static void Track(string editDescription)
@@ -171,7 +174,7 @@ public static class LevelState
 
 	private static void ClearState()
 	{
-		LevelEditorState.SelectedWorldObject = null;
+		LevelEditorState.SetSelectedWorldObject(null);
 		WorldObjectEditorWindow.Reset();
 	}
 
