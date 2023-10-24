@@ -14,6 +14,8 @@ public static class Shortcuts
 	public const string AddNewObject = nameof(AddNewObject);
 	public const string FocusOnCurrentObject = nameof(FocusOnCurrentObject);
 	public const string DeleteSelectedObjects = nameof(DeleteSelectedObjects);
+	public const string Undo = nameof(Undo);
+	public const string Redo = nameof(Redo);
 
 	private static readonly List<Shortcut> _shortcuts = new()
 	{
@@ -22,19 +24,14 @@ public static class Shortcuts
 		new(Save, Keys.S, true, false, "Save level", LevelState.Save),
 		new(SaveAs, Keys.S, true, true, "Save level as", LevelState.SaveAs),
 		new(AddNewObject, Keys.Space, false, false, "Add new object", MainLogic.AddNewWorldObject),
-		new(DeleteSelectedObjects, Keys.Delete, false, false, "Delete selected objects", () =>
-		{
-			if (LevelEditorState.SelectedWorldObject == null)
-				return;
-
-			LevelState.Level.WorldObjects.Remove(LevelEditorState.SelectedWorldObject);
-			LevelEditorState.SelectedWorldObject = null;
-		}),
+		new(DeleteSelectedObjects, Keys.Delete, false, false, "Delete selected objects", MainLogic.RemoveWorldObject),
 		new(FocusOnCurrentObject, Keys.A, false, false, "Focus on current object", () =>
 		{
 			if (LevelEditorState.SelectedWorldObject != null)
 				Camera3d.SetFocusPoint(LevelEditorState.SelectedWorldObject.Position);
 		}),
+		new(Undo, Keys.Z, true, false, "Undo", () => LevelState.SetHistoryIndex(LevelState.CurrentHistoryIndex - 1)),
+		new(Redo, Keys.Y, true, false, "Redo", () => LevelState.SetHistoryIndex(LevelState.CurrentHistoryIndex + 1)),
 	};
 
 	public static IReadOnlyList<Shortcut> ShortcutsList => _shortcuts;

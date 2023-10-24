@@ -40,6 +40,8 @@ public static class LevelAssetsWindow
 				list.AddRange(relativePaths);
 				list = list.Order().Distinct().ToList();
 				LevelState.ReloadAssets(LevelState.LevelFilePath);
+
+				LevelState.Track("Added asset");
 			}
 		}
 
@@ -73,6 +75,8 @@ public static class LevelAssetsWindow
 			{
 				list.Remove(toRemove);
 				LevelState.ReloadAssets(LevelState.LevelFilePath);
+
+				LevelState.Track("Removed asset");
 			}
 		}
 
