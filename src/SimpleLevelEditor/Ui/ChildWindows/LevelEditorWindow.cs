@@ -12,8 +12,12 @@ public static class LevelEditorWindow
 {
 	private static readonly float[] _gridSnapPoints = { 0, 0.125f, 0.25f, 0.5f, 1, 2, 4, 8 };
 	private static int _gridSnapIndex = 4;
+
 	private static bool _isMoveXzButtonActive;
 	private static bool _isMoveYButtonActive;
+	private static bool _isRotationXKnobActive;
+	private static bool _isRotationYKnobActive;
+	private static bool _isRotationZKnobActive;
 
 	private static float GridSnap => _gridSnapIndex >= 0 && _gridSnapIndex < _gridSnapPoints.Length ? _gridSnapPoints[_gridSnapIndex] : 0;
 
@@ -166,34 +170,40 @@ public static class LevelEditorWindow
 		{
 			drawList.AddLine(posOrigin.Value, posX.Value, 0xff0000ff);
 			ImGui.SetCursorScreenPos(posX.Value);
-			RenderRotationAndScaleControls('X', ref LevelEditorState.SelectedWorldObject.Rotation.X, ref LevelEditorState.SelectedWorldObject.Scale.X);
+			RenderRotationAndScaleControls('X', ref LevelEditorState.SelectedWorldObject.Rotation.X, ref LevelEditorState.SelectedWorldObject.Scale.X, ref _isRotationXKnobActive);
 		}
 
 		if (posY.HasValue)
 		{
 			drawList.AddLine(posOrigin.Value, posY.Value, 0xff00ff00);
 			ImGui.SetCursorScreenPos(posY.Value);
-			RenderRotationAndScaleControls('Y', ref LevelEditorState.SelectedWorldObject.Rotation.Y, ref LevelEditorState.SelectedWorldObject.Scale.Y);
+			RenderRotationAndScaleControls('Y', ref LevelEditorState.SelectedWorldObject.Rotation.Y, ref LevelEditorState.SelectedWorldObject.Scale.Y, ref _isRotationYKnobActive);
 		}
 
 		if (posZ.HasValue)
 		{
 			drawList.AddLine(posOrigin.Value, posZ.Value, 0xffff0000);
 			ImGui.SetCursorScreenPos(posZ.Value);
-			RenderRotationAndScaleControls('Z', ref LevelEditorState.SelectedWorldObject.Rotation.Z, ref LevelEditorState.SelectedWorldObject.Scale.Z);
+			RenderRotationAndScaleControls('Z', ref LevelEditorState.SelectedWorldObject.Rotation.Z, ref LevelEditorState.SelectedWorldObject.Scale.Z, ref _isRotationZKnobActive);
 		}
 
-		static void RenderRotationAndScaleControls(char axis, ref float rotation, ref float scale)
+		static void RenderRotationAndScaleControls(char axis, ref float rotation, ref float scale, ref bool isRotationKnobActive)
 		{
 			if (Input.IsKeyHeld(rotationKey))
 			{
-				ImGuiExt.KnobAngle(Inline.Span($"Rotation {axis}"), ref rotation);
+				(_, bool wasActive) = ImGuiExt.KnobAngle(Inline.Span($"Rotation {axis}"), ref rotation, ref isRotationKnobActive);
+
+				if (wasActive)
+					LevelState.Track("Rotated object");
 			}
 			else if (Input.IsKeyHeld(scaleKey))
 			{
 				ImGui.PushItemWidth(80);
 				ImGui.SliderFloat(Inline.Span($"Scale {axis}"), ref scale, 0.01f, 20f, "%.3f", ImGuiSliderFlags.Logarithmic);
 				ImGui.PopItemWidth();
+
+				if (ImGui.IsItemDeactivatedAfterEdit())
+					LevelState.Track("Scaled object");
 			}
 		}
 

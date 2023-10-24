@@ -5,7 +5,7 @@ namespace SimpleLevelEditor.Ui;
 
 public static class ImGuiExt
 {
-	public static bool KnobAngle(ReadOnlySpan<char> label, ref float value)
+	public static (bool ValueChanged, bool WasActive) KnobAngle(ReadOnlySpan<char> label, ref float value, ref bool isActive)
 	{
 		ImGuiStylePtr style = ImGui.GetStyle();
 
@@ -17,7 +17,8 @@ public static class ImGuiExt
 
 		ImGui.InvisibleButton(label, new(radiusOuter * 2, radiusOuter * 2 + lineHeight + style.ItemInnerSpacing.Y));
 		bool valueChanged = false;
-		bool isActive = ImGui.IsItemActive();
+		bool wasActive = isActive && ImGui.IsMouseReleased(ImGuiMouseButton.Left);
+		isActive = ImGui.IsItemActive();
 		bool isHovered = ImGui.IsItemHovered();
 		if (isActive)
 		{
@@ -48,6 +49,6 @@ public static class ImGuiExt
 			ImGui.EndTooltip();
 		}
 
-		return valueChanged;
+		return (valueChanged, wasActive);
 	}
 }
