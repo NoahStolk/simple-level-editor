@@ -19,13 +19,29 @@ public record Level3dData
 
 	public Level3dData DeepCopy()
 	{
+		List<string> newMeshes = new();
+		for (int i = 0; i < Meshes.Count; i++)
+			newMeshes.Add(Meshes[i]);
+
+		List<string> newTextures = new();
+		for (int i = 0; i < Textures.Count; i++)
+			newTextures.Add(Textures[i]);
+
+		List<WorldObject> newWorldObjects = new();
+		for (int i = 0; i < WorldObjects.Count; i++)
+			newWorldObjects.Add(WorldObjects[i].DeepCopy());
+
+		List<Entity> newEntities = new();
+		for (int i = 0; i < Entities.Count; i++)
+			newEntities.Add(Entities[i].DeepCopy());
+
 		return new()
 		{
 			Version = Version,
-			Meshes = new(Meshes),
-			Textures = new(Textures),
-			WorldObjects = new(WorldObjects),
-			Entities = new(Entities),
+			Meshes = newMeshes,
+			Textures = newTextures,
+			WorldObjects = newWorldObjects,
+			Entities = newEntities,
 		};
 	}
 }
