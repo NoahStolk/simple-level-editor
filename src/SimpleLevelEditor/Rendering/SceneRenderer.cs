@@ -140,20 +140,34 @@ public static class SceneRenderer
 
 	private static void RenderBoundingBoxes(ShaderCacheEntry lineShader)
 	{
-		if (!LevelEditorState.RenderBoundingBoxes)
-			return;
-
 		Gl.BindVertexArray(_cubeVao);
 		Gl.LineWidth(2);
 
 		for (int i = 0; i < LevelState.Level.WorldObjects.Count; i++)
 		{
 			WorldObject worldObject = LevelState.Level.WorldObjects[i];
-			RenderBoundingBox(lineShader, worldObject);
+
+			if (worldObject != LevelEditorState.SelectedWorldObject && !LevelEditorState.RenderBoundingBoxes)
+				continue;
+
+			float timeAddition = MathF.Sin((float)Glfw.GetTime() * 10) * 0.5f + 0.5f;
+			timeAddition *= 0.5f;
+
+			Vector4 color;
+			if (worldObject == LevelEditorState.SelectedWorldObject && worldObject == LevelEditorState.HighlightedObject && Camera3d.Mode == CameraMode.None)
+				color = new(0.5f + timeAddition, 1, 0.5f + timeAddition, 1);
+			else if (worldObject == LevelEditorState.SelectedWorldObject)
+				color = new(0, 0.75f, 0, 1);
+			else if (worldObject == LevelEditorState.HighlightedObject && Camera3d.Mode == CameraMode.None)
+				color = new(1, 0.5f + timeAddition, 1, 1);
+			else
+				color = new(0.75f, 0, 0.75f, 1);
+
+			RenderBoundingBox(lineShader, worldObject, color);
 		}
 	}
 
-	private static void RenderBoundingBox(ShaderCacheEntry lineShader, WorldObject worldObject)
+	private static void RenderBoundingBox(ShaderCacheEntry lineShader, WorldObject worldObject, Vector4 color)
 	{
 		MeshContainer.Entry? mesh = MeshContainer.GetMesh(worldObject.Mesh);
 		if (mesh == null)
@@ -161,19 +175,6 @@ public static class SceneRenderer
 
 		int lineModelUniform = lineShader.GetUniformLocation("model");
 		int lineColorUniform = lineShader.GetUniformLocation("color");
-
-		float timeAddition = MathF.Sin((float)Glfw.GetTime() * 10) * 0.5f + 0.5f;
-		timeAddition *= 0.5f;
-
-		Vector4 color;
-		if (worldObject == LevelEditorState.SelectedWorldObject && worldObject == LevelEditorState.HighlightedObject && Camera3d.Mode == CameraMode.None)
-			color = new(0.5f + timeAddition, 1, 0.5f + timeAddition, 1);
-		else if (worldObject == LevelEditorState.SelectedWorldObject)
-			color = new(0, 0.75f, 0, 1);
-		else if (worldObject == LevelEditorState.HighlightedObject && Camera3d.Mode == CameraMode.None)
-			color = new(1, 0.5f + timeAddition, 1, 1);
-		else
-			color = new(0.75f, 0, 0.75f, 1);
 
 		ShaderUniformUtils.Set(lineColorUniform, color);
 
