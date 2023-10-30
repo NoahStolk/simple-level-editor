@@ -1,7 +1,6 @@
 using ImGuiNET;
 using SimpleLevelEditor.State;
 using SimpleLevelEditor.Ui.ChildWindows;
-using SimpleLevelEditor.Utils;
 
 namespace SimpleLevelEditor.Ui;
 

@@ -1,5 +1,6 @@
 using Silk.NET.OpenGL;
 using SimpleLevelEditor.Content;
+using SimpleLevelEditor.Extensions;
 using SimpleLevelEditor.Model;
 using SimpleLevelEditor.State;
 using SimpleLevelEditor.Utils;
@@ -45,8 +46,8 @@ public static class SceneRenderer
 		ShaderCacheEntry lineShader = InternalContent.Shaders["Line"];
 		Gl.UseProgram(lineShader.Id);
 
-		ShaderUniformUtils.Set(lineShader.GetUniformLocation("view"), Camera3d.ViewMatrix);
-		ShaderUniformUtils.Set(lineShader.GetUniformLocation("projection"), Camera3d.Projection);
+		Gl.UniformMatrix4x4(lineShader.GetUniformLocation("view"), Camera3d.ViewMatrix);
+		Gl.UniformMatrix4x4(lineShader.GetUniformLocation("projection"), Camera3d.Projection);
 
 		RenderOrigin(lineShader);
 		RenderGrid(lineShader);
@@ -55,8 +56,8 @@ public static class SceneRenderer
 		ShaderCacheEntry meshShader = InternalContent.Shaders["Mesh"];
 		Gl.UseProgram(meshShader.Id);
 
-		ShaderUniformUtils.Set(meshShader.GetUniformLocation("view"), Camera3d.ViewMatrix);
-		ShaderUniformUtils.Set(meshShader.GetUniformLocation("projection"), Camera3d.Projection);
+		Gl.UniformMatrix4x4(meshShader.GetUniformLocation("view"), Camera3d.ViewMatrix);
+		Gl.UniformMatrix4x4(meshShader.GetUniformLocation("projection"), Camera3d.Projection);
 
 		RenderWorldObjects(meshShader);
 	}
@@ -73,35 +74,35 @@ public static class SceneRenderer
 		Gl.LineWidth(4);
 
 		// X axis
-		ShaderUniformUtils.Set(lineModelUniform, scaleMatrix * Matrix4x4.CreateFromAxisAngle(Vector3.UnitY, MathF.PI / 2));
-		ShaderUniformUtils.Set(lineColorUniform, new Vector4(1, 0, 0, 1));
+		Gl.UniformMatrix4x4(lineModelUniform, scaleMatrix * Matrix4x4.CreateFromAxisAngle(Vector3.UnitY, MathF.PI / 2));
+		Gl.UniformVector4(lineColorUniform, new Vector4(1, 0, 0, 1));
 		Gl.DrawArrays(PrimitiveType.Lines, 0, 6);
 
 		// Y axis
-		ShaderUniformUtils.Set(lineModelUniform, scaleMatrix * Matrix4x4.CreateFromAxisAngle(Vector3.UnitX, MathF.PI * 1.5f));
-		ShaderUniformUtils.Set(lineColorUniform, new Vector4(0, 1, 0, 1));
+		Gl.UniformMatrix4x4(lineModelUniform, scaleMatrix * Matrix4x4.CreateFromAxisAngle(Vector3.UnitX, MathF.PI * 1.5f));
+		Gl.UniformVector4(lineColorUniform, new Vector4(0, 1, 0, 1));
 		Gl.DrawArrays(PrimitiveType.Lines, 0, 6);
 
 		// Z axis
-		ShaderUniformUtils.Set(lineModelUniform, scaleMatrix);
-		ShaderUniformUtils.Set(lineColorUniform, new Vector4(0, 0, 1, 1));
+		Gl.UniformMatrix4x4(lineModelUniform, scaleMatrix);
+		Gl.UniformVector4(lineColorUniform, new Vector4(0, 0, 1, 1));
 		Gl.DrawArrays(PrimitiveType.Lines, 0, 6);
 
 		Gl.LineWidth(2);
 
 		// X axis (negative)
-		ShaderUniformUtils.Set(lineModelUniform, scaleMatrix * Matrix4x4.CreateFromAxisAngle(Vector3.UnitY, -MathF.PI / 2));
-		ShaderUniformUtils.Set(lineColorUniform, new Vector4(1, 0, 0, 0.5f));
+		Gl.UniformMatrix4x4(lineModelUniform, scaleMatrix * Matrix4x4.CreateFromAxisAngle(Vector3.UnitY, -MathF.PI / 2));
+		Gl.UniformVector4(lineColorUniform, new Vector4(1, 0, 0, 0.5f));
 		Gl.DrawArrays(PrimitiveType.Lines, 0, 6);
 
 		// Y axis (negative)
-		ShaderUniformUtils.Set(lineModelUniform, scaleMatrix * Matrix4x4.CreateFromAxisAngle(Vector3.UnitX, MathF.PI / 2));
-		ShaderUniformUtils.Set(lineColorUniform, new Vector4(0, 1, 0, 0.5f));
+		Gl.UniformMatrix4x4(lineModelUniform, scaleMatrix * Matrix4x4.CreateFromAxisAngle(Vector3.UnitX, MathF.PI / 2));
+		Gl.UniformVector4(lineColorUniform, new Vector4(0, 1, 0, 0.5f));
 		Gl.DrawArrays(PrimitiveType.Lines, 0, 6);
 
 		// Z axis (negative)
-		ShaderUniformUtils.Set(lineModelUniform, scaleMatrix * Matrix4x4.CreateFromAxisAngle(Vector3.UnitY, MathF.PI));
-		ShaderUniformUtils.Set(lineColorUniform, new Vector4(0, 0, 1, 0.5f));
+		Gl.UniformMatrix4x4(lineModelUniform, scaleMatrix * Matrix4x4.CreateFromAxisAngle(Vector3.UnitY, MathF.PI));
+		Gl.UniformVector4(lineColorUniform, new Vector4(0, 0, 1, 0.5f));
 		Gl.DrawArrays(PrimitiveType.Lines, 0, 6);
 	}
 
@@ -110,7 +111,7 @@ public static class SceneRenderer
 		int lineModelUniform = lineShader.GetUniformLocation("model");
 		int lineColorUniform = lineShader.GetUniformLocation("color");
 
-		ShaderUniformUtils.Set(lineColorUniform, new Vector4(0.5f, 0.5f, 0.5f, 1));
+		Gl.UniformVector4(lineColorUniform, new Vector4(0.5f, 0.5f, 0.5f, 1));
 		Gl.LineWidth(1);
 
 		int min = -LevelEditorState.GridCellCount;
@@ -126,13 +127,13 @@ public static class SceneRenderer
 			// Prevent rendering grid lines on top of origin lines (Z-fighting).
 			if (LevelEditorState.TargetHeight != 0 || i * LevelEditorState.GridCellSize + offset.X != 0)
 			{
-				ShaderUniformUtils.Set(lineModelUniform, scaleMat * Matrix4x4.CreateTranslation(new Vector3(i * LevelEditorState.GridCellSize, LevelEditorState.TargetHeight, min * LevelEditorState.GridCellSize) + offset));
+				Gl.UniformMatrix4x4(lineModelUniform, scaleMat * Matrix4x4.CreateTranslation(new Vector3(i * LevelEditorState.GridCellSize, LevelEditorState.TargetHeight, min * LevelEditorState.GridCellSize) + offset));
 				Gl.DrawArrays(PrimitiveType.Lines, 0, 6);
 			}
 
 			if (LevelEditorState.TargetHeight != 0 || i * LevelEditorState.GridCellSize + offset.Z != 0)
 			{
-				ShaderUniformUtils.Set(lineModelUniform, scaleMat * Matrix4x4.CreateFromAxisAngle(Vector3.UnitY, MathF.PI / 2) * Matrix4x4.CreateTranslation(new Vector3(min * LevelEditorState.GridCellSize, LevelEditorState.TargetHeight, i * LevelEditorState.GridCellSize) + offset));
+				Gl.UniformMatrix4x4(lineModelUniform, scaleMat * Matrix4x4.CreateFromAxisAngle(Vector3.UnitY, MathF.PI / 2) * Matrix4x4.CreateTranslation(new Vector3(min * LevelEditorState.GridCellSize, LevelEditorState.TargetHeight, i * LevelEditorState.GridCellSize) + offset));
 				Gl.DrawArrays(PrimitiveType.Lines, 0, 6);
 			}
 		}
@@ -176,14 +177,14 @@ public static class SceneRenderer
 		int lineModelUniform = lineShader.GetUniformLocation("model");
 		int lineColorUniform = lineShader.GetUniformLocation("color");
 
-		ShaderUniformUtils.Set(lineColorUniform, color);
+		Gl.UniformVector4(lineColorUniform, color);
 
 		Vector3 bbScale = worldObject.Scale * (mesh.BoundingMax - mesh.BoundingMin);
 		Vector3 bbOffset = (mesh.BoundingMax + mesh.BoundingMin) / 2;
 		Matrix4x4 rotationMatrix = MathUtils.CreateRotationMatrixFromEulerAngles(worldObject.Rotation);
 
 		Matrix4x4 modelMatrix = Matrix4x4.CreateScale(bbScale) * rotationMatrix * Matrix4x4.CreateTranslation(worldObject.Position + Vector3.Transform(bbOffset, rotationMatrix));
-		ShaderUniformUtils.Set(lineModelUniform, modelMatrix);
+		Gl.UniformMatrix4x4(lineModelUniform, modelMatrix);
 		Gl.DrawArrays(PrimitiveType.Lines, 0, 24);
 	}
 
@@ -193,7 +194,7 @@ public static class SceneRenderer
 		for (int i = 0; i < LevelState.Level.WorldObjects.Count; i++)
 		{
 			WorldObject worldObject = LevelState.Level.WorldObjects[i];
-			ShaderUniformUtils.Set(modelUniform, worldObject.GetModelMatrix());
+			Gl.UniformMatrix4x4(modelUniform, worldObject.GetModelMatrix());
 
 			MeshContainer.Entry? mesh = MeshContainer.GetMesh(worldObject.Mesh);
 			if (mesh == null)

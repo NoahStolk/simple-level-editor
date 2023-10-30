@@ -3,8 +3,7 @@ using SimpleLevelEditor;
 using SimpleLevelEditor.Content;
 using SimpleLevelEditor.Content.Parsers.Texture;
 using SimpleLevelEditor.Content.Parsers.Texture.TgaFormat;
-using SimpleLevelEditor.Rendering;
-using SimpleLevelEditor.Utils;
+using SimpleLevelEditor.Extensions;
 
 Graphics.CreateWindow(new("Simple Level Editor", Constants.WindowWidth, Constants.WindowHeight, false));
 Graphics.SetWindowSizeLimits(1024, 768, 4096, 2160);
@@ -32,8 +31,8 @@ ImGuiController imGuiController = new(Constants.WindowWidth, Constants.WindowHei
 	int texture = uiShader.GetUniformLocation("Texture");
 	int projMtx = uiShader.GetUniformLocation("ProjMtx");
 
-	ShaderUniformUtils.Set(texture, 0);
-	ShaderUniformUtils.Set(projMtx, orthoProjection);
+	Graphics.Gl.Uniform1(texture, 0);
+	Graphics.Gl.UniformMatrix4x4(projMtx, orthoProjection);
 });
 
 ImGuiStylePtr style = ImGui.GetStyle();

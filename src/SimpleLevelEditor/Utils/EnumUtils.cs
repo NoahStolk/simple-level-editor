@@ -1,5 +1,4 @@
 using SimpleLevelEditor.Model.Enums;
-using SimpleLevelEditor.State;
 
 namespace SimpleLevelEditor.Utils;
 
