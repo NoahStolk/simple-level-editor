@@ -172,10 +172,30 @@ public static class LevelState
 
 	private static void SetLevel(string? levelFilePath, Level3dData level)
 	{
+		AssetFileWatcher.Destroy();
+
 		LevelFilePath = levelFilePath;
 		Level = level;
 		_fileMd5Hash = _memoryMd5Hash;
 		IsModified = !_fileMd5Hash.SequenceEqual(_memoryMd5Hash);
+
+		string? baseDirectory = Path.GetDirectoryName(levelFilePath);
+		if (baseDirectory != null)
+			RefreshAssetFileWatcher(baseDirectory, level.Meshes.Concat(level.Textures));
+	}
+
+	private static void RefreshAssetFileWatcher(string baseDirectory, IEnumerable<string> assetPaths)
+	{
+		List<string> assetDirectories = new();
+		foreach (string assetFilePath in assetPaths)
+		{
+			string? directory = Path.GetDirectoryName(assetFilePath);
+			if (directory != null && !assetDirectories.Contains(directory))
+				assetDirectories.Add(directory);
+		}
+
+		foreach (string assetDirectory in assetDirectories)
+			AssetFileWatcher.AddDirectory(Path.Combine(baseDirectory, assetDirectory));
 	}
 
 	private static void ClearState()

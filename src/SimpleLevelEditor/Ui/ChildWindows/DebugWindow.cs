@@ -31,6 +31,12 @@ public static class DebugWindow
 			ImGui.Text(Inline.Span($"Total memory: {GC.GetTotalMemory(false):N0} bytes"));
 			ImGui.Text(Inline.Span($"Total pause duration: {GC.GetTotalPauseDuration().TotalSeconds:0.000} s"));
 
+			ImGui.SeparatorText("Dirs");
+
+			ImGui.Text(Inline.Span(AssetFileWatcher.Directories.Count));
+			for (int i = 0; i < AssetFileWatcher.Directories.Count; i++)
+				ImGui.TextWrapped(AssetFileWatcher.Directories[i]);
+
 			ImGui.SeparatorText("Warnings");
 
 			ImGui.BeginDisabled(DebugState.Warnings.Count == 0);

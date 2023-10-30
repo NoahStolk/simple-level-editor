@@ -37,7 +37,7 @@ public static class TextureContainer
 			if (!File.Exists(absolutePath))
 				continue;
 
-			TextureData textureData = TgaParser.Parse(File.ReadAllBytes(absolutePath));
+			TextureData textureData = TgaParser.Parse(FileWrapper.ForceReadAllBytes(absolutePath));
 			uint textureId = CreateFromTexture(textureData.Width, textureData.Height, textureData.ColorData);
 			_textures.Add(texturePath, textureId);
 		}

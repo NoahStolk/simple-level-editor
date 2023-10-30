@@ -35,7 +35,7 @@ public static class MeshContainer
 			if (!File.Exists(absolutePath))
 				continue;
 
-			ModelData modelData = ObjParser.Parse(File.ReadAllBytes(absolutePath));
+			ModelData modelData = ObjParser.Parse(FileWrapper.ForceReadAllBytes(absolutePath));
 			if (modelData.Meshes.Count == 0)
 				continue;
 
