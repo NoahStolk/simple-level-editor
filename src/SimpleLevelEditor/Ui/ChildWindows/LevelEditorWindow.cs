@@ -1,6 +1,7 @@
 using Detach;
 using Detach.Utils;
 using ImGuiNET;
+using Silk.NET.GLFW;
 using SimpleLevelEditor.Content;
 using SimpleLevelEditor.Logic;
 using SimpleLevelEditor.Rendering;
@@ -13,8 +14,7 @@ public static class LevelEditorWindow
 	private static readonly float[] _gridSnapPoints = { 0, 0.125f, 0.25f, 0.5f, 1, 2, 4, 8 };
 	private static int _gridSnapIndex = 4;
 
-	private static bool _isMoveXzButtonActive;
-	private static bool _isMoveYButtonActive;
+	private static bool _isMoveButtonActive;
 
 	private static float GridSnap => _gridSnapIndex >= 0 && _gridSnapIndex < _gridSnapPoints.Length ? _gridSnapPoints[_gridSnapIndex] : 0;
 
@@ -103,24 +103,11 @@ public static class LevelEditorWindow
 		Vector2? posY = GetPosition2d(LevelEditorState.SelectedWorldObject.Position + Vector3.Transform(Vector3.UnitY, rotationMatrix));
 		Vector2? posZ = GetPosition2d(LevelEditorState.SelectedWorldObject.Position + Vector3.Transform(Vector3.UnitZ, rotationMatrix));
 
-		bool wasActiveXz = RenderMoveButton("Move XZ", drawList, posOrigin.Value, ref _isMoveXzButtonActive);
-		if (_isMoveXzButtonActive)
+		bool wasMoveButtonActive = RenderMoveButton("Move", drawList, posOrigin.Value, ref _isMoveButtonActive);
+		if (_isMoveButtonActive)
 		{
-			Vector3 targetPosition = Camera3d.GetMouseWorldPosition(normalizedMousePosition, new(Vector3.UnitY, -LevelEditorState.SelectedWorldObject.Position.Y));
-			if (Vector3.Dot(targetPosition, nearPlane.Normal) + nearPlane.D < 0)
-			{
-				LevelEditorState.SelectedWorldObject.Position.X = GridSnap > 0 ? MathF.Round(targetPosition.X / GridSnap) * GridSnap : targetPosition.X;
-				LevelEditorState.SelectedWorldObject.Position.Z = GridSnap > 0 ? MathF.Round(targetPosition.Z / GridSnap) * GridSnap : targetPosition.Z;
-			}
-		}
-
-		if (wasActiveXz)
-			LevelState.Track("Moved world object (hor)");
-
-		if (posY.HasValue)
-		{
-			bool wasActiveY = RenderMoveButton("Move Y", drawList, posY.Value, ref _isMoveYButtonActive);
-			if (_isMoveYButtonActive)
+			bool ctrl = Input.IsKeyHeld(Keys.ControlLeft) || Input.IsKeyHeld(Keys.ControlRight);
+			if (ctrl)
 			{
 				Vector3 point1 = LevelEditorState.SelectedWorldObject.Position;
 				Vector3 point2 = point1 + Vector3.Transform(Vector3.UnitX, Camera3d.Rotation);
@@ -137,15 +124,25 @@ public static class LevelEditorWindow
 					LevelEditorState.SelectedWorldObject.Position.Y = snappedTargetPosition.Value.Y;
 				}
 			}
-
-			if (wasActiveY)
-				LevelState.Track("Moved world object (ver)");
-
-			drawList.AddLine(posOrigin.Value, posY.Value, 0xff00ff00);
+			else
+			{
+				Vector3 targetPosition = Camera3d.GetMouseWorldPosition(normalizedMousePosition, new(Vector3.UnitY, -LevelEditorState.SelectedWorldObject.Position.Y));
+				if (Vector3.Dot(targetPosition, nearPlane.Normal) + nearPlane.D < 0)
+				{
+					LevelEditorState.SelectedWorldObject.Position.X = GridSnap > 0 ? MathF.Round(targetPosition.X / GridSnap) * GridSnap : targetPosition.X;
+					LevelEditorState.SelectedWorldObject.Position.Z = GridSnap > 0 ? MathF.Round(targetPosition.Z / GridSnap) * GridSnap : targetPosition.Z;
+				}
+			}
 		}
+
+		if (wasMoveButtonActive)
+			LevelState.Track("Moved world object");
 
 		if (posX.HasValue)
 			drawList.AddLine(posOrigin.Value, posX.Value, 0xff0000ff);
+
+		if (posY.HasValue)
+			drawList.AddLine(posOrigin.Value, posY.Value, 0xff00ff00);
 
 		if (posZ.HasValue)
 			drawList.AddLine(posOrigin.Value, posZ.Value, 0xffff0000);
@@ -154,6 +151,7 @@ public static class LevelEditorWindow
 		{
 			const int padding = 6;
 			Vector2 size = ImGui.CalcTextSize(text) + new Vector2(padding * 2);
+			posOrigin -= size / 2;
 
 			ImGui.SetCursorScreenPos(posOrigin);
 			ImGui.InvisibleButton(text, size);

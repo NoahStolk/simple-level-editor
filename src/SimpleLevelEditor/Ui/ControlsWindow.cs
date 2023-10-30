@@ -11,6 +11,7 @@ public static class ControlsWindow
 		["Look around"] = "Right mouse button",
 		["Zoom in/out"] = "Scroll wheel",
 		["Change target height"] = "Scroll wheel + CTRL",
+		["Move object vertically"] = "CTRL while dragging",
 	};
 
 	public static void Render(ref bool showWindow)
