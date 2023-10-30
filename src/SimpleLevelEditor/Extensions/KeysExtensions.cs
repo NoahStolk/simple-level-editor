@@ -210,6 +210,9 @@ public static class KeysExtensions
 
 			Keys.GraveAccent => isShiftKeyHeld ? '~' : '`',
 
+			Keys.KeypadDecimal => '.',
+			Keys.KeypadSubtract => '-',
+
 			_ => null,
 		};
 	}
