@@ -1,4 +1,3 @@
-using NativeFileDialogSharp;
 using SimpleLevelEditor.Formats;
 using SimpleLevelEditor.Model;
 using SimpleLevelEditor.Rendering;
@@ -64,19 +63,23 @@ public static class LevelState
 
 	public static void Load()
 	{
-		DialogResult dialogResult = DialogWrapper.FileOpen(_fileExtension);
-		if (dialogResult is not { IsOk: true })
+		DialogWrapper.FileOpen(LoadCallback, _fileExtension);
+	}
+
+	private static void LoadCallback(string? path)
+	{
+		if (path == null)
 			return;
 
-		using (FileStream fs = new(dialogResult.Path, FileMode.Open))
+		using (FileStream fs = new(path, FileMode.Open))
 		using (XmlReader reader = XmlReader.Create(fs))
 		{
 			Level3dData level = XmlFormatSerializer.ReadLevel(reader);
-			SetLevel(dialogResult.Path, level);
+			SetLevel(path, level);
 		}
 
 		ClearState();
-		ReloadAssets(dialogResult.Path);
+		LoadScheduleState.Schedule(path);
 		Track("Reset");
 	}
 
@@ -96,12 +99,15 @@ public static class LevelState
 
 	public static void SaveAs()
 	{
-		DialogResult dialogResult = DialogWrapper.FileSave(_fileExtension);
-		if (dialogResult is not { IsOk: true })
+		DialogWrapper.FileSave(SaveAsCallback, _fileExtension);
+	}
+
+	private static void SaveAsCallback(string? path)
+	{
+		if (path == null)
 			return;
 
-		string path = Path.ChangeExtension(dialogResult.Path, $".{_fileExtension}");
-		Save(path);
+		Save(Path.ChangeExtension(path, $".{_fileExtension}"));
 	}
 
 	public static void SetHistoryIndex(int index)

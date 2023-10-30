@@ -1,6 +1,5 @@
 using Detach;
 using ImGuiNET;
-using NativeFileDialogSharp;
 using SimpleLevelEditor.State;
 using System.Diagnostics;
 
@@ -16,34 +15,21 @@ public static class LevelAssetsWindow
 
 			float height = MathF.Floor(size.Y / 2f - 40f) - 1;
 
-			RenderAssetPaths(height, "Meshes", "obj", ref LevelState.Level.Meshes);
-			RenderAssetPaths(height, "Textures", "tga", ref LevelState.Level.Textures);
+			RenderAssetPaths(height, "Meshes", "obj", LevelState.Level.Meshes, l => LevelState.Level.Meshes = l);
+			RenderAssetPaths(height, "Textures", "tga", LevelState.Level.Textures, l => LevelState.Level.Textures = l);
 		}
 
 		ImGui.EndChild(); // End Level Assets
 	}
 
-	private static void RenderAssetPaths(float windowHeight, string name, string dialogFilterList, ref List<string> list)
+	private static void RenderAssetPaths(float windowHeight, string name, string dialogFilterList, List<string> list, Action<List<string>> setList)
 	{
 		ImGui.BeginDisabled(LevelState.LevelFilePath == null);
 		if (ImGui.Button(Inline.Span($"Add {name}")))
 		{
 			Debug.Assert(LevelState.LevelFilePath != null, "Cannot click this button because it should be disabled.");
 
-			DialogResult dialogResult = DialogWrapper.FileOpenMultiple(dialogFilterList);
-			if (dialogResult is { IsOk: true })
-			{
-				string? parentDirectory = Path.GetDirectoryName(LevelState.LevelFilePath);
-				Debug.Assert(parentDirectory != null, "Parent directory should not be null.");
-
-				string[] relativePaths = dialogResult.Paths.Select(path => Path.GetRelativePath(parentDirectory, path)).ToArray();
-
-				list.AddRange(relativePaths);
-				list = list.Order().Distinct().ToList();
-				LevelState.ReloadAssets(LevelState.LevelFilePath);
-
-				LevelState.Track("Added assets");
-			}
+			DialogWrapper.FileOpenMultiple(p => AddAssetsCallback(list, setList, p), dialogFilterList);
 		}
 
 		ImGui.EndDisabled();
@@ -83,5 +69,22 @@ public static class LevelAssetsWindow
 
 		ImGui.EndChild();
 		ImGui.EndDisabled();
+	}
+
+	private static void AddAssetsCallback(List<string> list, Action<List<string>> setList, IReadOnlyList<string>? paths)
+	{
+		if (paths == null)
+			return;
+
+		string? parentDirectory = Path.GetDirectoryName(LevelState.LevelFilePath);
+		Debug.Assert(parentDirectory != null, "Parent directory should not be null.");
+
+		string[] relativePaths = paths.Select(path => Path.GetRelativePath(parentDirectory, path)).ToArray();
+
+		list.AddRange(relativePaths);
+		setList(list.Order().Distinct().ToList());
+		LoadScheduleState.Schedule(LevelState.LevelFilePath);
+
+		LevelState.Track("Added assets");
 	}
 }

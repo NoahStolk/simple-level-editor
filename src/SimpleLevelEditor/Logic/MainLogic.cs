@@ -11,6 +11,8 @@ public static class MainLogic
 {
 	public static void Run(bool isFocused, Vector2 normalizedMousePosition, Plane nearPlane, float gridSnap)
 	{
+		LoadScheduleState.LoadIfScheduled();
+
 		CalculateTargetPosition(normalizedMousePosition, nearPlane, gridSnap);
 		CalculateHighlightedObject(normalizedMousePosition, isFocused);
 
