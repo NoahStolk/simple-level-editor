@@ -1,10 +1,11 @@
+using Detach;
+using Detach.Utils;
 using ImGuiNET;
 using Silk.NET.GLFW;
 using SimpleLevelEditor.Content;
 using SimpleLevelEditor.Logic;
 using SimpleLevelEditor.Rendering;
 using SimpleLevelEditor.State;
-using SimpleLevelEditor.Utils;
 
 namespace SimpleLevelEditor.Ui.ChildWindows;
 

@@ -1,5 +1,4 @@
 using Silk.NET.GLFW;
-using SimpleLevelEditor.Maths;
 
 namespace SimpleLevelEditor.Rendering;
 
@@ -111,16 +110,15 @@ public static class Camera3d
 		Vector3 farPoint = UnProject(farSource, Projection, ViewMatrix, Matrix4x4.Identity);
 
 		// Create a ray from the near clip plane to the far clip plane.
-		Vector3 direction = Vector3.Normalize(farPoint - nearPoint);
-		Ray ray = new(nearPoint, direction);
+		Vector3 rayDirection = Vector3.Normalize(farPoint - nearPoint);
 
 		// Calculate distance of intersection point from ray.Position.
-		float denominator = Vector3.Dot(plane.Normal, ray.Direction);
-		float numerator = Vector3.Dot(plane.Normal, ray.Position) + plane.D;
+		float denominator = Vector3.Dot(plane.Normal, rayDirection);
+		float numerator = Vector3.Dot(plane.Normal, nearPoint) + plane.D;
 		float t = -(numerator / denominator);
 
 		// Calculate the picked position on the y = 0 plane.
-		return nearPoint + direction * t;
+		return nearPoint + rayDirection * t;
 	}
 
 	private static Vector3 UnProject(Vector3 source, Matrix4x4 projection, Matrix4x4 view, Matrix4x4 world)

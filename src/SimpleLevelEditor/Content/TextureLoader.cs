@@ -1,5 +1,5 @@
+using Detach.Parsers.Texture;
 using Silk.NET.OpenGL;
-using SimpleLevelEditor.Content.Parsers.Texture;
 
 namespace SimpleLevelEditor.Content;
 
@@ -17,7 +17,7 @@ public static class TextureLoader
 		Graphics.Gl.TexParameterI(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)GLEnum.Nearest);
 
 		fixed (byte* b = texture.ColorData)
-			Graphics.Gl.TexImage2D(TextureTarget.Texture2D, 0, InternalFormat.Rgba, (uint)texture.Width, (uint)texture.Height, 0, GLEnum.Rgba, PixelType.UnsignedByte, b);
+			Graphics.Gl.TexImage2D(TextureTarget.Texture2D, 0, InternalFormat.Rgba, texture.Width, texture.Height, 0, GLEnum.Rgba, PixelType.UnsignedByte, b);
 
 		Graphics.Gl.GenerateMipmap(TextureTarget.Texture2D);
 

@@ -1,4 +1,4 @@
-using SimpleLevelEditor.Content.Parsers.Texture;
+using Detach.Parsers.Texture;
 
 namespace SimpleLevelEditor.Content;
 

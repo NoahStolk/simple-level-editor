@@ -1,5 +1,5 @@
+using Detach.Collisions;
 using Silk.NET.GLFW;
-using SimpleLevelEditor.Maths;
 using SimpleLevelEditor.Model;
 using SimpleLevelEditor.Rendering;
 using SimpleLevelEditor.State;
@@ -71,8 +71,9 @@ public static class MainLogic
 	{
 		Matrix4x4 viewProjection = Camera3d.ViewMatrix * Camera3d.Projection;
 		Plane farPlane = new(viewProjection.M13 - viewProjection.M14, viewProjection.M23 - viewProjection.M24, viewProjection.M33 - viewProjection.M34, viewProjection.M43 - viewProjection.M44);
+		Vector3 rayStartPosition = Camera3d.Position;
 		Vector3 rayEndPosition = Camera3d.GetMouseWorldPosition(normalizedMousePosition, farPlane);
-		Ray ray = new(Camera3d.Position, Vector3.Normalize(rayEndPosition - Camera3d.Position));
+		Vector3 rayDirection = Vector3.Normalize(rayEndPosition - rayStartPosition);
 		Vector3? closestIntersection = null;
 		LevelEditorState.HighlightedObject = null;
 
@@ -92,8 +93,7 @@ public static class MainLogic
 			Vector3 bbScale = worldObject.Scale * (mesh.BoundingMax - mesh.BoundingMin);
 			Vector3 bbOffset = (mesh.BoundingMax + mesh.BoundingMin) / 2;
 			float maxScale = Math.Max(bbScale.X, Math.Max(bbScale.Y, bbScale.Z));
-			Sphere sphere = new(worldObject.Position + bbOffset, maxScale);
-			Vector3? sphereIntersection = ray.Intersects(sphere);
+			Vector3? sphereIntersection = Ray.IntersectsSphere(rayStartPosition, rayDirection, worldObject.Position + bbOffset, maxScale);
 			if (sphereIntersection == null)
 				continue;
 
@@ -104,7 +104,7 @@ public static class MainLogic
 				Vector3 p2 = Vector3.Transform(mesh.Mesh.Vertices[mesh.Mesh.Indices[j + 1]].Position, modelMatrix);
 				Vector3 p3 = Vector3.Transform(mesh.Mesh.Vertices[mesh.Mesh.Indices[j + 2]].Position, modelMatrix);
 
-				Vector3? triangleIntersection = ray.Intersects(p1, p2, p3);
+				Vector3? triangleIntersection = Ray.IntersectsTriangle(rayStartPosition, rayDirection, p1, p2, p3);
 				if (triangleIntersection == null)
 					continue;
 

@@ -1,8 +1,8 @@
+using Detach.Parsers.Texture;
+using Detach.Parsers.Texture.TgaFormat;
 using ImGuiNET;
 using SimpleLevelEditor;
 using SimpleLevelEditor.Content;
-using SimpleLevelEditor.Content.Parsers.Texture;
-using SimpleLevelEditor.Content.Parsers.Texture.TgaFormat;
 using SimpleLevelEditor.Extensions;
 
 Graphics.CreateWindow(new("Simple Level Editor", Constants.WindowWidth, Constants.WindowHeight, false));

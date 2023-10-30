@@ -1,5 +1,5 @@
+using Detach.Utils;
 using SimpleLevelEditor.Model.Enums;
-using SimpleLevelEditor.Utils;
 
 namespace SimpleLevelEditor.Model;
 

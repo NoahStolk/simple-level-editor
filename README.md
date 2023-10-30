@@ -18,4 +18,5 @@ Currently there is only a Windows build, but it should be easy to create builds 
 - [NativeFileDialogSharp](https://github.com/milleniumbug/NativeFileDialogSharp) ([nativefiledialog](https://github.com/mlabbe/nativefiledialog))
 
 ### Other dependencies
+- [Detach](https://github.com/NoahStolk/Detach)
 - [OneOf](https://github.com/mcintyre321/OneOf)

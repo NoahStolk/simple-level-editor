@@ -1,8 +1,8 @@
+using Detach.Utils;
 using OneOf;
 using SimpleLevelEditor.Model;
 using SimpleLevelEditor.Model.EntityTypes;
 using SimpleLevelEditor.Model.Enums;
-using SimpleLevelEditor.Utils;
 using System.Text;
 using System.Xml;
 
