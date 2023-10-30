@@ -10,7 +10,7 @@ public static class LevelEditorState
 	public static int GridCellCount = 64;
 	public static int GridCellSize = 1;
 	public static Vector3? TargetPosition;
-	public static bool RenderBoundingBoxes = true;
+	public static bool RenderBoundingBoxes;
 
 	public static WorldObject? HighlightedObject;
 	public static WorldObject? SelectedWorldObject { get; private set; }
