@@ -40,37 +40,38 @@ public static class WorldObjectEditorWindow
 
 	private static void RenderWorldObjectInputs(WorldObject worldObject)
 	{
-		ImGui.DragFloat3("Position", ref worldObject.Position, 0.1f, float.MinValue, float.MaxValue, "%.1f");
+		ImGui.Text("Position");
+		ImGui.DragFloat3("##position", ref worldObject.Position, 0.1f, float.MinValue, float.MaxValue, "%.1f");
 		if (ImGui.IsItemDeactivatedAfterEdit())
 			LevelState.Track("Changed object position");
 
-		ImGui.DragFloat3("Rotation", ref worldObject.Rotation, 5f, -180, 180, "%.0f");
-		if (ImGui.IsItemDeactivatedAfterEdit())
+		if (RenderResetButton("Position_reset"))
+		{
+			worldObject.Position = Vector3.Zero;
 			LevelState.Track("Changed object position");
+		}
 
-		ImGui.SameLine();
-		ImGui.PushID("Rotation_reset");
-		if (ImGui.Button("Reset"))
+		ImGui.Text("Rotation");
+		ImGui.DragFloat3("##rotation", ref worldObject.Rotation, 5f, -180, 180, "%.0f");
+		if (ImGui.IsItemDeactivatedAfterEdit())
+			LevelState.Track("Changed object rotation");
+
+		if (RenderResetButton("Rotation_reset"))
 		{
 			worldObject.Rotation = Vector3.Zero;
 			LevelState.Track("Changed object rotation");
 		}
 
-		ImGui.PopID();
-
-		ImGui.DragFloat3("Scale", ref worldObject.Scale, 0.05f, 0.05f, float.MaxValue, "%.2f");
+		ImGui.Text("Scale");
+		ImGui.DragFloat3("##scale", ref worldObject.Scale, 0.05f, 0.05f, float.MaxValue, "%.2f");
 		if (ImGui.IsItemDeactivatedAfterEdit())
 			LevelState.Track("Changed object scale");
 
-		ImGui.SameLine();
-		ImGui.PushID("Scale_reset");
-		if (ImGui.Button("Reset"))
+		if (RenderResetButton("Scale_reset"))
 		{
 			worldObject.Scale = Vector3.One;
 			LevelState.Track("Changed object scale");
 		}
-
-		ImGui.PopID();
 
 		ImGui.Separator();
 
@@ -101,6 +102,17 @@ public static class WorldObjectEditorWindow
 			RenderAssetsGrid(LevelState.Level.Textures, ref worldObject.Texture);
 
 		ImGui.EndChild(); // End Texture
+	}
+
+	private static bool RenderResetButton(ReadOnlySpan<char> label)
+	{
+		ImGui.SameLine();
+		ImGui.PushID(label);
+		if (ImGui.Button("Reset"))
+			return true;
+
+		ImGui.PopID();
+		return false;
 	}
 
 	private static void RenderAssetsGrid(IReadOnlyList<string> items, ref string selectedItem)
