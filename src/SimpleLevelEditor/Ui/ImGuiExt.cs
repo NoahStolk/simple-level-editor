@@ -6,7 +6,7 @@ namespace SimpleLevelEditor.Ui;
 
 public static class ImGuiExt
 {
-	public static (bool ValueChanged, bool WasActive) KnobAngle(ReadOnlySpan<char> label, ref float value, ref bool isActive)
+	public static (bool ValueChanged, bool WasActive) KnobAngle(ReadOnlySpan<char> label, ref float valueDegrees, ref bool isActive)
 	{
 		ImGuiStylePtr style = ImGui.GetStyle();
 
@@ -25,17 +25,17 @@ public static class ImGuiExt
 		{
 			// Calculate angle from mouse to center of knob.
 			Vector2 mousePos = ImGui.GetMousePos();
-			value = MathF.Atan2(mousePos.Y - center.Y, mousePos.X - center.X);
+			valueDegrees = MathUtils.ToDegrees(MathF.Atan2(mousePos.Y - center.Y, mousePos.X - center.X));
 
 			const float snapDegrees = 5f;
-			float rad = MathUtils.ToRadians(snapDegrees);
-			value = MathF.Round(value / rad) * rad;
+			valueDegrees = MathF.Round(valueDegrees / snapDegrees) * snapDegrees;
 
 			valueChanged = true;
 		}
 
-		float angleCos = MathF.Cos(value);
-		float angleSin = MathF.Sin(value);
+		float valueRadians = MathUtils.ToRadians(valueDegrees);
+		float angleCos = MathF.Cos(valueRadians);
+		float angleSin = MathF.Sin(valueRadians);
 		const float radiusInner = radiusOuter * 0.4f;
 		drawList.AddCircleFilled(center, radiusOuter, ImGui.GetColorU32(ImGuiCol.FrameBg), 16);
 		drawList.AddLine(new(center.X + angleCos * radiusInner, center.Y + angleSin * radiusInner), new(center.X + angleCos * (radiusOuter - 2), center.Y + angleSin * (radiusOuter - 2)), ImGui.GetColorU32(ImGuiCol.SliderGrabActive), 2f);
@@ -46,7 +46,7 @@ public static class ImGuiExt
 		{
 			ImGui.SetNextWindowPos(new(pos.X - style.WindowPadding.X, pos.Y - lineHeight - style.ItemInnerSpacing.Y - style.WindowPadding.Y));
 			ImGui.BeginTooltip();
-			ImGui.Text(Inline.Span($"{MathUtils.ToDegrees(value):0} deg"));
+			ImGui.Text(Inline.Span($"{valueDegrees:0} deg"));
 			ImGui.EndTooltip();
 		}
 

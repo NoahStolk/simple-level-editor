@@ -102,7 +102,7 @@ public static class LevelEditorWindow
 		if (!posOrigin.HasValue)
 			return;
 
-		Matrix4x4 rotationMatrix = MathUtils.CreateRotationMatrixFromEulerAngles(LevelEditorState.SelectedWorldObject.Rotation);
+		Matrix4x4 rotationMatrix = MathUtils.CreateRotationMatrixFromEulerAngles(MathUtils.ToRadians(LevelEditorState.SelectedWorldObject.Rotation));
 		Vector2? posX = GetPosition2d(LevelEditorState.SelectedWorldObject.Position + Vector3.Transform(Vector3.UnitX, rotationMatrix));
 		Vector2? posY = GetPosition2d(LevelEditorState.SelectedWorldObject.Position + Vector3.Transform(Vector3.UnitY, rotationMatrix));
 		Vector2? posZ = GetPosition2d(LevelEditorState.SelectedWorldObject.Position + Vector3.Transform(Vector3.UnitZ, rotationMatrix));
@@ -188,11 +188,11 @@ public static class LevelEditorWindow
 			RenderRotationAndScaleControls('Z', ref LevelEditorState.SelectedWorldObject.Rotation.Z, ref LevelEditorState.SelectedWorldObject.Scale.Z, ref _isRotationZKnobActive);
 		}
 
-		static void RenderRotationAndScaleControls(char axis, ref float rotation, ref float scale, ref bool isRotationKnobActive)
+		static void RenderRotationAndScaleControls(char axis, ref float rotationDegrees, ref float scale, ref bool isRotationKnobActive)
 		{
 			if (Input.IsKeyHeld(rotationKey))
 			{
-				(_, bool wasActive) = ImGuiExt.KnobAngle(Inline.Span($"Rotation {axis}"), ref rotation, ref isRotationKnobActive);
+				(_, bool wasActive) = ImGuiExt.KnobAngle(Inline.Span($"Rotation {axis}"), ref rotationDegrees, ref isRotationKnobActive);
 
 				if (wasActive)
 					LevelState.Track("Rotated object");

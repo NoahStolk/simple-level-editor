@@ -9,12 +9,40 @@ public record WorldObject
 	/// The Id is only used to keep track of the object in the editor.
 	/// </summary>
 	public required int Id;
+
+	/// <summary>
+	/// Path to the mesh file.
+	/// </summary>
 	public required string Mesh;
+
+	/// <summary>
+	/// Path to the texture file.
+	/// </summary>
 	public required string Texture;
+
+	/// <summary>
+	/// Path to the bounding mesh file.
+	/// </summary>
 	public required string BoundingMesh;
+
+	/// <summary>
+	/// Scale in units.
+	/// </summary>
 	public required Vector3 Scale;
+
+	/// <summary>
+	/// Rotation in degrees.
+	/// </summary>
 	public required Vector3 Rotation;
+
+	/// <summary>
+	/// Position in units.
+	/// </summary>
 	public required Vector3 Position;
+
+	/// <summary>
+	/// World object flags.
+	/// </summary>
 	public required WorldObjectValues Values;
 
 	public WorldObject DeepCopy()
@@ -34,6 +62,6 @@ public record WorldObject
 
 	public Matrix4x4 GetModelMatrix()
 	{
-		return Matrix4x4.CreateScale(Scale) * MathUtils.CreateRotationMatrixFromEulerAngles(Rotation) * Matrix4x4.CreateTranslation(Position);
+		return Matrix4x4.CreateScale(Scale) * MathUtils.CreateRotationMatrixFromEulerAngles(MathUtils.ToRadians(Rotation)) * Matrix4x4.CreateTranslation(Position);
 	}
 }

@@ -182,7 +182,7 @@ public static class SceneRenderer
 
 		Vector3 bbScale = worldObject.Scale * (mesh.BoundingMax - mesh.BoundingMin);
 		Vector3 bbOffset = (mesh.BoundingMax + mesh.BoundingMin) / 2;
-		Matrix4x4 rotationMatrix = MathUtils.CreateRotationMatrixFromEulerAngles(worldObject.Rotation);
+		Matrix4x4 rotationMatrix = MathUtils.CreateRotationMatrixFromEulerAngles(MathUtils.ToRadians(worldObject.Rotation));
 
 		Matrix4x4 modelMatrix = Matrix4x4.CreateScale(bbScale) * rotationMatrix * Matrix4x4.CreateTranslation(worldObject.Position + Vector3.Transform(bbOffset, rotationMatrix));
 		Gl.UniformMatrix4x4(lineModelUniform, modelMatrix);

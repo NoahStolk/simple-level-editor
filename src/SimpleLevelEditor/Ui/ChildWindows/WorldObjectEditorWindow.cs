@@ -1,4 +1,3 @@
-using Detach;
 using ImGuiNET;
 using SimpleLevelEditor.Model;
 using SimpleLevelEditor.Model.Enums;
@@ -41,21 +40,25 @@ public static class WorldObjectEditorWindow
 
 	private static void RenderWorldObjectInputs(WorldObject worldObject)
 	{
-		Vector3 position = worldObject.Position;
-		if (ImGui.InputFloat3("Position", ref position, "%.3f", ImGuiInputTextFlags.CharsDecimal))
-			worldObject.Position = position;
-
+		ImGui.DragFloat3("Position", ref worldObject.Position, 0.1f, float.MinValue, float.MaxValue, "%.1f");
 		if (ImGui.IsItemDeactivatedAfterEdit())
 			LevelState.Track("Changed object position");
 
-		worldObject.Rotation = RenderRotationInputs("Rotation X", worldObject.Rotation, static r => r.X, static (r, f) => r with { X = f });
-		worldObject.Rotation = RenderRotationInputs("Rotation Y", worldObject.Rotation, static r => r.Y, static (r, f) => r with { Y = f });
-		worldObject.Rotation = RenderRotationInputs("Rotation Z", worldObject.Rotation, static r => r.Z, static (r, f) => r with { Z = f });
+		ImGui.DragFloat3("Rotation", ref worldObject.Rotation, 5f, -180, 180, "%.0f");
+		if (ImGui.IsItemDeactivatedAfterEdit())
+			LevelState.Track("Changed object position");
 
-		Vector3 scale = worldObject.Scale;
-		if (ImGui.SliderFloat3("Scale", ref scale, 0.01f, 20f, "%.3f", ImGuiSliderFlags.Logarithmic))
-			worldObject.Scale = scale;
+		ImGui.SameLine();
+		ImGui.PushID("Rotation_reset");
+		if (ImGui.Button("Reset"))
+		{
+			worldObject.Rotation = Vector3.Zero;
+			LevelState.Track("Changed object rotation");
+		}
 
+		ImGui.PopID();
+
+		ImGui.DragFloat3("Scale", ref worldObject.Scale, 0.05f, 0.05f, float.MaxValue, "%.2f");
 		if (ImGui.IsItemDeactivatedAfterEdit())
 			LevelState.Track("Changed object scale");
 
@@ -98,28 +101,6 @@ public static class WorldObjectEditorWindow
 			RenderAssetsGrid(LevelState.Level.Textures, ref worldObject.Texture);
 
 		ImGui.EndChild(); // End Texture
-	}
-
-	private static Vector3 RenderRotationInputs(ReadOnlySpan<char> label, Vector3 rotation, Func<Vector3, float> selector, Func<Vector3, float, Vector3> setter)
-	{
-		float rotationInRadians = selector(rotation);
-		if (ImGui.SliderAngle(label, ref rotationInRadians, -180f, 180f))
-			rotation = setter(rotation, rotationInRadians);
-
-		if (ImGui.IsItemDeactivatedAfterEdit())
-			LevelState.Track("Changed object rotation");
-
-		ImGui.SameLine();
-		ImGui.PushID(Inline.Span($"{label}_reset"));
-		if (ImGui.Button("Reset"))
-		{
-			rotation = setter(rotation, 0f);
-			LevelState.Track("Changed object rotation");
-		}
-
-		ImGui.PopID();
-
-		return rotation;
 	}
 
 	private static void RenderAssetsGrid(IReadOnlyList<string> items, ref string selectedItem)
