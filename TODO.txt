@@ -1,11 +1,15 @@
 HIGH PRIORITY
-- Fix z-fighting with grid lines
-- Save state indicated by asterisk in title bar
-- Center move buttons on axes
-- Read textures upside down to be compatible with Blender
-- Add texture UV sliders?
+- Hot reloading assets
+- Entity editor
+	- Add/remove entities
+	- Add/remove entity properties
+	- Edit entity properties
 
 MEDIUM PRIORITY
+- Fix z-fighting with grid lines
+- Save state indicated by asterisk in title bar
+- Read textures upside down to be compatible with Blender
+- Add texture UV sliders?
 - Multiple selection
 	- Hold shift to select multiple meshes?
 - Settings
@@ -17,3 +21,11 @@ MEDIUM PRIORITY
 
 BACKLOG
 - Render mesh and texture previews
+
+UI
+- World object editor mesh/texture grids should scale with window height just like level assets lists
+- History should be under mesh/texture grids
+
+FORMAT
+- Flags should be free to use for whatever instead of being reserved for specific purposes
+	- Use strings in UI with underlying bitfield values to allow for custom flags, save underlying bitfield values to file

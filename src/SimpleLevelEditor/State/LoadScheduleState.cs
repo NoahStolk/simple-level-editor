@@ -21,6 +21,5 @@ public static class LoadScheduleState
 
 		LevelState.ReloadAssets(_path);
 		_needsLoad = false;
-		_path = null;
 	}
 }
