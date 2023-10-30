@@ -136,7 +136,7 @@ public static class WorldObjectEditorWindow
 				ImGui.TableNextColumn();
 				string assetName = items[i];
 
-				if (ImGui.Selectable(Inline.Span(assetName), selectedItem == assetName, ImGuiSelectableFlags.None, new(0, 128)))
+				if (ImGui.Selectable(Path.GetFileNameWithoutExtension(assetName.AsSpan()), selectedItem == assetName, ImGuiSelectableFlags.None, new(0, 128)))
 				{
 					selectedItem = assetName;
 					LevelState.Track("Changed object asset");

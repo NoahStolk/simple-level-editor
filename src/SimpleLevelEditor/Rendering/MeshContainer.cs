@@ -66,7 +66,7 @@ public static class MeshContainer
 			modelData.Positions[meshData.Faces[j].Position - 1],
 			modelData.Textures.Count > t - 1 && t > 0 ? modelData.Textures[t - 1] : default, // TODO: Separate face type?
 			modelData.Normals[meshData.Faces[j].Normal - 1]);
-			outFaces[j] = (ushort)j;
+			outFaces[j] = (uint)j;
 		}
 
 		return new(outVertices, outFaces);
