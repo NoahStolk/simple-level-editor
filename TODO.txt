@@ -1,12 +1,7 @@
 HIGH PRIORITY
-- Auto-snap scale to integers but allow for decimal input
-- Auto-snap rotation to 5 degree increments but allow for decimal input
 - Fix z-fighting with grid lines
 - Save state indicated by asterisk in title bar
-- Move rotation knobs to static positions and give colors based on axes
-- Center rotation knobs on axes
 - Center move buttons on axes
-- Center scale sliders on axes
 - Read textures upside down to be compatible with Blender
 - Add texture UV sliders?
 
