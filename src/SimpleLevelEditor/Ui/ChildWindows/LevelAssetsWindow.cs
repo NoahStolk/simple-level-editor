@@ -13,7 +13,10 @@ public static class LevelAssetsWindow
 		{
 			ImGui.SeparatorText("Level Assets");
 
-			float height = MathF.Floor(size.Y / 2f - 40f) - 1;
+			if (ImGui.Button("Reload all"))
+				LevelState.ReloadAssets(LevelState.LevelFilePath);
+
+			float height = MathF.Floor(size.Y / 2f) - 76;
 
 			RenderAssetPaths(height, "Meshes", "obj", LevelState.Level.Meshes, l => LevelState.Level.Meshes = l);
 			RenderAssetPaths(height, "Textures", "tga", LevelState.Level.Textures, l => LevelState.Level.Textures = l);
@@ -22,8 +25,10 @@ public static class LevelAssetsWindow
 		ImGui.EndChild(); // End Level Assets
 	}
 
-	private static void RenderAssetPaths(float windowHeight, string name, string dialogFilterList, List<string> list, Action<List<string>> setList)
+	private static void RenderAssetPaths(float windowHeight, ReadOnlySpan<char> name, string dialogFilterList, List<string> list, Action<List<string>> setList)
 	{
+		ImGui.SeparatorText(name);
+
 		ImGui.BeginDisabled(LevelState.LevelFilePath == null);
 		if (ImGui.Button(Inline.Span($"Add {name}")))
 		{
