@@ -63,7 +63,7 @@ public static class MainWindow
 
 			const int leftWidth = 256;
 			const int rightWidth = 512;
-			const int bottomHeight = 448;
+			const int bottomHeight = 256;
 			float middleWidth = viewportSize.X - leftWidth - rightWidth;
 
 			if (ImGui.BeginChild("Left", new(leftWidth, 0)))
@@ -71,7 +71,18 @@ public static class MainWindow
 				const int levelInfoHeight = 192;
 				LevelInfoWindow.Render(new(leftWidth, levelInfoHeight));
 				LevelAssetsWindow.Render(new(leftWidth, viewportSize.Y - bottomHeight - levelInfoHeight));
-				DebugWindow.Render(new(leftWidth, 0));
+
+				if (ImGui.BeginChild("History", default, true))
+				{
+					for (int i = 0; i < LevelState.History.Count; i++)
+					{
+						bool isCurrent = i == LevelState.CurrentHistoryIndex;
+						LevelState.HistoryEntry entry = LevelState.History[i];
+						ImGui.TextColored(isCurrent ? new(0, 1, 0, 1) : Vector4.One, entry.EditDescription);
+					}
+				}
+
+				ImGui.EndChild(); // End History
 			}
 
 			ImGui.EndChild(); // End Left
@@ -89,24 +100,13 @@ public static class MainWindow
 
 			if (ImGui.BeginChild("Right", new(0, 0)))
 			{
-				WorldObjectEditorWindow.Render(new(0, 0));
+				WorldObjectEditorWindow.Render(new(0, viewportSize.Y - bottomHeight));
+				DebugWindow.Render(default);
 			}
 
 			ImGui.EndChild(); // End Right
 		}
 
 		ImGui.End(); // End 3D Level Editor
-
-		if (ImGui.Begin("History"))
-		{
-			for (int i = 0; i < LevelState.History.Count; i++)
-			{
-				bool isCurrent = i == LevelState.CurrentHistoryIndex;
-				LevelState.HistoryEntry entry = LevelState.History[i];
-				ImGui.TextColored(isCurrent ? new(0, 1, 0, 1) : Vector4.One, entry.EditDescription);
-			}
-		}
-
-		ImGui.End(); // End History
 	}
 }

@@ -13,7 +13,26 @@ public static class DebugWindow
 	{
 		if (ImGui.BeginChild("Debug", size, true))
 		{
-			ImGui.SeparatorText("Debug");
+			ImGui.SeparatorText("Warnings");
+
+			if (ImGui.BeginChild("Warnings", new(0, 96)))
+			{
+				if (DebugState.Warnings.Count > 0)
+				{
+					foreach (KeyValuePair<string, int> kvp in DebugState.Warnings)
+						ImGui.TextWrapped(Inline.Span($"{kvp.Key}: {kvp.Value}"));
+				}
+			}
+
+			ImGui.EndChild(); // End Warnings
+
+			ImGui.BeginDisabled(DebugState.Warnings.Count == 0);
+			if (ImGui.Button("Clear"))
+				DebugState.ClearWarnings();
+
+			ImGui.EndDisabled();
+
+			ImGui.SeparatorText("Performance");
 
 			ImGui.Text(Inline.Span($"{App.Instance.Fps} FPS"));
 			ImGui.Text(Inline.Span($"Frame time: {App.Instance.FrameTime:0.0000} s"));
@@ -31,38 +50,18 @@ public static class DebugWindow
 			ImGui.Text(Inline.Span($"Total memory: {GC.GetTotalMemory(false):N0} bytes"));
 			ImGui.Text(Inline.Span($"Total pause duration: {GC.GetTotalPauseDuration().TotalSeconds:0.000} s"));
 
-			ImGui.SeparatorText("Dirs");
+			ImGui.SeparatorText("Watching directories");
 
-			ImGui.Text(Inline.Span(AssetFileWatcher.Directories.Count));
 			for (int i = 0; i < AssetFileWatcher.Directories.Count; i++)
 				ImGui.TextWrapped(AssetFileWatcher.Directories[i]);
 
-			ImGui.SeparatorText("Warnings");
-
-			ImGui.BeginDisabled(DebugState.Warnings.Count == 0);
-			if (ImGui.Button("Clear"))
-				DebugState.ClearWarnings();
-
-			ImGui.EndDisabled();
-
-			if (ImGui.BeginChild("Warnings", new(0, 96)))
-			{
-				if (DebugState.Warnings.Count > 0)
-				{
-					foreach (KeyValuePair<string, int> kvp in DebugState.Warnings)
-						ImGui.TextWrapped(Inline.Span($"{kvp.Key}: {kvp.Value}"));
-				}
-			}
-
-			ImGui.EndChild(); // End Warnings
-
 			ImGui.SeparatorText("Input");
 
-			if (Input.IsKeyHeld(Keys.ControlLeft) || Input.IsKeyHeld(Keys.ControlRight))
-				ImGui.Text("CTRL");
-
-			if (Input.IsKeyHeld(Keys.ShiftLeft) || Input.IsKeyHeld(Keys.ShiftRight))
-				ImGui.Text("SHIFT");
+			ImGui.TextColored(Input.IsKeyHeld(Keys.ControlLeft) || Input.IsKeyHeld(Keys.ControlRight) ? Vector4.One : new(0.5f), "CTRL");
+			ImGui.SameLine();
+			ImGui.TextColored(Input.IsKeyHeld(Keys.AltLeft) || Input.IsKeyHeld(Keys.AltRight) ? Vector4.One : new(0.5f), "ALT");
+			ImGui.SameLine();
+			ImGui.TextColored(Input.IsKeyHeld(Keys.ShiftLeft) || Input.IsKeyHeld(Keys.ShiftRight) ? Vector4.One : new(0.5f), "SHIFT");
 		}
 
 		ImGui.EndChild(); // End Debug
