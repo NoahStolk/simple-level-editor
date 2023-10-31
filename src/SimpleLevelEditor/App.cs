@@ -57,6 +57,7 @@ public sealed class App
 				Thread.Yield();
 		}
 
+		AssetFileWatcher.Destroy();
 		_imGuiController.Destroy();
 		Graphics.Glfw.Terminate();
 	}

@@ -1,5 +1,4 @@
 HIGH PRIORITY
-- Hot reloading assets
 - Entity editor
 	- Add/remove entities
 	- Add/remove entity properties

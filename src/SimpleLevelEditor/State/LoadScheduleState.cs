@@ -19,7 +19,7 @@ public static class LoadScheduleState
 		if (!_needsLoad)
 			return;
 
-		LevelState.ReloadAssets(_path);
-		_needsLoad = false;
+		bool reloadedSuccessfully = LevelState.ReloadAssets(_path);
+		_needsLoad = !reloadedSuccessfully;
 	}
 }
