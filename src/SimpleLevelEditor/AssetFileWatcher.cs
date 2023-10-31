@@ -37,7 +37,7 @@ public static class AssetFileWatcher
 		}
 		catch (Exception ex)
 		{
-			Console.WriteLine(ex);
+			DebugState.AddWarning($"Failed to watch directory '{directory}': {ex.Message}");
 		}
 	}
 

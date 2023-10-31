@@ -204,10 +204,19 @@ public static class LevelState
 		WorldObjectEditorWindow.Reset();
 	}
 
-	public static void ReloadAssets(string? levelFilePath)
+	public static bool ReloadAssets(string? levelFilePath)
 	{
-		MeshContainer.Rebuild(levelFilePath);
-		TextureContainer.Rebuild(levelFilePath);
+		try
+		{
+			MeshContainer.Rebuild(levelFilePath);
+			TextureContainer.Rebuild(levelFilePath);
+			return true;
+		}
+		catch (Exception ex)
+		{
+			DebugState.AddWarning($"Failed to reload assets: {ex.Message}");
+			return false;
+		}
 	}
 
 	public record HistoryEntry(Level3dData Object, byte[] Hash, string EditDescription);

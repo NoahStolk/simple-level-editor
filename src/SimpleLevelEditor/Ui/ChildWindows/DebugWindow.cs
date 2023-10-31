@@ -50,7 +50,7 @@ public static class DebugWindow
 				if (DebugState.Warnings.Count > 0)
 				{
 					foreach (KeyValuePair<string, int> kvp in DebugState.Warnings)
-						ImGui.Text(Inline.Span($"{kvp.Key}: {kvp.Value}"));
+						ImGui.TextWrapped(Inline.Span($"{kvp.Key}: {kvp.Value}"));
 				}
 			}
 
