@@ -1,5 +1,4 @@
 using Detach.Utils;
-using SimpleLevelEditor.Model.Enums;
 
 namespace SimpleLevelEditor.Model;
 
@@ -21,11 +20,6 @@ public record WorldObject
 	public required string Texture;
 
 	/// <summary>
-	/// Path to the bounding mesh file.
-	/// </summary>
-	public required string BoundingMesh;
-
-	/// <summary>
 	/// Scale in units.
 	/// </summary>
 	public required Vector3 Scale;
@@ -43,20 +37,17 @@ public record WorldObject
 	/// <summary>
 	/// World object flags.
 	/// </summary>
-	public required WorldObjectValues Values;
+	public required List<string> Flags;
 
 	public WorldObject DeepCopy()
 	{
-		return new()
+		List<string> newFlags = new();
+		for (int i = 0; i < Flags.Count; i++)
+			newFlags.Add(Flags[i]);
+
+		return this with
 		{
-			Id = Id,
-			Mesh = Mesh,
-			Position = Position,
-			Scale = Scale,
-			Rotation = Rotation,
-			Texture = Texture,
-			BoundingMesh = BoundingMesh,
-			Values = Values,
+			Flags = newFlags,
 		};
 	}
 

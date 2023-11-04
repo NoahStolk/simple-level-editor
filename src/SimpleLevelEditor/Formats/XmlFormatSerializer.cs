@@ -1,7 +1,6 @@
 using OneOf;
 using SimpleLevelEditor.Model;
 using SimpleLevelEditor.Model.EntityTypes;
-using SimpleLevelEditor.Model.Enums;
 using System.Text;
 using System.Xml;
 
@@ -94,11 +93,10 @@ public static class XmlFormatSerializer
 					Id = worldObjectIndex,
 					Mesh = reader.GetAttribute("Mesh") ?? throw _invalidFormat,
 					Texture = reader.GetAttribute("Texture") ?? throw _invalidFormat,
-					BoundingMesh = reader.GetAttribute("BoundingMesh") ?? throw _invalidFormat,
 					Position = ReadVector3(reader.GetAttribute("Position") ?? throw _invalidFormat),
 					Rotation = ReadVector3(reader.GetAttribute("Rotation") ?? throw _invalidFormat),
 					Scale = ReadVector3(reader.GetAttribute("Scale") ?? throw _invalidFormat),
-					Values = Enum.Parse<WorldObjectValues>(reader.GetAttribute("Values") ?? throw _invalidFormat),
+					Flags = reader.GetAttribute("Flags")?.Split(',').Select(s => s.Trim()).ToList() ?? new List<string>(),
 				};
 				worldObjects.Add(worldObject);
 			}
@@ -221,11 +219,10 @@ public static class XmlFormatSerializer
 			writer.WriteStartElement("WorldObject");
 			writer.WriteAttributeString("Mesh", worldObject.Mesh);
 			writer.WriteAttributeString("Texture", worldObject.Texture);
-			writer.WriteAttributeString("BoundingMesh", worldObject.BoundingMesh);
 			writer.WriteVector3("Position", worldObject.Position);
 			writer.WriteVector3("Rotation", worldObject.Rotation);
 			writer.WriteVector3("Scale", worldObject.Scale);
-			writer.WriteAttributeString("Values", worldObject.Values.ToString());
+			writer.WriteAttributeString("Flags", string.Join(", ", worldObject.Flags));
 			writer.WriteEndElement();
 		}
 

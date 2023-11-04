@@ -1,8 +1,6 @@
 using ImGuiNET;
 using SimpleLevelEditor.Model;
-using SimpleLevelEditor.Model.Enums;
 using SimpleLevelEditor.State;
-using SimpleLevelEditor.Utils;
 
 namespace SimpleLevelEditor.Ui.ChildWindows;
 
@@ -18,8 +16,7 @@ public static class WorldObjectEditorWindow
 		Rotation = default,
 		Scale = Vector3.One,
 		Texture = string.Empty,
-		Values = WorldObjectValues.None,
-		BoundingMesh = string.Empty,
+		Flags = new(),
 	};
 	public static WorldObject DefaultObject { get; private set; } = _default.DeepCopy();
 
@@ -109,18 +106,28 @@ public static class WorldObjectEditorWindow
 
 		ImGui.Separator();
 
-		for (int i = 0; i < EnumUtils.WorldObjectValuesArray.Count; i++)
+		for (int i = 0; i < worldObject.Flags.Count; i++)
 		{
-			WorldObjectValues value = EnumUtils.WorldObjectValuesArray[i];
-			if (value == WorldObjectValues.None)
-				continue;
+			string value = worldObject.Flags[i];
 
-			uint values = (uint)worldObject.Values;
-			if (ImGui.CheckboxFlags(EnumUtils.WorldObjectValuesNames[value], ref values, (uint)value))
+			if (ImGui.InputText($"##flags{i}", ref value, 32))
+				worldObject.Flags[i] = value;
+
+			if (ImGui.IsItemDeactivatedAfterEdit())
+				LevelState.Track("Changed object flags");
+
+			ImGui.SameLine();
+			if (ImGui.Button($"X##flags{i}"))
 			{
-				worldObject.Values = (WorldObjectValues)values;
-				LevelState.Track("Changed object values");
+				worldObject.Flags.RemoveAt(i);
+				LevelState.Track("Removed object flag");
 			}
+		}
+
+		if (ImGui.Button("Add Flag"))
+		{
+			worldObject.Flags.Add(string.Empty);
+			LevelState.Track("Added object flag");
 		}
 
 		ImGui.SeparatorText("Mesh");

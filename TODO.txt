@@ -23,7 +23,3 @@ BACKLOG
 
 UI
 - World object editor mesh/texture grids should scale with window height just like level assets lists
-
-FORMAT
-- Flags should be free to use for whatever instead of being reserved for specific purposes
-	- Use strings in UI with underlying bitfield values to allow for custom flags, save comma-separated values to file
