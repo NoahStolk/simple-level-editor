@@ -1,6 +1,6 @@
 namespace SimpleLevelEditor.Model.EntityTypes;
 
-public struct StandingCylinder
+public record StandingCylinder
 {
 	public Vector3 Position;
 	public float Radius;

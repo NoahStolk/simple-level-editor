@@ -32,11 +32,11 @@ public static class MainLogic
 		if (!LevelEditorState.TargetPosition.HasValue)
 			return;
 
-		WorldObject reference = LevelEditorState.SelectedWorldObject ?? WorldObjectEditorWindow.DefaultObject;
-		if (reference.Mesh.Length == 0 || reference.Texture.Length == 0)
+		WorldObject referenceWorldObject = LevelEditorState.SelectedWorldObject ?? WorldObjectEditorWindow.DefaultObject;
+		if (referenceWorldObject.Mesh.Length == 0 || referenceWorldObject.Texture.Length == 0)
 			return;
 
-		WorldObject worldObject = reference with
+		WorldObject worldObject = referenceWorldObject with
 		{
 			Id = LevelState.Level.WorldObjects.Count > 0 ? LevelState.Level.WorldObjects.Max(o => o.Id) + 1 : 0,
 			Position = LevelEditorState.TargetPosition.Value,

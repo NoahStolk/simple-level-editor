@@ -1,6 +1,6 @@
 namespace SimpleLevelEditor.Model.EntityTypes;
 
-public struct Sphere
+public record Sphere
 {
 	public Vector3 Position;
 	public float Radius;

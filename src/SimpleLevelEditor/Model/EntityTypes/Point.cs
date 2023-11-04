@@ -1,6 +1,6 @@
 namespace SimpleLevelEditor.Model.EntityTypes;
 
-public struct Point
+public record Point
 {
 	public Vector3 Position;
 

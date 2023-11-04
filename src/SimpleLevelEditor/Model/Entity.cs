@@ -15,10 +15,8 @@ public record Entity
 		for (int i = 0; i < Properties.Count; i++)
 			newEntityProperties.Add(Properties[i].DeepCopy());
 
-		return new()
+		return this with
 		{
-			Name = Name,
-			Shape = Shape,
 			Properties = newEntityProperties,
 		};
 	}

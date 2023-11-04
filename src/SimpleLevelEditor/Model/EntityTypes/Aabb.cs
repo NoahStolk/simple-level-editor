@@ -1,6 +1,6 @@
 namespace SimpleLevelEditor.Model.EntityTypes;
 
-public struct Aabb
+public record Aabb
 {
 	public Vector3 Min;
 	public Vector3 Max;
