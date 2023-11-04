@@ -136,7 +136,7 @@ public static class XmlFormatSerializer
 		return entities;
 	}
 
-	private static OneOf<Point, Sphere, Aabb, StandingCylinder> ReadShape(string shape)
+	private static OneOf<Point, Sphere, Aabb> ReadShape(string shape)
 	{
 		string[] parts = shape.Split(' ');
 		switch (parts[0])
@@ -147,8 +147,6 @@ public static class XmlFormatSerializer
 				return new Sphere(ReadVector3(parts[1]), float.Parse(parts[2]));
 			case "Aabb":
 				return new Aabb(ReadVector3(parts[1]), ReadVector3(parts[2]));
-			case "StandingCylinder":
-				return new StandingCylinder(ReadVector3(parts[1]), float.Parse(parts[2]), float.Parse(parts[3]));
 			default:
 				throw new Exception($"Unknown shape: {shape}");
 		}

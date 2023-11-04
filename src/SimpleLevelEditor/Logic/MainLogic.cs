@@ -102,7 +102,6 @@ public static class MainLogic
 				Point => new Point(LevelEditorState.TargetPosition.Value),
 				Sphere s => new Sphere(LevelEditorState.TargetPosition.Value, s.Radius),
 				Aabb a => a.GetCentered(LevelEditorState.TargetPosition.Value),
-				StandingCylinder c => new StandingCylinder(LevelEditorState.TargetPosition.Value, c.Radius, c.Height),
 				_ => throw new NotImplementedException(),
 			},
 		};

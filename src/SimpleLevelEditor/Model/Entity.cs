@@ -11,7 +11,7 @@ public record Entity
 	public required int Id;
 
 	public required string Name;
-	public required OneOf<Point, Sphere, Aabb, StandingCylinder> Shape;
+	public required OneOf<Point, Sphere, Aabb> Shape;
 	public required List<EntityProperty> Properties;
 
 	public Vector3 GetPosition()
@@ -21,7 +21,6 @@ public record Entity
 			Point p => p.Position,
 			Sphere s => s.Position,
 			Aabb a => (a.Min + a.Max) / 2,
-			StandingCylinder c => c.Position,
 			_ => throw new($"Unknown shape: {Shape.Value}"),
 		};
 	}

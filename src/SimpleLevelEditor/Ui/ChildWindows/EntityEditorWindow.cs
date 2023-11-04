@@ -40,12 +40,25 @@ public static class EntityEditorWindow
 		if (ImGui.IsItemDeactivatedAfterEdit())
 			LevelState.Track("Changed entity name");
 
+		if (ImGui.BeginCombo("Entity type", entity.Shape.Value.GetType().Name))
+		{
+			if (ImGui.Selectable("Point", entity.Shape.Value is Point))
+				entity.Shape = new Point(default);
+
+			if (ImGui.Selectable("Sphere", entity.Shape.Value is Sphere))
+				entity.Shape = new Sphere(default, 2);
+
+			if (ImGui.Selectable("Aabb", entity.Shape.Value is Aabb))
+				entity.Shape = new Aabb(-Vector3.One, Vector3.One);
+
+			ImGui.EndCombo();
+		}
+
 		switch (entity.Shape.Value)
 		{
 			case Point point: RenderPointInputs(point); break;
 			case Sphere sphere: RenderSphereInputs(sphere); break;
 			case Aabb aabb: RenderAabbInputs(aabb); break;
-			case StandingCylinder standingCylinder: RenderStandingCylinderInputs(standingCylinder); break;
 		}
 
 		ImGui.SeparatorText("Properties");
@@ -187,45 +200,6 @@ public static class EntityEditorWindow
 		{
 			aabb.Max = Vector3.Zero;
 			LevelState.Track("Changed entity box max");
-		}
-	}
-
-	private static void RenderStandingCylinderInputs(StandingCylinder standingCylinder)
-	{
-		ImGui.Text("Position");
-
-		ImGui.DragFloat3("##position", ref standingCylinder.Position, 0.1f, float.MinValue, float.MaxValue, "%.1f");
-		if (ImGui.IsItemDeactivatedAfterEdit())
-			LevelState.Track("Changed entity position");
-
-		if (RenderResetButton("Position_reset"))
-		{
-			standingCylinder.Position = Vector3.Zero;
-			LevelState.Track("Changed entity position");
-		}
-
-		ImGui.Text("Radius");
-
-		ImGui.DragFloat("##radius", ref standingCylinder.Radius, 0.1f, float.MinValue, float.MaxValue, "%.1f");
-		if (ImGui.IsItemDeactivatedAfterEdit())
-			LevelState.Track("Changed entity radius");
-
-		if (RenderResetButton("Radius_reset"))
-		{
-			standingCylinder.Radius = 0;
-			LevelState.Track("Changed entity radius");
-		}
-
-		ImGui.Text("Height");
-
-		ImGui.DragFloat("##height", ref standingCylinder.Height, 0.1f, float.MinValue, float.MaxValue, "%.1f");
-		if (ImGui.IsItemDeactivatedAfterEdit())
-			LevelState.Track("Changed entity height");
-
-		if (RenderResetButton("Height_reset"))
-		{
-			standingCylinder.Height = 0;
-			LevelState.Track("Changed entity height");
 		}
 	}
 
