@@ -119,7 +119,9 @@ public static class LevelState
 		Level = History[CurrentHistoryIndex].Object.DeepCopy();
 
 		LevelEditorState.HighlightedObject = null;
+		LevelEditorState.HighlightedEntity = null;
 		LevelEditorState.UpdateSelectedWorldObject();
+		LevelEditorState.UpdateSelectedEntity();
 	}
 
 	public static void Track(string editDescription)
@@ -201,7 +203,9 @@ public static class LevelState
 	private static void ClearState()
 	{
 		LevelEditorState.SetSelectedWorldObject(null);
+		LevelEditorState.SetSelectedEntity(null);
 		WorldObjectEditorWindow.Reset();
+		EntityEditorWindow.Reset();
 	}
 
 	public static bool ReloadAssets(string? levelFilePath)

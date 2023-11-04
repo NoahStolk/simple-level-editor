@@ -100,7 +100,25 @@ public static class MainWindow
 
 			if (ImGui.BeginChild("Right", new(0, 0)))
 			{
-				WorldObjectEditorWindow.Render(new(0, viewportSize.Y - bottomHeight));
+				if (ImGui.BeginTabBar("##edit"))
+				{
+					if (ImGui.BeginTabItem("World objects"))
+					{
+						LevelEditorState.Mode = LevelEditorState.EditMode.WorldObjects;
+						WorldObjectEditorWindow.Render(new(0, viewportSize.Y - bottomHeight));
+						ImGui.EndTabItem();
+					}
+
+					if (ImGui.BeginTabItem("Entities"))
+					{
+						LevelEditorState.Mode = LevelEditorState.EditMode.Entities;
+						EntityEditorWindow.Render(new(0, viewportSize.Y - bottomHeight));
+						ImGui.EndTabItem();
+					}
+				}
+
+				ImGui.EndTabBar();
+
 				DebugWindow.Render(default);
 			}
 

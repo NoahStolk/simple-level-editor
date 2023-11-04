@@ -111,13 +111,16 @@ public static class XmlFormatSerializer
 
 	private static List<Entity> ReadEntities(XmlReader reader)
 	{
+		int entityIndex = 0;
 		List<Entity> entities = new();
 		while (reader.Read())
 		{
 			if (reader is { NodeType: XmlNodeType.Element, Name: "Entity" })
 			{
+				entityIndex++; // 0 is reserved for the default entity.
 				Entity entity = new()
 				{
+					Id = entityIndex,
 					Name = reader.GetAttribute("Name") ?? throw _invalidFormat,
 					Shape = ReadShape(reader.GetAttribute("Shape") ?? throw _invalidFormat),
 					Properties = ReadProperties(reader),

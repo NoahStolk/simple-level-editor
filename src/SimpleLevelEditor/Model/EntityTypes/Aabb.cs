@@ -10,4 +10,12 @@ public record Aabb
 		Min = min;
 		Max = max;
 	}
+
+	public Aabb GetCentered(Vector3 center)
+	{
+		Vector3 diff = Max - Min;
+		Vector3 newMin = center - diff / 2;
+		Vector3 newMax = center + diff / 2;
+		return new(newMin, newMax);
+	}
 }

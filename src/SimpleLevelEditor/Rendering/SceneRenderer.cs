@@ -3,6 +3,7 @@ using Silk.NET.OpenGL;
 using SimpleLevelEditor.Content;
 using SimpleLevelEditor.Extensions;
 using SimpleLevelEditor.Model;
+using SimpleLevelEditor.Model.EntityTypes;
 using SimpleLevelEditor.State;
 using SimpleLevelEditor.Utils;
 using static SimpleLevelEditor.Graphics;
@@ -53,6 +54,7 @@ public static class SceneRenderer
 		RenderOrigin(lineShader);
 		RenderGrid(lineShader);
 		RenderBoundingBoxes(lineShader);
+		RenderEntities(lineShader);
 
 		ShaderCacheEntry meshShader = InternalContent.Shaders["Mesh"];
 		Gl.UseProgram(meshShader.Id);
@@ -210,6 +212,24 @@ public static class SceneRenderer
 			Gl.BindVertexArray(mesh.Vao);
 			fixed (uint* index = &mesh.Mesh.Indices[0])
 				Gl.DrawElements(PrimitiveType.Triangles, (uint)mesh.Mesh.Indices.Length, DrawElementsType.UnsignedInt, index);
+		}
+	}
+
+	private static void RenderEntities(ShaderCacheEntry lineShader)
+	{
+		int modelUniform = lineShader.GetUniformLocation("model");
+		int colorUniform = lineShader.GetUniformLocation("color");
+		for (int i = 0; i < LevelState.Level.Entities.Count; i++)
+		{
+			Entity entity = LevelState.Level.Entities[i];
+
+			if (entity.Shape.Value is Point point)
+			{
+				Gl.UniformMatrix4x4(modelUniform, Matrix4x4.CreateScale(0.1f) * Matrix4x4.CreateTranslation(point.Position));
+				Gl.UniformVector4(colorUniform, new Vector4(1, 1, 1, 1));
+				Gl.BindVertexArray(_cubeVao);
+				Gl.DrawArrays(PrimitiveType.Lines, 0, 24);
+			}
 		}
 	}
 }

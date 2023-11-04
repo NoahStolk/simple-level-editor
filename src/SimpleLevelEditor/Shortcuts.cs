@@ -23,13 +23,9 @@ public static class Shortcuts
 		new(Open, Keys.O, true, false, "Open level", LevelState.Load),
 		new(Save, Keys.S, true, false, "Save level", LevelState.Save),
 		new(SaveAs, Keys.S, true, true, "Save level as", LevelState.SaveAs),
-		new(AddNewObject, Keys.Space, false, false, "Add new object", MainLogic.AddNewWorldObject),
-		new(DeleteSelectedObjects, Keys.Delete, false, false, "Delete selected objects", MainLogic.RemoveWorldObject),
-		new(FocusOnCurrentObject, Keys.A, false, false, "Focus on current object", () =>
-		{
-			if (LevelEditorState.SelectedWorldObject != null)
-				Camera3d.SetFocusPoint(LevelEditorState.SelectedWorldObject.Position);
-		}),
+		new(AddNewObject, Keys.Space, false, false, "Add new object/entity", MainLogic.AddNew),
+		new(DeleteSelectedObjects, Keys.Delete, false, false, "Delete selected objects/entities", MainLogic.RemoveWorldObject),
+		new(FocusOnCurrentObject, Keys.A, false, false, "Focus on current object/entity", MainLogic.Focus),
 		new(Undo, Keys.Z, true, false, "Undo", () => LevelState.SetHistoryIndex(LevelState.CurrentHistoryIndex - 1)),
 		new(Redo, Keys.Y, true, false, "Redo", () => LevelState.SetHistoryIndex(LevelState.CurrentHistoryIndex + 1)),
 	};
