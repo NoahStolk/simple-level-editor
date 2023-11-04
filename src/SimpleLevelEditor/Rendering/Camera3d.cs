@@ -10,14 +10,14 @@ public static class Camera3d
 	private const int _fieldOfView = 2;
 	private static Vector2 _originalCursor = Input.GetMousePosition();
 
-	private static float _yaw;
-	private static float _pitch;
+	private static float _yaw = MathF.PI * 0.25f;
+	private static float _pitch = -0.5f;
 
 	private static float _zoom = 5;
 
 	private static Vector3 _focusPoint;
 
-	public static Quaternion Rotation { get; private set; } = Quaternion.Identity;
+	public static Quaternion Rotation { get; private set; } = Quaternion.CreateFromYawPitchRoll(_yaw, -_pitch, 0);
 	public static Vector3 Position { get; private set; }
 
 	public static Matrix4x4 Projection { get; private set; }
