@@ -42,6 +42,35 @@ public static class SceneRenderer
 		new(-0.5f, 0.5f, 0.5f),
 		new(0.5f, 0.5f, 0.5f),
 	});
+	private static readonly uint _sphereVao = VaoUtils.CreateLineVao(GetSphereVertexPositions(16, 16, 1));
+
+	private static Vector3[] GetSphereVertexPositions(uint horizontalLines, uint verticalLines, float radius)
+	{
+		uint vertexCount = horizontalLines * verticalLines + 2;
+
+		Vector3[] vertices = new Vector3[vertexCount];
+		for (uint i = 0; i < horizontalLines; i++)
+		{
+			float horizontalAngle = MathF.PI * (i + 1) / (horizontalLines + 1);
+
+			for (uint j = 0; j < verticalLines; j++)
+			{
+				float verticalAngle = 2 * MathF.PI * j / verticalLines;
+
+				float x = MathF.Sin(horizontalAngle) * MathF.Cos(verticalAngle);
+				float y = MathF.Sin(horizontalAngle) * MathF.Sin(verticalAngle);
+				float z = MathF.Cos(horizontalAngle);
+
+				uint index = i * verticalLines + j;
+				vertices[index] = new Vector3(x, y, z) * radius;
+			}
+		}
+
+		vertices[vertexCount - 2] = new(0, 0, radius);
+		vertices[vertexCount - 1] = new(0, 0, -radius);
+
+		return vertices;
+	}
 
 	public static void RenderScene()
 	{
@@ -227,6 +256,21 @@ public static class SceneRenderer
 			{
 				Gl.UniformMatrix4x4(modelUniform, Matrix4x4.CreateScale(0.1f) * Matrix4x4.CreateTranslation(point.Position));
 				Gl.UniformVector4(colorUniform, new Vector4(1, 1, 1, 1));
+				Gl.BindVertexArray(_sphereVao);
+				Gl.DrawArrays(PrimitiveType.Lines, 0, 16 * 16 + 2);
+			}
+			else if (entity.Shape.Value is Sphere sphere)
+			{
+				Gl.UniformMatrix4x4(modelUniform, Matrix4x4.CreateScale(sphere.Radius) * Matrix4x4.CreateTranslation(sphere.Position));
+				Gl.UniformVector4(colorUniform, new Vector4(1, 1, 0, 1));
+				Gl.BindVertexArray(_sphereVao);
+				Gl.DrawArrays(PrimitiveType.LineStrip, 0, 16 * 16 + 2);
+			}
+			else if (entity.Shape.Value is Aabb aabb)
+			{
+				Vector3 size = aabb.Max - aabb.Min;
+				Gl.UniformMatrix4x4(modelUniform, Matrix4x4.CreateScale(size) * Matrix4x4.CreateTranslation(aabb.Min + size / 2));
+				Gl.UniformVector4(colorUniform, new Vector4(1, 0, 1, 1));
 				Gl.BindVertexArray(_cubeVao);
 				Gl.DrawArrays(PrimitiveType.Lines, 0, 24);
 			}

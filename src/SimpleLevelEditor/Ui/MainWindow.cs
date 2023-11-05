@@ -115,9 +115,9 @@ public static class MainWindow
 						EntityEditorWindow.Render(new(0, viewportSize.Y - bottomHeight));
 						ImGui.EndTabItem();
 					}
-				}
 
-				ImGui.EndTabBar();
+					ImGui.EndTabBar();
+				}
 
 				DebugWindow.Render(default);
 			}
