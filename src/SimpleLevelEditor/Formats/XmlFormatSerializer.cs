@@ -17,7 +17,7 @@ public static class XmlFormatSerializer
 		Level3dData level = Level3dData.CreateDefault();
 		while (reader.Read())
 		{
-			if (reader.NodeType == XmlNodeType.Element)
+			if (reader is { NodeType: XmlNodeType.Element, IsEmptyElement: false })
 			{
 				switch (reader.Name)
 				{
@@ -265,6 +265,7 @@ public static class XmlFormatSerializer
 				case Point: writer.WriteAttributeString("Shape", "Point"); break;
 			}
 
+			writer.WriteStartElement("Properties");
 			foreach (EntityProperty property in entity.Properties)
 			{
 				writer.WriteStartElement("Property");
@@ -273,6 +274,8 @@ public static class XmlFormatSerializer
 				writer.WritePropertyValue("Value", property.Value);
 				writer.WriteEndElement();
 			}
+
+			writer.WriteEndElement();
 
 			writer.WriteEndElement();
 		}

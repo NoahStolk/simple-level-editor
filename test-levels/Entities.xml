@@ -4,10 +4,24 @@
   <Textures />
   <WorldObjects />
   <Entities>
-    <Entity Name="a" Position="1 0 -1" Shape="Point" />
-    <Entity Name="a" Position="2 -2.3841858E-07 3" Shape="Sphere 2" />
-    <Entity Name="a" Position="-2 0 -2" Shape="Aabb -1 -1 -1 1 1 1" />
-    <Entity Name="a" Position="-2 0 5" Shape="Aabb -1 -1 -1 1 1 1" />
-    <Entity Name="a" Position="9 0 -2" Shape="Aabb -1 -1 -1 1 1 1" />
+    <Entity Name="a" Position="1 0 -1" Shape="Point">
+      <Properties />
+    </Entity>
+    <Entity Name="" Position="-2 0 0" Shape="Aabb -1 -1 -1 1 1 1">
+      <Properties>
+        <Property Key="t" Type="bool" Value="True" />
+        <Property Key="gg" Type="s32" Value="83" />
+        <Property Key="ssss" Type="float" Value="70" />
+        <Property Key="s" Type="float2" Value="16 12" />
+      </Properties>
+    </Entity>
+    <Entity Name="" Position="2 0 5" Shape="Sphere 2">
+      <Properties>
+        <Property Key="t" Type="bool" Value="True" />
+        <Property Key="gg" Type="s32" Value="83" />
+        <Property Key="ssss" Type="float" Value="70" />
+        <Property Key="s" Type="float2" Value="16 12" />
+      </Properties>
+    </Entity>
   </Entities>
 </Level>
