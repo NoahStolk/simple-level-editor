@@ -42,17 +42,17 @@ public static class SceneRenderer
 		new(-0.5f, 0.5f, 0.5f),
 		new(0.5f, 0.5f, 0.5f),
 	});
-	private static readonly Vector3[] _sphereVertices = GetSphereVertexPositions(16, 16, 1);
+	private static readonly Vector3[] _sphereVertices = GetSphereVertexPositions(8, 16, 1);
 	private static readonly uint _sphereVao = VaoUtils.CreateLineVao(_sphereVertices);
 
 	private static Vector3[] GetSphereVertexPositions(uint horizontalLines, uint verticalLines, float radius)
 	{
 		List<Vector3> vertices = new();
-		for (uint i = 0; i < horizontalLines; i++)
+		for (uint i = 0; i <= horizontalLines; i++)
 		{
-			float horizontalAngle = MathF.PI * (i + 1) / (horizontalLines + 1);
+			float horizontalAngle = MathF.PI * i / horizontalLines;
 
-			for (uint j = 0; j < verticalLines; j++)
+			for (uint j = 0; j <= verticalLines; j++)
 			{
 				float verticalAngle = 2 * MathF.PI * j / verticalLines;
 
@@ -60,7 +60,26 @@ public static class SceneRenderer
 				float y = MathF.Sin(horizontalAngle) * MathF.Sin(verticalAngle);
 				float z = MathF.Cos(horizontalAngle);
 
-				if (j != 0 && j != verticalLines - 1)
+				if (j != 0 && j != verticalLines)
+					vertices.Add(new Vector3(x, y, z) * radius);
+
+				vertices.Add(new Vector3(x, y, z) * radius);
+			}
+		}
+
+		for (uint i = 0; i <= verticalLines; i++)
+		{
+			float verticalAngle = 2 * MathF.PI * i / verticalLines;
+
+			for (uint j = 0; j <= horizontalLines; j++)
+			{
+				float horizontalAngle = MathF.PI * j / horizontalLines;
+
+				float x = MathF.Sin(horizontalAngle) * MathF.Cos(verticalAngle);
+				float y = MathF.Sin(horizontalAngle) * MathF.Sin(verticalAngle);
+				float z = MathF.Cos(horizontalAngle);
+
+				if (j != 0 && j != horizontalLines)
 					vertices.Add(new Vector3(x, y, z) * radius);
 
 				vertices.Add(new Vector3(x, y, z) * radius);

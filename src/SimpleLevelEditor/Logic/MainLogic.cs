@@ -5,7 +5,6 @@ using SimpleLevelEditor.Model.EntityShapes;
 using SimpleLevelEditor.Rendering;
 using SimpleLevelEditor.State;
 using SimpleLevelEditor.Ui.ChildWindows;
-using Sphere = SimpleLevelEditor.Model.EntityShapes.Sphere;
 
 namespace SimpleLevelEditor.Logic;
 
@@ -203,7 +202,7 @@ public static class MainLogic
 			float? intersection = entity.Shape switch
 			{
 				Point => IntersectsSphere(entity.Position, 0.1f),
-				Sphere sphere => IntersectsSphere(entity.Position, sphere.Radius),
+				Model.EntityShapes.Sphere sphere => IntersectsSphere(entity.Position, sphere.Radius),
 				Aabb aabb => Ray.IntersectsAxisAlignedBoundingBox(rayStartPosition, rayDirection, entity.Position + aabb.Min, entity.Position + aabb.Max)?.Distance,
 				_ => throw new NotImplementedException(),
 			};
