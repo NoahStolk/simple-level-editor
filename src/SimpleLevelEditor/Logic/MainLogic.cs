@@ -204,9 +204,11 @@ public static class MainLogic
 			{
 				Point => IntersectsSphere(entity.Position, 0.1f),
 				Sphere sphere => IntersectsSphere(entity.Position, sphere.Radius),
-				Aabb aabb => Ray.IntersectsAxisAlignedBoundingBox(rayStartPosition, rayDirection, aabb.Min, aabb.Max)?.Distance,
+				Aabb aabb => Ray.IntersectsAxisAlignedBoundingBox(rayStartPosition, rayDirection, entity.Position + aabb.Min, entity.Position + aabb.Max)?.Distance,
 				_ => throw new NotImplementedException(),
 			};
+			if (!intersection.HasValue)
+				continue;
 
 			if (closestDistance == null || intersection < closestDistance)
 			{

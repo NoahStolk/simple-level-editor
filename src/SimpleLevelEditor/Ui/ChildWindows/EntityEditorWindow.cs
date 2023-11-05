@@ -8,6 +8,17 @@ namespace SimpleLevelEditor.Ui.ChildWindows;
 
 public static class EntityEditorWindow
 {
+	private static readonly Dictionary<Type, string> _typeNames = new()
+	{
+		{ typeof(bool), "Boolean" },
+		{ typeof(int), "Integer" },
+		{ typeof(float), "Float" },
+		{ typeof(Vector2), "Float (2)" },
+		{ typeof(Vector3), "Float (3)" },
+		{ typeof(Vector4), "Float (4)" },
+		{ typeof(string), "Text" },
+	};
+
 	private static readonly Entity _default = new()
 	{
 		Id = 0,
@@ -92,27 +103,27 @@ public static class EntityEditorWindow
 			if (ImGui.IsItemDeactivatedAfterEdit())
 				LevelState.Track("Changed entity property key name");
 
-			if (ImGui.BeginCombo(Inline.Span($"Property type##{i}"), property.Value.Value.GetType().Name))
+			if (ImGui.BeginCombo(Inline.Span($"Property type##{i}"), _typeNames[property.Value.Value.GetType()]))
 			{
-				if (ImGui.Selectable("Boolean", property.Value.Value is bool))
+				if (ImGui.Selectable(_typeNames[typeof(bool)], property.Value.Value is bool))
 					property.Value = false;
 
-				if (ImGui.Selectable("Integer", property.Value.Value is int))
+				if (ImGui.Selectable(_typeNames[typeof(int)], property.Value.Value is int))
 					property.Value = 0;
 
-				if (ImGui.Selectable("Float", property.Value.Value is float))
+				if (ImGui.Selectable(_typeNames[typeof(float)], property.Value.Value is float))
 					property.Value = 0f;
 
-				if (ImGui.Selectable("Float (2)", property.Value.Value is Vector2))
+				if (ImGui.Selectable(_typeNames[typeof(Vector2)], property.Value.Value is Vector2))
 					property.Value = Vector2.Zero;
 
-				if (ImGui.Selectable("Float (3)", property.Value.Value is Vector3))
+				if (ImGui.Selectable(_typeNames[typeof(Vector3)], property.Value.Value is Vector3))
 					property.Value = Vector3.Zero;
 
-				if (ImGui.Selectable("Float (4)", property.Value.Value is Vector4))
+				if (ImGui.Selectable(_typeNames[typeof(Vector4)], property.Value.Value is Vector4))
 					property.Value = Vector4.Zero;
 
-				if (ImGui.Selectable("Text", property.Value.Value is string))
+				if (ImGui.Selectable(_typeNames[typeof(string)], property.Value.Value is string))
 					property.Value = string.Empty;
 
 				entity.Properties[i] = property;

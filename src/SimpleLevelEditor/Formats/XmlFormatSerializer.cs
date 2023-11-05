@@ -142,9 +142,9 @@ public static class XmlFormatSerializer
 		string[] parts = shape.Split(' ');
 		return parts[0] switch
 		{
-			"Point" => new Point(),
-			"Sphere" => new Sphere(float.Parse(parts[1])),
-			"Aabb" => new Aabb(new(float.Parse(parts[1]), float.Parse(parts[2]), float.Parse(parts[3])), new(float.Parse(parts[4]), float.Parse(parts[5]), float.Parse(parts[6]))),
+			"point" => new Point(),
+			"sphere" => new Sphere(float.Parse(parts[1])),
+			"aabb" => new Aabb(new(float.Parse(parts[1]), float.Parse(parts[2]), float.Parse(parts[3])), new(float.Parse(parts[4]), float.Parse(parts[5]), float.Parse(parts[6]))),
 			_ => throw _invalidFormat,
 		};
 	}
@@ -159,7 +159,7 @@ public static class XmlFormatSerializer
 				string type = reader.GetAttribute("Type") ?? throw _invalidFormat;
 				OneOf<bool, int, float, Vector2, Vector3, Vector4, string> value = type switch
 				{
-					"bool" => bool.Parse(reader.GetAttribute("Value") ?? throw _invalidFormat),
+					"bool" => bool.Parse(reader.GetAttribute("Value")?.ToLower() ?? throw _invalidFormat),
 					"s32" => int.Parse(reader.GetAttribute("Value") ?? throw _invalidFormat),
 					"float" => float.Parse(reader.GetAttribute("Value") ?? throw _invalidFormat),
 					"float2" => ReadVector2(reader.GetAttribute("Value") ?? throw _invalidFormat),
@@ -260,9 +260,9 @@ public static class XmlFormatSerializer
 
 			switch (entity.Shape)
 			{
-				case Aabb aabb: writer.WriteAttributeString("Shape", $"Aabb {aabb.Min.X} {aabb.Min.Y} {aabb.Min.Z} {aabb.Max.X} {aabb.Max.Y} {aabb.Max.Z}"); break;
-				case Sphere sphere: writer.WriteAttributeString("Shape", $"Sphere {sphere.Radius}"); break;
-				case Point: writer.WriteAttributeString("Shape", "Point"); break;
+				case Aabb aabb: writer.WriteAttributeString("Shape", $"aabb {aabb.Min.X} {aabb.Min.Y} {aabb.Min.Z} {aabb.Max.X} {aabb.Max.Y} {aabb.Max.Z}"); break;
+				case Sphere sphere: writer.WriteAttributeString("Shape", $"sphere {sphere.Radius}"); break;
+				case Point: writer.WriteAttributeString("Shape", "point"); break;
 			}
 
 			writer.WriteStartElement("Properties");
@@ -310,7 +310,7 @@ public static class XmlFormatSerializer
 	{
 		string valueString = value.Value switch
 		{
-			bool b => b.ToString(),
+			bool b => b.ToString().ToLower(),
 			int i => i.ToString(),
 			float f => f.ToString(),
 			Vector2 v => $"{v.X} {v.Y}",

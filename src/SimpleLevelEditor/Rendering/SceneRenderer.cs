@@ -42,13 +42,12 @@ public static class SceneRenderer
 		new(-0.5f, 0.5f, 0.5f),
 		new(0.5f, 0.5f, 0.5f),
 	});
-	private static readonly uint _sphereVao = VaoUtils.CreateLineVao(GetSphereVertexPositions(16, 16, 1));
+	private static readonly Vector3[] _sphereVertices = GetSphereVertexPositions(16, 16, 1);
+	private static readonly uint _sphereVao = VaoUtils.CreateLineVao(_sphereVertices);
 
 	private static Vector3[] GetSphereVertexPositions(uint horizontalLines, uint verticalLines, float radius)
 	{
-		uint vertexCount = horizontalLines * verticalLines + 2;
-
-		Vector3[] vertices = new Vector3[vertexCount];
+		List<Vector3> vertices = new();
 		for (uint i = 0; i < horizontalLines; i++)
 		{
 			float horizontalAngle = MathF.PI * (i + 1) / (horizontalLines + 1);
@@ -61,15 +60,14 @@ public static class SceneRenderer
 				float y = MathF.Sin(horizontalAngle) * MathF.Sin(verticalAngle);
 				float z = MathF.Cos(horizontalAngle);
 
-				uint index = i * verticalLines + j;
-				vertices[index] = new Vector3(x, y, z) * radius;
+				if (j != 0 && j != verticalLines - 1)
+					vertices.Add(new Vector3(x, y, z) * radius);
+
+				vertices.Add(new Vector3(x, y, z) * radius);
 			}
 		}
 
-		vertices[vertexCount - 2] = new(0, 0, radius);
-		vertices[vertexCount - 1] = new(0, 0, -radius);
-
-		return vertices;
+		return vertices.ToArray();
 	}
 
 	public static void RenderScene()
@@ -252,29 +250,44 @@ public static class SceneRenderer
 		{
 			Entity entity = LevelState.Level.Entities[i];
 
-			if (entity.Shape is Sphere sphere)
-			{
-				Gl.UniformMatrix4x4(modelUniform, Matrix4x4.CreateScale(sphere.Radius) * Matrix4x4.CreateTranslation(entity.Position));
-				Gl.UniformVector4(colorUniform, new Vector4(1, 1, 0, 1));
-				Gl.BindVertexArray(_sphereVao);
-				Gl.DrawArrays(PrimitiveType.LineStrip, 0, 16 * 16 + 2);
-			}
-			else if (entity.Shape is Aabb aabb)
+			float timeAddition = MathF.Sin((float)Glfw.GetTime() * 10) * 0.5f + 0.5f;
+			timeAddition *= 0.5f;
+
+			Vector4 color;
+			if (entity == LevelEditorState.SelectedEntity && entity == LevelEditorState.HighlightedEntity && Camera3d.Mode == CameraMode.None)
+				color = new(0.5f + timeAddition, 1, 0.5f + timeAddition, 1);
+			else if (entity == LevelEditorState.SelectedEntity)
+				color = new(0, 0.75f, 0, 1);
+			else if (entity == LevelEditorState.HighlightedEntity && Camera3d.Mode == CameraMode.None)
+				color = new(1, 0.5f + timeAddition, 1, 1);
+			else
+				color = new(0.75f, 0, 0.75f, 1);
+
+			if (entity.Shape is Aabb aabb)
 			{
 				Vector3 size = aabb.Max - aabb.Min;
 				Vector3 center = (aabb.Max + aabb.Min) / 2;
 				Gl.UniformMatrix4x4(modelUniform, Matrix4x4.CreateScale(size) * Matrix4x4.CreateTranslation(entity.Position + center));
-				Gl.UniformVector4(colorUniform, new Vector4(1, 0, 1, 1));
+				Gl.UniformVector4(colorUniform, color);
 				Gl.BindVertexArray(_cubeVao);
 				Gl.DrawArrays(PrimitiveType.Lines, 0, 24);
 			}
+			else if (entity.Shape is Sphere sphere)
+			{
+				RenderSphere(modelUniform, colorUniform, color, entity.Position, sphere.Radius);
+			}
 			else
 			{
-				Gl.UniformMatrix4x4(modelUniform, Matrix4x4.CreateScale(0.1f) * Matrix4x4.CreateTranslation(entity.Position));
-				Gl.UniformVector4(colorUniform, new Vector4(1, 1, 1, 1));
-				Gl.BindVertexArray(_sphereVao);
-				Gl.DrawArrays(PrimitiveType.Lines, 0, 16 * 16 + 2);
+				RenderSphere(modelUniform, colorUniform, color, entity.Position, 0.1f);
 			}
 		}
+	}
+
+	private static void RenderSphere(int modelUniform, int colorUniform, Vector4 color, Vector3 position, float radius)
+	{
+		Gl.UniformMatrix4x4(modelUniform, Matrix4x4.CreateScale(radius) * Matrix4x4.CreateTranslation(position));
+		Gl.UniformVector4(colorUniform, color);
+		Gl.BindVertexArray(_sphereVao);
+		Gl.DrawArrays(PrimitiveType.Lines, 0, (uint)_sphereVertices.Length);
 	}
 }
