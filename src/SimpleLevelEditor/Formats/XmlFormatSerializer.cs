@@ -1,6 +1,6 @@
 using OneOf;
 using SimpleLevelEditor.Model;
-using SimpleLevelEditor.Model.EntityTypes;
+using SimpleLevelEditor.Model.EntityShapes;
 using System.Text;
 using System.Xml;
 
@@ -14,7 +14,7 @@ public static class XmlFormatSerializer
 
 	public static Level3dData ReadLevel(XmlReader reader)
 	{
-		Level3dData level = Level3dData.Default;
+		Level3dData level = Level3dData.CreateDefault();
 		while (reader.Read())
 		{
 			if (reader.NodeType == XmlNodeType.Element)
@@ -122,6 +122,7 @@ public static class XmlFormatSerializer
 				{
 					Id = entityIndex,
 					Name = reader.GetAttribute("Name") ?? throw _invalidFormat,
+					Position = ReadVector3(reader.GetAttribute("Position") ?? throw _invalidFormat),
 					Shape = ReadShape(reader.GetAttribute("Shape") ?? throw _invalidFormat),
 					Properties = ReadProperties(reader),
 				};
@@ -136,20 +137,16 @@ public static class XmlFormatSerializer
 		return entities;
 	}
 
-	private static OneOf<Point, Sphere, Aabb> ReadShape(string shape)
+	private static IEntityShape ReadShape(string shape)
 	{
 		string[] parts = shape.Split(' ');
-		switch (parts[0])
+		return parts[0] switch
 		{
-			case "Point":
-				return new Point(ReadVector3(parts[1]));
-			case "Sphere":
-				return new Sphere(ReadVector3(parts[1]), float.Parse(parts[2]));
-			case "Aabb":
-				return new Aabb(ReadVector3(parts[1]), ReadVector3(parts[2]));
-			default:
-				throw new Exception($"Unknown shape: {shape}");
-		}
+			"Point" => new Point(),
+			"Sphere" => new Sphere(float.Parse(parts[1])),
+			"Aabb" => new Aabb(new(float.Parse(parts[1]), float.Parse(parts[2]), float.Parse(parts[3])), new(float.Parse(parts[4]), float.Parse(parts[5]), float.Parse(parts[6]))),
+			_ => throw _invalidFormat,
+		};
 	}
 
 	private static List<EntityProperty> ReadProperties(XmlReader reader)
@@ -159,10 +156,23 @@ public static class XmlFormatSerializer
 		{
 			if (reader is { NodeType: XmlNodeType.Element, Name: "Property" })
 			{
+				string type = reader.GetAttribute("Type") ?? throw _invalidFormat;
+				OneOf<bool, int, float, Vector2, Vector3, Vector4, string> value = type switch
+				{
+					"bool" => bool.Parse(reader.GetAttribute("Value") ?? throw _invalidFormat),
+					"s32" => int.Parse(reader.GetAttribute("Value") ?? throw _invalidFormat),
+					"float" => float.Parse(reader.GetAttribute("Value") ?? throw _invalidFormat),
+					"float2" => ReadVector2(reader.GetAttribute("Value") ?? throw _invalidFormat),
+					"float3" => ReadVector3(reader.GetAttribute("Value") ?? throw _invalidFormat),
+					"float4" => ReadVector4(reader.GetAttribute("Value") ?? throw _invalidFormat),
+					"str" => reader.GetAttribute("Value") ?? throw _invalidFormat,
+					_ => throw _invalidFormat,
+				};
+
 				EntityProperty property = new()
 				{
 					Key = reader.GetAttribute("Key") ?? throw _invalidFormat,
-					Value = int.Parse(reader.GetAttribute("Value") ?? throw _invalidFormat),
+					Value = value,
 				};
 				properties.Add(property);
 			}
@@ -175,10 +185,22 @@ public static class XmlFormatSerializer
 		return properties;
 	}
 
+	private static Vector2 ReadVector2(string vector)
+	{
+		string[] parts = vector.Split(' ');
+		return new(float.Parse(parts[0]), float.Parse(parts[1]));
+	}
+
 	private static Vector3 ReadVector3(string vector)
 	{
 		string[] parts = vector.Split(' ');
 		return new(float.Parse(parts[0]), float.Parse(parts[1]), float.Parse(parts[2]));
+	}
+
+	private static Vector4 ReadVector4(string vector)
+	{
+		string[] parts = vector.Split(' ');
+		return new(float.Parse(parts[0]), float.Parse(parts[1]), float.Parse(parts[2]), float.Parse(parts[3]));
 	}
 
 	public static void WriteLevel(MemoryStream ms, Level3dData level, bool writeCompact)
@@ -223,7 +245,7 @@ public static class XmlFormatSerializer
 			writer.WriteVector3("Position", worldObject.Position);
 			writer.WriteVector3("Rotation", worldObject.Rotation);
 			writer.WriteVector3("Scale", worldObject.Scale);
-			writer.WriteAttributeString("Flags", string.Join(", ", worldObject.Flags));
+			writer.WriteAttributeString("Flags", string.Join(", ", worldObject.Flags.Select(s => s.Trim())));
 			writer.WriteEndElement();
 		}
 
@@ -233,13 +255,22 @@ public static class XmlFormatSerializer
 		foreach (Entity entity in level.Entities)
 		{
 			writer.WriteStartElement("Entity");
-			writer.WriteAttributeString("Name", entity.Name);
-			writer.WriteAttributeString("Shape", entity.Shape.ToString());
+			writer.WriteAttributeString("Name", entity.Name.Trim());
+			writer.WriteVector3("Position", entity.Position);
+
+			switch (entity.Shape)
+			{
+				case Aabb aabb: writer.WriteAttributeString("Shape", $"Aabb {aabb.Min.X} {aabb.Min.Y} {aabb.Min.Z} {aabb.Max.X} {aabb.Max.Y} {aabb.Max.Z}"); break;
+				case Sphere sphere: writer.WriteAttributeString("Shape", $"Sphere {sphere.Radius}"); break;
+				case Point: writer.WriteAttributeString("Shape", "Point"); break;
+			}
+
 			foreach (EntityProperty property in entity.Properties)
 			{
 				writer.WriteStartElement("Property");
-				writer.WriteAttributeString("Key", property.Key);
-				writer.WriteAttributeString("Value", property.Value.ToString());
+				writer.WriteAttributeString("Key", property.Key.Trim());
+				writer.WritePropertyType("Type", property.Value);
+				writer.WritePropertyValue("Value", property.Value);
 				writer.WriteEndElement();
 			}
 
@@ -254,5 +285,37 @@ public static class XmlFormatSerializer
 	private static void WriteVector3(this XmlWriter writer, string name, Vector3 vector)
 	{
 		writer.WriteAttributeString(name, $"{vector.X} {vector.Y} {vector.Z}");
+	}
+
+	private static void WritePropertyType(this XmlWriter writer, string name, OneOf<bool, int, float, Vector2, Vector3, Vector4, string> value)
+	{
+		string valueString = value.Value switch
+		{
+			bool => "bool",
+			int => "s32",
+			float => "float",
+			Vector2 => "float2",
+			Vector3 => "float3",
+			Vector4 => "float4",
+			string => "str",
+			_ => throw new NotImplementedException(),
+		};
+		writer.WriteAttributeString(name, valueString);
+	}
+
+	private static void WritePropertyValue(this XmlWriter writer, string name, OneOf<bool, int, float, Vector2, Vector3, Vector4, string> value)
+	{
+		string valueString = value.Value switch
+		{
+			bool b => b.ToString(),
+			int i => i.ToString(),
+			float f => f.ToString(),
+			Vector2 v => $"{v.X} {v.Y}",
+			Vector3 v => $"{v.X} {v.Y} {v.Z}",
+			Vector4 v => $"{v.X} {v.Y} {v.Z} {v.W}",
+			string s => s,
+			_ => throw new NotImplementedException(),
+		};
+		writer.WriteAttributeString(name, valueString);
 	}
 }

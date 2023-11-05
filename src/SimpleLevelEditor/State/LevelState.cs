@@ -15,7 +15,7 @@ public static class LevelState
 	private static byte[] _memoryMd5Hash;
 	private static byte[] _fileMd5Hash;
 
-	private static Level3dData _level = Level3dData.Default;
+	private static Level3dData _level = Level3dData.CreateDefault();
 
 	static LevelState()
 	{
@@ -54,7 +54,7 @@ public static class LevelState
 
 	public static void New()
 	{
-		Level3dData level = Level3dData.Default.DeepCopy();
+		Level3dData level = Level3dData.CreateDefault();
 		SetLevel(null, level);
 		ClearState();
 		ReloadAssets(null);

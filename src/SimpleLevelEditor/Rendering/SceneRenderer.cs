@@ -3,7 +3,7 @@ using Silk.NET.OpenGL;
 using SimpleLevelEditor.Content;
 using SimpleLevelEditor.Extensions;
 using SimpleLevelEditor.Model;
-using SimpleLevelEditor.Model.EntityTypes;
+using SimpleLevelEditor.Model.EntityShapes;
 using SimpleLevelEditor.State;
 using SimpleLevelEditor.Utils;
 using static SimpleLevelEditor.Graphics;
@@ -252,27 +252,28 @@ public static class SceneRenderer
 		{
 			Entity entity = LevelState.Level.Entities[i];
 
-			if (entity.Shape.Value is Point point)
+			if (entity.Shape is Sphere sphere)
 			{
-				Gl.UniformMatrix4x4(modelUniform, Matrix4x4.CreateScale(0.1f) * Matrix4x4.CreateTranslation(point.Position));
-				Gl.UniformVector4(colorUniform, new Vector4(1, 1, 1, 1));
-				Gl.BindVertexArray(_sphereVao);
-				Gl.DrawArrays(PrimitiveType.Lines, 0, 16 * 16 + 2);
-			}
-			else if (entity.Shape.Value is Sphere sphere)
-			{
-				Gl.UniformMatrix4x4(modelUniform, Matrix4x4.CreateScale(sphere.Radius) * Matrix4x4.CreateTranslation(sphere.Position));
+				Gl.UniformMatrix4x4(modelUniform, Matrix4x4.CreateScale(sphere.Radius) * Matrix4x4.CreateTranslation(entity.Position));
 				Gl.UniformVector4(colorUniform, new Vector4(1, 1, 0, 1));
 				Gl.BindVertexArray(_sphereVao);
 				Gl.DrawArrays(PrimitiveType.LineStrip, 0, 16 * 16 + 2);
 			}
-			else if (entity.Shape.Value is Aabb aabb)
+			else if (entity.Shape is Aabb aabb)
 			{
 				Vector3 size = aabb.Max - aabb.Min;
-				Gl.UniformMatrix4x4(modelUniform, Matrix4x4.CreateScale(size) * Matrix4x4.CreateTranslation(aabb.Min + size / 2));
+				Vector3 center = (aabb.Max + aabb.Min) / 2;
+				Gl.UniformMatrix4x4(modelUniform, Matrix4x4.CreateScale(size) * Matrix4x4.CreateTranslation(entity.Position + center));
 				Gl.UniformVector4(colorUniform, new Vector4(1, 0, 1, 1));
 				Gl.BindVertexArray(_cubeVao);
 				Gl.DrawArrays(PrimitiveType.Lines, 0, 24);
+			}
+			else
+			{
+				Gl.UniformMatrix4x4(modelUniform, Matrix4x4.CreateScale(0.1f) * Matrix4x4.CreateTranslation(entity.Position));
+				Gl.UniformVector4(colorUniform, new Vector4(1, 1, 1, 1));
+				Gl.BindVertexArray(_sphereVao);
+				Gl.DrawArrays(PrimitiveType.Lines, 0, 16 * 16 + 2);
 			}
 		}
 	}

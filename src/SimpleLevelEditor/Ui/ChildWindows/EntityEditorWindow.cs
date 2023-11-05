@@ -1,7 +1,7 @@
 using Detach;
 using ImGuiNET;
 using SimpleLevelEditor.Model;
-using SimpleLevelEditor.Model.EntityTypes;
+using SimpleLevelEditor.Model.EntityShapes;
 using SimpleLevelEditor.State;
 
 namespace SimpleLevelEditor.Ui.ChildWindows;
@@ -13,7 +13,8 @@ public static class EntityEditorWindow
 		Id = 0,
 		Name = string.Empty,
 		Properties = new(),
-		Shape = new Point(default),
+		Position = default,
+		Shape = new Point(),
 	};
 	public static Entity DefaultEntity { get; private set; } = _default.DeepCopy();
 
@@ -40,23 +41,34 @@ public static class EntityEditorWindow
 		if (ImGui.IsItemDeactivatedAfterEdit())
 			LevelState.Track("Changed entity name");
 
-		if (ImGui.BeginCombo("Entity type", entity.Shape.Value.GetType().Name))
+		ImGui.Text("Position");
+
+		ImGui.DragFloat3("##position", ref entity.Position, 0.1f, float.MinValue, float.MaxValue, "%.1f");
+		if (ImGui.IsItemDeactivatedAfterEdit())
+			LevelState.Track("Changed entity position");
+
+		if (RenderResetButton("Position_reset"))
 		{
-			if (ImGui.Selectable("Point", entity.Shape.Value is Point))
-				entity.Shape = new Point(default);
+			entity.Position = Vector3.Zero;
+			LevelState.Track("Changed entity position");
+		}
 
-			if (ImGui.Selectable("Sphere", entity.Shape.Value is Sphere))
-				entity.Shape = new Sphere(default, 2);
+		if (ImGui.BeginCombo("Entity type", entity.Shape.GetType().Name))
+		{
+			if (ImGui.Selectable("Point", entity.Shape is Point))
+				entity.Shape = new Point();
 
-			if (ImGui.Selectable("Aabb", entity.Shape.Value is Aabb))
+			if (ImGui.Selectable("Sphere", entity.Shape is Sphere))
+				entity.Shape = new Sphere(2);
+
+			if (ImGui.Selectable("Aabb", entity.Shape is Aabb))
 				entity.Shape = new Aabb(-Vector3.One, Vector3.One);
 
 			ImGui.EndCombo();
 		}
 
-		switch (entity.Shape.Value)
+		switch (entity.Shape)
 		{
-			case Point point: RenderPointInputs(point); break;
 			case Sphere sphere: RenderSphereInputs(sphere); break;
 			case Aabb aabb: RenderAabbInputs(aabb); break;
 		}
@@ -134,38 +146,11 @@ public static class EntityEditorWindow
 		}
 	}
 
-	private static void RenderPointInputs(Point point)
-	{
-		ImGui.Text("Position");
-
-		ImGui.DragFloat3("##position", ref point.Position, 0.1f, float.MinValue, float.MaxValue, "%.1f");
-		if (ImGui.IsItemDeactivatedAfterEdit())
-			LevelState.Track("Changed entity position");
-
-		if (RenderResetButton("Position_reset"))
-		{
-			point.Position = Vector3.Zero;
-			LevelState.Track("Changed entity position");
-		}
-	}
-
 	private static void RenderSphereInputs(Sphere sphere)
 	{
-		ImGui.Text("Position");
-
-		ImGui.DragFloat3("##position", ref sphere.Position, 0.1f, float.MinValue, float.MaxValue, "%.1f");
-		if (ImGui.IsItemDeactivatedAfterEdit())
-			LevelState.Track("Changed entity position");
-
-		if (RenderResetButton("Position_reset"))
-		{
-			sphere.Position = Vector3.Zero;
-			LevelState.Track("Changed entity position");
-		}
-
 		ImGui.Text("Radius");
 
-		ImGui.DragFloat("##radius", ref sphere.Radius, 0.1f, float.MinValue, float.MaxValue, "%.1f");
+		ImGui.DragFloat("##radius", ref sphere.Radius, 0.1f, 0, float.MaxValue, "%.1f");
 		if (ImGui.IsItemDeactivatedAfterEdit())
 			LevelState.Track("Changed entity radius");
 
@@ -180,7 +165,7 @@ public static class EntityEditorWindow
 	{
 		ImGui.Text("Box Min");
 
-		ImGui.DragFloat3("##box_min", ref aabb.Min, 0.1f, float.MinValue, float.MaxValue, "%.1f");
+		ImGui.DragFloat3("##box_min", ref aabb.Min, 0.1f, float.MinValue, 0, "%.1f");
 		if (ImGui.IsItemDeactivatedAfterEdit())
 			LevelState.Track("Changed entity box min");
 
@@ -192,7 +177,7 @@ public static class EntityEditorWindow
 
 		ImGui.Text("Box Max");
 
-		ImGui.DragFloat3("##box_max", ref aabb.Max, 0.1f, float.MinValue, float.MaxValue, "%.1f");
+		ImGui.DragFloat3("##box_max", ref aabb.Max, 0.1f, 0, float.MaxValue, "%.1f");
 		if (ImGui.IsItemDeactivatedAfterEdit())
 			LevelState.Track("Changed entity box max");
 

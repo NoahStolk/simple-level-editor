@@ -1,11 +1,11 @@
 using Detach.Collisions;
 using Silk.NET.GLFW;
 using SimpleLevelEditor.Model;
-using SimpleLevelEditor.Model.EntityTypes;
+using SimpleLevelEditor.Model.EntityShapes;
 using SimpleLevelEditor.Rendering;
 using SimpleLevelEditor.State;
 using SimpleLevelEditor.Ui.ChildWindows;
-using Sphere = SimpleLevelEditor.Model.EntityTypes.Sphere;
+using Sphere = SimpleLevelEditor.Model.EntityShapes.Sphere;
 
 namespace SimpleLevelEditor.Logic;
 
@@ -51,7 +51,7 @@ public static class MainLogic
 				break;
 			case LevelEditorState.EditMode.Entities:
 				if (LevelEditorState.SelectedEntity != null)
-					Camera3d.SetFocusPoint(LevelEditorState.SelectedEntity.GetPosition());
+					Camera3d.SetFocusPoint(LevelEditorState.SelectedEntity.Position);
 
 				break;
 		}
@@ -97,13 +97,7 @@ public static class MainLogic
 		Entity entity = referenceEntity with
 		{
 			Id = LevelState.Level.WorldObjects.Count > 0 ? LevelState.Level.WorldObjects.Max(o => o.Id) + 1 : 0,
-			Shape = referenceEntity.Shape.Value switch
-			{
-				Point => new Point(LevelEditorState.TargetPosition.Value),
-				Sphere s => new Sphere(LevelEditorState.TargetPosition.Value, s.Radius),
-				Aabb a => a.GetCentered(LevelEditorState.TargetPosition.Value),
-				_ => throw new NotImplementedException(),
-			},
+			Position = LevelEditorState.TargetPosition.Value,
 		};
 		LevelState.Level.Entities.Add(entity);
 
@@ -206,10 +200,10 @@ public static class MainLogic
 		{
 			Entity entity = LevelState.Level.Entities[i];
 
-			float? intersection = entity.Shape.Value switch
+			float? intersection = entity.Shape switch
 			{
-				Point point => IntersectsSphere(point.Position, 0.1f),
-				Sphere sphere => IntersectsSphere(sphere.Position, sphere.Radius),
+				Point => IntersectsSphere(entity.Position, 0.1f),
+				Sphere sphere => IntersectsSphere(entity.Position, sphere.Radius),
 				Aabb aabb => Ray.IntersectsAxisAlignedBoundingBox(rayStartPosition, rayDirection, aabb.Min, aabb.Max)?.Distance,
 				_ => throw new NotImplementedException(),
 			};

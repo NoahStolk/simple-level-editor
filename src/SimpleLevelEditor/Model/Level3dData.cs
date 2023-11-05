@@ -8,14 +8,17 @@ public record Level3dData
 	public required List<WorldObject> WorldObjects;
 	public required List<Entity> Entities;
 
-	public static Level3dData Default => new()
+	public static Level3dData CreateDefault()
 	{
-		Version = 1,
-		Meshes = new(),
-		Textures = new(),
-		WorldObjects = new(),
-		Entities = new(),
-	};
+		return new()
+		{
+			Version = 1,
+			Meshes = new(),
+			Textures = new(),
+			WorldObjects = new(),
+			Entities = new(),
+		};
+	}
 
 	public Level3dData DeepCopy()
 	{

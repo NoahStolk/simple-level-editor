@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Level Version="1">
+  <Meshes />
+  <Textures />
+  <WorldObjects />
+  <Entities>
+    <Entity Name="a" Position="1 0 -1" Shape="Point" />
+    <Entity Name="a" Position="2 -2.3841858E-07 3" Shape="Sphere 2" />
+    <Entity Name="a" Position="-2 0 -2" Shape="Aabb -1 -1 -1 1 1 1" />
+    <Entity Name="a" Position="-2 0 5" Shape="Aabb -1 -1 -1 1 1 1" />
+    <Entity Name="a" Position="9 0 -2" Shape="Aabb -1 -1 -1 1 1 1" />
+  </Entities>
+</Level>

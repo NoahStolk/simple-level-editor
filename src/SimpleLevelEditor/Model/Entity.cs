@@ -1,5 +1,4 @@
-using OneOf;
-using SimpleLevelEditor.Model.EntityTypes;
+using SimpleLevelEditor.Model.EntityShapes;
 
 namespace SimpleLevelEditor.Model;
 
@@ -11,19 +10,9 @@ public record Entity
 	public required int Id;
 
 	public required string Name;
-	public required OneOf<Point, Sphere, Aabb> Shape;
+	public required Vector3 Position;
+	public required IEntityShape Shape;
 	public required List<EntityProperty> Properties;
-
-	public Vector3 GetPosition()
-	{
-		return Shape.Value switch
-		{
-			Point p => p.Position,
-			Sphere s => s.Position,
-			Aabb a => (a.Min + a.Max) / 2,
-			_ => throw new($"Unknown shape: {Shape.Value}"),
-		};
-	}
 
 	public Entity DeepCopy()
 	{

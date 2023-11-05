@@ -49,7 +49,7 @@ public static class LevelEditorWindow
 				ImGui.SeparatorText("Grid");
 
 				ImGui.PushItemWidth(itemWidth);
-				ImGui.SliderInt("Grid Snap", ref _gridSnapIndex, 0, _gridSnapPoints.Length - 1, Inline.Span(GridSnap));
+				ImGui.SliderInt("Grid snap", ref _gridSnapIndex, 0, _gridSnapPoints.Length - 1, Inline.Span(GridSnap));
 				ImGui.SliderInt("Cells per side", ref LevelEditorState.GridCellCount, 1, 64);
 				ImGui.SliderInt("Cell size", ref LevelEditorState.GridCellSize, 1, 4);
 				ImGui.PopItemWidth();
@@ -98,11 +98,6 @@ public static class LevelEditorWindow
 		if (!posOrigin.HasValue)
 			return;
 
-		Matrix4x4 rotationMatrix = MathUtils.CreateRotationMatrixFromEulerAngles(MathUtils.ToRadians(LevelEditorState.SelectedWorldObject.Rotation));
-		Vector2? posX = GetPosition2d(LevelEditorState.SelectedWorldObject.Position + Vector3.Transform(Vector3.UnitX, rotationMatrix));
-		Vector2? posY = GetPosition2d(LevelEditorState.SelectedWorldObject.Position + Vector3.Transform(Vector3.UnitY, rotationMatrix));
-		Vector2? posZ = GetPosition2d(LevelEditorState.SelectedWorldObject.Position + Vector3.Transform(Vector3.UnitZ, rotationMatrix));
-
 		bool wasMoveButtonActive = RenderMoveButton("Move", drawList, posOrigin.Value, ref _isMoveButtonActive);
 		if (_isMoveButtonActive)
 		{
@@ -137,6 +132,11 @@ public static class LevelEditorWindow
 
 		if (wasMoveButtonActive)
 			LevelState.Track("Moved world object");
+
+		Matrix4x4 rotationMatrix = MathUtils.CreateRotationMatrixFromEulerAngles(MathUtils.ToRadians(LevelEditorState.SelectedWorldObject.Rotation));
+		Vector2? posX = GetPosition2d(LevelEditorState.SelectedWorldObject.Position + Vector3.Transform(Vector3.UnitX, rotationMatrix));
+		Vector2? posY = GetPosition2d(LevelEditorState.SelectedWorldObject.Position + Vector3.Transform(Vector3.UnitY, rotationMatrix));
+		Vector2? posZ = GetPosition2d(LevelEditorState.SelectedWorldObject.Position + Vector3.Transform(Vector3.UnitZ, rotationMatrix));
 
 		if (posX.HasValue)
 			drawList.AddLine(posOrigin.Value, posX.Value, 0xff0000ff);

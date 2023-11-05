@@ -1,6 +1,5 @@
 using Silk.NET.GLFW;
 using SimpleLevelEditor.Logic;
-using SimpleLevelEditor.Rendering;
 using SimpleLevelEditor.State;
 
 namespace SimpleLevelEditor;
