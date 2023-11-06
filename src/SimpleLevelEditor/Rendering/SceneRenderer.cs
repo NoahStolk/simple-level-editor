@@ -103,7 +103,7 @@ public static class SceneRenderer
 
 		RenderOrigin(lineShader);
 		RenderGrid(lineShader);
-		RenderBoundingBoxes(lineShader);
+		RenderEdges(lineShader);
 		RenderEntities(lineShader);
 
 		ShaderCacheEntry meshShader = InternalContent.Shaders["Mesh"];
@@ -129,34 +129,34 @@ public static class SceneRenderer
 		// X axis
 		Gl.UniformMatrix4x4(lineModelUniform, scaleMatrix * Matrix4x4.CreateFromAxisAngle(Vector3.UnitY, MathF.PI / 2));
 		Gl.UniformVector4(lineColorUniform, new Vector4(1, 0, 0, 1));
-		Gl.DrawArrays(PrimitiveType.Lines, 0, 6);
+		Gl.DrawArrays(PrimitiveType.Lines, 0, 2);
 
 		// Y axis
 		Gl.UniformMatrix4x4(lineModelUniform, scaleMatrix * Matrix4x4.CreateFromAxisAngle(Vector3.UnitX, MathF.PI * 1.5f));
 		Gl.UniformVector4(lineColorUniform, new Vector4(0, 1, 0, 1));
-		Gl.DrawArrays(PrimitiveType.Lines, 0, 6);
+		Gl.DrawArrays(PrimitiveType.Lines, 0, 2);
 
 		// Z axis
 		Gl.UniformMatrix4x4(lineModelUniform, scaleMatrix);
 		Gl.UniformVector4(lineColorUniform, new Vector4(0, 0, 1, 1));
-		Gl.DrawArrays(PrimitiveType.Lines, 0, 6);
+		Gl.DrawArrays(PrimitiveType.Lines, 0, 2);
 
 		Gl.LineWidth(2);
 
 		// X axis (negative)
 		Gl.UniformMatrix4x4(lineModelUniform, scaleMatrix * Matrix4x4.CreateFromAxisAngle(Vector3.UnitY, -MathF.PI / 2));
 		Gl.UniformVector4(lineColorUniform, new Vector4(1, 0, 0, 0.5f));
-		Gl.DrawArrays(PrimitiveType.Lines, 0, 6);
+		Gl.DrawArrays(PrimitiveType.Lines, 0, 2);
 
 		// Y axis (negative)
 		Gl.UniformMatrix4x4(lineModelUniform, scaleMatrix * Matrix4x4.CreateFromAxisAngle(Vector3.UnitX, MathF.PI / 2));
 		Gl.UniformVector4(lineColorUniform, new Vector4(0, 1, 0, 0.5f));
-		Gl.DrawArrays(PrimitiveType.Lines, 0, 6);
+		Gl.DrawArrays(PrimitiveType.Lines, 0, 2);
 
 		// Z axis (negative)
 		Gl.UniformMatrix4x4(lineModelUniform, scaleMatrix * Matrix4x4.CreateFromAxisAngle(Vector3.UnitY, MathF.PI));
 		Gl.UniformVector4(lineColorUniform, new Vector4(0, 0, 1, 0.5f));
-		Gl.DrawArrays(PrimitiveType.Lines, 0, 6);
+		Gl.DrawArrays(PrimitiveType.Lines, 0, 2);
 	}
 
 	private static void RenderGrid(ShaderCacheEntry lineShader)
@@ -181,20 +181,19 @@ public static class SceneRenderer
 			if (LevelEditorState.TargetHeight != 0 || i * LevelEditorState.GridCellSize + offset.X != 0)
 			{
 				Gl.UniformMatrix4x4(lineModelUniform, scaleMat * Matrix4x4.CreateTranslation(new Vector3(i * LevelEditorState.GridCellSize, LevelEditorState.TargetHeight, min * LevelEditorState.GridCellSize) + offset));
-				Gl.DrawArrays(PrimitiveType.Lines, 0, 6);
+				Gl.DrawArrays(PrimitiveType.Lines, 0, 2);
 			}
 
 			if (LevelEditorState.TargetHeight != 0 || i * LevelEditorState.GridCellSize + offset.Z != 0)
 			{
 				Gl.UniformMatrix4x4(lineModelUniform, scaleMat * Matrix4x4.CreateFromAxisAngle(Vector3.UnitY, MathF.PI / 2) * Matrix4x4.CreateTranslation(new Vector3(min * LevelEditorState.GridCellSize, LevelEditorState.TargetHeight, i * LevelEditorState.GridCellSize) + offset));
-				Gl.DrawArrays(PrimitiveType.Lines, 0, 6);
+				Gl.DrawArrays(PrimitiveType.Lines, 0, 2);
 			}
 		}
 	}
 
-	private static void RenderBoundingBoxes(ShaderCacheEntry lineShader)
+	private static void RenderEdges(ShaderCacheEntry lineShader)
 	{
-		Gl.BindVertexArray(_cubeVao);
 		Gl.LineWidth(2);
 
 		for (int i = 0; i < LevelState.Level.WorldObjects.Count; i++)
@@ -214,11 +213,11 @@ public static class SceneRenderer
 			else
 				continue;
 
-			RenderBoundingBox(lineShader, worldObject, color);
+			RenderEdges(lineShader, worldObject, color);
 		}
 	}
 
-	private static void RenderBoundingBox(ShaderCacheEntry lineShader, WorldObject worldObject, Vector4 color)
+	private static unsafe void RenderEdges(ShaderCacheEntry lineShader, WorldObject worldObject, Vector4 color)
 	{
 		MeshContainer.Entry? mesh = MeshContainer.GetMesh(worldObject.Mesh);
 		if (mesh == null)
@@ -229,13 +228,13 @@ public static class SceneRenderer
 
 		Gl.UniformVector4(lineColorUniform, color);
 
-		Vector3 bbScale = worldObject.Scale * (mesh.BoundingMax - mesh.BoundingMin);
-		Vector3 bbOffset = (mesh.BoundingMax + mesh.BoundingMin) / 2;
 		Matrix4x4 rotationMatrix = MathUtils.CreateRotationMatrixFromEulerAngles(MathUtils.ToRadians(worldObject.Rotation));
-
-		Matrix4x4 modelMatrix = Matrix4x4.CreateScale(bbScale) * rotationMatrix * Matrix4x4.CreateTranslation(worldObject.Position + Vector3.Transform(bbOffset, rotationMatrix));
+		Matrix4x4 modelMatrix = Matrix4x4.CreateScale(worldObject.Scale) * rotationMatrix * Matrix4x4.CreateTranslation(worldObject.Position);
 		Gl.UniformMatrix4x4(lineModelUniform, modelMatrix);
-		Gl.DrawArrays(PrimitiveType.Lines, 0, 24);
+
+		Gl.BindVertexArray(mesh.LineVao);
+		fixed (uint* index = &mesh.LineIndices[0])
+			Gl.DrawElements(PrimitiveType.Lines, (uint)mesh.LineIndices.Length, DrawElementsType.UnsignedInt, index);
 	}
 
 	private static unsafe void RenderWorldObjects(ShaderCacheEntry meshShader)
@@ -256,7 +255,7 @@ public static class SceneRenderer
 
 			Gl.BindTexture(TextureTarget.Texture2D, textureId.Value);
 
-			Gl.BindVertexArray(mesh.Vao);
+			Gl.BindVertexArray(mesh.MeshVao);
 			fixed (uint* index = &mesh.Mesh.Indices[0])
 				Gl.DrawElements(PrimitiveType.Triangles, (uint)mesh.Mesh.Indices.Length, DrawElementsType.UnsignedInt, index);
 		}
