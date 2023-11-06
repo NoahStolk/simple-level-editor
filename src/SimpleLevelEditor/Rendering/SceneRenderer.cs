@@ -57,8 +57,8 @@ public static class SceneRenderer
 				float verticalAngle = 2 * MathF.PI * j / verticalLines;
 
 				float x = MathF.Sin(horizontalAngle) * MathF.Cos(verticalAngle);
-				float y = MathF.Sin(horizontalAngle) * MathF.Sin(verticalAngle);
-				float z = MathF.Cos(horizontalAngle);
+				float y = MathF.Cos(horizontalAngle);
+				float z = MathF.Sin(horizontalAngle) * MathF.Sin(verticalAngle);
 
 				if (j != 0 && j != verticalLines)
 					vertices.Add(new Vector3(x, y, z) * radius);
@@ -76,8 +76,8 @@ public static class SceneRenderer
 				float horizontalAngle = MathF.PI * j / horizontalLines;
 
 				float x = MathF.Sin(horizontalAngle) * MathF.Cos(verticalAngle);
-				float y = MathF.Sin(horizontalAngle) * MathF.Sin(verticalAngle);
-				float z = MathF.Cos(horizontalAngle);
+				float y = MathF.Cos(horizontalAngle);
+				float z = MathF.Sin(horizontalAngle) * MathF.Sin(verticalAngle);
 
 				if (j != 0 && j != horizontalLines)
 					vertices.Add(new Vector3(x, y, z) * radius);

@@ -64,7 +64,9 @@ public static class EntityEditorWindow
 			LevelState.Track("Changed entity position");
 		}
 
-		if (ImGui.BeginCombo("Entity type", entity.Shape.GetType().Name))
+		ImGui.SeparatorText("Shape");
+
+		if (ImGui.BeginCombo("Shape Type", entity.Shape.GetType().Name))
 		{
 			if (ImGui.Selectable("Point", entity.Shape is Point))
 				entity.Shape = new Point();
@@ -90,20 +92,13 @@ public static class EntityEditorWindow
 		{
 			EntityProperty property = entity.Properties[i];
 
-			if (ImGui.InputText($"##property_key{i}", ref property.Key, 32))
+			if (ImGui.InputText(Inline.Span($"Property Key##{i}"), ref property.Key, 32))
 				entity.Properties[i] = property;
-
-			ImGui.SameLine();
-			if (ImGui.Button($"X##property_remove{i}"))
-			{
-				entity.Properties.RemoveAt(i);
-				LevelState.Track("Removed entity property");
-			}
 
 			if (ImGui.IsItemDeactivatedAfterEdit())
 				LevelState.Track("Changed entity property key name");
 
-			if (ImGui.BeginCombo(Inline.Span($"Property type##{i}"), _typeNames[property.Value.Value.GetType()]))
+			if (ImGui.BeginCombo(Inline.Span($"Property Type##{i}"), _typeNames[property.Value.Value.GetType()]))
 			{
 				if (ImGui.Selectable(_typeNames[typeof(bool)], property.Value.Value is bool))
 					property.Value = false;
@@ -143,7 +138,13 @@ public static class EntityEditorWindow
 				_ => entity.Properties[i].Value,
 			};
 
-			ImGui.Spacing();
+			if (ImGui.Button(Inline.Span($"Delete Property##{i}")))
+			{
+				entity.Properties.RemoveAt(i);
+				LevelState.Track("Removed entity property");
+			}
+
+			ImGui.Separator();
 		}
 
 		if (ImGui.Button("Add Property"))
@@ -161,40 +162,34 @@ public static class EntityEditorWindow
 	{
 		ImGui.Text("Radius");
 
-		ImGui.DragFloat("##radius", ref sphere.Radius, 0.1f, 0, float.MaxValue, "%.1f");
+		ImGui.DragFloat("##radius", ref sphere.Radius, 0.1f, 0.1f, float.MaxValue, "%.1f");
 		if (ImGui.IsItemDeactivatedAfterEdit())
 			LevelState.Track("Changed entity radius");
-
-		if (RenderResetButton("Radius_reset"))
-		{
-			sphere.Radius = 0;
-			LevelState.Track("Changed entity radius");
-		}
 	}
 
 	private static void RenderAabbInputs(Aabb aabb)
 	{
 		ImGui.Text("Box Min");
 
-		ImGui.DragFloat3("##box_min", ref aabb.Min, 0.1f, float.MinValue, 0, "%.1f");
+		ImGui.DragFloat3("##box_min", ref aabb.Min, 0.1f, float.MinValue, -0.1f, "%.1f");
 		if (ImGui.IsItemDeactivatedAfterEdit())
 			LevelState.Track("Changed entity box min");
 
 		if (RenderResetButton("Box_min_reset"))
 		{
-			aabb.Min = Vector3.Zero;
+			aabb.Min = -Vector3.One;
 			LevelState.Track("Changed entity box min");
 		}
 
 		ImGui.Text("Box Max");
 
-		ImGui.DragFloat3("##box_max", ref aabb.Max, 0.1f, 0, float.MaxValue, "%.1f");
+		ImGui.DragFloat3("##box_max", ref aabb.Max, 0.1f, 0.1f, float.MaxValue, "%.1f");
 		if (ImGui.IsItemDeactivatedAfterEdit())
 			LevelState.Track("Changed entity box max");
 
 		if (RenderResetButton("Box_max_reset"))
 		{
-			aabb.Max = Vector3.Zero;
+			aabb.Max = Vector3.One;
 			LevelState.Track("Changed entity box max");
 		}
 	}
