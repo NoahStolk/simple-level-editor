@@ -42,8 +42,12 @@ public static class SceneRenderer
 		new(-0.5f, 0.5f, 0.5f),
 		new(0.5f, 0.5f, 0.5f),
 	});
+
 	private static readonly Vector3[] _sphereVertices = GetSphereVertexPositions(8, 16, 1);
 	private static readonly uint _sphereVao = VaoUtils.CreateLineVao(_sphereVertices);
+
+	private static readonly Vector3[] _pointVertices = GetSphereVertexPositions(3, 6, 1);
+	private static readonly uint _pointVao = VaoUtils.CreateLineVao(_pointVertices);
 
 	private static Vector3[] GetSphereVertexPositions(uint horizontalLines, uint verticalLines, float radius)
 	{
@@ -290,20 +294,18 @@ public static class SceneRenderer
 			}
 			else if (entity.Shape is Sphere sphere)
 			{
-				RenderSphere(modelUniform, colorUniform, color, entity.Position, sphere.Radius);
+				Gl.UniformMatrix4x4(modelUniform, Matrix4x4.CreateScale(sphere.Radius) * Matrix4x4.CreateTranslation(entity.Position));
+				Gl.UniformVector4(colorUniform, color);
+				Gl.BindVertexArray(_sphereVao);
+				Gl.DrawArrays(PrimitiveType.Lines, 0, (uint)_sphereVertices.Length);
 			}
 			else
 			{
-				RenderSphere(modelUniform, colorUniform, color, entity.Position, 0.1f);
+				Gl.UniformMatrix4x4(modelUniform, Matrix4x4.CreateScale(0.1f) * Matrix4x4.CreateTranslation(entity.Position));
+				Gl.UniformVector4(colorUniform, color);
+				Gl.BindVertexArray(_pointVao);
+				Gl.DrawArrays(PrimitiveType.Lines, 0, (uint)_pointVertices.Length);
 			}
 		}
-	}
-
-	private static void RenderSphere(int modelUniform, int colorUniform, Vector4 color, Vector3 position, float radius)
-	{
-		Gl.UniformMatrix4x4(modelUniform, Matrix4x4.CreateScale(radius) * Matrix4x4.CreateTranslation(position));
-		Gl.UniformVector4(colorUniform, color);
-		Gl.BindVertexArray(_sphereVao);
-		Gl.DrawArrays(PrimitiveType.Lines, 0, (uint)_sphereVertices.Length);
 	}
 }
