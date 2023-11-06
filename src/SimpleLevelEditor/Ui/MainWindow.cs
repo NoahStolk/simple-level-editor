@@ -100,24 +100,25 @@ public static class MainWindow
 
 			if (ImGui.BeginChild("Right", new(0, 0)))
 			{
-				if (ImGui.BeginTabBar("##edit"))
-				{
-					if (ImGui.BeginTabItem("World objects"))
-					{
-						LevelEditorState.Mode = LevelEditorState.EditMode.WorldObjects;
-						WorldObjectEditorWindow.Render(new(0, viewportSize.Y - bottomHeight));
-						ImGui.EndTabItem();
-					}
+				Vector4 activeButton = new(0.3f, 0.3f, 0.3f, 1);
 
-					if (ImGui.BeginTabItem("Entities"))
-					{
-						LevelEditorState.Mode = LevelEditorState.EditMode.Entities;
-						EntityEditorWindow.Render(new(0, viewportSize.Y - bottomHeight));
-						ImGui.EndTabItem();
-					}
+				ImGui.PushStyleColor(ImGuiCol.Button, LevelEditorState.Mode == LevelEditorState.EditMode.WorldObjects ? activeButton : default);
+				if (ImGui.Button("World objects"))
+					LevelEditorState.Mode = LevelEditorState.EditMode.WorldObjects;
 
-					ImGui.EndTabBar();
-				}
+				ImGui.PopStyleColor();
+
+				ImGui.SameLine();
+				ImGui.PushStyleColor(ImGuiCol.Button, LevelEditorState.Mode == LevelEditorState.EditMode.Entities ? activeButton : default);
+				if (ImGui.Button("Entities"))
+					LevelEditorState.Mode = LevelEditorState.EditMode.Entities;
+
+				ImGui.PopStyleColor();
+
+				if (LevelEditorState.Mode == LevelEditorState.EditMode.WorldObjects)
+					WorldObjectEditorWindow.Render(new(0, viewportSize.Y - bottomHeight));
+				else if (LevelEditorState.Mode == LevelEditorState.EditMode.Entities)
+					EntityEditorWindow.Render(new(0, viewportSize.Y - bottomHeight));
 
 				DebugWindow.Render(default);
 			}

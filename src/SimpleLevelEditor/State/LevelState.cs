@@ -118,8 +118,7 @@ public static class LevelState
 		CurrentHistoryIndex = Math.Clamp(index, 0, History.Count - 1);
 		Level = History[CurrentHistoryIndex].Object.DeepCopy();
 
-		LevelEditorState.HighlightedObject = null;
-		LevelEditorState.HighlightedEntity = null;
+		LevelEditorState.ClearHighlight();
 		LevelEditorState.UpdateSelectedWorldObject();
 		LevelEditorState.UpdateSelectedEntity();
 	}
