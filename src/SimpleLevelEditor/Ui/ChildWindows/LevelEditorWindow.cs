@@ -42,7 +42,7 @@ public static class LevelEditorWindow
 			Vector2 cursorPosition = ImGui.GetCursorPos();
 
 			ImGui.PushStyleColor(ImGuiCol.ChildBg, new Vector4(0, 0, 0, 0.2f));
-			if (ImGui.BeginChild("Level Editor Menu", new(280, 192), true))
+			if (ImGui.BeginChild("Level Editor Menu", new(280, 144), true))
 			{
 				const int itemWidth = 160;
 
@@ -58,12 +58,6 @@ public static class LevelEditorWindow
 
 				ImGui.PushItemWidth(itemWidth);
 				ImGui.InputFloat("Height", ref LevelEditorState.TargetHeight, 0.25f, 1, "%.2f");
-				ImGui.PopItemWidth();
-
-				ImGui.SeparatorText("Objects");
-
-				ImGui.PushItemWidth(itemWidth);
-				ImGui.Checkbox("Render bounding boxes", ref LevelEditorState.RenderBoundingBoxes);
 				ImGui.PopItemWidth();
 			}
 

@@ -197,9 +197,6 @@ public static class SceneRenderer
 		{
 			WorldObject worldObject = LevelState.Level.WorldObjects[i];
 
-			if (worldObject != LevelEditorState.SelectedWorldObject && !LevelEditorState.RenderBoundingBoxes)
-				continue;
-
 			float timeAddition = MathF.Sin((float)Glfw.GetTime() * 10) * 0.5f + 0.5f;
 			timeAddition *= 0.5f;
 
@@ -211,7 +208,7 @@ public static class SceneRenderer
 			else if (worldObject == LevelEditorState.HighlightedObject && Camera3d.Mode == CameraMode.None)
 				color = new(1, 0.5f + timeAddition, 1, 1);
 			else
-				color = new(0.75f, 0, 0.75f, 1);
+				continue;
 
 			RenderBoundingBox(lineShader, worldObject, color);
 		}
