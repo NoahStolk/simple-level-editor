@@ -4,6 +4,7 @@ using Silk.NET.OpenGL;
 using SimpleLevelEditor.Content.Data;
 using SimpleLevelEditor.State;
 using SimpleLevelEditor.Utils;
+using System.Collections;
 
 namespace SimpleLevelEditor.Rendering;
 
@@ -62,6 +63,8 @@ public static class MeshContainer
 				Vector3 positionB = modelData.Positions[(int)b];
 				Vector3 positionC = modelData.Positions[(int)c];
 				Vector3 normal = Vector3.Normalize(Vector3.Cross(positionB - positionA, positionC - positionA));
+				if (float.IsNaN(normal.X) || float.IsNaN(normal.Y) || float.IsNaN(normal.Z))
+					continue;
 
 				AddEdge(edges, new(a, b), normal);
 				AddEdge(edges, new(b, c), normal);
@@ -72,7 +75,7 @@ public static class MeshContainer
 			List<uint> lineIndices = new();
 			foreach (KeyValuePair<Edge, List<Vector3>> edge in edges)
 			{
-				int distinctNormals = edge.Value.Distinct().Count();
+				int distinctNormals = edge.Value.Distinct(NormalComparer.Instance).Count();
 				if (edge.Value.Count > 1 && distinctNormals == 1)
 					continue;
 
@@ -151,6 +154,22 @@ public static class MeshContainer
 		public override int GetHashCode()
 		{
 			return A < B ? HashCode.Combine(A, B) : HashCode.Combine(B, A);
+		}
+	}
+
+	private sealed class NormalComparer : IEqualityComparer<Vector3>
+	{
+		public static readonly NormalComparer Instance = new();
+
+		public bool Equals(Vector3 x, Vector3 y)
+		{
+			const float epsilon = 0.01f;
+			return Math.Abs(x.X - y.X) < epsilon && Math.Abs(x.Y - y.Y) < epsilon && Math.Abs(x.Z - y.Z) < epsilon;
+		}
+
+		public int GetHashCode(Vector3 obj)
+		{
+			return obj.GetHashCode();
 		}
 	}
 }
