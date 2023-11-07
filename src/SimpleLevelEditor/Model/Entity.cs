@@ -16,12 +16,21 @@ public record Entity
 
 	public Entity DeepCopy()
 	{
+		IEntityShape newShape = Shape switch
+		{
+			Sphere sphere => sphere.DeepCopy(),
+			Point point => point.DeepCopy(),
+			Aabb aabb => aabb.DeepCopy(),
+			_ => throw new NotImplementedException(),
+		};
+
 		List<EntityProperty> newEntityProperties = new();
 		for (int i = 0; i < Properties.Count; i++)
 			newEntityProperties.Add(Properties[i].DeepCopy());
 
 		return this with
 		{
+			Shape = newShape,
 			Properties = newEntityProperties,
 		};
 	}
