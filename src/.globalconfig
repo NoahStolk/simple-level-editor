@@ -249,6 +249,9 @@ dotnet_diagnostic.S2368.severity                                              = 
 # Replace the control character at position x by its escape sequence y.
 dotnet_diagnostic.S2479.severity                                              = none
 
+# Boolean expressions should not be gratuitous. (Broken analyzer)
+dotnet_diagnostic.S2589.severity                                              = none
+
 # Extract this nested ternary operation into an independent statement.
 dotnet_diagnostic.S3358.severity                                              = none
 

@@ -1,6 +1,7 @@
 using Detach.Collisions;
 using Silk.NET.GLFW;
 using SimpleLevelEditor.Model;
+using SimpleLevelEditor.Model.EntityShapes;
 using SimpleLevelEditor.Rendering;
 using SimpleLevelEditor.State;
 using SimpleLevelEditor.Ui.ChildWindows;
@@ -23,20 +24,42 @@ public static class MainLogic
 				LevelEditorState.TargetHeight = Math.Clamp(LevelEditorState.TargetHeight - scroll, -512, 512);
 		}
 
-		if (isFocused && Input.IsButtonPressed(MouseButton.Left) && LevelEditorState.HighlightedObject != null)
-			LevelEditorState.SetSelectedWorldObject(LevelEditorState.SelectedWorldObject == LevelEditorState.HighlightedObject ? null : LevelEditorState.HighlightedObject);
+		if (isFocused && Input.IsButtonPressed(MouseButton.Left))
+		{
+			if (LevelEditorState.HighlightedObject != null)
+				LevelEditorState.SetSelectedWorldObject(LevelEditorState.SelectedWorldObject == LevelEditorState.HighlightedObject ? null : LevelEditorState.HighlightedObject);
+			else if (LevelEditorState.HighlightedEntity != null)
+				LevelEditorState.SetSelectedEntity(LevelEditorState.SelectedEntity == LevelEditorState.HighlightedEntity ? null : LevelEditorState.HighlightedEntity);
+		}
 	}
 
-	public static void AddNewWorldObject()
+	public static void Focus()
+	{
+		if (LevelEditorState.SelectedWorldObject != null)
+			Camera3d.SetFocusPoint(LevelEditorState.SelectedWorldObject.Position);
+		else if (LevelEditorState.SelectedEntity != null)
+			Camera3d.SetFocusPoint(LevelEditorState.SelectedEntity.Position);
+	}
+
+	public static void AddNew()
+	{
+		switch (LevelEditorState.Mode)
+		{
+			case LevelEditorState.EditMode.WorldObjects: AddNewWorldObject(); break;
+			case LevelEditorState.EditMode.Entities: AddNewEntity(); break;
+		}
+	}
+
+	private static void AddNewWorldObject()
 	{
 		if (!LevelEditorState.TargetPosition.HasValue)
 			return;
 
-		WorldObject reference = LevelEditorState.SelectedWorldObject ?? WorldObjectEditorWindow.DefaultObject;
-		if (reference.Mesh.Length == 0 || reference.Texture.Length == 0)
+		WorldObject referenceWorldObject = LevelEditorState.SelectedWorldObject ?? WorldObjectEditorWindow.DefaultObject;
+		if (referenceWorldObject.Mesh.Length == 0 || referenceWorldObject.Texture.Length == 0)
 			return;
 
-		WorldObject worldObject = reference with
+		WorldObject worldObject = referenceWorldObject with
 		{
 			Id = LevelState.Level.WorldObjects.Count > 0 ? LevelState.Level.WorldObjects.Max(o => o.Id) + 1 : 0,
 			Position = LevelEditorState.TargetPosition.Value,
@@ -44,18 +67,43 @@ public static class MainLogic
 		LevelState.Level.WorldObjects.Add(worldObject);
 
 		LevelEditorState.SetSelectedWorldObject(worldObject);
-		LevelEditorState.HighlightedObject = worldObject;
+		LevelEditorState.SetHighlightedObject(worldObject);
 		LevelState.Track("Added object");
 	}
 
-	public static void RemoveWorldObject()
+	private static void AddNewEntity()
 	{
-		if (LevelEditorState.SelectedWorldObject == null)
+		if (!LevelEditorState.TargetPosition.HasValue)
 			return;
 
-		LevelState.Level.WorldObjects.Remove(LevelEditorState.SelectedWorldObject);
-		LevelEditorState.SetSelectedWorldObject(null);
-		LevelState.Track("Deleted world object");
+		Entity referenceEntity = LevelEditorState.SelectedEntity ?? EntityEditorWindow.DefaultEntity;
+
+		Entity entity = referenceEntity with
+		{
+			Id = LevelState.Level.WorldObjects.Count > 0 ? LevelState.Level.WorldObjects.Max(o => o.Id) + 1 : 0,
+			Position = LevelEditorState.TargetPosition.Value,
+		};
+		LevelState.Level.Entities.Add(entity);
+
+		LevelEditorState.SetSelectedEntity(entity);
+		LevelEditorState.SetHighlightedEntity(entity);
+		LevelState.Track("Added entity");
+	}
+
+	public static void Remove()
+	{
+		if (LevelEditorState.SelectedWorldObject != null)
+		{
+			LevelState.Level.WorldObjects.Remove(LevelEditorState.SelectedWorldObject);
+			LevelEditorState.SetSelectedWorldObject(null);
+			LevelState.Track("Deleted world object");
+		}
+		else if (LevelEditorState.SelectedEntity != null)
+		{
+			LevelState.Level.Entities.Remove(LevelEditorState.SelectedEntity);
+			LevelEditorState.SetSelectedEntity(null);
+			LevelState.Track("Deleted entity");
+		}
 	}
 
 	private static void CalculateTargetPosition(Vector2 normalizedMousePosition, Plane nearPlane, float gridSnap)
@@ -76,14 +124,15 @@ public static class MainLogic
 		Vector3 rayStartPosition = Camera3d.Position;
 		Vector3 rayEndPosition = Camera3d.GetMouseWorldPosition(normalizedMousePosition, farPlane);
 		Vector3 rayDirection = Vector3.Normalize(rayEndPosition - rayStartPosition);
-		Vector3? closestIntersection = null;
-		LevelEditorState.HighlightedObject = null;
+		LevelEditorState.ClearHighlight();
 
 		if (!isFocused)
 			return;
 
 		if (Input.IsButtonHeld(Camera3d.LookButton))
 			return;
+
+		Vector3? closestIntersection = null;
 
 		for (int i = 0; i < LevelState.Level.WorldObjects.Count; i++)
 		{
@@ -113,9 +162,41 @@ public static class MainLogic
 				if (closestIntersection == null || Vector3.DistanceSquared(Camera3d.Position, triangleIntersection.Value) < Vector3.DistanceSquared(Camera3d.Position, closestIntersection.Value))
 				{
 					closestIntersection = triangleIntersection.Value;
-					LevelEditorState.HighlightedObject = worldObject;
+					LevelEditorState.SetHighlightedObject(worldObject);
 				}
 			}
+		}
+
+		float? closestDistance = closestIntersection.HasValue ? Vector3.Distance(Camera3d.Position, closestIntersection.Value) : null;
+
+		for (int i = 0; i < LevelState.Level.Entities.Count; i++)
+		{
+			Entity entity = LevelState.Level.Entities[i];
+
+			float? intersection = entity.Shape switch
+			{
+				Point => IntersectsSphere(entity.Position, 0.1f),
+				Model.EntityShapes.Sphere sphere => IntersectsSphere(entity.Position, sphere.Radius),
+				Aabb aabb => Ray.IntersectsAxisAlignedBoundingBox(rayStartPosition, rayDirection, entity.Position + aabb.Min, entity.Position + aabb.Max)?.Distance,
+				_ => throw new NotImplementedException(),
+			};
+			if (!intersection.HasValue)
+				continue;
+
+			if (closestDistance == null || intersection < closestDistance)
+			{
+				closestDistance = intersection;
+				LevelEditorState.SetHighlightedEntity(entity);
+			}
+		}
+
+		float? IntersectsSphere(Vector3 position, float radius)
+		{
+			Vector3? intersection = Ray.IntersectsSphere(rayStartPosition, rayDirection, position, radius);
+			if (!intersection.HasValue)
+				return null;
+
+			return (rayStartPosition - intersection.Value).Length();
 		}
 	}
 }

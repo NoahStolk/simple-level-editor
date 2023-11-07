@@ -42,14 +42,14 @@ public static class LevelEditorWindow
 			Vector2 cursorPosition = ImGui.GetCursorPos();
 
 			ImGui.PushStyleColor(ImGuiCol.ChildBg, new Vector4(0, 0, 0, 0.2f));
-			if (ImGui.BeginChild("Level Editor Menu", new(280, 192), true))
+			if (ImGui.BeginChild("Level Editor Menu", new(280, 144), true))
 			{
 				const int itemWidth = 160;
 
 				ImGui.SeparatorText("Grid");
 
 				ImGui.PushItemWidth(itemWidth);
-				ImGui.SliderInt("Grid Snap", ref _gridSnapIndex, 0, _gridSnapPoints.Length - 1, Inline.Span(GridSnap));
+				ImGui.SliderInt("Grid snap", ref _gridSnapIndex, 0, _gridSnapPoints.Length - 1, Inline.Span(GridSnap));
 				ImGui.SliderInt("Cells per side", ref LevelEditorState.GridCellCount, 1, 64);
 				ImGui.SliderInt("Cell size", ref LevelEditorState.GridCellSize, 1, 4);
 				ImGui.PopItemWidth();
@@ -58,12 +58,6 @@ public static class LevelEditorWindow
 
 				ImGui.PushItemWidth(itemWidth);
 				ImGui.InputFloat("Height", ref LevelEditorState.TargetHeight, 0.25f, 1, "%.2f");
-				ImGui.PopItemWidth();
-
-				ImGui.SeparatorText("Objects");
-
-				ImGui.PushItemWidth(itemWidth);
-				ImGui.Checkbox("Render bounding boxes", ref LevelEditorState.RenderBoundingBoxes);
 				ImGui.PopItemWidth();
 			}
 
@@ -97,11 +91,6 @@ public static class LevelEditorWindow
 		Vector2? posOrigin = GetPosition2d(LevelEditorState.SelectedWorldObject.Position);
 		if (!posOrigin.HasValue)
 			return;
-
-		Matrix4x4 rotationMatrix = MathUtils.CreateRotationMatrixFromEulerAngles(MathUtils.ToRadians(LevelEditorState.SelectedWorldObject.Rotation));
-		Vector2? posX = GetPosition2d(LevelEditorState.SelectedWorldObject.Position + Vector3.Transform(Vector3.UnitX, rotationMatrix));
-		Vector2? posY = GetPosition2d(LevelEditorState.SelectedWorldObject.Position + Vector3.Transform(Vector3.UnitY, rotationMatrix));
-		Vector2? posZ = GetPosition2d(LevelEditorState.SelectedWorldObject.Position + Vector3.Transform(Vector3.UnitZ, rotationMatrix));
 
 		bool wasMoveButtonActive = RenderMoveButton("Move", drawList, posOrigin.Value, ref _isMoveButtonActive);
 		if (_isMoveButtonActive)
@@ -137,6 +126,11 @@ public static class LevelEditorWindow
 
 		if (wasMoveButtonActive)
 			LevelState.Track("Moved world object");
+
+		Matrix4x4 rotationMatrix = MathUtils.CreateRotationMatrixFromEulerAngles(MathUtils.ToRadians(LevelEditorState.SelectedWorldObject.Rotation));
+		Vector2? posX = GetPosition2d(LevelEditorState.SelectedWorldObject.Position + Vector3.Transform(Vector3.UnitX, rotationMatrix));
+		Vector2? posY = GetPosition2d(LevelEditorState.SelectedWorldObject.Position + Vector3.Transform(Vector3.UnitY, rotationMatrix));
+		Vector2? posZ = GetPosition2d(LevelEditorState.SelectedWorldObject.Position + Vector3.Transform(Vector3.UnitZ, rotationMatrix));
 
 		if (posX.HasValue)
 			drawList.AddLine(posOrigin.Value, posX.Value, 0xff0000ff);

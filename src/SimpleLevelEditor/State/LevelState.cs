@@ -15,7 +15,7 @@ public static class LevelState
 	private static byte[] _memoryMd5Hash;
 	private static byte[] _fileMd5Hash;
 
-	private static Level3dData _level = Level3dData.Default;
+	private static Level3dData _level = Level3dData.CreateDefault();
 
 	static LevelState()
 	{
@@ -54,7 +54,7 @@ public static class LevelState
 
 	public static void New()
 	{
-		Level3dData level = Level3dData.Default.DeepCopy();
+		Level3dData level = Level3dData.CreateDefault();
 		SetLevel(null, level);
 		ClearState();
 		ReloadAssets(null);
@@ -118,8 +118,9 @@ public static class LevelState
 		CurrentHistoryIndex = Math.Clamp(index, 0, History.Count - 1);
 		Level = History[CurrentHistoryIndex].Object.DeepCopy();
 
-		LevelEditorState.HighlightedObject = null;
+		LevelEditorState.ClearHighlight();
 		LevelEditorState.UpdateSelectedWorldObject();
+		LevelEditorState.UpdateSelectedEntity();
 	}
 
 	public static void Track(string editDescription)
@@ -201,7 +202,9 @@ public static class LevelState
 	private static void ClearState()
 	{
 		LevelEditorState.SetSelectedWorldObject(null);
+		LevelEditorState.SetSelectedEntity(null);
 		WorldObjectEditorWindow.Reset();
+		EntityEditorWindow.Reset();
 	}
 
 	public static bool ReloadAssets(string? levelFilePath)

@@ -1,12 +1,17 @@
-using OneOf;
-using SimpleLevelEditor.Model.EntityTypes;
+using SimpleLevelEditor.Model.EntityShapes;
 
 namespace SimpleLevelEditor.Model;
 
 public record Entity
 {
+	/// <summary>
+	/// The Id is only used to keep track of the object in the editor.
+	/// </summary>
+	public required int Id;
+
 	public required string Name;
-	public required OneOf<Point, Sphere, Aabb, StandingCylinder> Shape;
+	public required Vector3 Position;
+	public required IEntityShape Shape;
 	public required List<EntityProperty> Properties;
 
 	public Entity DeepCopy()
@@ -15,10 +20,8 @@ public record Entity
 		for (int i = 0; i < Properties.Count; i++)
 			newEntityProperties.Add(Properties[i].DeepCopy());
 
-		return new()
+		return this with
 		{
-			Name = Name,
-			Shape = Shape,
 			Properties = newEntityProperties,
 		};
 	}
