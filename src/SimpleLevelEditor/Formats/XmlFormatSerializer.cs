@@ -84,7 +84,7 @@ public static class XmlFormatSerializer
 					Position = DataFormatter.ReadVector3(reader.GetAttribute("Position") ?? throw _invalidFormat),
 					Rotation = DataFormatter.ReadVector3(reader.GetAttribute("Rotation") ?? throw _invalidFormat),
 					Scale = DataFormatter.ReadVector3(reader.GetAttribute("Scale") ?? throw _invalidFormat),
-					Flags = reader.GetAttribute("Flags")?.Split(',').Select(s => s.Trim()).ToList() ?? new List<string>(),
+					Flags = reader.GetAttribute("Flags")?.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries).ToList() ?? new List<string>(),
 				};
 				worldObjects.Add(worldObject);
 			}
@@ -192,7 +192,7 @@ public static class XmlFormatSerializer
 			writer.WriteAttributeString("Position", DataFormatter.Write(worldObject.Position));
 			writer.WriteAttributeString("Rotation", DataFormatter.Write(worldObject.Rotation));
 			writer.WriteAttributeString("Scale", DataFormatter.Write(worldObject.Scale));
-			writer.WriteAttributeString("Flags", string.Join(", ", worldObject.Flags.Select(s => s.Trim())));
+			writer.WriteAttributeString("Flags", string.Join(',', worldObject.Flags.Select(s => s.Trim())));
 			writer.WriteEndElement();
 		}
 

@@ -96,18 +96,20 @@ public static class MeshContainer
 
 	private static Mesh GetMesh(ModelData modelData, MeshData meshData)
 	{
-		// TODO: Do not duplicate vertices.
 		Vertex[] outVertices = new Vertex[meshData.Faces.Count];
 		uint[] outFaces = new uint[meshData.Faces.Count];
-		for (int j = 0; j < meshData.Faces.Count; j++)
+		for (int i = 0; i < meshData.Faces.Count; i++)
 		{
-			ushort t = meshData.Faces[j].Texture;
+			ushort v = meshData.Faces[i].Position;
+			ushort vt = meshData.Faces[i].Texture;
+			ushort vn = meshData.Faces[i].Normal;
 
-			outVertices[j] = new(
-				modelData.Positions[meshData.Faces[j].Position - 1],
-				modelData.Textures.Count > t - 1 && t > 0 ? modelData.Textures[t - 1] : default, // TODO: Separate face type?
-				modelData.Normals[meshData.Faces[j].Normal - 1]);
-			outFaces[j] = (uint)j;
+			Vector3 position = modelData.Positions.Count > v - 1 && v > 0 ? modelData.Positions[v - 1] : default;
+			Vector2 texture = modelData.Textures.Count > vt - 1 && vt > 0 ? modelData.Textures[vt - 1] : default;
+			Vector3 normal = modelData.Normals.Count > vn - 1 && vn > 0 ? modelData.Normals[vn - 1] : default;
+
+			outVertices[i] = new(position, texture, normal);
+			outFaces[i] = (uint)i;
 		}
 
 		return new(outVertices, outFaces);
@@ -116,18 +118,22 @@ public static class MeshContainer
 	private static unsafe uint CreateFromMesh(Mesh mesh)
 	{
 		uint vao = Graphics.Gl.GenVertexArray();
+		uint vbo = Graphics.Gl.GenBuffer();
+
 		Graphics.Gl.BindVertexArray(vao);
 
-		uint vbo = Graphics.Gl.GenBuffer();
 		Graphics.Gl.BindBuffer(BufferTargetARB.ArrayBuffer, vbo);
-
-		GlUtils.BufferData(BufferTargetARB.ArrayBuffer, mesh.Vertices, BufferUsageARB.StaticDraw);
+		fixed (Vertex* v = &mesh.Vertices[0])
+			Graphics.Gl.BufferData(BufferTargetARB.ArrayBuffer, (uint)(mesh.Vertices.Length * sizeof(Vertex)), v, BufferUsageARB.StaticDraw);
 
 		Graphics.Gl.EnableVertexAttribArray(0);
 		Graphics.Gl.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, (uint)sizeof(Vertex), (void*)0);
 
 		Graphics.Gl.EnableVertexAttribArray(1);
 		Graphics.Gl.VertexAttribPointer(1, 2, VertexAttribPointerType.Float, false, (uint)sizeof(Vertex), (void*)(3 * sizeof(float)));
+
+		Graphics.Gl.EnableVertexAttribArray(2);
+		Graphics.Gl.VertexAttribPointer(2, 3, VertexAttribPointerType.Float, false, (uint)sizeof(Vertex), (void*)(5 * sizeof(float)));
 
 		Graphics.Gl.BindVertexArray(0);
 		Graphics.Gl.BindBuffer(BufferTargetARB.ArrayBuffer, 0);

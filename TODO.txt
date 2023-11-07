@@ -1,8 +1,6 @@
 HIGH PRIORITY
 - Entity editor
-	- Add/remove entities
-	- Add/remove entity properties
-	- Edit entity properties
+	- Move entities with Move button
 
 MEDIUM PRIORITY
 - Fix z-fighting with grid lines
