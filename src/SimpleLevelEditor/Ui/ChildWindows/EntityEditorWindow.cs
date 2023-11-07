@@ -101,25 +101,46 @@ public static class EntityEditorWindow
 			if (ImGui.BeginCombo(Inline.Span($"Property Type##{i}"), _typeNames[property.Value.Value.GetType()]))
 			{
 				if (ImGui.Selectable(_typeNames[typeof(bool)], property.Value.Value is bool))
+				{
 					property.Value = false;
+					LevelState.Track("Changed entity property value type");
+				}
 
 				if (ImGui.Selectable(_typeNames[typeof(int)], property.Value.Value is int))
+				{
 					property.Value = 0;
+					LevelState.Track("Changed entity property value type");
+				}
 
 				if (ImGui.Selectable(_typeNames[typeof(float)], property.Value.Value is float))
+				{
 					property.Value = 0f;
+					LevelState.Track("Changed entity property value type");
+				}
 
 				if (ImGui.Selectable(_typeNames[typeof(Vector2)], property.Value.Value is Vector2))
+				{
 					property.Value = Vector2.Zero;
+					LevelState.Track("Changed entity property value type");
+				}
 
 				if (ImGui.Selectable(_typeNames[typeof(Vector3)], property.Value.Value is Vector3))
+				{
 					property.Value = Vector3.Zero;
+					LevelState.Track("Changed entity property value type");
+				}
 
 				if (ImGui.Selectable(_typeNames[typeof(Vector4)], property.Value.Value is Vector4))
+				{
 					property.Value = Vector4.Zero;
+					LevelState.Track("Changed entity property value type");
+				}
 
 				if (ImGui.Selectable(_typeNames[typeof(string)], property.Value.Value is string))
+				{
 					property.Value = string.Empty;
+					LevelState.Track("Changed entity property value type");
+				}
 
 				entity.Properties[i] = property;
 
@@ -137,6 +158,9 @@ public static class EntityEditorWindow
 				string s when ImGui.InputText(Inline.Span($"##property_value{i}"), ref s, 32) => s,
 				_ => entity.Properties[i].Value,
 			};
+
+			if (ImGui.IsItemDeactivatedAfterEdit())
+				LevelState.Track("Changed entity property value");
 
 			if (ImGui.Button(Inline.Span($"Delete Property##{i}")))
 			{
