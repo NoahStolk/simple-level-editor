@@ -108,6 +108,8 @@ public static class MeshContainer
 			Vector2 texture = modelData.Textures.Count > vt - 1 && vt > 0 ? modelData.Textures[vt - 1] : default;
 			Vector3 normal = modelData.Normals.Count > vn - 1 && vn > 0 ? modelData.Normals[vn - 1] : default;
 
+			texture = texture with { Y = 1 - texture.Y };
+
 			outVertices[i] = new(position, texture, normal);
 			outFaces[i] = (uint)i;
 		}
