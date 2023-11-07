@@ -2,7 +2,6 @@ using Detach.Parsers.Texture;
 using Detach.Parsers.Texture.TgaFormat;
 using Silk.NET.OpenGL;
 using SimpleLevelEditor.State;
-using SimpleLevelEditor.Utils;
 
 namespace SimpleLevelEditor.Rendering;
 

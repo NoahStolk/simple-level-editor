@@ -2,7 +2,6 @@ using ImGuiNET;
 using Silk.NET.GLFW;
 using Silk.NET.OpenGL;
 using SimpleLevelEditor.Extensions;
-using SimpleLevelEditor.Utils;
 using System.Runtime.InteropServices;
 
 namespace SimpleLevelEditor;

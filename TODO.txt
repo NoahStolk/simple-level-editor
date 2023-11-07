@@ -1,14 +1,8 @@
 HIGH PRIORITY
-- Entity editor
-	- Move entities with Move button
 
 MEDIUM PRIORITY
 - Fix z-fighting with grid lines
 - Save state indicated by asterisk in title bar
-- Read textures upside down to be compatible with Blender
-- Add texture UV sliders?
-- Multiple selection
-	- Hold shift to select multiple meshes?
 - Settings
 	- FOV
 	- Look speed
@@ -18,6 +12,9 @@ MEDIUM PRIORITY
 
 BACKLOG
 - Render mesh and texture previews
+- Multiple selection
+	- Hold shift to select multiple meshes?
+- Add texture UV sliders?
 
 UI
 - World object editor mesh/texture grids should scale with window height just like level assets lists
