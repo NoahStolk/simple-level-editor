@@ -1,4 +1,5 @@
 HIGH PRIORITY
+- Fix entity name being copied when selecting a different entity while the text box is active.
 
 MEDIUM PRIORITY
 - Fix z-fighting with grid lines

@@ -48,7 +48,7 @@ public static class LevelState
 	private static byte[] GetBytes(Level3dData obj)
 	{
 		using MemoryStream ms = new();
-		XmlFormatSerializer.WriteLevel(ms, obj, false);
+		XmlFormatSerializer.WriteLevel(ms, obj, true);
 		return ms.ToArray();
 	}
 
