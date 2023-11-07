@@ -62,7 +62,7 @@ public sealed class ImGuiController
 
 	#region Initialization
 
-	private static void RecreateFontDeviceTexture()
+	private static unsafe void RecreateFontDeviceTexture()
 	{
 		// Build texture atlas
 		ImGuiIOPtr io = ImGui.GetIO();
@@ -82,7 +82,8 @@ public sealed class ImGuiController
 		Graphics.Gl.TexParameterI(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)GLEnum.Linear);
 		Graphics.Gl.TexParameterI(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)GLEnum.Linear);
 
-		GlUtils.TexImageRgba2D((uint)width, (uint)height, data);
+		fixed (byte* b = data)
+			Graphics.Gl.TexImage2D(TextureTarget.Texture2D, 0, InternalFormat.Rgba, (uint)width, (uint)height, 0, GLEnum.Rgba, PixelType.UnsignedByte, b);
 
 		io.Fonts.SetTexID((IntPtr)textureId);
 	}

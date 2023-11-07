@@ -13,7 +13,8 @@ public static class VaoUtils
 		uint vbo = Gl.GenBuffer();
 		Gl.BindBuffer(BufferTargetARB.ArrayBuffer, vbo);
 
-		GlUtils.BufferData(BufferTargetARB.ArrayBuffer, vertices, BufferUsageARB.StaticDraw);
+		fixed (Vector3* v = &vertices[0])
+			Gl.BufferData(BufferTargetARB.ArrayBuffer, (uint)(vertices.Length * sizeof(Vector3)), v, BufferUsageARB.StaticDraw);
 
 		Gl.EnableVertexAttribArray(0);
 		Gl.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, (uint)sizeof(Vector3), (void*)0);

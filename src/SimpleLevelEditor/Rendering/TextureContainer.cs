@@ -43,7 +43,7 @@ public static class TextureContainer
 		}
 	}
 
-	private static uint CreateFromTexture(uint width, uint height, byte[] pixels)
+	private static unsafe uint CreateFromTexture(uint width, uint height, byte[] pixels)
 	{
 		uint textureId = Graphics.Gl.GenTexture();
 
@@ -54,7 +54,8 @@ public static class TextureContainer
 		Graphics.Gl.TexParameterI(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)GLEnum.Nearest);
 		Graphics.Gl.TexParameterI(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)GLEnum.Nearest);
 
-		GlUtils.TexImageRgba2D(width, height, pixels);
+		fixed (byte* b = pixels)
+			Graphics.Gl.TexImage2D(TextureTarget.Texture2D, 0, InternalFormat.Rgba, width, height, 0, GLEnum.Rgba, PixelType.UnsignedByte, b);
 
 		Graphics.Gl.GenerateMipmap(TextureTarget.Texture2D);
 
