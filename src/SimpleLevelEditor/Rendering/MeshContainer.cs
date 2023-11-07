@@ -4,7 +4,6 @@ using Silk.NET.OpenGL;
 using SimpleLevelEditor.Content.Data;
 using SimpleLevelEditor.State;
 using SimpleLevelEditor.Utils;
-using System.Collections;
 
 namespace SimpleLevelEditor.Rendering;
 
