@@ -142,22 +142,13 @@ public static class WorldObjectEditorWindow
 			Vector2 origin = ImGui.GetCursorScreenPos();
 			for (int i = 0; i < LevelState.Level.Meshes.Count; i++)
 			{
-				Vector2 position = new(i % rowLength * tileSize, MathF.Floor(i / (float)rowLength) * tileSize);
 				string meshName = LevelState.Level.Meshes[i];
 
+				Vector2 localPosition = new(i % rowLength * tileSize, MathF.Floor(i / (float)rowLength) * tileSize);
 				ImDrawListPtr drawList = ImGui.GetWindowDrawList();
-				Vector2 cursorPos = origin + position;
+				Vector2 cursorPos = origin + localPosition;
 
-				ReadOnlySpan<char> displayName = Path.GetFileNameWithoutExtension(meshName.AsSpan());
-				Vector2 displayNameSize = ImGui.CalcTextSize(displayName);
-				Vector2 textOrigin = cursorPos + new Vector2(tileSize / 2f - displayNameSize.X / 2f, 3);
-				drawList.AddRectFilled(textOrigin, textOrigin + displayNameSize, 0xB0000000);
-				drawList.AddText(textOrigin, 0xFFFFFFFF, displayName);
-
-				drawList.AddRect(cursorPos, cursorPos + new Vector2(tileSize), worldObject.Mesh == meshName ? 0xFFFFFFFF : 0xFF444444);
-
-				bool isHovered = ImGui.IsMouseHoveringRect(cursorPos, cursorPos + new Vector2(tileSize));
-				if (ImGui.IsMouseClicked(ImGuiMouseButton.Left) && isHovered)
+				if (AssetTile(meshName, cursorPos, tileSize, drawList, worldObject.Mesh == meshName))
 				{
 					worldObject.Mesh = meshName;
 					LevelState.Track("Changed object mesh");
@@ -176,11 +167,11 @@ public static class WorldObjectEditorWindow
 			Vector2 origin = ImGui.GetCursorScreenPos();
 			for (int i = 0; i < LevelState.Level.Textures.Count; i++)
 			{
-				Vector2 position = new(i % rowLength * tileSize, MathF.Floor(i / (float)rowLength) * tileSize);
 				string textureName = LevelState.Level.Textures[i];
 
+				Vector2 localPosition = new(i % rowLength * tileSize, MathF.Floor(i / (float)rowLength) * tileSize);
 				ImDrawListPtr drawList = ImGui.GetWindowDrawList();
-				Vector2 cursorPos = origin + position;
+				Vector2 cursorPos = origin + localPosition;
 
 				uint? textureId = TextureContainer.GetTexture(textureName);
 				if (textureId.HasValue)
@@ -189,16 +180,7 @@ public static class WorldObjectEditorWindow
 					drawList.AddImage((IntPtr)textureId.Value, cursorPos + new Vector2(padding), cursorPos + new Vector2(tileSize) - new Vector2(padding));
 				}
 
-				ReadOnlySpan<char> displayName = Path.GetFileNameWithoutExtension(textureName.AsSpan());
-				Vector2 displayNameSize = ImGui.CalcTextSize(displayName);
-				Vector2 textOrigin = cursorPos + new Vector2(tileSize / 2f - displayNameSize.X / 2f, 3);
-				drawList.AddRectFilled(textOrigin, textOrigin + displayNameSize, 0xB0000000);
-				drawList.AddText(textOrigin, 0xFFFFFFFF, displayName);
-
-				drawList.AddRect(cursorPos, cursorPos + new Vector2(tileSize), worldObject.Texture == textureName ? 0xFFFFFFFF : 0xFF444444);
-
-				bool isHovered = ImGui.IsMouseHoveringRect(cursorPos, cursorPos + new Vector2(tileSize));
-				if (ImGui.IsMouseClicked(ImGuiMouseButton.Left) && isHovered)
+				if (AssetTile(textureName, cursorPos, tileSize, drawList, worldObject.Texture == textureName))
 				{
 					worldObject.Texture = textureName;
 					LevelState.Track("Changed object texture");
@@ -207,6 +189,31 @@ public static class WorldObjectEditorWindow
 		}
 
 		ImGui.EndChild(); // End Texture
+
+		static bool AssetTile(string assetName, Vector2 cursorPos, float tileSize, ImDrawListPtr drawList, bool isSelected)
+		{
+			ReadOnlySpan<char> displayName = Path.GetFileNameWithoutExtension(assetName.AsSpan());
+			Vector2 displayNameSize = ImGui.CalcTextSize(displayName);
+			Vector2 textOrigin = cursorPos + new Vector2(tileSize / 2f - displayNameSize.X / 2f, 3);
+			drawList.AddRectFilled(textOrigin, textOrigin + displayNameSize, 0xB0000000);
+			drawList.AddText(textOrigin, 0xFFFFFFFF, displayName);
+
+			bool isHovered = ImGui.IsMouseHoveringRect(cursorPos, cursorPos + new Vector2(tileSize));
+			drawList.AddRect(cursorPos, cursorPos + new Vector2(tileSize), GetBorderColor(isSelected, isHovered));
+
+			return isHovered && ImGui.IsMouseClicked(ImGuiMouseButton.Left);
+		}
+
+		static uint GetBorderColor(bool isSelected, bool isHovered)
+		{
+			return (isSelected, isHovered) switch
+			{
+				(true, true) => 0xFF88FFFF,
+				(true, false) => 0xFFFFFFFF,
+				(false, true) => 0xFF448888,
+				(false, false) => 0xFF444444,
+			};
+		}
 	}
 
 	private static bool RenderResetButton(ReadOnlySpan<char> label)
