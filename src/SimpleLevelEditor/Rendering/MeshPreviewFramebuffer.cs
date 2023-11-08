@@ -11,6 +11,7 @@ public class MeshPreviewFramebuffer
 {
 	private readonly MeshContainer.Entry _mesh;
 	private readonly float _zoom;
+	private readonly Vector3 _origin;
 	private Vector2 _cachedFramebufferSize;
 	private Matrix4x4 _projection;
 	private float _timer;
@@ -23,6 +24,8 @@ public class MeshPreviewFramebuffer
 
 		Vector3 distance = mesh.BoundingMax - mesh.BoundingMin;
 		_zoom = distance.Length();
+
+		_origin = (mesh.BoundingMin + mesh.BoundingMax) / 2;
 	}
 
 	public uint FramebufferTextureId { get; private set; }
@@ -107,7 +110,7 @@ public class MeshPreviewFramebuffer
 		Gl.UseProgram(lineShader.Id);
 
 		Quaternion cameraRotation = Quaternion.CreateFromYawPitchRoll(_timer, 0.5f, 0);
-		Vector3 cameraPosition = Vector3.Transform(new(0, 0, -_zoom), cameraRotation);
+		Vector3 cameraPosition = _origin + Vector3.Transform(new(0, 0, -_zoom), cameraRotation);
 		Vector3 upDirection = Vector3.Transform(Vector3.UnitY, cameraRotation);
 		Vector3 lookDirection = Vector3.Transform(Vector3.UnitZ, cameraRotation);
 		Matrix4x4 viewMatrix = Matrix4x4.CreateLookAt(cameraPosition, cameraPosition + lookDirection, upDirection);
