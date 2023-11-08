@@ -220,10 +220,6 @@ public static class WorldObjectEditorWindow
 		return false;
 	}
 
-	private static void RenderAssetsGrid(IReadOnlyList<string> items, ref string selectedItem)
-	{
-	}
-
 	private static void ScaleProportionally(ref Vector3 scale, float value)
 	{
 		scale.X = value;
