@@ -110,7 +110,7 @@ public static class WorldObjectEditorWindow
 		{
 			string value = worldObject.Flags[i];
 
-			if (ImGui.InputText($"##flags{i}", ref value, 32))
+			if (ImGui.InputText($"##flag_{worldObject.Id}_{i}", ref value, 32))
 				worldObject.Flags[i] = value;
 
 			if (ImGui.IsItemDeactivatedAfterEdit())

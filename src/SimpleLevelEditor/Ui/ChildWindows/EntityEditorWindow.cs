@@ -48,7 +48,7 @@ public static class EntityEditorWindow
 
 	private static void RenderEntityInputs(Entity entity)
 	{
-		ImGui.InputText("Name", ref entity.Name, 32);
+		ImGui.InputText($"Name##{entity.Id}_name", ref entity.Name, 32);
 		if (ImGui.IsItemDeactivatedAfterEdit())
 			LevelState.Track("Changed entity name");
 
