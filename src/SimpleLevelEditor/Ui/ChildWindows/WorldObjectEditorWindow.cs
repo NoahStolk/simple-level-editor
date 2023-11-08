@@ -148,6 +148,18 @@ public static class WorldObjectEditorWindow
 				ImDrawListPtr drawList = ImGui.GetWindowDrawList();
 				Vector2 cursorPos = origin + localPosition;
 
+				MeshPreviewFramebuffer? framebuffer = MeshContainer.GetMeshPreviewFramebuffer(meshName);
+				if (framebuffer != null)
+				{
+					const float padding = 12;
+					Vector2 start = cursorPos + new Vector2(padding);
+					Vector2 end = cursorPos + new Vector2(tileSize) - new Vector2(padding);
+					Vector2 size = end - start;
+
+					framebuffer.Render(size);
+					drawList.AddImage((IntPtr)framebuffer.FramebufferTextureId, start, end, Vector2.UnitY, Vector2.UnitX);
+				}
+
 				if (AssetTile(meshName, cursorPos, tileSize, drawList, worldObject.Mesh == meshName))
 				{
 					worldObject.Mesh = meshName;

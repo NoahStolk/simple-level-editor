@@ -10,6 +10,7 @@ namespace SimpleLevelEditor.Rendering;
 public static class MeshContainer
 {
 	private static readonly Dictionary<string, Entry> _meshes = new();
+	private static readonly Dictionary<string, MeshPreviewFramebuffer> _meshPreviewFramebuffers = new();
 
 	public static Entry? GetMesh(string path)
 	{
@@ -20,17 +21,30 @@ public static class MeshContainer
 		return null;
 	}
 
+	public static MeshPreviewFramebuffer? GetMeshPreviewFramebuffer(string path)
+	{
+		if (_meshPreviewFramebuffers.TryGetValue(path, out MeshPreviewFramebuffer? data))
+			return data;
+
+		DebugState.AddWarning($"Cannot find mesh preview framebuffer '{path}'");
+		return null;
+	}
+
 	public static void Rebuild(string? levelFilePath)
 	{
+		foreach (KeyValuePair<string, MeshPreviewFramebuffer> kvp in _meshPreviewFramebuffers)
+			kvp.Value.Destroy();
+
 		_meshes.Clear();
+		_meshPreviewFramebuffers.Clear();
 
 		string? levelDirectory = Path.GetDirectoryName(levelFilePath);
 		if (levelDirectory == null)
 			return;
 
-		foreach (string modelPath in LevelState.Level.Meshes)
+		foreach (string meshPath in LevelState.Level.Meshes)
 		{
-			string absolutePath = Path.Combine(levelDirectory, modelPath);
+			string absolutePath = Path.Combine(levelDirectory, meshPath);
 
 			if (!File.Exists(absolutePath))
 				continue;
@@ -82,7 +96,9 @@ public static class MeshContainer
 				lineIndices.Add(edge.Key.B);
 			}
 
-			_meshes.Add(modelPath, new(mainMesh, vao, lineIndices.ToArray(), VaoUtils.CreateLineVao(modelData.Positions.ToArray()), boundingMin, boundingMax));
+			Entry entry = new(mainMesh, vao, lineIndices.ToArray(), VaoUtils.CreateLineVao(modelData.Positions.ToArray()), boundingMin, boundingMax);
+			_meshes.Add(meshPath, entry);
+			_meshPreviewFramebuffers.Add(meshPath, new(entry));
 		}
 
 		void AddEdge(IDictionary<Edge, List<Vector3>> edges, Edge d, Vector3 normal)
