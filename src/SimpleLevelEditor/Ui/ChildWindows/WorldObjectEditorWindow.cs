@@ -166,6 +166,8 @@ public static class WorldObjectEditorWindow
 					LevelState.Track("Changed object mesh");
 				}
 			}
+
+			AddScrollMarker(LevelState.Level.Meshes.Count, rowLength, tileSize);
 		}
 
 		ImGui.EndChild(); // End Mesh
@@ -198,6 +200,8 @@ public static class WorldObjectEditorWindow
 					LevelState.Track("Changed object texture");
 				}
 			}
+
+			AddScrollMarker(LevelState.Level.Textures.Count, rowLength, tileSize);
 		}
 
 		ImGui.EndChild(); // End Texture
@@ -226,6 +230,12 @@ public static class WorldObjectEditorWindow
 				(false, false) => 0xFF444444,
 			};
 		}
+	}
+
+	private static void AddScrollMarker(int tileCount, int rowLength, float tileSize)
+	{
+		int rows = (int)MathF.Ceiling(tileCount / (float)rowLength);
+		ImGui.InvisibleButton("scroll_marker", new(0, rows * tileSize));
 	}
 
 	private static bool RenderResetButton(ReadOnlySpan<char> label)
