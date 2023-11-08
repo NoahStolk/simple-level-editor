@@ -1,5 +1,6 @@
 using ImGuiNET;
 using SimpleLevelEditor.Model;
+using SimpleLevelEditor.Rendering;
 using SimpleLevelEditor.State;
 
 namespace SimpleLevelEditor.Ui.ChildWindows;
@@ -130,17 +131,80 @@ public static class WorldObjectEditorWindow
 			LevelState.Track("Added object flag");
 		}
 
+		const int rowLength = 4;
+
 		ImGui.SeparatorText("Mesh");
 
 		if (ImGui.BeginChild("Mesh", new(0, 280), true))
-			RenderAssetsGrid(LevelState.Level.Meshes, ref worldObject.Mesh);
+		{
+			float childWidth = ImGui.GetContentRegionAvail().X;
+			float tileSize = childWidth / rowLength;
+			Vector2 origin = ImGui.GetCursorScreenPos();
+			for (int i = 0; i < LevelState.Level.Meshes.Count; i++)
+			{
+				Vector2 position = new(i % rowLength * tileSize, MathF.Floor(i / (float)rowLength) * tileSize);
+				string meshName = LevelState.Level.Meshes[i];
+
+				ImDrawListPtr drawList = ImGui.GetWindowDrawList();
+				Vector2 cursorPos = origin + position;
+
+				ReadOnlySpan<char> displayName = Path.GetFileNameWithoutExtension(meshName.AsSpan());
+				Vector2 displayNameSize = ImGui.CalcTextSize(displayName);
+				Vector2 textOrigin = cursorPos + new Vector2(tileSize / 2f - displayNameSize.X / 2f, 3);
+				drawList.AddRectFilled(textOrigin, textOrigin + displayNameSize, 0xB0000000);
+				drawList.AddText(textOrigin, 0xFFFFFFFF, displayName);
+
+				drawList.AddRect(cursorPos, cursorPos + new Vector2(tileSize), worldObject.Mesh == meshName ? 0xFFFFFFFF : 0xFF444444);
+
+				bool isHovered = ImGui.IsMouseHoveringRect(cursorPos, cursorPos + new Vector2(tileSize));
+				if (ImGui.IsMouseClicked(ImGuiMouseButton.Left) && isHovered)
+				{
+					worldObject.Mesh = meshName;
+					LevelState.Track("Changed object mesh");
+				}
+			}
+		}
 
 		ImGui.EndChild(); // End Mesh
 
 		ImGui.SeparatorText("Texture");
 
 		if (ImGui.BeginChild("Texture", new(0, 280), true))
-			RenderAssetsGrid(LevelState.Level.Textures, ref worldObject.Texture);
+		{
+			float childWidth = ImGui.GetContentRegionAvail().X;
+			float tileSize = childWidth / rowLength;
+			Vector2 origin = ImGui.GetCursorScreenPos();
+			for (int i = 0; i < LevelState.Level.Textures.Count; i++)
+			{
+				Vector2 position = new(i % rowLength * tileSize, MathF.Floor(i / (float)rowLength) * tileSize);
+				string textureName = LevelState.Level.Textures[i];
+
+				ImDrawListPtr drawList = ImGui.GetWindowDrawList();
+				Vector2 cursorPos = origin + position;
+
+				uint? textureId = TextureContainer.GetTexture(textureName);
+				if (textureId.HasValue)
+				{
+					const float padding = 12;
+					drawList.AddImage((IntPtr)textureId.Value, cursorPos + new Vector2(padding), cursorPos + new Vector2(tileSize) - new Vector2(padding));
+				}
+
+				ReadOnlySpan<char> displayName = Path.GetFileNameWithoutExtension(textureName.AsSpan());
+				Vector2 displayNameSize = ImGui.CalcTextSize(displayName);
+				Vector2 textOrigin = cursorPos + new Vector2(tileSize / 2f - displayNameSize.X / 2f, 3);
+				drawList.AddRectFilled(textOrigin, textOrigin + displayNameSize, 0xB0000000);
+				drawList.AddText(textOrigin, 0xFFFFFFFF, displayName);
+
+				drawList.AddRect(cursorPos, cursorPos + new Vector2(tileSize), worldObject.Texture == textureName ? 0xFFFFFFFF : 0xFF444444);
+
+				bool isHovered = ImGui.IsMouseHoveringRect(cursorPos, cursorPos + new Vector2(tileSize));
+				if (ImGui.IsMouseClicked(ImGuiMouseButton.Left) && isHovered)
+				{
+					worldObject.Texture = textureName;
+					LevelState.Track("Changed object texture");
+				}
+			}
+		}
 
 		ImGui.EndChild(); // End Texture
 	}
@@ -158,27 +222,6 @@ public static class WorldObjectEditorWindow
 
 	private static void RenderAssetsGrid(IReadOnlyList<string> items, ref string selectedItem)
 	{
-		const int rowLength = 4;
-
-		if (ImGui.BeginTable("Grid", rowLength))
-		{
-			for (int i = 0; i < items.Count; i++)
-			{
-				if (i % rowLength == 0)
-					ImGui.TableNextRow();
-
-				ImGui.TableNextColumn();
-				string assetName = items[i];
-
-				if (ImGui.Selectable(Path.GetFileNameWithoutExtension(assetName.AsSpan()), selectedItem == assetName, ImGuiSelectableFlags.None, new(0, 128)))
-				{
-					selectedItem = assetName;
-					LevelState.Track("Changed object asset");
-				}
-			}
-
-			ImGui.EndTable();
-		}
 	}
 
 	private static void ScaleProportionally(ref Vector3 scale, float value)
