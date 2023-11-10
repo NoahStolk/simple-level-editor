@@ -13,12 +13,12 @@ public static class LevelEditorSelectionMenu
 	public static void RenderSelectionMenu(Vector2 framebufferSize, ImDrawListPtr drawList, Vector2 cursorScreenPos, Plane nearPlane, Vector2 normalizedMousePosition, float gridSnap)
 	{
 		if (LevelEditorState.SelectedWorldObject != null)
-			RenderSelectionMenu(framebufferSize, drawList, cursorScreenPos, nearPlane, normalizedMousePosition, gridSnap, ref LevelEditorState.SelectedWorldObject.Position, LevelEditorState.SelectedWorldObject.Rotation);
+			RenderSelectionMenu(framebufferSize, drawList, cursorScreenPos, nearPlane, normalizedMousePosition, gridSnap, ref LevelEditorState.SelectedWorldObject.Position, LevelEditorState.SelectedWorldObject.Rotation, "world object");
 		else if (LevelEditorState.SelectedEntity != null)
-			RenderSelectionMenu(framebufferSize, drawList, cursorScreenPos, nearPlane, normalizedMousePosition, gridSnap, ref LevelEditorState.SelectedEntity.Position, Vector3.Zero);
+			RenderSelectionMenu(framebufferSize, drawList, cursorScreenPos, nearPlane, normalizedMousePosition, gridSnap, ref LevelEditorState.SelectedEntity.Position, Vector3.Zero, "entity");
 	}
 
-	private static void RenderSelectionMenu(Vector2 framebufferSize, ImDrawListPtr drawList, Vector2 cursorScreenPos, Plane nearPlane, Vector2 normalizedMousePosition, float gridSnap, ref Vector3 objectPosition, Vector3 objectRotation)
+	private static void RenderSelectionMenu(Vector2 framebufferSize, ImDrawListPtr drawList, Vector2 cursorScreenPos, Plane nearPlane, Vector2 normalizedMousePosition, float gridSnap, ref Vector3 objectPosition, Vector3 objectRotation, ReadOnlySpan<char> name)
 	{
 		Vector2? posOrigin = GetPosition2d(framebufferSize, cursorScreenPos, nearPlane, objectPosition);
 		if (!posOrigin.HasValue)
@@ -57,7 +57,7 @@ public static class LevelEditorSelectionMenu
 		}
 
 		if (wasMoveButtonActive)
-			LevelState.Track("Moved world object");
+			LevelState.Track($"Moved {name}");
 
 		Matrix4x4 rotationMatrix = MathUtils.CreateRotationMatrixFromEulerAngles(MathUtils.ToRadians(objectRotation));
 		Vector2? posX = GetPosition2d(framebufferSize, cursorScreenPos, nearPlane, objectPosition + Vector3.Transform(Vector3.UnitX, rotationMatrix));
