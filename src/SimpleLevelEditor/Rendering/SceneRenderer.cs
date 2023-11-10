@@ -300,7 +300,7 @@ public static class SceneRenderer
 			}
 			else
 			{
-				Gl.UniformMatrix4x4(modelUniform, Matrix4x4.CreateScale(0.1f) * Matrix4x4.CreateTranslation(entity.Position));
+				Gl.UniformMatrix4x4(modelUniform, Matrix4x4.CreateScale(0.3f) * Matrix4x4.CreateTranslation(entity.Position));
 				Gl.UniformVector4(colorUniform, color);
 				Gl.BindVertexArray(_pointVao);
 				Gl.DrawArrays(PrimitiveType.Lines, 0, (uint)_pointVertices.Length);
