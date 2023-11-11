@@ -48,7 +48,7 @@ public static class EntityEditorWindow
 
 	private static void RenderEntityInputs(Entity entity)
 	{
-		ImGui.InputText($"Name##{entity.Id}_name", ref entity.Name, 32);
+		ImGui.InputText($"Name##{entity.Id}", ref entity.Name, 32);
 		if (ImGui.IsItemDeactivatedAfterEdit())
 			LevelState.Track("Changed entity name");
 
@@ -58,7 +58,7 @@ public static class EntityEditorWindow
 		if (ImGui.IsItemDeactivatedAfterEdit())
 			LevelState.Track("Changed entity position");
 
-		if (RenderResetButton("Position_reset"))
+		if (RenderResetButton(Inline.Span($"Position_reset##{entity.Id}")))
 		{
 			entity.Position = Vector3.Zero;
 			LevelState.Track("Changed entity position");
@@ -66,15 +66,15 @@ public static class EntityEditorWindow
 
 		ImGui.SeparatorText("Shape");
 
-		if (ImGui.BeginCombo("Shape Type", entity.Shape.GetType().Name))
+		if (ImGui.BeginCombo(Inline.Span($"Shape Type##{entity.Id}"), entity.Shape.GetType().Name))
 		{
-			if (ImGui.Selectable("Point", entity.Shape is Point))
+			if (ImGui.Selectable(Inline.Span($"Point##{entity.Id}"), entity.Shape is Point))
 				entity.Shape = new Point();
 
-			if (ImGui.Selectable("Sphere", entity.Shape is Sphere))
+			if (ImGui.Selectable(Inline.Span($"Sphere##{entity.Id}"), entity.Shape is Sphere))
 				entity.Shape = new Sphere(2);
 
-			if (ImGui.Selectable("Aabb", entity.Shape is Aabb))
+			if (ImGui.Selectable(Inline.Span($"Aabb##{entity.Id}"), entity.Shape is Aabb))
 				entity.Shape = new Aabb(-Vector3.One, Vector3.One);
 
 			ImGui.EndCombo();
@@ -82,8 +82,8 @@ public static class EntityEditorWindow
 
 		switch (entity.Shape)
 		{
-			case Sphere sphere: RenderSphereInputs(sphere); break;
-			case Aabb aabb: RenderAabbInputs(aabb); break;
+			case Sphere sphere: RenderSphereInputs(entity.Id, sphere); break;
+			case Aabb aabb: RenderAabbInputs(entity.Id, aabb); break;
 		}
 
 		ImGui.SeparatorText("Properties");
@@ -92,13 +92,13 @@ public static class EntityEditorWindow
 		{
 			EntityProperty property = entity.Properties[i];
 
-			if (ImGui.InputText(Inline.Span($"Property Key##{i}"), ref property.Key, 32))
+			if (ImGui.InputText(Inline.Span($"Property Key##{entity.Id}_{i}"), ref property.Key, 32))
 				entity.Properties[i] = property;
 
 			if (ImGui.IsItemDeactivatedAfterEdit())
 				LevelState.Track("Changed entity property key name");
 
-			if (ImGui.BeginCombo(Inline.Span($"Property Type##{i}"), _typeNames[property.Value.Value.GetType()]))
+			if (ImGui.BeginCombo(Inline.Span($"Property Type##{entity.Id}_{i}"), _typeNames[property.Value.Value.GetType()]))
 			{
 				if (ImGui.Selectable(_typeNames[typeof(bool)], property.Value.Value is bool))
 				{
@@ -149,20 +149,20 @@ public static class EntityEditorWindow
 
 			entity.Properties[i].Value = property.Value.Value switch
 			{
-				bool b when ImGui.Checkbox(Inline.Span($"##property_value{i}"), ref b) => b,
-				int int32 when ImGui.DragInt(Inline.Span($"##property_value{i}"), ref int32) => int32,
-				float f when ImGui.DragFloat(Inline.Span($"##property_value{i}"), ref f) => f,
-				Vector2 v2 when ImGui.DragFloat2(Inline.Span($"##property_value{i}"), ref v2) => v2,
-				Vector3 v3 when ImGui.DragFloat3(Inline.Span($"##property_value{i}"), ref v3) => v3,
-				Vector4 v4 when ImGui.DragFloat4(Inline.Span($"##property_value{i}"), ref v4) => v4,
-				string s when ImGui.InputText(Inline.Span($"##property_value{i}"), ref s, 32) => s,
+				bool b when ImGui.Checkbox(Inline.Span($"##property_value{entity.Id}_{i}"), ref b) => b,
+				int int32 when ImGui.DragInt(Inline.Span($"##property_value{entity.Id}_{i}"), ref int32) => int32,
+				float f when ImGui.DragFloat(Inline.Span($"##property_value{entity.Id}_{i}"), ref f) => f,
+				Vector2 v2 when ImGui.DragFloat2(Inline.Span($"##property_value{entity.Id}_{i}"), ref v2) => v2,
+				Vector3 v3 when ImGui.DragFloat3(Inline.Span($"##property_value{entity.Id}_{i}"), ref v3) => v3,
+				Vector4 v4 when ImGui.DragFloat4(Inline.Span($"##property_value{entity.Id}_{i}"), ref v4) => v4,
+				string s when ImGui.InputText(Inline.Span($"##property_value{entity.Id}_{i}"), ref s, 32) => s,
 				_ => entity.Properties[i].Value,
 			};
 
 			if (ImGui.IsItemDeactivatedAfterEdit())
 				LevelState.Track("Changed entity property value");
 
-			if (ImGui.Button(Inline.Span($"Delete Property##{i}")))
+			if (ImGui.Button(Inline.Span($"Delete Property##{entity.Id}_{i}")))
 			{
 				entity.Properties.RemoveAt(i);
 				LevelState.Track("Removed entity property");
@@ -182,24 +182,24 @@ public static class EntityEditorWindow
 		}
 	}
 
-	private static void RenderSphereInputs(Sphere sphere)
+	private static void RenderSphereInputs(int entityId, Sphere sphere)
 	{
 		ImGui.Text("Radius");
 
-		ImGui.DragFloat("##radius", ref sphere.Radius, 0.1f, 0.1f, float.MaxValue, "%.1f");
+		ImGui.DragFloat(Inline.Span($"##radius{entityId}"), ref sphere.Radius, 0.1f, 0.1f, float.MaxValue, "%.1f");
 		if (ImGui.IsItemDeactivatedAfterEdit())
 			LevelState.Track("Changed entity radius");
 	}
 
-	private static void RenderAabbInputs(Aabb aabb)
+	private static void RenderAabbInputs(int entityId, Aabb aabb)
 	{
 		ImGui.Text("Box Min");
 
-		ImGui.DragFloat3("##box_min", ref aabb.Min, 0.1f, float.MinValue, -0.1f, "%.1f");
+		ImGui.DragFloat3(Inline.Span($"##box_min{entityId}"), ref aabb.Min, 0.1f, float.MinValue, -0.1f, "%.1f");
 		if (ImGui.IsItemDeactivatedAfterEdit())
 			LevelState.Track("Changed entity box min");
 
-		if (RenderResetButton("Box_min_reset"))
+		if (RenderResetButton(Inline.Span($"Box_min_reset{entityId}")))
 		{
 			aabb.Min = -Vector3.One;
 			LevelState.Track("Changed entity box min");
@@ -207,11 +207,11 @@ public static class EntityEditorWindow
 
 		ImGui.Text("Box Max");
 
-		ImGui.DragFloat3("##box_max", ref aabb.Max, 0.1f, 0.1f, float.MaxValue, "%.1f");
+		ImGui.DragFloat3(Inline.Span($"##box_max{entityId}"), ref aabb.Max, 0.1f, 0.1f, float.MaxValue, "%.1f");
 		if (ImGui.IsItemDeactivatedAfterEdit())
 			LevelState.Track("Changed entity box max");
 
-		if (RenderResetButton("Box_max_reset"))
+		if (RenderResetButton(Inline.Span($"Box_max_reset{entityId}")))
 		{
 			aabb.Max = Vector3.One;
 			LevelState.Track("Changed entity box max");

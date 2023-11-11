@@ -78,9 +78,9 @@ public static class MainLogic
 
 		Entity referenceEntity = LevelEditorState.SelectedEntity ?? EntityEditorWindow.DefaultEntity;
 
-		Entity entity = referenceEntity with
+		Entity entity = referenceEntity.DeepCopy() with
 		{
-			Id = LevelState.Level.WorldObjects.Count > 0 ? LevelState.Level.WorldObjects.Max(o => o.Id) + 1 : 0,
+			Id = LevelState.Level.Entities.Count > 0 ? LevelState.Level.Entities.Max(o => o.Id) + 1 : 0,
 			Position = LevelEditorState.TargetPosition.Value,
 		};
 		LevelState.Level.Entities.Add(entity);
