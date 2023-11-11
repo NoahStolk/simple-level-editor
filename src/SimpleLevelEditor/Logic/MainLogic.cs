@@ -59,7 +59,7 @@ public static class MainLogic
 		if (referenceWorldObject.Mesh.Length == 0 || referenceWorldObject.Texture.Length == 0)
 			return;
 
-		WorldObject worldObject = referenceWorldObject with
+		WorldObject worldObject = referenceWorldObject.DeepCopy() with
 		{
 			Id = LevelState.Level.WorldObjects.Count > 0 ? LevelState.Level.WorldObjects.Max(o => o.Id) + 1 : 0,
 			Position = LevelEditorState.TargetPosition.Value,
