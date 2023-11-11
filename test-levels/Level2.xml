@@ -85,9 +85,9 @@
     <WorldObject Mesh="mesh\Plane.obj" Texture="tex\Dirt.tga" Position="6 0 10" Rotation="-90 0 0" Scale="2 2 2" Flags="" />
   </WorldObjects>
   <Entities>
-    <Entity Name="" Position="-2.5 0.7 2" Shape="point" />
-    <Entity Name="" Position="-2 1 -5" Shape="sphere 2" />
-    <Entity Name="" Position="8 4 -0" Shape="sphere 2" />
-    <Entity Name="" Position="1 4 7" Shape="aabb -1 -1 -1 1 1 1" />
+    <Entity Name="PlayerSpawn" Position="-2.5 0.7 2" Shape="point" />
+    <Entity Name="TestSphere" Position="-2 1 -5" Shape="sphere 2" />
+    <Entity Name="TestSphere" Position="8 4 -0" Shape="sphere 2" Color="rgba 88 177 34 0" IsActive="bool true" />
+    <Entity Name="TestBox" Position="1 4 7" Shape="aabb -1 -1 -1 1 1 1" />
   </Entities>
 </Level>

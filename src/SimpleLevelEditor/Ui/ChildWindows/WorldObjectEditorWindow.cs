@@ -1,3 +1,4 @@
+using Detach;
 using ImGuiNET;
 using SimpleLevelEditor.Model;
 using SimpleLevelEditor.Rendering;
@@ -111,14 +112,14 @@ public static class WorldObjectEditorWindow
 		{
 			string value = worldObject.Flags[i];
 
-			if (ImGui.InputText($"##flag_{worldObject.Id}_{i}", ref value, 32))
+			if (ImGui.InputText(Inline.Span($"##flag_{worldObject.Id}_{i}"), ref value, 32))
 				worldObject.Flags[i] = value;
 
 			if (ImGui.IsItemDeactivatedAfterEdit())
 				LevelState.Track("Changed object flags");
 
 			ImGui.SameLine();
-			if (ImGui.Button($"X##flags{i}"))
+			if (ImGui.Button(Inline.Span($"X##flags{i}")))
 			{
 				worldObject.Flags.RemoveAt(i);
 				LevelState.Track("Removed object flag");
