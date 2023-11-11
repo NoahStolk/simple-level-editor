@@ -1,4 +1,5 @@
 using SimpleLevelEditor.Model;
+using SimpleLevelEditor.State;
 using System.Text;
 using System.Xml;
 
@@ -105,6 +106,24 @@ public static class XmlFormatSerializer
 		{
 			if (reader is { NodeType: XmlNodeType.Element, Name: "Entity" })
 			{
+				List<EntityProperty> properties = new();
+				for (int i = 0; i < reader.AttributeCount; i++)
+				{
+					reader.MoveToAttribute(i);
+					if (reader.Name is "Name" or "Position" or "Shape")
+						continue;
+
+					int indexOfSpace = reader.Value.IndexOf(' ');
+					string type = reader.Value[..indexOfSpace];
+					string value = reader.Value[(indexOfSpace + 1)..];
+
+					properties.Add(new()
+					{
+						Key = reader.Name,
+						Value = DataFormatter.ReadProperty(value, type),
+					});
+				}
+
 				entityIndex++; // 0 is reserved for the default entity.
 				Entity entity = new()
 				{
@@ -112,7 +131,7 @@ public static class XmlFormatSerializer
 					Name = reader.GetAttribute("Name") ?? throw _invalidFormat,
 					Position = DataFormatter.ReadVector3(reader.GetAttribute("Position") ?? throw _invalidFormat),
 					Shape = DataFormatter.ReadShape(reader.GetAttribute("Shape") ?? throw _invalidFormat),
-					Properties = ReadProperties(reader),
+					Properties = properties,
 				};
 				entities.Add(entity);
 			}
@@ -123,31 +142,6 @@ public static class XmlFormatSerializer
 		}
 
 		return entities;
-	}
-
-	private static List<EntityProperty> ReadProperties(XmlReader reader)
-	{
-		List<EntityProperty> properties = new();
-		while (reader.Read())
-		{
-			if (reader is { NodeType: XmlNodeType.Element, Name: "Property" })
-			{
-				string type = reader.GetAttribute("Type") ?? throw _invalidFormat;
-				string valueString = reader.GetAttribute("Value") ?? throw _invalidFormat;
-				EntityProperty property = new()
-				{
-					Key = reader.GetAttribute("Key") ?? throw _invalidFormat,
-					Value = DataFormatter.ReadProperty(valueString, type),
-				};
-				properties.Add(property);
-			}
-			else if (reader is { NodeType: XmlNodeType.EndElement, Name: "Entity" })
-			{
-				break;
-			}
-		}
-
-		return properties;
 	}
 
 	public static void WriteLevel(MemoryStream ms, Level3dData level, bool writeCompact)
@@ -206,17 +200,16 @@ public static class XmlFormatSerializer
 			writer.WriteAttributeString("Position", DataFormatter.Write(entity.Position));
 			writer.WriteAttributeString("Shape", DataFormatter.Write(entity.Shape));
 
-			writer.WriteStartElement("Properties");
 			foreach (EntityProperty property in entity.Properties)
 			{
-				writer.WriteStartElement("Property");
-				writer.WriteAttributeString("Key", property.Key.Trim());
-				writer.WriteAttributeString("Type", DataFormatter.WritePropertyType(property.Value));
-				writer.WriteAttributeString("Value", DataFormatter.Write(property.Value));
-				writer.WriteEndElement();
-			}
+				if (property.Key.Length == 0 || property.Key is "Name" or "Position" or "Shape")
+				{
+					DebugState.AddWarning($"Skipping invalid property key: {property.Key}");
+					continue;
+				}
 
-			writer.WriteEndElement();
+				writer.WriteAttributeString(property.Key.Trim(), $"{DataFormatter.WritePropertyType(property.Value)} {DataFormatter.Write(property.Value)}");
+			}
 
 			writer.WriteEndElement();
 		}

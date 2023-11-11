@@ -7,10 +7,10 @@
     <Texture Path="tex\Bricks.tga" />
   </Textures>
   <WorldObjects>
-    <WorldObject Mesh="mesh\Plane.obj" Texture="tex\Bricks.tga" BoundingMesh="" Position="0 -0 -0" Rotation="0 0 0" Scale="1 1 1" Values="None" />
-    <WorldObject Mesh="mesh\Plane.obj" Texture="tex\Bricks.tga" BoundingMesh="" Position="0.5 0 -0.5" Rotation="0 90 0" Scale="1 1 1" Values="None" />
-    <WorldObject Mesh="mesh\Plane.obj" Texture="tex\Bricks.tga" BoundingMesh="" Position="0 0 -1" Rotation="0 180 0" Scale="1 1 1" Values="None" />
-    <WorldObject Mesh="mesh\Plane.obj" Texture="tex\Bricks.tga" BoundingMesh="" Position="-0.5 0 -0.5" Rotation="0 -90 0" Scale="1 1 1" Values="None" />
+    <WorldObject Mesh="mesh\Plane.obj" Texture="tex\Bricks.tga" Position="0 -0 -0" Rotation="0 0 0" Scale="1 1 1" Flags="" />
+    <WorldObject Mesh="mesh\Plane.obj" Texture="tex\Bricks.tga" Position="0.5 0 -0.5" Rotation="0 90 0" Scale="1 1 1" Flags="" />
+    <WorldObject Mesh="mesh\Plane.obj" Texture="tex\Bricks.tga" Position="0 0 -1" Rotation="0 180 0" Scale="1 1 1" Flags="" />
+    <WorldObject Mesh="mesh\Plane.obj" Texture="tex\Bricks.tga" Position="-0.5 0 -0.5" Rotation="0 -90 0" Scale="1 1 1" Flags="" />
   </WorldObjects>
   <Entities />
 </Level>
