@@ -1,4 +1,5 @@
 using OneOf;
+using SimpleLevelEditor.Data;
 using SimpleLevelEditor.Model.EntityShapes;
 
 namespace SimpleLevelEditor.Formats;
@@ -16,6 +17,8 @@ public static class DataFormatter
 	private const string _vector3Id = "float3";
 	private const string _vector4Id = "float4";
 	private const string _stringId = "str";
+	private const string _rgbId = "rgb";
+	private const string _rgbaId = "rgba";
 
 	public static bool ReadBool(string str)
 	{
@@ -55,7 +58,19 @@ public static class DataFormatter
 		return str;
 	}
 
-	public static OneOf<bool, int, float, Vector2, Vector3, Vector4, string> ReadProperty(string str, string type)
+	public static Rgb ReadRgb(string str)
+	{
+		string[] parts = str.Split(' ');
+		return new(byte.Parse(parts[0]), byte.Parse(parts[1]), byte.Parse(parts[2]));
+	}
+
+	public static Rgba ReadRgba(string str)
+	{
+		string[] parts = str.Split(' ');
+		return new(byte.Parse(parts[0]), byte.Parse(parts[1]), byte.Parse(parts[2]), byte.Parse(parts[3]));
+	}
+
+	public static OneOf<bool, int, float, Vector2, Vector3, Vector4, string, Rgb, Rgba> ReadProperty(string str, string type)
 	{
 		return type switch
 		{
@@ -66,6 +81,8 @@ public static class DataFormatter
 			_vector3Id => ReadVector3(str),
 			_vector4Id => ReadVector4(str),
 			_stringId => ReadString(str),
+			_rgbId => ReadRgb(str),
+			_rgbaId => ReadRgba(str),
 			_ => throw new NotImplementedException(),
 		};
 	}
@@ -125,7 +142,17 @@ public static class DataFormatter
 		return data;
 	}
 
-	public static string Write(OneOf<bool, int, float, Vector2, Vector3, Vector4, string> value)
+	public static string Write(Rgb data)
+	{
+		return $"{data.R} {data.G} {data.B}";
+	}
+
+	public static string Write(Rgba data)
+	{
+		return $"{data.R} {data.G} {data.B} {data.A}";
+	}
+
+	public static string Write(OneOf<bool, int, float, Vector2, Vector3, Vector4, string, Rgb, Rgba> value)
 	{
 		return value.Value switch
 		{
@@ -136,6 +163,8 @@ public static class DataFormatter
 			Vector3 v => Write(v),
 			Vector4 v => Write(v),
 			string s => Write(s),
+			Rgb rgb => Write(rgb),
+			Rgba rgba => Write(rgba),
 			_ => throw new NotImplementedException(),
 		};
 	}
@@ -151,7 +180,7 @@ public static class DataFormatter
 		};
 	}
 
-	public static string WritePropertyType(OneOf<bool, int, float, Vector2, Vector3, Vector4, string> value)
+	public static string WritePropertyType(OneOf<bool, int, float, Vector2, Vector3, Vector4, string, Rgb, Rgba> value)
 	{
 		return value.Value switch
 		{
@@ -162,6 +191,8 @@ public static class DataFormatter
 			Vector3 => _vector3Id,
 			Vector4 => _vector4Id,
 			string => _stringId,
+			Rgb => _rgbId,
+			Rgba => _rgbaId,
 			_ => throw new NotImplementedException(),
 		};
 	}

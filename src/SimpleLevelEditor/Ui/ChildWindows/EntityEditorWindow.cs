@@ -1,8 +1,11 @@
 using Detach;
 using ImGuiNET;
+using OneOf;
+using SimpleLevelEditor.Data;
 using SimpleLevelEditor.Model;
 using SimpleLevelEditor.Model.EntityShapes;
 using SimpleLevelEditor.State;
+using SimpleLevelEditor.Utils;
 
 namespace SimpleLevelEditor.Ui.ChildWindows;
 
@@ -17,6 +20,8 @@ public static class EntityEditorWindow
 		{ typeof(Vector3), "Float (3)" },
 		{ typeof(Vector4), "Float (4)" },
 		{ typeof(string), "Text" },
+		{ typeof(Rgb), "RGB" },
+		{ typeof(Rgba), "RGBA" },
 	};
 
 	private static readonly Entity _default = new()
@@ -100,51 +105,28 @@ public static class EntityEditorWindow
 
 			if (ImGui.BeginCombo(Inline.Span($"Property Type##{entity.Id}_{i}"), _typeNames[property.Value.Value.GetType()]))
 			{
-				if (ImGui.Selectable(_typeNames[typeof(bool)], property.Value.Value is bool))
-				{
-					property.Value = false;
-					LevelState.Track("Changed entity property value type");
-				}
-
-				if (ImGui.Selectable(_typeNames[typeof(int)], property.Value.Value is int))
-				{
-					property.Value = 0;
-					LevelState.Track("Changed entity property value type");
-				}
-
-				if (ImGui.Selectable(_typeNames[typeof(float)], property.Value.Value is float))
-				{
-					property.Value = 0f;
-					LevelState.Track("Changed entity property value type");
-				}
-
-				if (ImGui.Selectable(_typeNames[typeof(Vector2)], property.Value.Value is Vector2))
-				{
-					property.Value = Vector2.Zero;
-					LevelState.Track("Changed entity property value type");
-				}
-
-				if (ImGui.Selectable(_typeNames[typeof(Vector3)], property.Value.Value is Vector3))
-				{
-					property.Value = Vector3.Zero;
-					LevelState.Track("Changed entity property value type");
-				}
-
-				if (ImGui.Selectable(_typeNames[typeof(Vector4)], property.Value.Value is Vector4))
-				{
-					property.Value = Vector4.Zero;
-					LevelState.Track("Changed entity property value type");
-				}
-
-				if (ImGui.Selectable(_typeNames[typeof(string)], property.Value.Value is string))
-				{
-					property.Value = string.Empty;
-					LevelState.Track("Changed entity property value type");
-				}
+				Selectable<bool>(false);
+				Selectable<int>(0);
+				Selectable<float>(0f);
+				Selectable<Vector2>(Vector2.Zero);
+				Selectable<Vector3>(Vector3.Zero);
+				Selectable<Vector4>(Vector4.Zero);
+				Selectable<string>(string.Empty);
+				Selectable<Rgb>(new Rgb(0, 0, 0));
+				Selectable<Rgba>(new Rgba(0, 0, 0, 0));
 
 				entity.Properties[i] = property;
 
 				ImGui.EndCombo();
+
+				void Selectable<T>(OneOf<bool, int, float, Vector2, Vector3, Vector4, string, Rgb, Rgba> defaultValue)
+				{
+					if (ImGui.Selectable(_typeNames[typeof(T)], property.Value.Value is T))
+					{
+						property.Value = defaultValue;
+						LevelState.Track("Changed entity property value type");
+					}
+				}
 			}
 
 			entity.Properties[i].Value = property.Value.Value switch
@@ -156,6 +138,8 @@ public static class EntityEditorWindow
 				Vector3 v3 when ImGui.DragFloat3(Inline.Span($"##property_value{entity.Id}_{i}"), ref v3) => v3,
 				Vector4 v4 when ImGui.DragFloat4(Inline.Span($"##property_value{entity.Id}_{i}"), ref v4) => v4,
 				string s when ImGui.InputText(Inline.Span($"##property_value{entity.Id}_{i}"), ref s, 32) => s,
+				Rgb rgb when ImGuiUtils.ColorEdit3Rgb(Inline.Span($"##property_value{entity.Id}_{i}"), ref rgb) => rgb,
+				Rgba rgba when ImGuiUtils.ColorEdit4Rgba(Inline.Span($"##property_value{entity.Id}_{i}"), ref rgba) => rgba,
 				_ => entity.Properties[i].Value,
 			};
 
