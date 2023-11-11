@@ -175,7 +175,7 @@ public static class MainLogic
 
 			float? intersection = entity.Shape switch
 			{
-				Point => IntersectsSphere(entity.Position, 0.1f),
+				Point => IntersectsSphere(entity.Position, SceneRenderer.PointScale),
 				Model.EntityShapes.Sphere sphere => IntersectsSphere(entity.Position, sphere.Radius),
 				Aabb aabb => Ray.IntersectsAxisAlignedBoundingBox(rayStartPosition, rayDirection, entity.Position + aabb.Min, entity.Position + aabb.Max)?.Distance,
 				_ => throw new NotImplementedException(),
