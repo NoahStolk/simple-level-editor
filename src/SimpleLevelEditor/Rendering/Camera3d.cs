@@ -39,7 +39,7 @@ public static class Camera3d
 
 			float scroll = Input.GetScroll();
 			if (scroll != 0 && !Input.IsKeyHeld(Keys.ControlLeft) && !Input.IsKeyHeld(Keys.ControlRight))
-				_zoom = Math.Clamp(_zoom - scroll, 1, 30);
+				_zoom = Math.Max(_zoom - scroll, 1);
 		}
 		else
 		{
@@ -88,7 +88,7 @@ public static class Camera3d
 		}
 		else if (Mode == CameraMode.Pan)
 		{
-			const float multiplier = 0.0125f;
+			float multiplier = 0.0005f * _zoom;
 			FocusPointTarget -= Vector3.Transform(new(-delta.X * multiplier, -delta.Y * multiplier, 0), Rotation);
 			_focusPoint = FocusPointTarget;
 
