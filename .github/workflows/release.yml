@@ -24,7 +24,7 @@ jobs:
                     -p:EnableCompressionInSingleFile=True
                     -p:PublishReadyToRun=False
                     -p:PublishProtocol=FileSystem
-                    -p:TargetFramework=net7.0
+                    -p:TargetFramework=net8.0
                     -p:RuntimeIdentifier=win-x64
                     -p:Platform=x64
                     -p:Configuration=Release
