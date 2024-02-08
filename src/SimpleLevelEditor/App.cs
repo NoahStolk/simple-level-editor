@@ -1,5 +1,9 @@
+using Detach.Parsers.Texture;
+using Detach.Parsers.Texture.TgaFormat;
+using Silk.NET.GLFW;
 using Silk.NET.OpenGL;
 using SimpleLevelEditor.Ui;
+using System.Runtime.InteropServices;
 
 namespace SimpleLevelEditor;
 
@@ -29,6 +33,18 @@ public sealed class App
 			Input.KeyCallback(keys, state);
 			imGuiController.PressKey(keys, state);
 		});
+
+		TextureData texture = TgaParser.Parse(File.ReadAllBytes(Path.Combine("Resources", "Textures", "Icon.tga")));
+
+		IntPtr iconPtr = Marshal.AllocHGlobal(texture.Width * texture.Height * 4);
+		Marshal.Copy(texture.ColorData, 0, iconPtr, texture.Width * texture.Height * 4);
+		Image image = new()
+		{
+			Width = texture.Width,
+			Height = texture.Height,
+			Pixels = (byte*)iconPtr,
+		};
+		Graphics.Glfw.SetWindowIcon(Graphics.Window, 1, &image);
 	}
 
 	public int Fps { get; private set; }

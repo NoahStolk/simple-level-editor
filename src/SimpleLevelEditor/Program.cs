@@ -23,7 +23,7 @@ foreach (string filePath in Directory.GetFiles(Path.Combine("Resources", "Textur
 	InternalContent.AddTexture(textureName, texture);
 }
 
-ImGuiController imGuiController = new(Constants.WindowWidth, Constants.WindowHeight, static orthoProjection =>
+ImGuiController imGuiController = new(Constants.WindowWidth, Constants.WindowHeight, static orthographicProjection =>
 {
 	ShaderCacheEntry uiShader = InternalContent.Shaders["Ui"];
 	Graphics.Gl.UseProgram(uiShader.Id);
@@ -32,7 +32,7 @@ ImGuiController imGuiController = new(Constants.WindowWidth, Constants.WindowHei
 	int projMtx = uiShader.GetUniformLocation("ProjMtx");
 
 	Graphics.Gl.Uniform1(texture, 0);
-	Graphics.Gl.UniformMatrix4x4(projMtx, orthoProjection);
+	Graphics.Gl.UniformMatrix4x4(projMtx, orthographicProjection);
 });
 
 ImGuiStylePtr style = ImGui.GetStyle();
