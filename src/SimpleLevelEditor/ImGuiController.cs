@@ -26,8 +26,8 @@ public sealed class ImGuiController
 		Keys.Tab,
 	};
 
-	private readonly List<char> _pressedChars = new();
-	private readonly List<Keys> _pressedControlKeys = new();
+	private readonly List<char> _pressedChars = [];
+	private readonly List<Keys> _pressedControlKeys = [];
 
 	private readonly uint _vbo;
 	private readonly uint _ebo;

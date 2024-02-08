@@ -187,7 +187,7 @@ public static class LevelState
 
 	private static void RefreshAssetFileWatcher(string baseDirectory, IEnumerable<string> assetPaths)
 	{
-		List<string> assetDirectories = new();
+		List<string> assetDirectories = [];
 		foreach (string assetFilePath in assetPaths)
 		{
 			string? directory = Path.GetDirectoryName(assetFilePath);

@@ -34,7 +34,7 @@ public static class XmlFormatSerializer
 
 	private static List<string> ReadMeshes(XmlReader reader)
 	{
-		List<string> meshes = new();
+		List<string> meshes = [];
 		while (reader.Read())
 		{
 			if (reader is { NodeType: XmlNodeType.Element, Name: "Mesh" })
@@ -52,7 +52,7 @@ public static class XmlFormatSerializer
 
 	private static List<string> ReadTextures(XmlReader reader)
 	{
-		List<string> textures = new();
+		List<string> textures = [];
 		while (reader.Read())
 		{
 			if (reader is { NodeType: XmlNodeType.Element, Name: "Texture" })
@@ -71,7 +71,7 @@ public static class XmlFormatSerializer
 	private static List<WorldObject> ReadWorldObjects(XmlReader reader)
 	{
 		int worldObjectIndex = 0;
-		List<WorldObject> worldObjects = new();
+		List<WorldObject> worldObjects = [];
 		while (reader.Read())
 		{
 			if (reader is { NodeType: XmlNodeType.Element, Name: "WorldObject" })
@@ -85,7 +85,7 @@ public static class XmlFormatSerializer
 					Position = DataFormatter.ReadVector3(reader.GetAttribute("Position") ?? throw _invalidFormat),
 					Rotation = DataFormatter.ReadVector3(reader.GetAttribute("Rotation") ?? throw _invalidFormat),
 					Scale = DataFormatter.ReadVector3(reader.GetAttribute("Scale") ?? throw _invalidFormat),
-					Flags = reader.GetAttribute("Flags")?.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries).ToList() ?? new List<string>(),
+					Flags = reader.GetAttribute("Flags")?.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries).ToList() ?? [],
 				};
 				worldObjects.Add(worldObject);
 			}
@@ -101,12 +101,12 @@ public static class XmlFormatSerializer
 	private static List<Entity> ReadEntities(XmlReader reader)
 	{
 		int entityIndex = 0;
-		List<Entity> entities = new();
+		List<Entity> entities = [];
 		while (reader.Read())
 		{
 			if (reader is { NodeType: XmlNodeType.Element, Name: "Entity" })
 			{
-				List<EntityProperty> properties = new();
+				List<EntityProperty> properties = [];
 				for (int i = 0; i < reader.AttributeCount; i++)
 				{
 					reader.MoveToAttribute(i);

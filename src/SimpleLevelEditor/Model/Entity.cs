@@ -24,7 +24,7 @@ public record Entity
 			_ => throw new NotImplementedException(),
 		};
 
-		List<EntityProperty> newEntityProperties = new();
+		List<EntityProperty> newEntityProperties = [];
 		for (int i = 0; i < Properties.Count; i++)
 			newEntityProperties.Add(Properties[i].DeepCopy());
 

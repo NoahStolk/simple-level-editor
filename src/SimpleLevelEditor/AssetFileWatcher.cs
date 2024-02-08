@@ -4,8 +4,8 @@ namespace SimpleLevelEditor;
 
 public static class AssetFileWatcher
 {
-	private static readonly List<string> _directories = new();
-	private static readonly List<FileSystemWatcher> _fileSystemWatchers = new();
+	private static readonly List<string> _directories = [];
+	private static readonly List<FileSystemWatcher> _fileSystemWatchers = [];
 
 	public static IReadOnlyList<string> Directories => _directories;
 

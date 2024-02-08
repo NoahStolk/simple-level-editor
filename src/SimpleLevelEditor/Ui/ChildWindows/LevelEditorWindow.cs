@@ -9,7 +9,7 @@ namespace SimpleLevelEditor.Ui.ChildWindows;
 
 public static class LevelEditorWindow
 {
-	private static readonly float[] _gridSnapPoints = { 0, 0.125f, 0.25f, 0.5f, 1, 2, 4, 8 };
+	private static readonly float[] _gridSnapPoints = [0, 0.125f, 0.25f, 0.5f, 1, 2, 4, 8];
 	private static int _gridSnapIndex = 4;
 
 	private static float GridSnap => _gridSnapIndex >= 0 && _gridSnapIndex < _gridSnapPoints.Length ? _gridSnapPoints[_gridSnapIndex] : 0;
@@ -25,10 +25,10 @@ public static class LevelEditorWindow
 		{
 			ImGui.SeparatorText("Level Editor");
 
-			Vector2 cursorScreenPos = ImGui.GetCursorScreenPos();
 			SceneFramebuffer.RenderFramebuffer(framebufferSize);
 
 			ImDrawListPtr drawList = ImGui.GetWindowDrawList();
+			Vector2 cursorScreenPos = ImGui.GetCursorScreenPos();
 			drawList.AddImage((IntPtr)SceneFramebuffer.FramebufferTextureId, cursorScreenPos, cursorScreenPos + framebufferSize, Vector2.UnitY, Vector2.UnitX);
 
 			Vector2 focusPointIconSize = new(16, 16);

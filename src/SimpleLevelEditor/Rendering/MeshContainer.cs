@@ -85,7 +85,7 @@ public static class MeshContainer
 			}
 
 			// Find edges that are only used by one triangle.
-			List<uint> lineIndices = new();
+			List<uint> lineIndices = [];
 			foreach (KeyValuePair<Edge, List<Vector3>> edge in edges)
 			{
 				int distinctNormals = edge.Value.Distinct(NormalComparer.Instance).Count();
@@ -104,7 +104,7 @@ public static class MeshContainer
 		void AddEdge(IDictionary<Edge, List<Vector3>> edges, Edge d, Vector3 normal)
 		{
 			if (!edges.ContainsKey(d))
-				edges.Add(d, new());
+				edges.Add(d, []);
 
 			edges[d].Add(normal);
 		}

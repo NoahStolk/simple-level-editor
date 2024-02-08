@@ -13,28 +13,28 @@ public record Level3dData
 		return new()
 		{
 			Version = 1,
-			Meshes = new(),
-			Textures = new(),
-			WorldObjects = new(),
-			Entities = new(),
+			Meshes = [],
+			Textures = [],
+			WorldObjects = [],
+			Entities = [],
 		};
 	}
 
 	public Level3dData DeepCopy()
 	{
-		List<string> newMeshes = new();
+		List<string> newMeshes = [];
 		for (int i = 0; i < Meshes.Count; i++)
 			newMeshes.Add(Meshes[i]);
 
-		List<string> newTextures = new();
+		List<string> newTextures = [];
 		for (int i = 0; i < Textures.Count; i++)
 			newTextures.Add(Textures[i]);
 
-		List<WorldObject> newWorldObjects = new();
+		List<WorldObject> newWorldObjects = [];
 		for (int i = 0; i < WorldObjects.Count; i++)
 			newWorldObjects.Add(WorldObjects[i].DeepCopy());
 
-		List<Entity> newEntities = new();
+		List<Entity> newEntities = [];
 		for (int i = 0; i < Entities.Count; i++)
 			newEntities.Add(Entities[i].DeepCopy());
 

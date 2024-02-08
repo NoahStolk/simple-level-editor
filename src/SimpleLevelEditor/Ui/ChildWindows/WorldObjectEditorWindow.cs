@@ -18,7 +18,7 @@ public static class WorldObjectEditorWindow
 		Rotation = default,
 		Scale = Vector3.One,
 		Texture = string.Empty,
-		Flags = new(),
+		Flags = [],
 	};
 	public static WorldObject DefaultObject { get; private set; } = _default.DeepCopy();
 

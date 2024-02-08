@@ -22,7 +22,7 @@ public static class TextureContainer
 	{
 		_textures.Clear();
 
-		uint defaultTextureId = CreateFromTexture(1, 1, new byte[] { 0xFF, 0xFF, 0xFF, 0xFF });
+		uint defaultTextureId = CreateFromTexture(1, 1, [0xFF, 0xFF, 0xFF, 0xFF]);
 		_textures.Add(string.Empty, defaultTextureId);
 
 		string? levelDirectory = Path.GetDirectoryName(levelFilePath);

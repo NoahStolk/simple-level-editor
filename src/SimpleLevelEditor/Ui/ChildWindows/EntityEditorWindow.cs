@@ -28,7 +28,7 @@ public static class EntityEditorWindow
 	{
 		Id = 0,
 		Name = string.Empty,
-		Properties = new(),
+		Properties = [],
 		Position = default,
 		Shape = new Point(),
 	};

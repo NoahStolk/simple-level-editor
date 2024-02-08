@@ -14,9 +14,8 @@ public static class SceneRenderer
 {
 	public const float PointScale = 0.3f;
 
-	private static readonly uint _lineVao = VaoUtils.CreateLineVao(new[] { Vector3.Zero, Vector3.UnitZ });
-	private static readonly uint _cubeVao = VaoUtils.CreateLineVao(new Vector3[]
-	{
+	private static readonly uint _lineVao = VaoUtils.CreateLineVao([Vector3.Zero, Vector3.UnitZ]);
+	private static readonly uint _cubeVao = VaoUtils.CreateLineVao([
 		new(-0.5f, -0.5f, -0.5f),
 		new(-0.5f, -0.5f, 0.5f),
 		new(-0.5f, 0.5f, -0.5f),
@@ -43,7 +42,7 @@ public static class SceneRenderer
 		new(0.5f, 0.5f, -0.5f),
 		new(-0.5f, 0.5f, 0.5f),
 		new(0.5f, 0.5f, 0.5f),
-	});
+	]);
 
 	private static readonly Vector3[] _sphereVertices = GetSphereVertexPositions(8, 16, 1);
 	private static readonly uint _sphereVao = VaoUtils.CreateLineVao(_sphereVertices);
@@ -53,7 +52,7 @@ public static class SceneRenderer
 
 	private static Vector3[] GetSphereVertexPositions(uint horizontalLines, uint verticalLines, float radius)
 	{
-		List<Vector3> vertices = new();
+		List<Vector3> vertices = [];
 		for (uint i = 0; i <= horizontalLines; i++)
 		{
 			float horizontalAngle = MathF.PI * i / horizontalLines;
