@@ -13,14 +13,11 @@
   </PropertyGroup>
 
   <ItemGroup Label="External dependencies">
-    <PackageReference Include="ImGui.NET" Version="1.90.1.1" />
     <PackageReference Include="NativeFileDialogSharp" Version="0.5.0" />
     <PackageReference Include="NoahStolk.Detach" Version="0.3.1" />
     <PackageReference Include="NoahStolk.ImGuiGlfw" Version="0.3.0" />
     <PackageReference Include="OneOf" Version="3.0.263" />
     <PackageReference Include="OneOf.Extended" Version="3.0.263" />
-    <PackageReference Include="Silk.NET.GLFW" Version="2.20.0" />
-    <PackageReference Include="Silk.NET.OpenGL" Version="2.20.0" />
   </ItemGroup>
 
   <ItemGroup Label="Static code analysis">
