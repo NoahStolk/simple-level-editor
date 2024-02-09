@@ -4,7 +4,6 @@ using ImGuiGlfw;
 using ImGuiNET;
 using SimpleLevelEditor;
 using SimpleLevelEditor.Content;
-using SimpleLevelEditor.Extensions;
 
 Graphics.CreateWindow(new("Simple Level Editor", Constants.WindowWidth, Constants.WindowHeight, false));
 Graphics.SetWindowSizeLimits(1024, 768, 4096, 2160);

@@ -213,8 +213,29 @@ dotnet_diagnostic.S1135.severity                                              = 
 # Diagnostics: None #
 #####################
 
+# Do not declare static members on generic types.
+dotnet_diagnostic.CA1000.severity                                             = none
+
+# Do not declare visible instance fields.
+dotnet_diagnostic.CA1051.severity                                             = none
+
+# Validate arguments of public methods.
+dotnet_diagnostic.CA1062.severity                                             = none
+
+# Do not raise exceptions in unexpected locations.
+dotnet_diagnostic.CA1065.severity                                             = none
+
+# Identifiers should not match keywords.
+dotnet_diagnostic.CA1716.severity                                             = none
+
+# Do not raise reserved exception types.
+dotnet_diagnostic.CA2201.severity                                             = none
+
 # Non-constant fields should not be visible
 dotnet_diagnostic.CA2211.severity                                             = none
+
+# Operator overloads have named alternates.
+dotnet_diagnostic.CA2225.severity                                             = none
 
 # Missing XML comment for publicly visible type or member.
 dotnet_diagnostic.CS1591.severity                                             = none
@@ -252,6 +273,9 @@ dotnet_diagnostic.S2479.severity                                              = 
 # Boolean expressions should not be gratuitous. (Broken analyzer)
 dotnet_diagnostic.S2589.severity                                              = none
 
+# Static fields should not be used in generic types.
+dotnet_diagnostic.S2743.severity                                              = none
+
 # Extract this nested ternary operation into an independent statement.
 dotnet_diagnostic.S3358.severity                                              = none
 
@@ -260,6 +284,9 @@ dotnet_diagnostic.S3453.severity                                              = 
 
 # Move class into a named namespace. (C# 10)
 dotnet_diagnostic.S3903.severity                                              = none
+
+# Enable XML documentation output.
+dotnet_diagnostic.SA0001.severity                                             = none
 
 # The keyword 'new' should be followed by a space. (C# 9)
 dotnet_diagnostic.SA1000.severity                                             = none

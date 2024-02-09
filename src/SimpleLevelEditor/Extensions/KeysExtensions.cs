@@ -1,4 +1,3 @@
-using ImGuiNET;
 using Silk.NET.GLFW;
 
 namespace SimpleLevelEditor.Extensions;
