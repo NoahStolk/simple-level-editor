@@ -1,4 +1,3 @@
-using ImGuiGlfw;
 using ImGuiNET;
 using Silk.NET.GLFW;
 using SimpleLevelEditor.Logic;
@@ -50,13 +49,13 @@ public static class Shortcuts
 		if (ImGui.GetIO().WantTextInput)
 			return;
 
-		bool ctrl = GlfwInput.IsKeyDown(Keys.ControlLeft) || GlfwInput.IsKeyDown(Keys.ControlRight);
-		bool shift = GlfwInput.IsKeyDown(Keys.ShiftLeft) || GlfwInput.IsKeyDown(Keys.ShiftRight);
+		bool ctrl = Input.GlfwInput.IsKeyDown(Keys.ControlLeft) || Input.GlfwInput.IsKeyDown(Keys.ControlRight);
+		bool shift = Input.GlfwInput.IsKeyDown(Keys.ShiftLeft) || Input.GlfwInput.IsKeyDown(Keys.ShiftRight);
 
 		for (int i = 0; i < _shortcuts.Count; i++)
 		{
 			Shortcut shortcut = _shortcuts[i];
-			if (GlfwInput.IsKeyPressed(shortcut.Key) && shift == shortcut.Shift && ctrl == shortcut.Ctrl)
+			if (Input.GlfwInput.IsKeyPressed(shortcut.Key) && shift == shortcut.Shift && ctrl == shortcut.Ctrl)
 			{
 				shortcut.Action();
 				break;

@@ -1,5 +1,4 @@
 using Detach.Utils;
-using ImGuiGlfw;
 using ImGuiNET;
 using Silk.NET.GLFW;
 using SimpleLevelEditor.Rendering;
@@ -28,7 +27,7 @@ public static class LevelEditorSelectionMenu
 		bool wasMoveButtonActive = RenderMoveButton("Move", drawList, posOrigin.Value, ref _isMoveButtonActive);
 		if (_isMoveButtonActive)
 		{
-			bool ctrl = GlfwInput.IsKeyDown(Keys.ControlLeft) || GlfwInput.IsKeyDown(Keys.ControlRight);
+			bool ctrl = Input.GlfwInput.IsKeyDown(Keys.ControlLeft) || Input.GlfwInput.IsKeyDown(Keys.ControlRight);
 			if (ctrl)
 			{
 				Vector3 point1 = objectPosition;

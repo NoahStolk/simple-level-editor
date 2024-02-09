@@ -1,5 +1,4 @@
 using Detach.Numerics;
-using ImGuiGlfw;
 using ImGuiNET;
 using Silk.NET.GLFW;
 
@@ -36,7 +35,7 @@ public static class InputDebugWindow
 					if (!Enum.IsDefined(key))
 						continue;
 
-					bool isDown = GlfwInput.IsKeyDown(key);
+					bool isDown = Input.GlfwInput.IsKeyDown(key);
 
 					ImGui.TableNextColumn();
 					ImGui.TextColored(isDown ? Color.White : Color.Gray(0.4f), key.ToString());

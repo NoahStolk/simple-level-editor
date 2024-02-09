@@ -1,4 +1,3 @@
-using ImGuiGlfw;
 using Silk.NET.GLFW;
 using Silk.NET.OpenGL;
 using System.Text;
@@ -83,11 +82,11 @@ public static class Graphics
 
 		_glfw.SetFramebufferSizeCallback(Window, (_, w, h) => SetWindowSize(w, h));
 		_glfw.SetWindowFocusCallback(Window, (_, focusing) => WindowIsActive = focusing);
-		_glfw.SetCursorPosCallback(Window, (_, x, y) => GlfwInput.CursorPosCallback(x, y));
-		_glfw.SetScrollCallback(Window, (_, _, y) => GlfwInput.MouseWheelCallback(y));
-		_glfw.SetMouseButtonCallback(Window, (_, button, state, _) => GlfwInput.MouseButtonCallback(button, state));
-		_glfw.SetKeyCallback(Window, (_, keys, _, state, _) => GlfwInput.KeyCallback(keys, state));
-		_glfw.SetCharCallback(Window, (_, codepoint) => GlfwInput.CharCallback(codepoint));
+		_glfw.SetCursorPosCallback(Window, (_, x, y) => Input.GlfwInput.CursorPosCallback(x, y));
+		_glfw.SetScrollCallback(Window, (_, _, y) => Input.GlfwInput.MouseWheelCallback(y));
+		_glfw.SetMouseButtonCallback(Window, (_, button, state, _) => Input.GlfwInput.MouseButtonCallback(button, state));
+		_glfw.SetKeyCallback(Window, (_, keys, _, state, _) => Input.GlfwInput.KeyCallback(keys, state));
+		_glfw.SetCharCallback(Window, (_, codepoint) => Input.GlfwInput.CharCallback(codepoint));
 
 		int x = (PrimaryMonitorWidth - CurrentWindowState.Width) / 2;
 		int y = (PrimaryMonitorHeight - CurrentWindowState.Height) / 2;

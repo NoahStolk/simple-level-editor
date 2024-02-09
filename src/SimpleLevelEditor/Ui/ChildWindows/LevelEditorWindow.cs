@@ -1,5 +1,4 @@
 using Detach;
-using ImGuiGlfw;
 using ImGuiNET;
 using SimpleLevelEditor.Content;
 using SimpleLevelEditor.Logic;
@@ -75,7 +74,7 @@ public static class LevelEditorWindow
 
 			Matrix4x4 viewProjection = Camera3d.ViewMatrix * Camera3d.Projection;
 			Plane nearPlane = new(-viewProjection.M13, -viewProjection.M23, -viewProjection.M33, -viewProjection.M43);
-			Vector2 mousePosition = GlfwInput.CursorPosition - cursorScreenPos;
+			Vector2 mousePosition = Input.GlfwInput.CursorPosition - cursorScreenPos;
 			Vector2 normalizedMousePosition = new Vector2(mousePosition.X / framebufferSize.X - 0.5f, -(mousePosition.Y / framebufferSize.Y - 0.5f)) * 2;
 
 			LevelEditorSelectionMenu.RenderSelectionMenu(framebufferSize, drawList, cursorScreenPos, nearPlane, normalizedMousePosition, Snap);

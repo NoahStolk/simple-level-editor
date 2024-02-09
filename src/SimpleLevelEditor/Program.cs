@@ -24,7 +24,7 @@ foreach (string filePath in Directory.GetFiles(Path.Combine("Resources", "Textur
 	InternalContent.AddTexture(textureName, texture);
 }
 
-ImGuiController imGuiController = new(Graphics.Gl, Constants.WindowWidth, Constants.WindowHeight);
+ImGuiController imGuiController = new(Graphics.Gl, Input.GlfwInput, Constants.WindowWidth, Constants.WindowHeight);
 
 ImGuiStylePtr style = ImGui.GetStyle();
 style.WindowPadding = new(4, 4);

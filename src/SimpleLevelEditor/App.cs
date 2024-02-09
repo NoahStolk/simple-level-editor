@@ -112,6 +112,6 @@ public sealed class App
 
 		_imGuiController.Render();
 
-		GlfwInput.PostRender();
+		Input.GlfwInput.PostRender();
 	}
 }

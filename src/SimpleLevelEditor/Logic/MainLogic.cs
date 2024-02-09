@@ -1,5 +1,4 @@
 using Detach.Collisions;
-using ImGuiGlfw;
 using Silk.NET.GLFW;
 using SimpleLevelEditor.Model;
 using SimpleLevelEditor.Model.EntityShapes;
@@ -18,14 +17,14 @@ public static class MainLogic
 		CalculateTargetPosition(normalizedMousePosition, nearPlane, gridSnap);
 		CalculateHighlightedObject(normalizedMousePosition, isFocused);
 
-		if (GlfwInput.IsKeyDown(Keys.ControlLeft) || GlfwInput.IsKeyDown(Keys.ControlRight))
+		if (Input.GlfwInput.IsKeyDown(Keys.ControlLeft) || Input.GlfwInput.IsKeyDown(Keys.ControlRight))
 		{
-			float scroll = GlfwInput.MouseWheelY;
+			float scroll = Input.GlfwInput.MouseWheelY;
 			if (scroll != 0)
 				LevelEditorState.TargetHeight = Math.Clamp(LevelEditorState.TargetHeight - scroll, -512, 512);
 		}
 
-		if (isFocused && GlfwInput.IsMouseButtonPressed(MouseButton.Left))
+		if (isFocused && Input.GlfwInput.IsMouseButtonPressed(MouseButton.Left))
 		{
 			if (LevelEditorState.HighlightedObject != null)
 				LevelEditorState.SetSelectedWorldObject(LevelEditorState.SelectedWorldObject == LevelEditorState.HighlightedObject ? null : LevelEditorState.HighlightedObject);
@@ -130,7 +129,7 @@ public static class MainLogic
 		if (!isFocused)
 			return;
 
-		if (GlfwInput.IsMouseButtonDown(Camera3d.LookButton))
+		if (Input.GlfwInput.IsMouseButtonDown(Camera3d.LookButton))
 			return;
 
 		Vector3? closestIntersection = null;
