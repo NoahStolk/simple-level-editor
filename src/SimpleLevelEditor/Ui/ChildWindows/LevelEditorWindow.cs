@@ -10,10 +10,10 @@ namespace SimpleLevelEditor.Ui.ChildWindows;
 
 public static class LevelEditorWindow
 {
-	private static readonly float[] _gridSnapPoints = [0, 0.125f, 0.25f, 0.5f, 1, 2, 4, 8];
-	private static int _gridSnapIndex = 4;
+	private static readonly float[] _snapPoints = [0, 0.125f, 0.25f, 0.5f, 1, 2, 4, 8];
+	private static int _snapIndex = 4;
 
-	private static float GridSnap => _gridSnapIndex >= 0 && _gridSnapIndex < _gridSnapPoints.Length ? _gridSnapPoints[_gridSnapIndex] : 0;
+	private static float Snap => _snapIndex >= 0 && _snapIndex < _snapPoints.Length ? _snapPoints[_snapIndex] : 0;
 
 	public static void Render(Vector2 size)
 	{
@@ -39,23 +39,34 @@ public static class LevelEditorWindow
 			Vector2 cursorPosition = ImGui.GetCursorPos();
 
 			ImGui.PushStyleColor(ImGuiCol.ChildBg, new Vector4(0, 0, 0, 0.2f));
-			if (ImGui.BeginChild("Level Editor Menu", new(280, 144), ImGuiChildFlags.Border))
+			if (ImGui.BeginChild("Level Editor Menu", new(280, 192), ImGuiChildFlags.Border))
 			{
 				const int itemWidth = 160;
+				if (ImGui.BeginTabBar("LevelEditorMenus"))
+				{
+					ImGui.PushItemWidth(itemWidth);
 
-				ImGui.SeparatorText("Grid");
+					if (ImGui.BeginTabItem("Editing"))
+					{
+						ImGui.SliderInt("Snap", ref _snapIndex, 0, _snapPoints.Length - 1, Inline.Span(Snap));
+						ImGui.InputFloat("Target height", ref LevelEditorState.TargetHeight, 0.25f, 1, "%.2f");
 
-				ImGui.PushItemWidth(itemWidth);
-				ImGui.SliderInt("Grid snap", ref _gridSnapIndex, 0, _gridSnapPoints.Length - 1, Inline.Span(GridSnap));
-				ImGui.SliderInt("Cells per side", ref LevelEditorState.GridCellCount, 1, 64);
-				ImGui.SliderInt("Cell size", ref LevelEditorState.GridCellSize, 1, 4);
-				ImGui.PopItemWidth();
+						ImGui.EndTabItem();
+					}
 
-				ImGui.SeparatorText("Height");
+					if (ImGui.BeginTabItem("Display"))
+					{
+						ImGui.SliderInt("Cells per side", ref LevelEditorState.GridCellCount, 1, 64);
+						ImGui.SliderInt("Cell size", ref LevelEditorState.GridCellSize, 1, 4);
 
-				ImGui.PushItemWidth(itemWidth);
-				ImGui.InputFloat("Height", ref LevelEditorState.TargetHeight, 0.25f, 1, "%.2f");
-				ImGui.PopItemWidth();
+						// TODO: Display filter settings here.
+						ImGui.EndTabItem();
+					}
+
+					ImGui.PopItemWidth();
+
+					ImGui.EndTabBar();
+				}
 			}
 
 			ImGui.EndChild(); // End Level Editor Menu
@@ -67,14 +78,14 @@ public static class LevelEditorWindow
 			Vector2 mousePosition = GlfwInput.CursorPosition - cursorScreenPos;
 			Vector2 normalizedMousePosition = new Vector2(mousePosition.X / framebufferSize.X - 0.5f, -(mousePosition.Y / framebufferSize.Y - 0.5f)) * 2;
 
-			LevelEditorSelectionMenu.RenderSelectionMenu(framebufferSize, drawList, cursorScreenPos, nearPlane, normalizedMousePosition, GridSnap);
+			LevelEditorSelectionMenu.RenderSelectionMenu(framebufferSize, drawList, cursorScreenPos, nearPlane, normalizedMousePosition, Snap);
 
 			ImGui.SetCursorPos(cursorPosition);
 			ImGui.InvisibleButton("3d_view", framebufferSize);
 			bool isFocused = ImGui.IsItemHovered();
 			Camera3d.Update(ImGui.GetIO().DeltaTime, isFocused);
 
-			MainLogic.Run(isFocused, normalizedMousePosition, nearPlane, GridSnap);
+			MainLogic.Run(isFocused, normalizedMousePosition, nearPlane, Snap);
 		}
 
 		ImGui.EndChild(); // End Level Editor
