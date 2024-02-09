@@ -1,4 +1,4 @@
-using ImGuiGlfwDotnet;
+using ImGuiGlfw;
 using Silk.NET.GLFW;
 using SimpleLevelEditor.Logic;
 using SimpleLevelEditor.State;

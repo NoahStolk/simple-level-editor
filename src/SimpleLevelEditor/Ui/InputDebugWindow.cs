@@ -1,5 +1,5 @@
 using Detach.Numerics;
-using ImGuiGlfwDotnet;
+using ImGuiGlfw;
 using ImGuiNET;
 using Silk.NET.GLFW;
 

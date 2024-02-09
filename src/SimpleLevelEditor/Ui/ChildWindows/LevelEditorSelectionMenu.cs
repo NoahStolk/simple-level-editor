@@ -1,5 +1,5 @@
 using Detach.Utils;
-using ImGuiGlfwDotnet;
+using ImGuiGlfw;
 using ImGuiNET;
 using Silk.NET.GLFW;
 using SimpleLevelEditor.Rendering;

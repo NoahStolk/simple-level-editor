@@ -1,6 +1,6 @@
 using Detach.Parsers.Texture;
 using Detach.Parsers.Texture.TgaFormat;
-using ImGuiGlfwDotnet;
+using ImGuiGlfw;
 using ImGuiNET;
 using Silk.NET.GLFW;
 using Silk.NET.OpenGL;

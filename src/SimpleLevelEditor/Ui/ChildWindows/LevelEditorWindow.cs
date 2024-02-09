@@ -1,5 +1,5 @@
 using Detach;
-using ImGuiGlfwDotnet;
+using ImGuiGlfw;
 using ImGuiNET;
 using SimpleLevelEditor.Content;
 using SimpleLevelEditor.Logic;

@@ -1,4 +1,4 @@
-using ImGuiGlfwDotnet;
+using ImGuiGlfw;
 using Silk.NET.GLFW;
 using Silk.NET.OpenGL;
 using System.Text;
