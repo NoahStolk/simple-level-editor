@@ -1,3 +1,4 @@
+using ImGuiGlfwDotnet;
 using Silk.NET.GLFW;
 using SimpleLevelEditor.Logic;
 using SimpleLevelEditor.State;
@@ -45,8 +46,8 @@ public static class Shortcuts
 
 	public static void Handle()
 	{
-		bool ctrl = Input.IsKeyHeld(Keys.ControlLeft) || Input.IsKeyHeld(Keys.ControlRight);
-		bool shift = Input.IsKeyHeld(Keys.ShiftLeft) || Input.IsKeyHeld(Keys.ShiftRight);
+		bool ctrl = GlfwInput.IsKeyDown(Keys.ControlLeft) || GlfwInput.IsKeyDown(Keys.ControlRight);
+		bool shift = GlfwInput.IsKeyDown(Keys.ShiftLeft) || GlfwInput.IsKeyDown(Keys.ShiftRight);
 
 		for (int i = 0; i < _shortcuts.Count; i++)
 		{

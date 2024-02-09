@@ -1,5 +1,6 @@
 using Detach.Parsers.Texture;
 using Detach.Parsers.Texture.TgaFormat;
+using ImGuiGlfwDotnet;
 using ImGuiNET;
 using SimpleLevelEditor;
 using SimpleLevelEditor.Content;
@@ -23,17 +24,7 @@ foreach (string filePath in Directory.GetFiles(Path.Combine("Resources", "Textur
 	InternalContent.AddTexture(textureName, texture);
 }
 
-ImGuiController imGuiController = new(Constants.WindowWidth, Constants.WindowHeight, static orthographicProjection =>
-{
-	ShaderCacheEntry uiShader = InternalContent.Shaders["Ui"];
-	Graphics.Gl.UseProgram(uiShader.Id);
-
-	int texture = uiShader.GetUniformLocation("Texture");
-	int projMtx = uiShader.GetUniformLocation("ProjMtx");
-
-	Graphics.Gl.Uniform1(texture, 0);
-	Graphics.Gl.UniformMatrix4x4(projMtx, orthographicProjection);
-});
+ImGuiController imGuiController = new(Graphics.Gl, Constants.WindowWidth, Constants.WindowHeight);
 
 ImGuiStylePtr style = ImGui.GetStyle();
 style.WindowPadding = new(4, 4);

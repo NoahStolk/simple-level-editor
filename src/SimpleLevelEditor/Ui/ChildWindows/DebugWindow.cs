@@ -1,6 +1,5 @@
 using Detach;
 using ImGuiNET;
-using Silk.NET.GLFW;
 using SimpleLevelEditor.State;
 
 namespace SimpleLevelEditor.Ui.ChildWindows;
@@ -54,14 +53,6 @@ public static class DebugWindow
 
 			for (int i = 0; i < AssetFileWatcher.Directories.Count; i++)
 				ImGui.TextWrapped(AssetFileWatcher.Directories[i]);
-
-			ImGui.SeparatorText("Input");
-
-			ImGui.TextColored(Input.IsKeyHeld(Keys.ControlLeft) || Input.IsKeyHeld(Keys.ControlRight) ? Vector4.One : new(0.5f), "CTRL");
-			ImGui.SameLine();
-			ImGui.TextColored(Input.IsKeyHeld(Keys.AltLeft) || Input.IsKeyHeld(Keys.AltRight) ? Vector4.One : new(0.5f), "ALT");
-			ImGui.SameLine();
-			ImGui.TextColored(Input.IsKeyHeld(Keys.ShiftLeft) || Input.IsKeyHeld(Keys.ShiftRight) ? Vector4.One : new(0.5f), "SHIFT");
 		}
 
 		ImGui.EndChild(); // End Debug
