@@ -10,7 +10,8 @@ public sealed class ImGuiController
 {
 	private static readonly IReadOnlyList<Keys> _allKeys = (Keys[])Enum.GetValues(typeof(Keys));
 
-	private readonly List<char> _pressedChars = [];
+	private readonly Dictionary<Keys, bool> _keysDown = [];
+	private readonly List<char> _charsPressed = [];
 
 	private readonly uint _vbo;
 	private readonly uint _ebo;
@@ -34,6 +35,7 @@ public sealed class ImGuiController
 
 		ImGuiIOPtr io = ImGui.GetIO();
 		io.BackendFlags |= ImGuiBackendFlags.RendererHasVtxOffset;
+		// io.ConfigFlags |= ImGuiConfigFlags.DockingEnable;
 
 		_vbo = Graphics.Gl.GenBuffer();
 		_ebo = Graphics.Gl.GenBuffer();
@@ -98,31 +100,30 @@ public sealed class ImGuiController
 		io.DisplaySize = new(_windowWidth, _windowHeight);
 		io.DisplayFramebufferScale = Vector2.One;
 		io.DeltaTime = deltaSeconds;
-		UpdateMouse(io);
-		UpdateKeyboard(io);
+
+		UpdateImGuiInput();
 
 		ImGui.NewFrame();
 
-		io.KeyCtrl = Input.IsKeyHeld(Keys.ControlLeft) || Input.IsKeyHeld(Keys.ControlRight);
-		io.KeyAlt = Input.IsKeyHeld(Keys.AltLeft) || Input.IsKeyHeld(Keys.AltRight);
-		io.KeyShift = Input.IsKeyHeld(Keys.ShiftLeft) || Input.IsKeyHeld(Keys.ShiftRight);
-		io.KeySuper = Input.IsKeyHeld(Keys.SuperLeft) || Input.IsKeyHeld(Keys.SuperRight);
+		io.KeyCtrl = IsKeyDown(Keys.ControlLeft) || IsKeyDown(Keys.ControlRight);
+		io.KeyAlt = IsKeyDown(Keys.AltLeft) || IsKeyDown(Keys.AltRight);
+		io.KeyShift = IsKeyDown(Keys.ShiftLeft) || IsKeyDown(Keys.ShiftRight);
+		io.KeySuper = IsKeyDown(Keys.SuperLeft) || IsKeyDown(Keys.SuperRight);
 	}
 
 	#region Input
 
-	private static void UpdateMouse(ImGuiIOPtr io)
+	private void UpdateImGuiInput()
 	{
+		ImGuiIOPtr io = ImGui.GetIO();
+
 		io.MousePos = Input.GetMousePosition();
 		io.MouseWheel = Input.GetScroll();
 
 		io.MouseDown[0] = Input.IsButtonHeld(MouseButton.Left);
 		io.MouseDown[1] = Input.IsButtonHeld(MouseButton.Right);
 		io.MouseDown[2] = Input.IsButtonHeld(MouseButton.Middle);
-	}
 
-	private void UpdateKeyboard(ImGuiIOPtr io)
-	{
 		for (int i = 0; i < _allKeys.Count; i++)
 		{
 			Keys key = _allKeys[i];
@@ -130,24 +131,45 @@ public sealed class ImGuiController
 			if (keyValue < 0)
 				continue;
 
-			io.AddKeyEvent(key.GetImGuiKey(), Input.IsKeyHeld(key));
+			io.AddKeyEvent(key.GetImGuiKey(), IsKeyDown(key));
 		}
 
-		for (int i = 0; i < _pressedChars.Count; i++)
-			io.AddInputCharacter(_pressedChars[i]);
+		for (int i = 0; i < _charsPressed.Count; i++)
+			io.AddInputCharacter(_charsPressed[i]);
 
-		_pressedChars.Clear();
+		_charsPressed.Clear();
 	}
 
-	public void PressKey(Keys keys, InputAction state)
+	public void PressKey(Keys keys, InputAction state, KeyModifiers keyModifiers)
 	{
-		if (state is not InputAction.Press and not InputAction.Repeat)
-			return;
+		if (state is InputAction.Press or InputAction.Repeat)
+		{
+			PressKey(keys);
 
-		bool shift = Input.IsKeyHeld(Keys.ShiftLeft) || Input.IsKeyHeld(Keys.ShiftRight);
-		char? c = keys.GetChar(shift);
-		if (c.HasValue)
-			_pressedChars.Add(c.Value);
+			bool shift = keyModifiers.HasFlag(KeyModifiers.Shift);
+			char? c = keys.GetChar(shift);
+			if (c.HasValue)
+				_charsPressed.Add(c.Value);
+		}
+		else
+		{
+			ReleaseKey(keys);
+		}
+	}
+
+	private void PressKey(Keys key)
+	{
+		_keysDown[key] = true;
+	}
+
+	private void ReleaseKey(Keys key)
+	{
+		_keysDown[key] = false;
+	}
+
+	public bool IsKeyDown(Keys key)
+	{
+		return _keysDown.TryGetValue(key, out bool isDown) && isDown;
 	}
 
 	#endregion Input

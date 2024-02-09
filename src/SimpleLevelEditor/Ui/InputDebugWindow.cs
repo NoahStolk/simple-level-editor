@@ -35,7 +35,7 @@ public static class InputDebugWindow
 					if (!Enum.IsDefined(key))
 						continue;
 
-					bool isDown = Input.IsKeyHeld(key);
+					bool isDown = App.Instance.ImGuiController.IsKeyDown(key);
 
 					ImGui.TableNextColumn();
 					ImGui.TextColored(isDown ? Color.White : Color.Gray(0.4f), key.ToString());

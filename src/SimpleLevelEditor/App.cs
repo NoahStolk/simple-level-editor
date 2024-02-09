@@ -1,5 +1,6 @@
 using Detach.Parsers.Texture;
 using Detach.Parsers.Texture.TgaFormat;
+using ImGuiNET;
 using Silk.NET.GLFW;
 using Silk.NET.OpenGL;
 using SimpleLevelEditor.Ui;
@@ -14,8 +15,6 @@ public sealed class App
 
 	private static App? _instance;
 
-	private readonly ImGuiController _imGuiController;
-
 	private double _currentTime = Graphics.Glfw.GetTime();
 	private double _frameTime;
 
@@ -24,14 +23,14 @@ public sealed class App
 
 	public unsafe App(ImGuiController imGuiController)
 	{
-		_imGuiController = imGuiController;
+		ImGuiController = imGuiController;
 
 		Graphics.Gl.ClearColor(0.3f, 0.3f, 0.3f, 0);
 
-		Graphics.Glfw.SetKeyCallback(Graphics.Window, (_, keys, _, state, _) =>
+		Graphics.Glfw.SetKeyCallback(Graphics.Window, (_, keys, _, state, keyModifiers) =>
 		{
 			Input.KeyCallback(keys, state);
-			imGuiController.PressKey(keys, state);
+			imGuiController.PressKey(keys, state, keyModifiers);
 		});
 
 		TextureData texture = TgaParser.Parse(File.ReadAllBytes(Path.Combine("Resources", "Textures", "Icon.tga")));
@@ -49,6 +48,7 @@ public sealed class App
 
 	public int Fps { get; private set; }
 	public float FrameTime => (float)_frameTime;
+	public ImGuiController ImGuiController { get; }
 
 	public static App Instance
 	{
@@ -74,7 +74,7 @@ public sealed class App
 		}
 
 		AssetFileWatcher.Destroy();
-		_imGuiController.Destroy();
+		ImGuiController.Destroy();
 		Graphics.Glfw.Terminate();
 	}
 
@@ -106,14 +106,16 @@ public sealed class App
 
 	private void Render()
 	{
-		_imGuiController.Update((float)_frameTime);
+		ImGuiController.Update((float)_frameTime);
 
 		Graphics.Gl.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit);
 
 		Shortcuts.Handle();
 
+		// ImGui.DockSpaceOverViewport();
+
 		MainWindow.Render();
 
-		_imGuiController.Render();
+		ImGuiController.Render();
 	}
 }
