@@ -118,7 +118,7 @@ public class MeshPreviewFramebuffer
 		Gl.UniformMatrix4x4(lineShader.GetUniformLocation("view"), viewMatrix);
 		Gl.UniformMatrix4x4(lineShader.GetUniformLocation("projection"), _projection);
 
-		Gl.UniformVector4(lineShader.GetUniformLocation("color"), new(1, 0, 0, 1));
+		Gl.Uniform4(lineShader.GetUniformLocation("color"), new Vector4(1, 0, 0, 1));
 		Gl.UniformMatrix4x4(lineShader.GetUniformLocation("model"), Matrix4x4.Identity);
 
 		Gl.BindVertexArray(_mesh.LineVao);

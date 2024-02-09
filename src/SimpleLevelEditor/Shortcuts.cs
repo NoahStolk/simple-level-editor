@@ -52,7 +52,7 @@ public static class Shortcuts
 		for (int i = 0; i < _shortcuts.Count; i++)
 		{
 			Shortcut shortcut = _shortcuts[i];
-			if (Input.IsKeyPressed(shortcut.Key) && shift == shortcut.Shift && ctrl == shortcut.Ctrl)
+			if (GlfwInput.IsKeyPressed(shortcut.Key) && shift == shortcut.Shift && ctrl == shortcut.Ctrl)
 			{
 				shortcut.Action();
 				break;

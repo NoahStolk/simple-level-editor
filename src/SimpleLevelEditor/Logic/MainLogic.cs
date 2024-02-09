@@ -25,7 +25,7 @@ public static class MainLogic
 				LevelEditorState.TargetHeight = Math.Clamp(LevelEditorState.TargetHeight - scroll, -512, 512);
 		}
 
-		if (isFocused && Input.IsButtonPressed(MouseButton.Left))
+		if (isFocused && GlfwInput.IsMouseButtonPressed(MouseButton.Left))
 		{
 			if (LevelEditorState.HighlightedObject != null)
 				LevelEditorState.SetSelectedWorldObject(LevelEditorState.SelectedWorldObject == LevelEditorState.HighlightedObject ? null : LevelEditorState.HighlightedObject);

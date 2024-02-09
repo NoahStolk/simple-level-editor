@@ -4,11 +4,6 @@ namespace SimpleLevelEditor.Extensions;
 
 public static class GlExtensions
 {
-	public static void UniformVector4(this GL gl, int uniformLocation, Vector4 value)
-	{
-		gl.Uniform4(uniformLocation, value.X, value.Y, value.Z, value.W);
-	}
-
 	public static void UniformMatrix4x4(this GL gl, int uniformLocation, Matrix4x4 value)
 	{
 		Span<float> data = stackalloc float[16]

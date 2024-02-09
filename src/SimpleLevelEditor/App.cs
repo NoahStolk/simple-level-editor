@@ -16,6 +16,8 @@ public sealed class App
 
 	private static App? _instance;
 
+	private readonly ImGuiController _imGuiController;
+
 	private double _currentTime = Graphics.Glfw.GetTime();
 	private double _frameTime;
 
@@ -24,7 +26,7 @@ public sealed class App
 
 	public unsafe App(ImGuiController imGuiController)
 	{
-		ImGuiController = imGuiController;
+		_imGuiController = imGuiController;
 
 		Graphics.Gl.ClearColor(0.3f, 0.3f, 0.3f, 0);
 
@@ -43,7 +45,6 @@ public sealed class App
 
 	public int Fps { get; private set; }
 	public float FrameTime => (float)_frameTime;
-	public ImGuiController ImGuiController { get; }
 
 	public static App Instance
 	{
@@ -69,7 +70,7 @@ public sealed class App
 		}
 
 		AssetFileWatcher.Destroy();
-		ImGuiController.Destroy();
+		_imGuiController.Destroy();
 		Graphics.Glfw.Terminate();
 	}
 
@@ -99,7 +100,7 @@ public sealed class App
 
 	private void Render()
 	{
-		ImGuiController.Update((float)_frameTime);
+		_imGuiController.Update((float)_frameTime);
 
 		Graphics.Gl.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit);
 
@@ -109,7 +110,7 @@ public sealed class App
 
 		MainWindow.Render();
 
-		ImGuiController.Render();
+		_imGuiController.Render();
 
 		GlfwInput.PostRender();
 	}
