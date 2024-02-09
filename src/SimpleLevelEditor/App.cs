@@ -1,5 +1,7 @@
 using Detach.Parsers.Texture;
 using Detach.Parsers.Texture.TgaFormat;
+using ImGuiGlfw;
+using ImGuiNET;
 using Silk.NET.GLFW;
 using Silk.NET.OpenGL;
 using SimpleLevelEditor.Ui;
@@ -27,12 +29,6 @@ public sealed class App
 		_imGuiController = imGuiController;
 
 		Graphics.Gl.ClearColor(0.3f, 0.3f, 0.3f, 0);
-
-		Graphics.Glfw.SetKeyCallback(Graphics.Window, (_, keys, _, state, _) =>
-		{
-			Input.KeyCallback(keys, state);
-			imGuiController.PressKey(keys, state);
-		});
 
 		TextureData texture = TgaParser.Parse(File.ReadAllBytes(Path.Combine("Resources", "Textures", "Icon.tga")));
 
@@ -99,8 +95,6 @@ public sealed class App
 		Render();
 		_renders++;
 
-		Input.PostUpdate();
-
 		Graphics.Glfw.SwapBuffers(Graphics.Window);
 	}
 
@@ -112,8 +106,12 @@ public sealed class App
 
 		Shortcuts.Handle();
 
+		ImGui.DockSpaceOverViewport(null, ImGuiDockNodeFlags.PassthruCentralNode);
+
 		MainWindow.Render();
 
 		_imGuiController.Render();
+
+		GlfwInput.PostRender();
 	}
 }

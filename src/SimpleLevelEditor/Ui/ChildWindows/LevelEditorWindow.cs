@@ -1,4 +1,5 @@
 using Detach;
+using ImGuiGlfw;
 using ImGuiNET;
 using SimpleLevelEditor.Content;
 using SimpleLevelEditor.Logic;
@@ -21,7 +22,7 @@ public static class LevelEditorWindow
 		SceneFramebuffer.Initialize(framebufferSize);
 		Camera3d.AspectRatio = framebufferSize.X / framebufferSize.Y;
 
-		if (ImGui.BeginChild("Level Editor", size, true))
+		if (ImGui.BeginChild("Level Editor", size, ImGuiChildFlags.Border))
 		{
 			ImGui.SeparatorText("Level Editor");
 
@@ -38,7 +39,7 @@ public static class LevelEditorWindow
 			Vector2 cursorPosition = ImGui.GetCursorPos();
 
 			ImGui.PushStyleColor(ImGuiCol.ChildBg, new Vector4(0, 0, 0, 0.2f));
-			if (ImGui.BeginChild("Level Editor Menu", new(280, 144), true))
+			if (ImGui.BeginChild("Level Editor Menu", new(280, 144), ImGuiChildFlags.Border))
 			{
 				const int itemWidth = 160;
 
@@ -63,7 +64,7 @@ public static class LevelEditorWindow
 
 			Matrix4x4 viewProjection = Camera3d.ViewMatrix * Camera3d.Projection;
 			Plane nearPlane = new(-viewProjection.M13, -viewProjection.M23, -viewProjection.M33, -viewProjection.M43);
-			Vector2 mousePosition = Input.GetMousePosition() - cursorScreenPos;
+			Vector2 mousePosition = GlfwInput.CursorPosition - cursorScreenPos;
 			Vector2 normalizedMousePosition = new Vector2(mousePosition.X / framebufferSize.X - 0.5f, -(mousePosition.Y / framebufferSize.Y - 0.5f)) * 2;
 
 			LevelEditorSelectionMenu.RenderSelectionMenu(framebufferSize, drawList, cursorScreenPos, nearPlane, normalizedMousePosition, GridSnap);

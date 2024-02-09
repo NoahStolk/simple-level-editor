@@ -8,7 +8,7 @@ public static class LevelInfoWindow
 {
 	public static void Render(Vector2 size)
 	{
-		if (ImGui.BeginChild("Level Info", size, true))
+		if (ImGui.BeginChild("Level Info", size, ImGuiChildFlags.Border))
 		{
 			ImGui.SeparatorText("Level Info");
 

@@ -1,3 +1,4 @@
+using ImGuiGlfw;
 using Silk.NET.GLFW;
 
 namespace SimpleLevelEditor.Rendering;
@@ -8,7 +9,7 @@ public static class Camera3d
 	private const MouseButton _panButton = MouseButton.Middle;
 
 	private const int _fieldOfView = 2;
-	private static Vector2 _originalCursor = Input.GetMousePosition();
+	private static Vector2 _originalCursor = GlfwInput.CursorPosition;
 
 	private static float _yaw = MathF.PI * 0.25f;
 	private static float _pitch = -0.5f;
@@ -37,8 +38,8 @@ public static class Camera3d
 		{
 			HandleMouse();
 
-			float scroll = Input.GetScroll();
-			if (scroll != 0 && !Input.IsKeyHeld(Keys.ControlLeft) && !Input.IsKeyHeld(Keys.ControlRight))
+			float scroll = GlfwInput.MouseWheelY;
+			if (scroll != 0 && !GlfwInput.IsKeyDown(Keys.ControlLeft) && !GlfwInput.IsKeyDown(Keys.ControlRight))
 				_zoom = Math.Max(_zoom - scroll, 1);
 		}
 		else
@@ -60,15 +61,15 @@ public static class Camera3d
 
 	private static unsafe void HandleMouse()
 	{
-		Vector2 cursor = Input.GetMousePosition();
+		Vector2 cursor = GlfwInput.CursorPosition;
 
-		if (Mode == CameraMode.None && (Input.IsButtonHeld(LookButton) || Input.IsButtonHeld(_panButton)))
+		if (Mode == CameraMode.None && (GlfwInput.IsMouseButtonDown(LookButton) || GlfwInput.IsMouseButtonDown(_panButton)))
 		{
 			Graphics.Glfw.SetInputMode(Graphics.Window, CursorStateAttribute.Cursor, CursorModeValue.CursorHidden);
 			_originalCursor = cursor;
-			Mode = Input.IsButtonHeld(LookButton) ? CameraMode.Look : CameraMode.Pan;
+			Mode = GlfwInput.IsMouseButtonDown(LookButton) ? CameraMode.Look : CameraMode.Pan;
 		}
-		else if (Mode != CameraMode.None && !Input.IsButtonHeld(LookButton) && !Input.IsButtonHeld(_panButton))
+		else if (Mode != CameraMode.None && !GlfwInput.IsMouseButtonDown(LookButton) && !GlfwInput.IsMouseButtonDown(_panButton))
 		{
 			ResetCameraMode();
 		}
