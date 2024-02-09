@@ -4,8 +4,9 @@ using ImGuiGlfw;
 using ImGuiNET;
 using SimpleLevelEditor;
 using SimpleLevelEditor.Content;
+using SimpleLevelEditor.Utils;
 
-Graphics.CreateWindow(new("Simple Level Editor", Constants.WindowWidth, Constants.WindowHeight, false));
+Graphics.CreateWindow(new($"Simple Level Editor v{AssemblyUtils.VersionString}", Constants.WindowWidth, Constants.WindowHeight, false));
 Graphics.SetWindowSizeLimits(1024, 768, 4096, 2160);
 
 foreach (string filePath in Directory.GetFiles(Path.Combine("Resources", "Shaders")).DistinctBy(Path.GetFileNameWithoutExtension))
