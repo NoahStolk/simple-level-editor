@@ -36,7 +36,7 @@ public static class EntityEditorWindow
 
 	public static void Render(Vector2 size)
 	{
-		if (ImGui.BeginChild("Edit Entity", size, true))
+		if (ImGui.BeginChild("Edit Entity", size, ImGuiChildFlags.Border))
 		{
 			ImGui.SeparatorText("Edit Entity");
 

@@ -1,3 +1,4 @@
+using ImGuiNET;
 using Silk.NET.GLFW;
 
 namespace SimpleLevelEditor.Extensions;
@@ -214,6 +215,68 @@ public static class KeysExtensions
 			Keys.KeypadSubtract => '-',
 
 			_ => null,
+		};
+	}
+
+	public static ImGuiKey GetImGuiKey(this Keys key)
+	{
+		return key switch
+		{
+			>= Keys.Number0 and <= Keys.Number9 => key - Keys.D0 + ImGuiKey._0,
+			>= Keys.A and <= Keys.Z => key - Keys.A + ImGuiKey.A,
+			>= Keys.Keypad0 and <= Keys.Keypad9 => key - Keys.Keypad0 + ImGuiKey.Keypad0,
+			>= Keys.F1 and <= Keys.F24 => key - Keys.F1 + ImGuiKey.F24,
+			_ => key switch
+			{
+				Keys.Tab => ImGuiKey.Tab,
+				Keys.Left => ImGuiKey.LeftArrow,
+				Keys.Right => ImGuiKey.RightArrow,
+				Keys.Up => ImGuiKey.UpArrow,
+				Keys.Down => ImGuiKey.DownArrow,
+				Keys.PageUp => ImGuiKey.PageUp,
+				Keys.PageDown => ImGuiKey.PageDown,
+				Keys.Home => ImGuiKey.Home,
+				Keys.End => ImGuiKey.End,
+				Keys.Insert => ImGuiKey.Insert,
+				Keys.Delete => ImGuiKey.Delete,
+				Keys.Backspace => ImGuiKey.Backspace,
+				Keys.Space => ImGuiKey.Space,
+				Keys.Enter => ImGuiKey.Enter,
+				Keys.Escape => ImGuiKey.Escape,
+				Keys.Apostrophe => ImGuiKey.Apostrophe,
+				Keys.Comma => ImGuiKey.Comma,
+				Keys.Minus => ImGuiKey.Minus,
+				Keys.Period => ImGuiKey.Period,
+				Keys.Slash => ImGuiKey.Slash,
+				Keys.Semicolon => ImGuiKey.Semicolon,
+				Keys.Equal => ImGuiKey.Equal,
+				Keys.LeftBracket => ImGuiKey.LeftBracket,
+				Keys.BackSlash => ImGuiKey.Backslash,
+				Keys.RightBracket => ImGuiKey.RightBracket,
+				Keys.GraveAccent => ImGuiKey.GraveAccent,
+				Keys.CapsLock => ImGuiKey.CapsLock,
+				Keys.ScrollLock => ImGuiKey.ScrollLock,
+				Keys.NumLock => ImGuiKey.NumLock,
+				Keys.PrintScreen => ImGuiKey.PrintScreen,
+				Keys.Pause => ImGuiKey.Pause,
+				Keys.KeypadDecimal => ImGuiKey.KeypadDecimal,
+				Keys.KeypadDivide => ImGuiKey.KeypadDivide,
+				Keys.KeypadMultiply => ImGuiKey.KeypadMultiply,
+				Keys.KeypadSubtract => ImGuiKey.KeypadSubtract,
+				Keys.KeypadAdd => ImGuiKey.KeypadAdd,
+				Keys.KeypadEnter => ImGuiKey.KeypadEnter,
+				Keys.KeypadEqual => ImGuiKey.KeypadEqual,
+				Keys.ShiftLeft => ImGuiKey.LeftShift,
+				Keys.ControlLeft => ImGuiKey.LeftCtrl,
+				Keys.AltLeft => ImGuiKey.LeftAlt,
+				Keys.SuperLeft => ImGuiKey.LeftSuper,
+				Keys.ShiftRight => ImGuiKey.RightShift,
+				Keys.ControlRight => ImGuiKey.RightCtrl,
+				Keys.AltRight => ImGuiKey.RightAlt,
+				Keys.SuperRight => ImGuiKey.RightSuper,
+				Keys.Menu => ImGuiKey.Menu,
+				_ => ImGuiKey.None,
+			},
 		};
 	}
 }

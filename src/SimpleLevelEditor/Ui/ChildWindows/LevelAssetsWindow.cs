@@ -9,7 +9,7 @@ public static class LevelAssetsWindow
 {
 	public static void Render(Vector2 size)
 	{
-		if (ImGui.BeginChild("Level Assets", size, true))
+		if (ImGui.BeginChild("Level Assets", size, ImGuiChildFlags.Border))
 		{
 			ImGui.SeparatorText("Level Assets");
 
@@ -48,7 +48,7 @@ public static class LevelAssetsWindow
 		}
 
 		ImGui.BeginDisabled(LevelState.LevelFilePath == null);
-		if (ImGui.BeginChild(Inline.Span($"{name}List"), new(0, windowHeight), true))
+		if (ImGui.BeginChild(Inline.Span($"{name}List"), new(0, windowHeight), ImGuiChildFlags.Border))
 		{
 			string? toRemove = null;
 			foreach (string item in list)

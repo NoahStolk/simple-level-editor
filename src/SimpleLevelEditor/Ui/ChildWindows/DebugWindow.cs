@@ -11,7 +11,7 @@ public static class DebugWindow
 
 	public static void Render(Vector2 size)
 	{
-		if (ImGui.BeginChild("Debug", size, true))
+		if (ImGui.BeginChild("Debug", size, ImGuiChildFlags.Border))
 		{
 			ImGui.SeparatorText("Warnings");
 

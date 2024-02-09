@@ -41,7 +41,10 @@ public static class Input
 
 	#region Keyboard
 
-	public static bool IsKeyHeld(Keys key) => _keysCurrent[(int)key];
+	public static bool IsKeyHeld(Keys key)
+	{
+		return _keysCurrent[(int)key];
+	}
 
 	public static bool IsKeyPressed(Keys key)
 	{
@@ -60,7 +63,9 @@ public static class Input
 	#region Mouse
 
 	public static bool IsButtonHeld(MouseButton mouseButton)
-		=> _mouseButtonsCurrent[(int)mouseButton];
+	{
+		return _mouseButtonsCurrent[(int)mouseButton];
+	}
 
 	public static bool IsButtonPressed(MouseButton mouseButton)
 	{
@@ -75,10 +80,14 @@ public static class Input
 	}
 
 	public static void MouseWheelCallback(double delta)
-		=> _mouseWheel = delta;
+	{
+		_mouseWheel = delta;
+	}
 
 	public static int GetScroll()
-		=> _mouseWheel > 0 ? 1 : _mouseWheel < 0 ? -1 : 0;
+	{
+		return _mouseWheel > 0 ? 1 : _mouseWheel < 0 ? -1 : 0;
+	}
 
 	public static unsafe Vector2 GetMousePosition()
 	{

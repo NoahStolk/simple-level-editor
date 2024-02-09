@@ -8,6 +8,7 @@ public static class MainWindow
 {
 	private static bool _showDemoWindow;
 	private static bool _showControlsWindow;
+	private static bool _showInputDebugWindow;
 
 	public static void Render()
 	{
@@ -16,6 +17,9 @@ public static class MainWindow
 
 		if (_showControlsWindow)
 			ControlsWindow.Render(ref _showControlsWindow);
+
+		if (_showInputDebugWindow)
+			InputDebugWindow.Render(ref _showInputDebugWindow);
 
 		Vector2 viewportSize = ImGui.GetMainViewport().Size;
 		ImGui.SetNextWindowSize(viewportSize);
@@ -47,6 +51,9 @@ public static class MainWindow
 					if (ImGui.MenuItem("Show ImGui Demo"))
 						_showDemoWindow = true;
 
+					if (ImGui.MenuItem("Show Input Debug"))
+						_showInputDebugWindow = true;
+
 					ImGui.EndMenu();
 				}
 
@@ -72,7 +79,7 @@ public static class MainWindow
 				LevelInfoWindow.Render(new(leftWidth, levelInfoHeight));
 				LevelAssetsWindow.Render(new(leftWidth, viewportSize.Y - bottomHeight - levelInfoHeight));
 
-				if (ImGui.BeginChild("History", default, true))
+				if (ImGui.BeginChild("History", default, ImGuiChildFlags.Border))
 				{
 					for (int i = 0; i < LevelState.History.Count; i++)
 					{

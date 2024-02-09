@@ -9,25 +9,8 @@ namespace SimpleLevelEditor;
 public sealed class ImGuiController
 {
 	private static readonly IReadOnlyList<Keys> _allKeys = (Keys[])Enum.GetValues(typeof(Keys));
-	private static readonly IEnumerable<Keys> _controlKeys = new List<Keys>
-	{
-		Keys.Left,
-		Keys.Right,
-		Keys.Up,
-		Keys.Down,
-		Keys.Home,
-		Keys.End,
-		Keys.PageUp,
-		Keys.PageDown,
-		Keys.Delete,
-		Keys.Backspace,
-		Keys.Enter,
-		Keys.Escape,
-		Keys.Tab,
-	};
 
 	private readonly List<char> _pressedChars = [];
-	private readonly List<Keys> _pressedControlKeys = [];
 
 	private readonly uint _vbo;
 	private readonly uint _ebo;
@@ -56,7 +39,6 @@ public sealed class ImGuiController
 		_ebo = Graphics.Gl.GenBuffer();
 
 		RecreateFontDeviceTexture();
-		SetKeyMappings();
 	}
 
 	#region Initialization
@@ -85,36 +67,6 @@ public sealed class ImGuiController
 			Graphics.Gl.TexImage2D(TextureTarget.Texture2D, 0, InternalFormat.Rgba, (uint)width, (uint)height, 0, GLEnum.Rgba, PixelType.UnsignedByte, b);
 
 		io.Fonts.SetTexID((IntPtr)textureId);
-	}
-
-	private static void SetKeyMappings()
-	{
-		ImGuiIOPtr io = ImGui.GetIO();
-		io.KeyRepeatRate = 1f / 30f;
-		io.KeyRepeatDelay = 0.05f;
-		io.KeyMap[(int)ImGuiKey.Tab] = (int)Keys.Tab;
-		io.KeyMap[(int)ImGuiKey.LeftArrow] = (int)Keys.Left;
-		io.KeyMap[(int)ImGuiKey.RightArrow] = (int)Keys.Right;
-		io.KeyMap[(int)ImGuiKey.UpArrow] = (int)Keys.Up;
-		io.KeyMap[(int)ImGuiKey.DownArrow] = (int)Keys.Down;
-		io.KeyMap[(int)ImGuiKey.PageUp] = (int)Keys.PageUp;
-		io.KeyMap[(int)ImGuiKey.PageDown] = (int)Keys.PageDown;
-		io.KeyMap[(int)ImGuiKey.Home] = (int)Keys.Home;
-		io.KeyMap[(int)ImGuiKey.End] = (int)Keys.End;
-		io.KeyMap[(int)ImGuiKey.Delete] = (int)Keys.Delete;
-		io.KeyMap[(int)ImGuiKey.Backspace] = (int)Keys.Backspace;
-		io.KeyMap[(int)ImGuiKey.Enter] = (int)Keys.Enter;
-		io.KeyMap[(int)ImGuiKey.KeypadEnter] = (int)Keys.KeypadEnter;
-		io.KeyMap[(int)ImGuiKey.Escape] = (int)Keys.Escape;
-
-		for (int i = 0; i < 26; i++)
-			io.KeyMap[(int)ImGuiKey.A + i] = (int)Keys.A + i;
-
-		for (int i = 0; i < 10; i++)
-		{
-			io.KeyMap[(int)ImGuiKey._0 + i] = (int)Keys.Number0 + i;
-			io.KeyMap[(int)ImGuiKey.Keypad0 + i] = (int)Keys.Keypad0 + i;
-		}
 	}
 
 	#endregion Initialization
@@ -150,9 +102,16 @@ public sealed class ImGuiController
 		UpdateKeyboard(io);
 
 		ImGui.NewFrame();
+
+		io.KeyCtrl = Input.IsKeyHeld(Keys.ControlLeft) || Input.IsKeyHeld(Keys.ControlRight);
+		io.KeyAlt = Input.IsKeyHeld(Keys.AltLeft) || Input.IsKeyHeld(Keys.AltRight);
+		io.KeyShift = Input.IsKeyHeld(Keys.ShiftLeft) || Input.IsKeyHeld(Keys.ShiftRight);
+		io.KeySuper = Input.IsKeyHeld(Keys.SuperLeft) || Input.IsKeyHeld(Keys.SuperRight);
 	}
 
-	private void UpdateMouse(ImGuiIOPtr io)
+	#region Input
+
+	private static void UpdateMouse(ImGuiIOPtr io)
 	{
 		io.MousePos = Input.GetMousePosition();
 		io.MouseWheel = Input.GetScroll();
@@ -171,44 +130,27 @@ public sealed class ImGuiController
 			if (keyValue < 0)
 				continue;
 
-			if (_controlKeys.Contains(key))
-				io.KeysDown[keyValue] = _pressedControlKeys.Contains(key);
-			else
-				io.KeysDown[keyValue] = Input.IsKeyHeld(key);
+			io.AddKeyEvent(key.GetImGuiKey(), Input.IsKeyHeld(key));
 		}
-
-		_pressedControlKeys.Clear();
 
 		for (int i = 0; i < _pressedChars.Count; i++)
 			io.AddInputCharacter(_pressedChars[i]);
 
 		_pressedChars.Clear();
-
-		io.KeyCtrl = Input.IsKeyHeld(Keys.ControlLeft) || Input.IsKeyHeld(Keys.ControlRight);
-		io.KeyAlt = Input.IsKeyHeld(Keys.AltLeft) || Input.IsKeyHeld(Keys.AltRight);
-		io.KeyShift = Input.IsKeyHeld(Keys.ShiftLeft) || Input.IsKeyHeld(Keys.ShiftRight);
-		io.KeySuper = Input.IsKeyHeld(Keys.SuperLeft) || Input.IsKeyHeld(Keys.SuperRight);
 	}
 
 	public void PressKey(Keys keys, InputAction state)
 	{
-		if (state is not (InputAction.Press or InputAction.Repeat))
+		if (state is not InputAction.Press and not InputAction.Repeat)
 			return;
 
-		if (_controlKeys.Contains(keys))
-		{
-			_pressedControlKeys.Add(keys);
-		}
-		else
-		{
-			ImGuiIOPtr io = ImGui.GetIO();
-			bool shift = io.KeyShift;
-			char? c = keys.GetChar(shift);
-
-			if (c.HasValue)
-				_pressedChars.Add(c.Value);
-		}
+		bool shift = Input.IsKeyHeld(Keys.ShiftLeft) || Input.IsKeyHeld(Keys.ShiftRight);
+		char? c = keys.GetChar(shift);
+		if (c.HasValue)
+			_pressedChars.Add(c.Value);
 	}
+
+	#endregion Input
 
 	#region Rendering
 
@@ -225,7 +167,7 @@ public sealed class ImGuiController
 		Graphics.Gl.Disable(GLEnum.PrimitiveRestart);
 		Graphics.Gl.PolygonMode(GLEnum.FrontAndBack, GLEnum.Fill);
 
-		Matrix4x4 orthoProjection = Matrix4x4.CreateOrthographicOffCenter(
+		Matrix4x4 orthographicProjection = Matrix4x4.CreateOrthographicOffCenter(
 			left: drawDataPtr.DisplayPos.X,
 			right: drawDataPtr.DisplayPos.X + drawDataPtr.DisplaySize.X,
 			bottom: drawDataPtr.DisplayPos.Y + drawDataPtr.DisplaySize.Y,
@@ -233,7 +175,7 @@ public sealed class ImGuiController
 			zNearPlane: -1,
 			zFarPlane: 1);
 
-		_useShader.Invoke(orthoProjection);
+		_useShader.Invoke(orthographicProjection);
 
 		Graphics.Gl.BindSampler(0, 0);
 

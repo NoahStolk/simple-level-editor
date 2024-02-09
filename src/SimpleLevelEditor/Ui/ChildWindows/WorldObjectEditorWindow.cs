@@ -24,7 +24,7 @@ public static class WorldObjectEditorWindow
 
 	public static void Render(Vector2 size)
 	{
-		if (ImGui.BeginChild("Edit World Object", size, true))
+		if (ImGui.BeginChild("Edit World Object", size, ImGuiChildFlags.Border))
 		{
 			ImGui.SeparatorText("Edit World Object");
 
@@ -136,7 +136,7 @@ public static class WorldObjectEditorWindow
 
 		ImGui.SeparatorText("Mesh");
 
-		if (ImGui.BeginChild("Mesh", new(0, 280), true))
+		if (ImGui.BeginChild("Mesh", new(0, 280), ImGuiChildFlags.Border))
 		{
 			float childWidth = ImGui.GetContentRegionAvail().X;
 			float tileSize = childWidth / rowLength;
@@ -175,7 +175,7 @@ public static class WorldObjectEditorWindow
 
 		ImGui.SeparatorText("Texture");
 
-		if (ImGui.BeginChild("Texture", new(0, 280), true))
+		if (ImGui.BeginChild("Texture", new(0, 280), ImGuiChildFlags.Border))
 		{
 			float childWidth = ImGui.GetContentRegionAvail().X;
 			float tileSize = childWidth / rowLength;
