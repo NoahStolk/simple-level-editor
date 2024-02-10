@@ -1,6 +1,5 @@
 using ImGuiNET;
 using SimpleLevelEditor.State;
-using SimpleLevelEditor.Ui.ChildWindows;
 
 namespace SimpleLevelEditor.Ui;
 
@@ -29,117 +28,55 @@ public static class MainWindow
 		ImGui.SetNextWindowSize(viewportSize);
 		ImGui.SetNextWindowPos(Vector2.Zero);
 
-		if (ImGui.Begin("3D Level Editor", ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoFocusOnAppearing | ImGuiWindowFlags.NoBringToFrontOnFocus | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.MenuBar))
+		if (ImGui.BeginMainMenuBar())
 		{
-			if (ImGui.BeginMenuBar())
+			if (ImGui.BeginMenu("File"))
 			{
-				if (ImGui.BeginMenu("File"))
-				{
-					if (ImGui.MenuItem("New", Shortcuts.GetKeyDescription(Shortcuts.New)))
-						LevelState.New();
+				if (ImGui.MenuItem("New", Shortcuts.GetKeyDescription(Shortcuts.New)))
+					LevelState.New();
 
-					if (ImGui.MenuItem("Open", Shortcuts.GetKeyDescription(Shortcuts.Open)))
-						LevelState.Load();
+				if (ImGui.MenuItem("Open", Shortcuts.GetKeyDescription(Shortcuts.Open)))
+					LevelState.Load();
 
-					if (ImGui.MenuItem("Save", Shortcuts.GetKeyDescription(Shortcuts.Save)))
-						LevelState.Save();
+				if (ImGui.MenuItem("Save", Shortcuts.GetKeyDescription(Shortcuts.Save)))
+					LevelState.Save();
 
-					if (ImGui.MenuItem("Save As", Shortcuts.GetKeyDescription(Shortcuts.SaveAs)))
-						LevelState.SaveAs();
+				if (ImGui.MenuItem("Save As", Shortcuts.GetKeyDescription(Shortcuts.SaveAs)))
+					LevelState.SaveAs();
 
-					ImGui.EndMenu();
-				}
-
-				if (ImGui.BeginMenu("Debug"))
-				{
-					if (ImGui.MenuItem("Show ImGui Demo"))
-						_showDemoWindow = true;
-
-					if (ImGui.MenuItem("Show Input Debug"))
-						_showInputDebugWindow = true;
-
-					if (ImGui.MenuItem("Show Performance"))
-						_showPerformanceWindow = true;
-
-					ImGui.EndMenu();
-				}
-
-				if (ImGui.BeginMenu("Help"))
-				{
-					if (ImGui.MenuItem("Controls & Shortcuts"))
-						_showControlsWindow = true;
-
-					ImGui.EndMenu();
-				}
-
-				ImGui.EndMenuBar();
+				ImGui.EndMenu();
 			}
 
-			const int leftWidth = 256;
-			const int rightWidth = 512;
-			const int bottomHeight = 256;
-			float middleWidth = viewportSize.X - leftWidth - rightWidth;
-
-			if (ImGui.BeginChild("Left", new(leftWidth, 0)))
+			if (ImGui.BeginMenu("Debug"))
 			{
-				const int levelInfoHeight = 192;
-				LevelInfoWindow.Render(new(leftWidth, levelInfoHeight));
-				LevelAssetsWindow.Render(new(leftWidth, viewportSize.Y - bottomHeight - levelInfoHeight));
+				if (ImGui.MenuItem("Show ImGui Demo"))
+					_showDemoWindow = true;
 
-				if (ImGui.BeginChild("History", default, ImGuiChildFlags.Border))
-				{
-					for (int i = 0; i < LevelState.History.Count; i++)
-					{
-						bool isCurrent = i == LevelState.CurrentHistoryIndex;
-						LevelState.HistoryEntry entry = LevelState.History[i];
-						ImGui.TextColored(isCurrent ? new(0, 1, 0, 1) : Vector4.One, entry.EditDescription);
-					}
-				}
+				if (ImGui.MenuItem("Show Input Debug"))
+					_showInputDebugWindow = true;
 
-				ImGui.EndChild(); // End History
+				if (ImGui.MenuItem("Show Performance"))
+					_showPerformanceWindow = true;
+
+				ImGui.EndMenu();
 			}
 
-			ImGui.EndChild(); // End Left
-
-			ImGui.SameLine();
-
-			if (ImGui.BeginChild("Middle", new(middleWidth, 0)))
+			if (ImGui.BeginMenu("Help"))
 			{
-				LevelEditorWindow.Render(new(middleWidth, viewportSize.Y - 27));
+				if (ImGui.MenuItem("Controls & Shortcuts"))
+					_showControlsWindow = true;
+
+				ImGui.EndMenu();
 			}
 
-			ImGui.EndChild(); // End Middle
-
-			ImGui.SameLine();
-
-			if (ImGui.BeginChild("Right", new(0, 0)))
-			{
-				Vector4 activeButton = new(0.3f, 0.3f, 0.3f, 1);
-
-				ImGui.PushStyleColor(ImGuiCol.Button, LevelEditorState.Mode == LevelEditorState.EditMode.WorldObjects ? activeButton : default);
-				if (ImGui.Button("World objects"))
-					LevelEditorState.Mode = LevelEditorState.EditMode.WorldObjects;
-
-				ImGui.PopStyleColor();
-
-				ImGui.SameLine();
-				ImGui.PushStyleColor(ImGuiCol.Button, LevelEditorState.Mode == LevelEditorState.EditMode.Entities ? activeButton : default);
-				if (ImGui.Button("Entities"))
-					LevelEditorState.Mode = LevelEditorState.EditMode.Entities;
-
-				ImGui.PopStyleColor();
-
-				if (LevelEditorState.Mode == LevelEditorState.EditMode.WorldObjects)
-					WorldObjectEditorWindow.Render(new(0, viewportSize.Y - bottomHeight));
-				else if (LevelEditorState.Mode == LevelEditorState.EditMode.Entities)
-					EntityEditorWindow.Render(new(0, viewportSize.Y - bottomHeight));
-
-				DebugWindow.Render(default);
-			}
-
-			ImGui.EndChild(); // End Right
+			ImGui.EndMainMenuBar();
 		}
 
-		ImGui.End(); // End 3D Level Editor
+		LevelInfoWindow.Render();
+		LevelAssetsWindow.Render();
+		HistoryWindow.Render();
+		LevelEditorWindow.Render();
+		ObjectEditorWindow.Render();
+		DebugWindow.Render();
 	}
 }

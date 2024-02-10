@@ -3,16 +3,14 @@ using Detach.Numerics;
 using ImGuiNET;
 using SimpleLevelEditor.State;
 
-namespace SimpleLevelEditor.Ui.ChildWindows;
+namespace SimpleLevelEditor.Ui;
 
 public static class DebugWindow
 {
-	public static void Render(Vector2 size)
+	public static void Render()
 	{
-		if (ImGui.BeginChild("Warnings", size, ImGuiChildFlags.Border))
+		if (ImGui.Begin("Warnings"))
 		{
-			ImGui.SeparatorText("Warnings");
-
 			ImGui.BeginDisabled(DebugState.Warnings.Count == 0);
 			if (ImGui.Button("Clear"))
 				DebugState.ClearWarnings();
@@ -35,6 +33,6 @@ public static class DebugWindow
 			ImGui.EndChild();
 		}
 
-		ImGui.EndChild();
+		ImGui.End();
 	}
 }

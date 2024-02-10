@@ -34,9 +34,9 @@ public static class EntityEditorWindow
 	};
 	public static Entity DefaultEntity { get; private set; } = _default.DeepCopy();
 
-	public static void Render(Vector2 size)
+	public static void Render()
 	{
-		if (ImGui.BeginChild("Edit Entity", size, ImGuiChildFlags.Border))
+		if (ImGui.BeginChild("Edit Entity", default, ImGuiChildFlags.Border))
 		{
 			ImGui.SeparatorText("Edit Entity");
 

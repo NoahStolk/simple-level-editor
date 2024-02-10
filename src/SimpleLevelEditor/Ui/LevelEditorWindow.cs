@@ -4,8 +4,9 @@ using SimpleLevelEditor.Content;
 using SimpleLevelEditor.Logic;
 using SimpleLevelEditor.Rendering;
 using SimpleLevelEditor.State;
+using SimpleLevelEditor.Ui.ChildWindows;
 
-namespace SimpleLevelEditor.Ui.ChildWindows;
+namespace SimpleLevelEditor.Ui;
 
 public static class LevelEditorWindow
 {
@@ -14,16 +15,14 @@ public static class LevelEditorWindow
 
 	private static float Snap => _snapIndex >= 0 && _snapIndex < _snapPoints.Length ? _snapPoints[_snapIndex] : 0;
 
-	public static void Render(Vector2 size)
+	public static void Render()
 	{
-		Vector2 framebufferSize = size - new Vector2(0, 32);
-
-		SceneFramebuffer.Initialize(framebufferSize);
-		Camera3d.AspectRatio = framebufferSize.X / framebufferSize.Y;
-
-		if (ImGui.BeginChild("Level Editor", size, ImGuiChildFlags.Border))
+		if (ImGui.Begin("Level Editor"))
 		{
-			ImGui.SeparatorText("Level Editor");
+			Vector2 framebufferSize = ImGui.GetContentRegionAvail();
+
+			SceneFramebuffer.Initialize(framebufferSize);
+			Camera3d.AspectRatio = framebufferSize.X / framebufferSize.Y;
 
 			SceneFramebuffer.RenderFramebuffer(framebufferSize);
 
@@ -87,6 +86,6 @@ public static class LevelEditorWindow
 			MainLogic.Run(isFocused, normalizedMousePosition, nearPlane, Snap);
 		}
 
-		ImGui.EndChild(); // End Level Editor
+		ImGui.End();
 	}
 }

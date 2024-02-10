@@ -22,9 +22,9 @@ public static class WorldObjectEditorWindow
 	};
 	public static WorldObject DefaultObject { get; private set; } = _default.DeepCopy();
 
-	public static void Render(Vector2 size)
+	public static void Render()
 	{
-		if (ImGui.BeginChild("Edit World Object", size, ImGuiChildFlags.Border))
+		if (ImGui.BeginChild("Edit World Object", default, ImGuiChildFlags.Border))
 		{
 			ImGui.SeparatorText("Edit World Object");
 

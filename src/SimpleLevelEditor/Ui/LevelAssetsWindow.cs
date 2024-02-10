@@ -3,26 +3,24 @@ using ImGuiNET;
 using SimpleLevelEditor.State;
 using System.Diagnostics;
 
-namespace SimpleLevelEditor.Ui.ChildWindows;
+namespace SimpleLevelEditor.Ui;
 
 public static class LevelAssetsWindow
 {
-	public static void Render(Vector2 size)
+	public static void Render()
 	{
-		if (ImGui.BeginChild("Level Assets", size, ImGuiChildFlags.Border))
+		if (ImGui.Begin("Level Assets"))
 		{
-			ImGui.SeparatorText("Level Assets");
-
 			if (ImGui.Button("Reload all"))
 				LevelState.ReloadAssets(LevelState.LevelFilePath);
 
-			float height = MathF.Floor(size.Y / 2f) - 76;
+			float height = ImGui.GetContentRegionAvail().Y / 2f - 48;
 
 			RenderAssetPaths(height, "Meshes", "obj", LevelState.Level.Meshes, l => LevelState.Level.Meshes = l);
 			RenderAssetPaths(height, "Textures", "tga", LevelState.Level.Textures, l => LevelState.Level.Textures = l);
 		}
 
-		ImGui.EndChild(); // End Level Assets
+		ImGui.End();
 	}
 
 	private static void RenderAssetPaths(float windowHeight, ReadOnlySpan<char> name, string dialogFilterList, List<string> list, Action<List<string>> setList)
