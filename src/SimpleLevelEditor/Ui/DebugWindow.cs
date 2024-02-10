@@ -1,36 +1,45 @@
 using Detach;
-using Detach.Numerics;
 using ImGuiNET;
-using SimpleLevelEditor.State;
 
 namespace SimpleLevelEditor.Ui;
 
 public static class DebugWindow
 {
-	public static void Render()
+	private static long _previousAllocatedBytes;
+
+	public static void Render(ref bool showWindow)
 	{
-		if (ImGui.Begin("Warnings"))
+		if (ImGui.Begin("Debug", ref showWindow))
 		{
-			ImGui.BeginDisabled(DebugState.Warnings.Count == 0);
-			if (ImGui.Button("Clear"))
-				DebugState.ClearWarnings();
+			ImGui.SeparatorText("Rendering");
 
-			ImGui.EndDisabled();
+			ImGui.Text(Inline.Span($"{App.Instance.Fps} FPS"));
+			ImGui.Text(Inline.Span($"Frame time: {App.Instance.FrameTime:0.0000} s"));
 
-			if (ImGui.BeginChild("WarningsList"))
+			ImGui.SeparatorText("Allocations");
+
+			long allocatedBytes = GC.GetAllocatedBytesForCurrentThread();
+			ImGui.Text(Inline.Span($"Allocated: {allocatedBytes:N0} bytes"));
+			ImGui.Text(Inline.Span($"Since last update: {allocatedBytes - _previousAllocatedBytes:N0} bytes"));
+			_previousAllocatedBytes = allocatedBytes;
+
+			for (int i = 0; i < GC.MaxGeneration + 1; i++)
+				ImGui.Text(Inline.Span($"Gen{i}: {GC.CollectionCount(i)} times"));
+
+			ImGui.Text(Inline.Span($"Total memory: {GC.GetTotalMemory(false):N0} bytes"));
+			ImGui.Text(Inline.Span($"Total pause duration: {GC.GetTotalPauseDuration().TotalSeconds:0.000} s"));
+
+			ImGui.SeparatorText("Watching directories");
+
+			if (AssetFileWatcher.Directories.Count > 0)
 			{
-				if (DebugState.Warnings.Count > 0)
-				{
-					foreach (KeyValuePair<string, int> kvp in DebugState.Warnings)
-						ImGui.TextWrapped(Inline.Span($"{kvp.Key}: {kvp.Value}"));
-				}
-				else
-				{
-					ImGui.TextColored(Color.Green, "No warnings");
-				}
+				for (int i = 0; i < AssetFileWatcher.Directories.Count; i++)
+					ImGui.TextWrapped(AssetFileWatcher.Directories[i]);
 			}
-
-			ImGui.EndChild();
+			else
+			{
+				ImGui.TextWrapped("No directories are currently being watched.");
+			}
 		}
 
 		ImGui.End();
