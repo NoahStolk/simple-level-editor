@@ -26,6 +26,7 @@ foreach (string filePath in Directory.GetFiles(Path.Combine("Resources", "Textur
 }
 
 ImGuiController imGuiController = new(Graphics.Gl, Input.GlfwInput, Constants.WindowWidth, Constants.WindowHeight);
+imGuiController.CreateDefaultFont();
 
 ImGuiIOPtr io = ImGui.GetIO();
 unsafe
