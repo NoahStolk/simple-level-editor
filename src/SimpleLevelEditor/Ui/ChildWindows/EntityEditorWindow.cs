@@ -100,6 +100,11 @@ public static class EntityEditorWindow
 			if (ImGui.InputText(Inline.Span($"Property Key##{entity.Id}_{i}"), ref property.Key, 32))
 				entity.Properties[i] = property;
 
+			ImGui.SameLine();
+			ImGui.Text("(?)");
+			if (ImGui.IsItemHovered())
+				ImGui.SetTooltip("Property names must begin with a letter.");
+
 			if (ImGui.IsItemDeactivatedAfterEdit())
 				LevelState.Track("Changed entity property key name");
 

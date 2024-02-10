@@ -1,5 +1,6 @@
 using SimpleLevelEditor.Model;
 using SimpleLevelEditor.State;
+using System.Globalization;
 using System.Text;
 using System.Xml;
 
@@ -20,7 +21,7 @@ public static class XmlFormatSerializer
 			{
 				switch (reader.Name)
 				{
-					case "Level": level.Version = int.Parse(reader.GetAttribute("Version") ?? throw _invalidFormat); break;
+					case "Level": level.Version = int.Parse(reader.GetAttribute("Version") ?? throw _invalidFormat, CultureInfo.InvariantCulture); break;
 					case "Meshes": level.Meshes = ReadMeshes(reader); break;
 					case "Textures": level.Textures = ReadTextures(reader); break;
 					case "WorldObjects": level.WorldObjects = ReadWorldObjects(reader); break;
@@ -113,7 +114,7 @@ public static class XmlFormatSerializer
 					if (reader.Name is "Name" or "Position" or "Shape")
 						continue;
 
-					int indexOfSpace = reader.Value.IndexOf(' ');
+					int indexOfSpace = reader.Value.IndexOf(' ', StringComparison.Ordinal);
 					string type = reader.Value[..indexOfSpace];
 					string value = reader.Value[(indexOfSpace + 1)..];
 
@@ -155,7 +156,7 @@ public static class XmlFormatSerializer
 	private static void WriteLevel(Level3dData level, XmlWriter writer)
 	{
 		writer.WriteStartElement("Level");
-		writer.WriteAttributeString("Version", level.Version.ToString());
+		writer.WriteAttributeString("Version", level.Version.ToString(CultureInfo.InvariantCulture));
 
 		writer.WriteStartElement("Meshes");
 		foreach (string mesh in level.Meshes)
@@ -202,7 +203,7 @@ public static class XmlFormatSerializer
 
 			foreach (EntityProperty property in entity.Properties)
 			{
-				if (property.Key.Length == 0 || property.Key is "Name" or "Position" or "Shape")
+				if (property.Key.Length == 0 || !char.IsLetter(property.Key[0]) || property.Key is "Name" or "Position" or "Shape")
 				{
 					DebugState.AddWarning($"Skipping invalid property key: {property.Key}");
 					continue;
