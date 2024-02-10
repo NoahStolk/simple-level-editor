@@ -9,6 +9,7 @@ public static class MainWindow
 	private static bool _showDemoWindow;
 	private static bool _showControlsWindow;
 	private static bool _showInputDebugWindow;
+	private static bool _showPerformanceWindow;
 
 	public static void Render()
 	{
@@ -20,6 +21,9 @@ public static class MainWindow
 
 		if (_showInputDebugWindow)
 			InputDebugWindow.Render(ref _showInputDebugWindow);
+
+		if (_showPerformanceWindow)
+			PerformanceWindow.Render(ref _showPerformanceWindow);
 
 		Vector2 viewportSize = ImGui.GetMainViewport().Size;
 		ImGui.SetNextWindowSize(viewportSize);
@@ -53,6 +57,9 @@ public static class MainWindow
 
 					if (ImGui.MenuItem("Show Input Debug"))
 						_showInputDebugWindow = true;
+
+					if (ImGui.MenuItem("Show Performance"))
+						_showPerformanceWindow = true;
 
 					ImGui.EndMenu();
 				}
