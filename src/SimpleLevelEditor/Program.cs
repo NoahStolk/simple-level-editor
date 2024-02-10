@@ -4,6 +4,7 @@ using ImGuiGlfw;
 using ImGuiNET;
 using SimpleLevelEditor;
 using SimpleLevelEditor.Content;
+using SimpleLevelEditor.User;
 using SimpleLevelEditor.Utils;
 
 Graphics.CreateWindow(new($"Simple Level Editor v{AssemblyUtils.VersionString}", Constants.WindowWidth, Constants.WindowHeight, false));
@@ -25,6 +26,14 @@ foreach (string filePath in Directory.GetFiles(Path.Combine("Resources", "Textur
 }
 
 ImGuiController imGuiController = new(Graphics.Gl, Input.GlfwInput, Constants.WindowWidth, Constants.WindowHeight);
+
+ImGuiIOPtr io = ImGui.GetIO();
+unsafe
+{
+	io.NativePtr->IniFilename = null;
+}
+
+UserSettings.LoadImGuiIni();
 
 ImGuiStylePtr style = ImGui.GetStyle();
 style.WindowPadding = new(4, 4);

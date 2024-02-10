@@ -5,6 +5,7 @@ using ImGuiNET;
 using Silk.NET.GLFW;
 using Silk.NET.OpenGL;
 using SimpleLevelEditor.Ui;
+using SimpleLevelEditor.User;
 using System.Runtime.InteropServices;
 
 namespace SimpleLevelEditor;
@@ -109,6 +110,9 @@ public sealed class App
 		ImGui.DockSpaceOverViewport(null, ImGuiDockNodeFlags.PassthruCentralNode);
 
 		MainWindow.Render();
+
+		if (ImGui.GetIO().WantSaveIniSettings)
+			UserSettings.SaveImGuiIni();
 
 		_imGuiController.Render();
 
