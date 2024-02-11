@@ -13,5 +13,10 @@ public static class EntityConfigState
 		using FileStream fs = new(path, FileMode.Open);
 		using XmlReader reader = XmlReader.Create(fs);
 		EntityConfig = XmlFormatSerializer.ReadEntityConfig(reader);
+
+		LevelEditorState.RenderFilter.Clear();
+		LevelEditorState.RenderFilter.Add("WorldObjects", true);
+		foreach (EntityDescriptor entity in EntityConfig.Entities)
+			LevelEditorState.RenderFilter.Add($"Entities:{entity.Name}", true);
 	}
 }
