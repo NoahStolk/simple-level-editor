@@ -222,5 +222,5 @@ public static class LevelState
 		}
 	}
 
-	public record HistoryEntry(Level3dData Object, byte[] Hash, string EditDescription);
+	public sealed record HistoryEntry(Level3dData Object, byte[] Hash, string EditDescription);
 }

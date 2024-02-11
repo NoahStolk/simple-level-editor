@@ -237,6 +237,9 @@ dotnet_diagnostic.CA2211.severity                                             = 
 # Operator overloads have named alternates.
 dotnet_diagnostic.CA2225.severity                                             = none
 
+# Do not use broken cryptographic algorithms.
+dotnet_diagnostic.CA5351.severity                                             = none
+
 # Missing XML comment for publicly visible type or member.
 dotnet_diagnostic.CS1591.severity                                             = none
 
