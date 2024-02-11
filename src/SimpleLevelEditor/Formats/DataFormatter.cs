@@ -1,6 +1,7 @@
 using OneOf;
 using SimpleLevelEditor.Data;
 using SimpleLevelEditor.Model.EntityShapes;
+using System.Globalization;
 
 namespace SimpleLevelEditor.Formats;
 
@@ -27,30 +28,30 @@ public static class DataFormatter
 
 	public static int ReadInt(string str)
 	{
-		return int.Parse(str);
+		return int.Parse(str, CultureInfo.InvariantCulture);
 	}
 
 	public static float ReadFloat(string str)
 	{
-		return float.Parse(str);
+		return float.Parse(str, CultureInfo.InvariantCulture);
 	}
 
 	public static Vector2 ReadVector2(string str)
 	{
 		string[] parts = str.Split(' ');
-		return new(float.Parse(parts[0]), float.Parse(parts[1]));
+		return new(float.Parse(parts[0], CultureInfo.InvariantCulture), float.Parse(parts[1], CultureInfo.InvariantCulture));
 	}
 
 	public static Vector3 ReadVector3(string str)
 	{
 		string[] parts = str.Split(' ');
-		return new(float.Parse(parts[0]), float.Parse(parts[1]), float.Parse(parts[2]));
+		return new(float.Parse(parts[0], CultureInfo.InvariantCulture), float.Parse(parts[1], CultureInfo.InvariantCulture), float.Parse(parts[2], CultureInfo.InvariantCulture));
 	}
 
 	public static Vector4 ReadVector4(string str)
 	{
 		string[] parts = str.Split(' ');
-		return new(float.Parse(parts[0]), float.Parse(parts[1]), float.Parse(parts[2]), float.Parse(parts[3]));
+		return new(float.Parse(parts[0], CultureInfo.InvariantCulture), float.Parse(parts[1], CultureInfo.InvariantCulture), float.Parse(parts[2], CultureInfo.InvariantCulture), float.Parse(parts[3], CultureInfo.InvariantCulture));
 	}
 
 	public static string ReadString(string str)
@@ -61,13 +62,13 @@ public static class DataFormatter
 	public static Rgb ReadRgb(string str)
 	{
 		string[] parts = str.Split(' ');
-		return new(byte.Parse(parts[0]), byte.Parse(parts[1]), byte.Parse(parts[2]));
+		return new(byte.Parse(parts[0], CultureInfo.InvariantCulture), byte.Parse(parts[1], CultureInfo.InvariantCulture), byte.Parse(parts[2], CultureInfo.InvariantCulture));
 	}
 
 	public static Rgba ReadRgba(string str)
 	{
 		string[] parts = str.Split(' ');
-		return new(byte.Parse(parts[0]), byte.Parse(parts[1]), byte.Parse(parts[2]), byte.Parse(parts[3]));
+		return new(byte.Parse(parts[0], CultureInfo.InvariantCulture), byte.Parse(parts[1], CultureInfo.InvariantCulture), byte.Parse(parts[2], CultureInfo.InvariantCulture), byte.Parse(parts[3], CultureInfo.InvariantCulture));
 	}
 
 	public static OneOf<bool, int, float, Vector2, Vector3, Vector4, string, Rgb, Rgba> ReadProperty(string str, string type)
@@ -89,13 +90,13 @@ public static class DataFormatter
 
 	public static IEntityShape ReadShape(string str)
 	{
-		int indexOfFirstSpace = str.IndexOf(' ');
+		int indexOfFirstSpace = str.IndexOf(' ', StringComparison.Ordinal);
 		string shapeId = indexOfFirstSpace == -1 ? str : str[..indexOfFirstSpace];
 		string shapeData = indexOfFirstSpace == -1 ? string.Empty : str[(indexOfFirstSpace + 1)..];
 		return shapeId switch
 		{
 			_pointId => new Point(),
-			_sphereId => new Sphere(float.Parse(shapeData)),
+			_sphereId => new Sphere(float.Parse(shapeData, CultureInfo.InvariantCulture)),
 			_aabbId => ReadAabb(shapeData),
 			_ => throw new FormatException(),
 		};
@@ -103,23 +104,23 @@ public static class DataFormatter
 		static Aabb ReadAabb(string str)
 		{
 			string[] parts = str.Split(' ');
-			return new(new(float.Parse(parts[0]), float.Parse(parts[1]), float.Parse(parts[2])), new(float.Parse(parts[3]), float.Parse(parts[4]), float.Parse(parts[5])));
+			return new(new(float.Parse(parts[0], CultureInfo.InvariantCulture), float.Parse(parts[1], CultureInfo.InvariantCulture), float.Parse(parts[2], CultureInfo.InvariantCulture)), new(float.Parse(parts[3], CultureInfo.InvariantCulture), float.Parse(parts[4], CultureInfo.InvariantCulture), float.Parse(parts[5], CultureInfo.InvariantCulture)));
 		}
 	}
 
 	public static string Write(bool data)
 	{
-		return data.ToString().ToLower();
+		return data.ToString(CultureInfo.InvariantCulture).ToLowerInvariant();
 	}
 
 	public static string Write(int data)
 	{
-		return data.ToString();
+		return data.ToString(CultureInfo.InvariantCulture);
 	}
 
 	public static string Write(float data)
 	{
-		return data.ToString();
+		return data.ToString(CultureInfo.InvariantCulture);
 	}
 
 	public static string Write(Vector2 data)
