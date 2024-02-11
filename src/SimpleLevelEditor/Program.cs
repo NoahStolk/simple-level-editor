@@ -7,6 +7,8 @@ using SimpleLevelEditor.Content;
 using SimpleLevelEditor.User;
 using SimpleLevelEditor.Utils;
 
+AppDomain.CurrentDomain.UnhandledException += (_, args) => LogUtils.Log.Fatal(args.ExceptionObject.ToString());
+
 Graphics.CreateWindow(new($"Simple Level Editor v{AssemblyUtils.VersionString}", Constants.WindowWidth, Constants.WindowHeight, false));
 Graphics.SetWindowSizeLimits(1024, 768, 4096, 2160);
 

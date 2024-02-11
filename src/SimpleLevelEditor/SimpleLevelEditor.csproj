@@ -19,6 +19,7 @@
     <PackageReference Include="NoahStolk.ImGuiGlfw" Version="0.5.0" />
     <PackageReference Include="OneOf" Version="3.0.263" />
     <PackageReference Include="OneOf.Extended" Version="3.0.263" />
+    <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup Label="Static code analysis">
