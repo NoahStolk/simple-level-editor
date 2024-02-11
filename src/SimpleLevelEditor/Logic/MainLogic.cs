@@ -136,7 +136,8 @@ public static class MainLogic
 
 		Vector3? closestIntersection = null;
 
-		RaycastWorldObjects(rayStartPosition, rayDirection, ref closestIntersection);
+		if (LevelEditorState.ShouldRenderWorldObjects())
+			RaycastWorldObjects(rayStartPosition, rayDirection, ref closestIntersection);
 
 		float? closestDistance = closestIntersection.HasValue ? Vector3.Distance(Camera3d.Position, closestIntersection.Value) : null;
 
@@ -184,6 +185,8 @@ public static class MainLogic
 		for (int i = 0; i < LevelState.Level.Entities.Count; i++)
 		{
 			Entity entity = LevelState.Level.Entities[i];
+			if (!LevelEditorState.ShouldRenderEntity(entity))
+				continue;
 
 			float? intersection = entity.Shape switch
 			{
