@@ -1,29 +1,19 @@
 using Detach;
+using Detach.Numerics;
 using ImGuiNET;
 using OneOf;
 using SimpleLevelEditor.Data;
+using SimpleLevelEditor.Model.EntityConfig;
 using SimpleLevelEditor.Model.Level;
 using SimpleLevelEditor.Model.Level.EntityShapes;
 using SimpleLevelEditor.State;
 using SimpleLevelEditor.Utils;
+using System.Diagnostics;
 
 namespace SimpleLevelEditor.Ui.ChildWindows;
 
 public static class EntityEditorWindow
 {
-	private static readonly Dictionary<Type, string> _typeNames = new()
-	{
-		{ typeof(bool), "Boolean" },
-		{ typeof(int), "Integer" },
-		{ typeof(float), "Float" },
-		{ typeof(Vector2), "Float (2)" },
-		{ typeof(Vector3), "Float (3)" },
-		{ typeof(Vector4), "Float (4)" },
-		{ typeof(string), "Text" },
-		{ typeof(Rgb), "RGB" },
-		{ typeof(Rgba), "RGBA" },
-	};
-
 	private static readonly Entity _default = new()
 	{
 		Id = 0,
@@ -53,10 +43,55 @@ public static class EntityEditorWindow
 
 	private static void RenderEntityInputs(Entity entity)
 	{
-		ImGui.InputText(Inline.Span($"Name##{entity.Id}"), ref entity.Name, 32);
-		if (ImGui.IsItemDeactivatedAfterEdit())
-			LevelState.Track("Changed entity name");
+		RenderEntityType(entity);
+		RenderEntityShape(entity);
+		RenderEntityProperties(entity);
+	}
 
+	private static void RenderEntityType(Entity entity)
+	{
+		if (ImGui.BeginCombo(Inline.Span($"Entity Type##{entity.Id}"), entity.Name))
+		{
+			for (int i = 0; i < EntityConfigState.EntityConfig.Entities.Count; i++)
+			{
+				EntityDescriptor descriptor = EntityConfigState.EntityConfig.Entities[i];
+				if (ImGui.Selectable(descriptor.Name))
+				{
+					entity.Name = descriptor.Name;
+					entity.Shape = descriptor.Shape switch
+					{
+						EntityShape.Point => new Point(),
+						EntityShape.Sphere => new Sphere(2),
+						EntityShape.Aabb => new Aabb(-Vector3.One, Vector3.One),
+						_ => throw new UnreachableException($"Invalid entity shape: {descriptor.Shape}"),
+					};
+					entity.Properties = descriptor.Properties.ConvertAll(p => new EntityProperty
+					{
+						Key = p.Name,
+						Value = p.Type switch
+						{
+							EntityPropertyType.Bool => false,
+							EntityPropertyType.Int => 0,
+							EntityPropertyType.Float => 0f,
+							EntityPropertyType.Vector2 => Vector2.Zero,
+							EntityPropertyType.Vector3 => Vector3.Zero,
+							EntityPropertyType.Vector4 => Vector4.Zero,
+							EntityPropertyType.String => string.Empty,
+							EntityPropertyType.Rgb => new Rgb(0, 0, 0),
+							EntityPropertyType.Rgba => new Rgba(0, 0, 0, 0),
+							_ => throw new UnreachableException($"Invalid entity property type: {p.Type}"),
+						},
+					});
+					LevelState.Track("Changed entity type");
+				}
+			}
+
+			ImGui.EndCombo();
+		}
+	}
+
+	private static void RenderEntityShape(Entity entity)
+	{
 		ImGui.Text("Position");
 
 		ImGui.DragFloat3("##position", ref entity.Position, 0.1f, float.MinValue, float.MaxValue, "%.1f");
@@ -69,72 +104,50 @@ public static class EntityEditorWindow
 			LevelState.Track("Changed entity position");
 		}
 
-		ImGui.SeparatorText("Shape");
-
-		if (ImGui.BeginCombo(Inline.Span($"Shape Type##{entity.Id}"), entity.Shape.GetType().Name))
-		{
-			if (ImGui.Selectable(Inline.Span($"Point##{entity.Id}"), entity.Shape is Point))
-				entity.Shape = new Point();
-
-			if (ImGui.Selectable(Inline.Span($"Sphere##{entity.Id}"), entity.Shape is Sphere))
-				entity.Shape = new Sphere(2);
-
-			if (ImGui.Selectable(Inline.Span($"Aabb##{entity.Id}"), entity.Shape is Aabb))
-				entity.Shape = new Aabb(-Vector3.One, Vector3.One);
-
-			ImGui.EndCombo();
-		}
-
 		switch (entity.Shape)
 		{
 			case Sphere sphere: RenderSphereInputs(entity.Id, sphere); break;
 			case Aabb aabb: RenderAabbInputs(entity.Id, aabb); break;
 		}
+	}
 
+	private static void RenderEntityProperties(Entity entity)
+	{
 		ImGui.SeparatorText("Properties");
 
-		for (int i = 0; i < entity.Properties.Count; i++)
+		EntityDescriptor? entityDescriptor = EntityConfigState.EntityConfig.Entities.Find(e => e.Name == entity.Name);
+		if (entityDescriptor == null)
 		{
-			EntityProperty property = entity.Properties[i];
+			ImGui.TextColored(Color.Red, "Unknown entity type");
+			return;
+		}
 
-			if (ImGui.InputText(Inline.Span($"Property Key##{entity.Id}_{i}"), ref property.Key, 32))
-				entity.Properties[i] = property;
-
-			ImGui.SameLine();
-			ImGui.Text("(?)");
-			if (ImGui.IsItemHovered())
-				ImGui.SetTooltip("Property names must begin with a letter.");
-
-			if (ImGui.IsItemDeactivatedAfterEdit())
-				LevelState.Track("Changed entity property key name");
-
-			if (ImGui.BeginCombo(Inline.Span($"Property Type##{entity.Id}_{i}"), _typeNames[property.Value.Value.GetType()]))
+		for (int i = 0; i < entityDescriptor.Properties.Count; i++)
+		{
+			EntityPropertyDescriptor propertyDescriptor = entityDescriptor.Properties[i];
+			EntityProperty? property = entity.Properties.Find(p => p.Key == propertyDescriptor.Name);
+			OneOf<bool, int, float, Vector2, Vector3, Vector4, string, Rgb, Rgba> value = property?.Value ?? propertyDescriptor.Type switch
 			{
-				Selectable<bool>(false);
-				Selectable<int>(0);
-				Selectable<float>(0f);
-				Selectable<Vector2>(Vector2.Zero);
-				Selectable<Vector3>(Vector3.Zero);
-				Selectable<Vector4>(Vector4.Zero);
-				Selectable<string>(string.Empty);
-				Selectable<Rgb>(new Rgb(0, 0, 0));
-				Selectable<Rgba>(new Rgba(0, 0, 0, 0));
-
-				entity.Properties[i] = property;
-
-				ImGui.EndCombo();
-
-				void Selectable<T>(OneOf<bool, int, float, Vector2, Vector3, Vector4, string, Rgb, Rgba> defaultValue)
-				{
-					if (ImGui.Selectable(_typeNames[typeof(T)], property.Value.Value is T))
-					{
-						property.Value = defaultValue;
-						LevelState.Track("Changed entity property value type");
-					}
-				}
+				EntityPropertyType.Bool => false,
+				EntityPropertyType.Int => 0,
+				EntityPropertyType.Float => 0f,
+				EntityPropertyType.Vector2 => Vector2.Zero,
+				EntityPropertyType.Vector3 => Vector3.Zero,
+				EntityPropertyType.Vector4 => Vector4.Zero,
+				EntityPropertyType.String => string.Empty,
+				EntityPropertyType.Rgb => new Rgb(0, 0, 0),
+				EntityPropertyType.Rgba => new Rgba(0, 0, 0, 0),
+				_ => throw new UnreachableException($"Invalid entity property type: {propertyDescriptor.Type}"),
+			};
+			if (property == null)
+			{
+				property = new() { Key = propertyDescriptor.Name, Value = value };
+				entity.Properties.Add(property);
 			}
 
-			entity.Properties[i].Value = property.Value.Value switch
+			ImGui.Text(propertyDescriptor.Name);
+
+			property.Value = value.Value switch
 			{
 				bool b when ImGui.Checkbox(Inline.Span($"##property_value{entity.Id}_{i}"), ref b) => b,
 				int int32 when ImGui.DragInt(Inline.Span($"##property_value{entity.Id}_{i}"), ref int32) => int32,
@@ -145,29 +158,13 @@ public static class EntityEditorWindow
 				string s when ImGui.InputText(Inline.Span($"##property_value{entity.Id}_{i}"), ref s, 32) => s,
 				Rgb rgb when ImGuiUtils.ColorEdit3Rgb(Inline.Span($"##property_value{entity.Id}_{i}"), ref rgb) => rgb,
 				Rgba rgba when ImGuiUtils.ColorEdit4Rgba(Inline.Span($"##property_value{entity.Id}_{i}"), ref rgba) => rgba,
-				_ => entity.Properties[i].Value,
+				_ => property.Value,
 			};
 
 			if (ImGui.IsItemDeactivatedAfterEdit())
 				LevelState.Track("Changed entity property value");
 
-			if (ImGui.Button(Inline.Span($"Delete Property##{entity.Id}_{i}")))
-			{
-				entity.Properties.RemoveAt(i);
-				LevelState.Track("Removed entity property");
-			}
-
 			ImGui.Separator();
-		}
-
-		if (ImGui.Button("Add Property"))
-		{
-			entity.Properties.Add(new()
-			{
-				Key = string.Empty,
-				Value = false,
-			});
-			LevelState.Track("Added entity property");
 		}
 	}
 
