@@ -15,7 +15,12 @@ public static class LevelAssetsWindow
 			{
 				LevelState.ReloadAssets(LevelState.LevelFilePath);
 				if (LevelState.Level.EntityConfigPath != null)
-					EntityConfigState.LoadEntityConfig(LevelState.Level.EntityConfigPath);
+				{
+					string? parentDirectory = Path.GetDirectoryName(LevelState.LevelFilePath);
+					Debug.Assert(parentDirectory != null, "Parent directory should not be null.");
+					string absolutePath = Path.Combine(parentDirectory, LevelState.Level.EntityConfigPath);
+					EntityConfigState.LoadEntityConfig(absolutePath);
+				}
 			}
 
 			ImGui.SeparatorText("Entity Config");
@@ -31,7 +36,6 @@ public static class LevelAssetsWindow
 
 					string? parentDirectory = Path.GetDirectoryName(LevelState.LevelFilePath);
 					Debug.Assert(parentDirectory != null, "Parent directory should not be null.");
-
 					LevelState.Level.EntityConfigPath = Path.GetRelativePath(parentDirectory, path);
 					EntityConfigState.LoadEntityConfig(path);
 				}
