@@ -5,6 +5,7 @@ using SimpleLevelEditor.Model.Level.EntityShapes;
 using SimpleLevelEditor.Rendering;
 using SimpleLevelEditor.State;
 using SimpleLevelEditor.Ui.ChildWindows;
+using System.Diagnostics;
 using Sphere = SimpleLevelEditor.Model.Level.EntityShapes.Sphere;
 
 namespace SimpleLevelEditor.Logic;
@@ -68,7 +69,7 @@ public static class MainLogic
 		LevelState.Level.WorldObjects.Add(worldObject);
 
 		LevelEditorState.SetSelectedWorldObject(worldObject);
-		LevelEditorState.SetHighlightedObject(worldObject);
+		LevelEditorState.SetHighlightedWorldObject(worldObject);
 		LevelState.Track("Added object");
 	}
 
@@ -135,6 +136,16 @@ public static class MainLogic
 
 		Vector3? closestIntersection = null;
 
+		if (LevelEditorState.ShouldRenderWorldObjects())
+			RaycastWorldObjects(rayStartPosition, rayDirection, ref closestIntersection);
+
+		float? closestDistance = closestIntersection.HasValue ? Vector3.Distance(Camera3d.Position, closestIntersection.Value) : null;
+
+		RaycastEntities(rayStartPosition, rayDirection, closestDistance);
+	}
+
+	private static void RaycastWorldObjects(Vector3 rayStartPosition, Vector3 rayDirection, ref Vector3? closestIntersection)
+	{
 		for (int i = 0; i < LevelState.Level.WorldObjects.Count; i++)
 		{
 			WorldObject worldObject = LevelState.Level.WorldObjects[i];
@@ -163,23 +174,26 @@ public static class MainLogic
 				if (closestIntersection == null || Vector3.DistanceSquared(Camera3d.Position, triangleIntersection.Value) < Vector3.DistanceSquared(Camera3d.Position, closestIntersection.Value))
 				{
 					closestIntersection = triangleIntersection.Value;
-					LevelEditorState.SetHighlightedObject(worldObject);
+					LevelEditorState.SetHighlightedWorldObject(worldObject);
 				}
 			}
 		}
+	}
 
-		float? closestDistance = closestIntersection.HasValue ? Vector3.Distance(Camera3d.Position, closestIntersection.Value) : null;
-
+	private static void RaycastEntities(Vector3 rayStartPosition, Vector3 rayDirection, float? closestDistance)
+	{
 		for (int i = 0; i < LevelState.Level.Entities.Count; i++)
 		{
 			Entity entity = LevelState.Level.Entities[i];
+			if (!LevelEditorState.ShouldRenderEntity(entity))
+				continue;
 
 			float? intersection = entity.Shape switch
 			{
 				Point => IntersectsSphere(entity.Position, SceneRenderer.PointScale),
 				Sphere sphere => IntersectsSphere(entity.Position, sphere.Radius),
 				Aabb aabb => Ray.IntersectsAxisAlignedBoundingBox(rayStartPosition, rayDirection, entity.Position + aabb.Min, entity.Position + aabb.Max)?.Distance,
-				_ => throw new NotImplementedException(),
+				_ => throw new UnreachableException($"Unknown entity shape: {entity.Shape}"),
 			};
 			if (!intersection.HasValue)
 				continue;
