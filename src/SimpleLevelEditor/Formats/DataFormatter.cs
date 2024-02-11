@@ -7,20 +7,6 @@ namespace SimpleLevelEditor.Formats;
 
 public static class DataFormatter
 {
-	private const string _pointId = "point";
-	private const string _sphereId = "sphere";
-	private const string _aabbId = "aabb";
-
-	private const string _boolId = "bool";
-	private const string _intId = "s32";
-	private const string _floatId = "float";
-	private const string _vector2Id = "float2";
-	private const string _vector3Id = "float3";
-	private const string _vector4Id = "float4";
-	private const string _stringId = "str";
-	private const string _rgbId = "rgb";
-	private const string _rgbaId = "rgba";
-
 	public static bool ReadBool(string str)
 	{
 		return bool.Parse(str);
@@ -75,15 +61,15 @@ public static class DataFormatter
 	{
 		return type switch
 		{
-			_boolId => ReadBool(str),
-			_intId => ReadInt(str),
-			_floatId => ReadFloat(str),
-			_vector2Id => ReadVector2(str),
-			_vector3Id => ReadVector3(str),
-			_vector4Id => ReadVector4(str),
-			_stringId => ReadString(str),
-			_rgbId => ReadRgb(str),
-			_rgbaId => ReadRgba(str),
+			FormatConstants.BoolId => ReadBool(str),
+			FormatConstants.IntId => ReadInt(str),
+			FormatConstants.FloatId => ReadFloat(str),
+			FormatConstants.Vector2Id => ReadVector2(str),
+			FormatConstants.Vector3Id => ReadVector3(str),
+			FormatConstants.Vector4Id => ReadVector4(str),
+			FormatConstants.StringId => ReadString(str),
+			FormatConstants.RgbId => ReadRgb(str),
+			FormatConstants.RgbaId => ReadRgba(str),
 			_ => throw new NotImplementedException(),
 		};
 	}
@@ -95,9 +81,9 @@ public static class DataFormatter
 		string shapeData = indexOfFirstSpace == -1 ? string.Empty : str[(indexOfFirstSpace + 1)..];
 		return shapeId switch
 		{
-			_pointId => new Point(),
-			_sphereId => new Sphere(float.Parse(shapeData, CultureInfo.InvariantCulture)),
-			_aabbId => ReadAabb(shapeData),
+			FormatConstants.PointId => new Point(),
+			FormatConstants.SphereId => new Sphere(float.Parse(shapeData, CultureInfo.InvariantCulture)),
+			FormatConstants.AabbId => ReadAabb(shapeData),
 			_ => throw new FormatException(),
 		};
 
@@ -174,9 +160,9 @@ public static class DataFormatter
 	{
 		return shape switch
 		{
-			Point => _pointId,
-			Sphere sphere => $"{_sphereId} {sphere.Radius}",
-			Aabb aabb => $"{_aabbId} {aabb.Min.X} {aabb.Min.Y} {aabb.Min.Z} {aabb.Max.X} {aabb.Max.Y} {aabb.Max.Z}",
+			Point => FormatConstants.PointId,
+			Sphere sphere => $"{FormatConstants.SphereId} {sphere.Radius}",
+			Aabb aabb => $"{FormatConstants.AabbId} {aabb.Min.X} {aabb.Min.Y} {aabb.Min.Z} {aabb.Max.X} {aabb.Max.Y} {aabb.Max.Z}",
 			_ => throw new NotImplementedException(),
 		};
 	}
@@ -185,15 +171,15 @@ public static class DataFormatter
 	{
 		return value.Value switch
 		{
-			bool => _boolId,
-			int => _intId,
-			float => _floatId,
-			Vector2 => _vector2Id,
-			Vector3 => _vector3Id,
-			Vector4 => _vector4Id,
-			string => _stringId,
-			Rgb => _rgbId,
-			Rgba => _rgbaId,
+			bool => FormatConstants.BoolId,
+			int => FormatConstants.IntId,
+			float => FormatConstants.FloatId,
+			Vector2 => FormatConstants.Vector2Id,
+			Vector3 => FormatConstants.Vector3Id,
+			Vector4 => FormatConstants.Vector4Id,
+			string => FormatConstants.StringId,
+			Rgb => FormatConstants.RgbId,
+			Rgba => FormatConstants.RgbaId,
 			_ => throw new NotImplementedException(),
 		};
 	}
