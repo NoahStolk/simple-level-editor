@@ -13,6 +13,8 @@ public static class XmlFormatSerializer
 	private static readonly XmlWriterSettings _xmlWriterSettings = new() { Indent = true, Encoding = new UTF8Encoding(false) };
 	private static readonly XmlWriterSettings _xmlWriterSettingsCompact = new() { Indent = false, Encoding = new UTF8Encoding(false) };
 
+	#region Read level
+
 	public static Level3dData ReadLevel(XmlReader reader)
 	{
 		Level3dData level = Level3dData.CreateDefault();
@@ -146,6 +148,10 @@ public static class XmlFormatSerializer
 		return entities;
 	}
 
+	#endregion Read level
+
+	#region Write level
+
 	public static void WriteLevel(MemoryStream ms, Level3dData level, bool writeCompact)
 	{
 		using XmlWriter writer = XmlWriter.Create(ms, writeCompact ? _xmlWriterSettingsCompact : _xmlWriterSettings);
@@ -220,4 +226,6 @@ public static class XmlFormatSerializer
 
 		writer.WriteEndElement();
 	}
+
+	#endregion Write level
 }
