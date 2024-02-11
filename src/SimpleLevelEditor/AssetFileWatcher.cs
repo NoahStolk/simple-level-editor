@@ -29,7 +29,7 @@ public static class AssetFileWatcher
 			fileSystemWatcher.Changed += (_, _) =>
 			{
 				DebugState.AddWarning("Asset file changed");
-				LoadScheduleState.Schedule(LevelState.LevelFilePath);
+				AssetLoadScheduleState.Schedule(LevelState.LevelFilePath);
 			};
 
 			_fileSystemWatchers.Add(fileSystemWatcher);

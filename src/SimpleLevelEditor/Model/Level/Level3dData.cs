@@ -1,8 +1,9 @@
-namespace SimpleLevelEditor.Model;
+namespace SimpleLevelEditor.Model.Level;
 
 public record Level3dData
 {
 	public required int Version;
+	public required string? EntityConfigPath;
 	public required List<string> Meshes;
 	public required List<string> Textures;
 	public required List<WorldObject> WorldObjects;
@@ -13,6 +14,7 @@ public record Level3dData
 		return new()
 		{
 			Version = 1,
+			EntityConfigPath = null,
 			Meshes = [],
 			Textures = [],
 			WorldObjects = [],
@@ -41,6 +43,7 @@ public record Level3dData
 		return new()
 		{
 			Version = Version,
+			EntityConfigPath = EntityConfigPath,
 			Meshes = newMeshes,
 			Textures = newTextures,
 			WorldObjects = newWorldObjects,

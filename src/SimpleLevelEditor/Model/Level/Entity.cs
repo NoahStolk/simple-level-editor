@@ -1,6 +1,6 @@
-using SimpleLevelEditor.Model.EntityShapes;
+using SimpleLevelEditor.Model.Level.EntityShapes;
 
-namespace SimpleLevelEditor.Model;
+namespace SimpleLevelEditor.Model.Level;
 
 public record Entity
 {

@@ -3,7 +3,8 @@ using ImGuiNET;
 using OneOf;
 using SimpleLevelEditor.Data;
 using SimpleLevelEditor.Model;
-using SimpleLevelEditor.Model.EntityShapes;
+using SimpleLevelEditor.Model.Level;
+using SimpleLevelEditor.Model.Level.EntityShapes;
 using SimpleLevelEditor.State;
 using SimpleLevelEditor.Utils;
 

@@ -1,6 +1,6 @@
 using Detach.Utils;
 
-namespace SimpleLevelEditor.Model;
+namespace SimpleLevelEditor.Model.Level;
 
 public record WorldObject
 {

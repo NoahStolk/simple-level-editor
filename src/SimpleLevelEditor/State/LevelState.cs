@@ -1,5 +1,6 @@
 using SimpleLevelEditor.Formats;
 using SimpleLevelEditor.Model;
+using SimpleLevelEditor.Model.Level;
 using SimpleLevelEditor.Rendering;
 using SimpleLevelEditor.Ui.ChildWindows;
 using System.Security.Cryptography;
@@ -79,7 +80,7 @@ public static class LevelState
 		}
 
 		ClearState();
-		LoadScheduleState.Schedule(path);
+		AssetLoadScheduleState.Schedule(path);
 		Track("Reset");
 	}
 

@@ -1,4 +1,5 @@
 using SimpleLevelEditor.Model;
+using SimpleLevelEditor.Model.Level;
 using SimpleLevelEditor.State;
 using System.Globalization;
 using System.Text;

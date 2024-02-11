@@ -1,10 +1,12 @@
 using Detach.Collisions;
 using Silk.NET.GLFW;
 using SimpleLevelEditor.Model;
-using SimpleLevelEditor.Model.EntityShapes;
+using SimpleLevelEditor.Model.Level;
+using SimpleLevelEditor.Model.Level.EntityShapes;
 using SimpleLevelEditor.Rendering;
 using SimpleLevelEditor.State;
 using SimpleLevelEditor.Ui.ChildWindows;
+using Sphere = SimpleLevelEditor.Model.Level.EntityShapes.Sphere;
 
 namespace SimpleLevelEditor.Logic;
 
@@ -12,7 +14,7 @@ public static class MainLogic
 {
 	public static void Run(bool isFocused, Vector2 normalizedMousePosition, Plane nearPlane, float gridSnap)
 	{
-		LoadScheduleState.LoadIfScheduled();
+		AssetLoadScheduleState.LoadIfScheduled();
 
 		CalculateTargetPosition(normalizedMousePosition, nearPlane, gridSnap);
 		CalculateHighlightedObject(normalizedMousePosition, isFocused);
@@ -176,7 +178,7 @@ public static class MainLogic
 			float? intersection = entity.Shape switch
 			{
 				Point => IntersectsSphere(entity.Position, SceneRenderer.PointScale),
-				Model.EntityShapes.Sphere sphere => IntersectsSphere(entity.Position, sphere.Radius),
+				Sphere sphere => IntersectsSphere(entity.Position, sphere.Radius),
 				Aabb aabb => Ray.IntersectsAxisAlignedBoundingBox(rayStartPosition, rayDirection, entity.Position + aabb.Min, entity.Position + aabb.Max)?.Distance,
 				_ => throw new NotImplementedException(),
 			};

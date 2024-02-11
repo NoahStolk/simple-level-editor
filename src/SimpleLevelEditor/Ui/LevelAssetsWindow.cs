@@ -86,7 +86,7 @@ public static class LevelAssetsWindow
 
 		list.AddRange(relativePaths);
 		setList(list.Order().Distinct().ToList());
-		LoadScheduleState.Schedule(LevelState.LevelFilePath);
+		AssetLoadScheduleState.Schedule(LevelState.LevelFilePath);
 
 		LevelState.Track("Added assets");
 	}

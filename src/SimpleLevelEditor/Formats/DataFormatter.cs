@@ -1,6 +1,6 @@
 using OneOf;
 using SimpleLevelEditor.Data;
-using SimpleLevelEditor.Model.EntityShapes;
+using SimpleLevelEditor.Model.Level.EntityShapes;
 using System.Globalization;
 
 namespace SimpleLevelEditor.Formats;

@@ -1,7 +1,7 @@
 using OneOf;
 using SimpleLevelEditor.Data;
 
-namespace SimpleLevelEditor.Model;
+namespace SimpleLevelEditor.Model.Level;
 
 public record EntityProperty
 {

@@ -1,4 +1,4 @@
-namespace SimpleLevelEditor.Model.EntityShapes;
+namespace SimpleLevelEditor.Model.Level.EntityShapes;
 
 public record Sphere(float Radius) : IEntityShape
 {
