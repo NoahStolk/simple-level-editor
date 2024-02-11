@@ -57,7 +57,13 @@ public static class LevelEditorWindow
 						ImGui.SliderInt("Cells per side", ref LevelEditorState.GridCellCount, 1, 64);
 						ImGui.SliderInt("Cell size", ref LevelEditorState.GridCellSize, 1, 4);
 
-						// TODO: Display filter settings here.
+						foreach (KeyValuePair<string, bool> filter in LevelEditorState.RenderFilter)
+						{
+							bool value = filter.Value;
+							if (ImGui.Checkbox(filter.Key, ref value))
+								LevelEditorState.RenderFilter[filter.Key] = value;
+						}
+
 						ImGui.EndTabItem();
 					}
 

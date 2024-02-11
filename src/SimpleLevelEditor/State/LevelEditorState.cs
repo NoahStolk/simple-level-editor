@@ -26,6 +26,31 @@ public static class LevelEditorState
 	public static WorldObject? SelectedWorldObject { get; private set; }
 	public static Entity? SelectedEntity { get; private set; }
 
+	public static Dictionary<string, bool> RenderFilter { get; } = new()
+	{
+		{ "WorldObjects", true },
+	};
+
+	public static bool ShouldRenderWorldObjects()
+	{
+		return RenderFilter.TryGetValue("WorldObjects", out bool value) && value;
+	}
+
+	public static bool ShouldRenderEntity(Entity entity)
+	{
+		return !RenderFilter.TryGetValue(entity.Name, out bool value) || value;
+	}
+
+	public static void AddEntityRenderFilter(Entity entity)
+	{
+		RenderFilter[$"Entities:{entity.Name}"] = true;
+	}
+
+	public static void RemoveEntityRenderFilter(string entityName)
+	{
+		RenderFilter.Remove($"Entities:{entityName}");
+	}
+
 	public static void ClearHighlight()
 	{
 		HighlightedObject = null;

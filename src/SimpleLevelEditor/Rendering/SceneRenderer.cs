@@ -113,7 +113,8 @@ public static class SceneRenderer
 		Gl.UniformMatrix4x4(meshShader.GetUniformLocation("view"), Camera3d.ViewMatrix);
 		Gl.UniformMatrix4x4(meshShader.GetUniformLocation("projection"), Camera3d.Projection);
 
-		RenderWorldObjects(meshShader);
+		if (LevelEditorState.ShouldRenderWorldObjects())
+			RenderWorldObjects(meshShader);
 	}
 
 	private static void RenderOrigin(ShaderCacheEntry lineShader)
@@ -269,6 +270,8 @@ public static class SceneRenderer
 		for (int i = 0; i < LevelState.Level.Entities.Count; i++)
 		{
 			Entity entity = LevelState.Level.Entities[i];
+			if (!LevelEditorState.ShouldRenderEntity(entity))
+				continue;
 
 			float timeAddition = MathF.Sin((float)Glfw.GetTime() * 10) * 0.5f + 0.5f;
 			timeAddition *= 0.5f;

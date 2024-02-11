@@ -89,6 +89,8 @@ public static class MainLogic
 		LevelEditorState.SetSelectedEntity(entity);
 		LevelEditorState.SetHighlightedEntity(entity);
 		LevelState.Track("Added entity");
+
+		LevelEditorState.AddEntityRenderFilter(entity);
 	}
 
 	public static void Remove()
@@ -102,6 +104,10 @@ public static class MainLogic
 		else if (LevelEditorState.SelectedEntity != null)
 		{
 			LevelState.Level.Entities.Remove(LevelEditorState.SelectedEntity);
+
+			if (!LevelState.Level.Entities.Exists(e => e.Name == LevelEditorState.SelectedEntity.Name))
+				LevelEditorState.RemoveEntityRenderFilter(LevelEditorState.SelectedEntity.Name);
+
 			LevelEditorState.SetSelectedEntity(null);
 			LevelState.Track("Deleted entity");
 		}
