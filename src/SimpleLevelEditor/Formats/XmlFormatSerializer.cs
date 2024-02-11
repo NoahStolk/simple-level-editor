@@ -4,6 +4,7 @@ using SimpleLevelEditor.State;
 using System.Globalization;
 using System.Text;
 using System.Xml;
+using System.Xml.Serialization;
 
 namespace SimpleLevelEditor.Formats;
 
@@ -12,70 +13,11 @@ public static class XmlFormatSerializer
 	private static readonly Exception _invalidFormat = new("Invalid format");
 	private static readonly XmlWriterSettings _xmlWriterSettings = new() { Indent = true, Encoding = new UTF8Encoding(false) };
 	private static readonly XmlWriterSettings _xmlWriterSettingsCompact = new() { Indent = false, Encoding = new UTF8Encoding(false) };
+	private static readonly XmlSerializer _entityConfigSerializer = new(typeof(EntityConfigData));
 
 	public static EntityConfigData ReadEntityConfig(XmlReader reader)
 	{
-		EntityConfigData entityConfig = EntityConfigData.CreateDefault();
-		while (reader.Read())
-		{
-			if (reader is { NodeType: XmlNodeType.Element, IsEmptyElement: false })
-			{
-				switch (reader.Name)
-				{
-					case "EntityConfig": entityConfig.Version = int.Parse(reader.GetAttribute("Version") ?? throw _invalidFormat, CultureInfo.InvariantCulture); break;
-					case "Entities": entityConfig.Entities = ReadEntityDescriptors(reader); break;
-				}
-			}
-		}
-
-		return entityConfig;
-	}
-
-	private static List<EntityDescriptor> ReadEntityDescriptors(XmlReader reader)
-	{
-		List<EntityDescriptor> entityDescriptors = [];
-		while (reader.Read())
-		{
-			if (reader is { NodeType: XmlNodeType.Element, Name: "Entity" })
-			{
-				EntityDescriptor entityDescriptor = new()
-				{
-					Name = reader.GetAttribute("Name") ?? throw _invalidFormat,
-					Shape = EnumFormatter.ParseEntityShape(reader.GetAttribute("Shape")) ?? throw _invalidFormat,
-					Properties = ReadProperties(reader),
-				};
-				entityDescriptors.Add(entityDescriptor);
-			}
-			else if (reader is { NodeType: XmlNodeType.EndElement, Name: "Entities" })
-			{
-				break;
-			}
-		}
-
-		return entityDescriptors;
-	}
-
-	private static List<EntityPropertyDescriptor> ReadProperties(XmlReader reader)
-	{
-		List<EntityPropertyDescriptor> properties = [];
-		while (reader.Read())
-		{
-			if (reader is { NodeType: XmlNodeType.Element, Name: "Property" })
-			{
-				EntityPropertyDescriptor property = new()
-				{
-					Name = reader.GetAttribute("Name") ?? throw _invalidFormat,
-					Type = EnumFormatter.ParseEntityPropertyType(reader.GetAttribute("Type")) ?? throw _invalidFormat,
-				};
-				properties.Add(property);
-			}
-			else if (reader is { NodeType: XmlNodeType.EndElement, Name: "Entity" })
-			{
-				break;
-			}
-		}
-
-		return properties;
+		return _entityConfigSerializer.Deserialize(reader) as EntityConfigData ?? throw _invalidFormat;
 	}
 
 	#region Read level
