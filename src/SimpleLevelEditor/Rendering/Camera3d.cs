@@ -31,6 +31,12 @@ public static class Camera3d
 		FocusPointTarget = focusPoint;
 	}
 
+	public static void SetFocusPointHard(Vector3 focusPoint)
+	{
+		FocusPointTarget = focusPoint;
+		_focusPoint = focusPoint;
+	}
+
 	public static void Update(float dt, bool isFocused)
 	{
 		if (isFocused)
@@ -40,6 +46,23 @@ public static class Camera3d
 			float scroll = Input.GlfwInput.MouseWheelY;
 			if (scroll != 0 && !Input.GlfwInput.IsKeyDown(Keys.ControlLeft) && !Input.GlfwInput.IsKeyDown(Keys.ControlRight))
 				_zoom = Math.Max(_zoom - scroll, 1);
+
+			if (!Input.GlfwInput.IsKeyDown(Keys.ControlLeft) && !Input.GlfwInput.IsKeyDown(Keys.ControlRight))
+			{
+				const float speed = 15;
+				if (Input.GlfwInput.IsKeyDown(Keys.W))
+					SetFocusPointHard(FocusPointTarget + Vector3.Transform(new(0, 0, speed), Rotation) * App.Instance.FrameTime);
+				if (Input.GlfwInput.IsKeyDown(Keys.S))
+					SetFocusPointHard(FocusPointTarget + Vector3.Transform(new(0, 0, -speed), Rotation) * App.Instance.FrameTime);
+				if (Input.GlfwInput.IsKeyDown(Keys.A))
+					SetFocusPointHard(FocusPointTarget + Vector3.Transform(new(speed, 0, 0), Rotation) * App.Instance.FrameTime);
+				if (Input.GlfwInput.IsKeyDown(Keys.D))
+					SetFocusPointHard(FocusPointTarget + Vector3.Transform(new(-speed, 0, 0), Rotation) * App.Instance.FrameTime);
+				if (Input.GlfwInput.IsKeyDown(Keys.Space))
+					SetFocusPointHard(FocusPointTarget + Vector3.Transform(new(0, speed, 0), Rotation) * App.Instance.FrameTime);
+				if (Input.GlfwInput.IsKeyDown(Keys.ShiftLeft))
+					SetFocusPointHard(FocusPointTarget + Vector3.Transform(new(0, -speed, 0), Rotation) * App.Instance.FrameTime);
+			}
 		}
 		else
 		{
@@ -89,8 +112,7 @@ public static class Camera3d
 		else if (Mode == CameraMode.Pan)
 		{
 			float multiplier = 0.0005f * _zoom;
-			FocusPointTarget -= Vector3.Transform(new(-delta.X * multiplier, -delta.Y * multiplier, 0), Rotation);
-			_focusPoint = FocusPointTarget;
+			SetFocusPointHard(FocusPointTarget - Vector3.Transform(new(-delta.X * multiplier, -delta.Y * multiplier, 0), Rotation));
 
 			Graphics.Glfw.SetCursorPos(Graphics.Window, _originalCursor.X, _originalCursor.Y);
 		}

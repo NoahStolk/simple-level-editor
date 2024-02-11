@@ -7,8 +7,9 @@ public static class ControlsWindow
 	private static readonly Dictionary<string, string> _controls = new()
 	{
 		["Select object"] = "Left mouse button",
-		["Move camera"] = "Middle mouse button",
+		["Pan camera"] = "Middle mouse button",
 		["Look around"] = "Right mouse button",
+		["Move focus point"] = "WASD, space, left shift",
 		["Zoom in/out"] = "Scroll wheel",
 		["Change target height"] = "Scroll wheel + CTRL",
 		["Move object vertically"] = "CTRL while dragging",
