@@ -2,7 +2,6 @@ using Detach.Utils;
 using Silk.NET.OpenGL;
 using SimpleLevelEditor.Content;
 using SimpleLevelEditor.Extensions;
-using SimpleLevelEditor.Model;
 using SimpleLevelEditor.Model.Level;
 using SimpleLevelEditor.Model.Level.EntityShapes;
 using SimpleLevelEditor.State;

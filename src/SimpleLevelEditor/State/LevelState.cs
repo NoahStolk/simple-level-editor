@@ -1,5 +1,4 @@
 using SimpleLevelEditor.Formats;
-using SimpleLevelEditor.Model;
 using SimpleLevelEditor.Model.Level;
 using SimpleLevelEditor.Rendering;
 using SimpleLevelEditor.Ui.ChildWindows;

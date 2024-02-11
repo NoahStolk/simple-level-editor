@@ -1,4 +1,3 @@
-using SimpleLevelEditor.Model;
 using SimpleLevelEditor.Model.Level;
 
 namespace SimpleLevelEditor.State;
