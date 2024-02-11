@@ -69,7 +69,7 @@ public static class MainLogic
 		LevelState.Level.WorldObjects.Add(worldObject);
 
 		LevelEditorState.SetSelectedWorldObject(worldObject);
-		LevelEditorState.SetHighlightedObject(worldObject);
+		LevelEditorState.SetHighlightedWorldObject(worldObject);
 		LevelState.Track("Added object");
 	}
 
@@ -174,7 +174,7 @@ public static class MainLogic
 				if (closestIntersection == null || Vector3.DistanceSquared(Camera3d.Position, triangleIntersection.Value) < Vector3.DistanceSquared(Camera3d.Position, closestIntersection.Value))
 				{
 					closestIntersection = triangleIntersection.Value;
-					LevelEditorState.SetHighlightedObject(worldObject);
+					LevelEditorState.SetHighlightedWorldObject(worldObject);
 				}
 			}
 		}

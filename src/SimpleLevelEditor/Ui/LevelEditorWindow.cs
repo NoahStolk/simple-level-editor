@@ -61,7 +61,14 @@ public static class LevelEditorWindow
 						{
 							bool value = filter.Value;
 							if (ImGui.Checkbox(filter.Key, ref value))
+							{
 								LevelEditorState.RenderFilter[filter.Key] = value;
+
+								if (filter.Key == "WorldObjects")
+									LevelEditorState.ClearSelectedWorldObject();
+								else if (filter.Key == $"Entities:{LevelEditorState.SelectedEntity?.Name}")
+									LevelEditorState.ClearSelectedEntity();
+							}
 						}
 
 						ImGui.EndTabItem();

@@ -44,7 +44,7 @@ public static class LevelEditorState
 		HighlightedEntity = null;
 	}
 
-	public static void SetHighlightedObject(WorldObject? worldObject)
+	public static void SetHighlightedWorldObject(WorldObject? worldObject)
 	{
 		HighlightedObject = worldObject;
 		HighlightedEntity = null;
@@ -54,6 +54,18 @@ public static class LevelEditorState
 	{
 		HighlightedEntity = entity;
 		HighlightedObject = null;
+	}
+
+	public static void ClearSelectedWorldObject()
+	{
+		SelectedWorldObject = null;
+		_selectedWorldObjectId = -1;
+	}
+
+	public static void ClearSelectedEntity()
+	{
+		SelectedEntity = null;
+		_selectedEntityId = -1;
 	}
 
 	public static void SetSelectedWorldObject(WorldObject? worldObject)
