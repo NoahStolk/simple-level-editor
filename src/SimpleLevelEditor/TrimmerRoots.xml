@@ -1,0 +1,9 @@
+<linker>
+	<assembly fullname="SimpleLevelEditor">
+		<type fullname="SimpleLevelEditor.Model.EntityConfig.EntityConfigData" preserve="all" />
+		<type fullname="SimpleLevelEditor.Model.EntityConfig.EntityDescriptor" preserve="all" />
+		<type fullname="SimpleLevelEditor.Model.EntityConfig.EntityPropertyDescriptor" preserve="all" />
+		<type fullname="SimpleLevelEditor.Model.EntityConfig.EntityPropertyType" preserve="all" />
+		<type fullname="SimpleLevelEditor.Model.EntityConfig.EntityShape" preserve="all" />
+	</assembly>
+</linker>
