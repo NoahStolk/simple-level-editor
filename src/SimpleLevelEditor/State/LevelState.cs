@@ -78,6 +78,14 @@ public static class LevelState
 			SetLevel(path, level);
 		}
 
+		string? levelDirectory = Path.GetDirectoryName(path);
+		if (levelDirectory != null && Level.EntityConfigPath != null)
+		{
+			string entityConfigPath = Path.Combine(levelDirectory, Level.EntityConfigPath);
+			if (File.Exists(entityConfigPath))
+				EntityConfigState.LoadEntityConfig(entityConfigPath);
+		}
+
 		ClearState();
 		AssetLoadScheduleState.Schedule(path);
 		Track("Reset");
