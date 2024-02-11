@@ -12,7 +12,30 @@ public static class LevelAssetsWindow
 		if (ImGui.Begin("Level Assets"))
 		{
 			if (ImGui.Button("Reload all"))
+			{
 				LevelState.ReloadAssets(LevelState.LevelFilePath);
+				if (LevelState.Level.EntityConfigPath != null)
+					EntityConfigState.LoadEntityConfig(LevelState.Level.EntityConfigPath);
+			}
+
+			ImGui.SeparatorText("Entity Config");
+			ImGui.Text(LevelState.Level.EntityConfigPath ?? "<No entity config loaded>");
+			if (ImGui.Button("Load entity config"))
+			{
+				DialogWrapper.FileOpen(LoadEntityConfigCallback, "xml");
+
+				static void LoadEntityConfigCallback(string? path)
+				{
+					if (path == null)
+						return;
+
+					string? parentDirectory = Path.GetDirectoryName(LevelState.LevelFilePath);
+					Debug.Assert(parentDirectory != null, "Parent directory should not be null.");
+
+					LevelState.Level.EntityConfigPath = Path.GetRelativePath(parentDirectory, path);
+					EntityConfigState.LoadEntityConfig(path);
+				}
+			}
 
 			float height = ImGui.GetContentRegionAvail().Y / 2f - 48;
 
