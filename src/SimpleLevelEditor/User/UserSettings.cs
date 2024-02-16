@@ -1,4 +1,5 @@
 using ImGuiNET;
+using SimpleLevelEditor.State;
 
 namespace SimpleLevelEditor.User;
 
@@ -12,14 +13,20 @@ public static class UserSettings
 		if (File.Exists(_filePath))
 		{
 			ImGui.LoadIniSettingsFromMemory(File.ReadAllText(_filePath));
+
+			DebugState.AddWarning("Loaded ImGui settings from " + _filePath);
 		}
 	}
 
-	public static void SaveImGuiIni()
+	public static void SaveImGuiIni(ImGuiIOPtr io)
 	{
 		Directory.CreateDirectory(_fileDirectory);
 
 		string iniData = ImGui.SaveIniSettingsToMemory(out _);
 		File.WriteAllText(_filePath, iniData);
+
+		DebugState.AddWarning("Saved ImGui settings to " + _filePath);
+
+		io.WantSaveIniSettings = false;
 	}
 }

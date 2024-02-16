@@ -111,8 +111,9 @@ public sealed class App
 
 		MainWindow.Render();
 
-		if (ImGui.GetIO().WantSaveIniSettings)
-			UserSettings.SaveImGuiIni();
+		ImGuiIOPtr io = ImGui.GetIO();
+		if (io.WantSaveIniSettings)
+			UserSettings.SaveImGuiIni(io);
 
 		_imGuiController.Render();
 
