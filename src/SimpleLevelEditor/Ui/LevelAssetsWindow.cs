@@ -25,6 +25,8 @@ public static class LevelAssetsWindow
 
 			ImGui.SeparatorText("Entity Config");
 			ImGui.Text(LevelState.Level.EntityConfigPath ?? "<No entity config loaded>");
+
+			ImGui.BeginDisabled(LevelState.LevelFilePath == null);
 			if (ImGui.Button("Load entity config"))
 			{
 				DialogWrapper.FileOpen(LoadEntityConfigCallback, "xml");
@@ -40,6 +42,8 @@ public static class LevelAssetsWindow
 					EntityConfigState.LoadEntityConfig(path);
 				}
 			}
+
+			ImGui.EndDisabled();
 
 			float height = ImGui.GetContentRegionAvail().Y / 2f - 48;
 
