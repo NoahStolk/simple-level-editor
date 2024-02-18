@@ -1,3 +1,4 @@
+using Detach.Numerics;
 using ImGuiNET;
 using SimpleLevelEditor.Data;
 
@@ -23,5 +24,10 @@ public static class ImGuiUtils
 			rgba = new((byte)(vector.X * byte.MaxValue), (byte)(vector.Y * byte.MaxValue), (byte)(vector.Z * byte.MaxValue), (byte)(vector.W * byte.MaxValue));
 
 		return edited;
+	}
+
+	public static void TextOptional(string? text)
+	{
+		ImGui.TextColored(text == null ? Color.Gray(0.5f) : Color.White, text ?? "N/A");
 	}
 }

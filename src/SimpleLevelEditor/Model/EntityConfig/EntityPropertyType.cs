@@ -12,5 +12,7 @@ public enum EntityPropertyType
 	String,
 	Rgb,
 	Rgba,
+
+	// TODO: Add Texture, Mesh?
 }
 #pragma warning restore CA1720

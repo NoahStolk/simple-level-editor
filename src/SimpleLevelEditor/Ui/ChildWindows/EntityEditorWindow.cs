@@ -3,6 +3,7 @@ using Detach.Numerics;
 using ImGuiNET;
 using OneOf;
 using SimpleLevelEditor.Data;
+using SimpleLevelEditor.Formats;
 using SimpleLevelEditor.Model.EntityConfig;
 using SimpleLevelEditor.Model.Level;
 using SimpleLevelEditor.Model.Level.EntityShapes;
@@ -126,19 +127,42 @@ public static class EntityEditorWindow
 		{
 			EntityPropertyDescriptor propertyDescriptor = entityDescriptor.Properties[i];
 			EntityProperty? property = entity.Properties.Find(p => p.Key == propertyDescriptor.Name);
+
 			OneOf<bool, int, float, Vector2, Vector3, Vector4, string, Rgb, Rgba> value = property?.Value ?? propertyDescriptor.Type switch
 			{
-				EntityPropertyType.Bool => false,
-				EntityPropertyType.Int => 0,
-				EntityPropertyType.Float => 0f,
-				EntityPropertyType.Vector2 => Vector2.Zero,
-				EntityPropertyType.Vector3 => Vector3.Zero,
-				EntityPropertyType.Vector4 => Vector4.Zero,
-				EntityPropertyType.String => string.Empty,
-				EntityPropertyType.Rgb => new Rgb(0, 0, 0),
-				EntityPropertyType.Rgba => new Rgba(0, 0, 0, 0),
+				EntityPropertyType.Bool => DataFormatter.TryReadBool(propertyDescriptor.DefaultValue, out bool b) && b,
+				EntityPropertyType.Int => DataFormatter.TryReadInt(propertyDescriptor.DefaultValue, out int int32) ? int32 : 0,
+				EntityPropertyType.Float => DataFormatter.TryReadFloat(propertyDescriptor.DefaultValue, out float f) ? f : 0f,
+				EntityPropertyType.Vector2 => DataFormatter.TryReadVector2(propertyDescriptor.DefaultValue, out Vector2 v2) ? v2 : Vector2.Zero,
+				EntityPropertyType.Vector3 => DataFormatter.TryReadVector3(propertyDescriptor.DefaultValue, out Vector3 v3) ? v3 : Vector3.Zero,
+				EntityPropertyType.Vector4 => DataFormatter.TryReadVector4(propertyDescriptor.DefaultValue, out Vector4 v4) ? v4 : Vector4.Zero,
+				EntityPropertyType.String => propertyDescriptor.DefaultValue ?? string.Empty,
+				EntityPropertyType.Rgb => DataFormatter.TryReadRgb(propertyDescriptor.DefaultValue, out Rgb rgb) ? rgb : new(0, 0, 0),
+				EntityPropertyType.Rgba => DataFormatter.TryReadRgba(propertyDescriptor.DefaultValue, out Rgba rgba) ? rgba : new(0, 0, 0, 0),
 				_ => throw new UnreachableException($"Invalid entity property type: {propertyDescriptor.Type}"),
 			};
+
+			OneOf<int, float> step = value.Value switch
+			{
+				int => DataFormatter.TryReadInt(propertyDescriptor.Step, out int s) ? s : 1,
+				float or Vector2 or Vector3 or Vector4 => DataFormatter.TryReadFloat(propertyDescriptor.Step, out float s) ? s : 0.1f,
+				_ => 0,
+			};
+
+			OneOf<int, float> minValue = value.Value switch
+			{
+				int => DataFormatter.TryReadInt(propertyDescriptor.MinValue, out int min) ? min : int.MinValue,
+				float or Vector2 or Vector3 or Vector4 => DataFormatter.TryReadFloat(propertyDescriptor.MinValue, out float min) ? min : float.MinValue,
+				_ => 0,
+			};
+
+			OneOf<int, float> maxValue = value.Value switch
+			{
+				int => DataFormatter.TryReadInt(propertyDescriptor.MaxValue, out int max) ? max : int.MaxValue,
+				float or Vector2 or Vector3 or Vector4 => DataFormatter.TryReadFloat(propertyDescriptor.MaxValue, out float max) ? max : float.MaxValue,
+				_ => 0,
+			};
+
 			if (property == null)
 			{
 				property = new() { Key = propertyDescriptor.Name, Value = value };
@@ -146,15 +170,22 @@ public static class EntityEditorWindow
 			}
 
 			ImGui.Text(propertyDescriptor.Name);
+			if (!string.IsNullOrWhiteSpace(propertyDescriptor.Description))
+			{
+				ImGui.SameLine();
+				ImGui.TextColored(Color.Gray(0.5f), "(?)");
+				if (ImGui.IsItemHovered())
+					ImGui.SetTooltip(propertyDescriptor.Description);
+			}
 
 			property.Value = value.Value switch
 			{
 				bool b when ImGui.Checkbox(Inline.Span($"##property_value{entity.Id}_{i}"), ref b) => b,
-				int int32 when ImGui.DragInt(Inline.Span($"##property_value{entity.Id}_{i}"), ref int32) => int32,
-				float f when ImGui.DragFloat(Inline.Span($"##property_value{entity.Id}_{i}"), ref f) => f,
-				Vector2 v2 when ImGui.DragFloat2(Inline.Span($"##property_value{entity.Id}_{i}"), ref v2) => v2,
-				Vector3 v3 when ImGui.DragFloat3(Inline.Span($"##property_value{entity.Id}_{i}"), ref v3) => v3,
-				Vector4 v4 when ImGui.DragFloat4(Inline.Span($"##property_value{entity.Id}_{i}"), ref v4) => v4,
+				int int32 when ImGui.DragInt(Inline.Span($"##property_value{entity.Id}_{i}"), ref int32, step.AsT0, minValue.AsT0, maxValue.AsT0) => int32,
+				float f when ImGui.DragFloat(Inline.Span($"##property_value{entity.Id}_{i}"), ref f, step.AsT1, minValue.AsT1, maxValue.AsT1) => f,
+				Vector2 v2 when ImGui.DragFloat2(Inline.Span($"##property_value{entity.Id}_{i}"), ref v2, step.AsT1, minValue.AsT1, maxValue.AsT1) => v2,
+				Vector3 v3 when ImGui.DragFloat3(Inline.Span($"##property_value{entity.Id}_{i}"), ref v3, step.AsT1, minValue.AsT1, maxValue.AsT1) => v3,
+				Vector4 v4 when ImGui.DragFloat4(Inline.Span($"##property_value{entity.Id}_{i}"), ref v4, step.AsT1, minValue.AsT1, maxValue.AsT1) => v4,
 				string s when ImGui.InputText(Inline.Span($"##property_value{entity.Id}_{i}"), ref s, 32) => s,
 				Rgb rgb when ImGuiUtils.ColorEdit3Rgb(Inline.Span($"##property_value{entity.Id}_{i}"), ref rgb) => rgb,
 				Rgba rgba when ImGuiUtils.ColorEdit4Rgba(Inline.Span($"##property_value{entity.Id}_{i}"), ref rgba) => rgba,

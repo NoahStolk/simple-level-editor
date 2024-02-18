@@ -3,6 +3,7 @@ using ImGuiNET;
 using SimpleLevelEditor.Model.EntityConfig;
 using SimpleLevelEditor.Model.Level;
 using SimpleLevelEditor.State;
+using SimpleLevelEditor.Utils;
 
 namespace SimpleLevelEditor.Ui;
 
@@ -51,35 +52,72 @@ public static class LevelInfoWindow
 				{
 					ImGui.Text(Inline.Span($"Name: {entity.Name}"));
 					ImGui.Text(Inline.Span($"Shape: {entity.Shape}"));
-					if (ImGui.TreeNode(Inline.Span($"Properties##{i}")))
+					if (entity.Properties.Count > 0)
 					{
-						for (int j = 0; j < entity.Properties.Count; j++)
-						{
-							EntityPropertyDescriptor property = entity.Properties[j];
-							ImGui.TextColored(
-							property.Type switch
-							{
-								EntityPropertyType.Bool => new(0, 0.25f, 1, 1),
-								EntityPropertyType.Int => new(0, 0.5f, 1, 1),
-								EntityPropertyType.Float => new(0, 0.7f, 0, 1),
-								EntityPropertyType.Vector2 => new(0, 0.8f, 0, 1),
-								EntityPropertyType.Vector3 => new(0, 0.9f, 0, 1),
-								EntityPropertyType.Vector4 => new(0, 1, 0, 1),
-								EntityPropertyType.String => new(1, 0.5f, 0, 1),
-								EntityPropertyType.Rgb => new(1, 0.75f, 0, 1),
-								EntityPropertyType.Rgba => new(1, 1, 0, 1),
-								_ => new(1, 0, 0, 1),
-							},
-							Inline.Span(property.Type));
-							ImGui.SameLine();
-							ImGui.Text(property.Name);
-						}
-
-						ImGui.TreePop();
+						RenderEntityProperties(i, entity);
 					}
 
 					ImGui.TreePop();
 				}
+			}
+
+			ImGui.TreePop();
+		}
+	}
+
+	private static void RenderEntityProperties(int i, EntityDescriptor entity)
+	{
+		if (ImGui.TreeNode(Inline.Span($"Properties##{i}")))
+		{
+			if (ImGui.BeginTable(Inline.Span($"PropertiesTable{i}"), 6))
+			{
+				ImGui.TableSetupColumn("Type");
+				ImGui.TableSetupColumn("Name");
+				ImGui.TableSetupColumn("Default");
+				ImGui.TableSetupColumn("Step");
+				ImGui.TableSetupColumn("Min");
+				ImGui.TableSetupColumn("Max");
+				ImGui.TableHeadersRow();
+
+				for (int j = 0; j < entity.Properties.Count; j++)
+				{
+					EntityPropertyDescriptor property = entity.Properties[j];
+					Vector4 color = property.Type switch
+					{
+						EntityPropertyType.Bool => new(0, 0.25f, 1, 1),
+						EntityPropertyType.Int => new(0, 0.5f, 1, 1),
+						EntityPropertyType.Float => new(0, 0.7f, 0, 1),
+						EntityPropertyType.Vector2 => new(0, 0.8f, 0, 1),
+						EntityPropertyType.Vector3 => new(0, 0.9f, 0, 1),
+						EntityPropertyType.Vector4 => new(0, 1, 0, 1),
+						EntityPropertyType.String => new(1, 0.5f, 0, 1),
+						EntityPropertyType.Rgb => new(1, 0.75f, 0, 1),
+						EntityPropertyType.Rgba => new(1, 1, 0, 1),
+						_ => new(1, 0, 0, 1),
+					};
+
+					ImGui.TableNextRow();
+
+					ImGui.TableNextColumn();
+					ImGui.TextColored(color, Inline.Span(property.Type));
+
+					ImGui.TableNextColumn();
+					ImGui.Text(property.Name);
+
+					ImGui.TableNextColumn();
+					ImGuiUtils.TextOptional(property.DefaultValue);
+
+					ImGui.TableNextColumn();
+					ImGuiUtils.TextOptional(property.Step);
+
+					ImGui.TableNextColumn();
+					ImGuiUtils.TextOptional(property.MinValue);
+
+					ImGui.TableNextColumn();
+					ImGuiUtils.TextOptional(property.MaxValue);
+				}
+
+				ImGui.EndTable();
 			}
 
 			ImGui.TreePop();
