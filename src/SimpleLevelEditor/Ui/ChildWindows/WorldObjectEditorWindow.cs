@@ -65,27 +65,10 @@ public static class WorldObjectEditorWindow
 
 		ImGui.Text("Scale");
 
-		// I have no idea why there isn't an easier way to do this.
 		if (_proportionalScaling)
 		{
-			// This is completely insane.
-			const float itemWidthXy = 104;
-			const float itemWidthZ = 106;
-
-			ImGui.PushItemWidth(itemWidthXy);
-			if (ImGui.DragFloat("##scale_x", ref worldObject.Scale.X, 0.05f, 0.05f, float.MaxValue, "%.2f"))
+			if (ImGui.DragFloat("##scale_proportional", ref worldObject.Scale.X, 0.05f, 0.05f, float.MaxValue, "%.2f"))
 				ScaleProportionally(ref worldObject.Scale, worldObject.Scale.X);
-
-			ImGui.SameLine();
-			if (ImGui.DragFloat("##scale_y", ref worldObject.Scale.Y, 0.05f, 0.05f, float.MaxValue, "%.2f"))
-				ScaleProportionally(ref worldObject.Scale, worldObject.Scale.Y);
-			ImGui.PopItemWidth();
-
-			ImGui.SameLine();
-			ImGui.PushItemWidth(itemWidthZ);
-			if (ImGui.DragFloat("##scale_z", ref worldObject.Scale.Z, 0.05f, 0.05f, float.MaxValue, "%.2f"))
-				ScaleProportionally(ref worldObject.Scale, worldObject.Scale.Z);
-			ImGui.PopItemWidth();
 
 			if (ImGui.IsItemDeactivatedAfterEdit())
 				LevelState.Track("Changed object scale");
