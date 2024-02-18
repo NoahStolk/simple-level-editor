@@ -1,9 +1,5 @@
 is_global = true
 
-##############
-# .NET Style #
-##############
-
 # Organize usings
 dotnet_sort_system_directives_first                                           = false
 
@@ -40,32 +36,6 @@ dotnet_style_prefer_inferred_anonymous_type_member_names                      = 
 dotnet_style_prefer_inferred_tuple_names                                      = true : suggestion
 dotnet_style_prefer_is_null_check_over_reference_equality_method              = true : silent
 
-###########
-# Symbols #
-###########
-
-dotnet_naming_symbols.interface_symbol.applicable_kinds                       = interface
-
-dotnet_naming_symbols.parameter_symbol.applicable_kinds                       = parameter
-
-dotnet_naming_symbols.method_symbol.applicable_kinds                          = method
-
-dotnet_naming_symbols.async_method_symbol.applicable_kinds                    = method
-dotnet_naming_symbols.async_method_symbol.required_modifiers                  = async
-
-dotnet_naming_symbols.property_symbol.applicable_kinds                        = property
-
-dotnet_naming_symbols.instance_field_symbol.applicable_kinds                  = field
-dotnet_naming_symbols.instance_field_symbol.required_modifiers                = instance
-
-dotnet_naming_symbols.public_static_field_symbol.applicable_accessibilities   = public,protected_internal,internal
-dotnet_naming_symbols.public_static_field_symbol.applicable_kinds             = field
-dotnet_naming_symbols.public_static_field_symbol.required_modifiers           = const,static
-
-dotnet_naming_symbols.private_static_field_symbol.applicable_accessibilities  = protected,private_protected,private
-dotnet_naming_symbols.private_static_field_symbol.applicable_kinds            = field
-dotnet_naming_symbols.private_static_field_symbol.required_modifiers          = const,static
-
 ##########
 # Styles #
 ##########
@@ -80,46 +50,103 @@ dotnet_naming_style.pascal_case_style.capitalization                          = 
 dotnet_naming_style.interface_style.capitalization                            = pascal_case
 dotnet_naming_style.interface_style.required_prefix                           = I
 
-# Async method
-dotnet_naming_style.async_method_style.capitalization                         = pascal_case
-dotnet_naming_style.async_method_style.required_suffix                        = Async
-
 # Field
 dotnet_naming_style.field_style.capitalization                                = camel_case
 dotnet_naming_style.field_style.required_prefix                               = _
+
+# Type parameter
+dotnet_naming_style.type_parameter_style.capitalization                       = pascal_case
+dotnet_naming_style.type_parameter_style.required_prefix                      = T
+
+###########
+# Symbols #
+###########
+
+# TODO: Add event, delegate.
+
+dotnet_naming_symbols.namespace_symbol.applicable_kinds                       = namespace
+
+dotnet_naming_symbols.type_parameter_symbol.applicable_kinds                  = type_parameter
+
+dotnet_naming_symbols.interface_symbol.applicable_kinds                       = interface
+
+dotnet_naming_symbols.class_symbol.applicable_kinds                           = class
+
+dotnet_naming_symbols.struct_symbol.applicable_kinds                          = struct
+
+dotnet_naming_symbols.enum_symbol.applicable_kinds                            = enum
+
+dotnet_naming_symbols.method_symbol.applicable_kinds                          = method
+
+dotnet_naming_symbols.local_function_symbol.applicable_kinds                  = local_function
+
+dotnet_naming_symbols.property_symbol.applicable_kinds                        = property
+
+dotnet_naming_symbols.parameter_symbol.applicable_kinds                       = parameter
+
+dotnet_naming_symbols.local_symbol.applicable_kinds                           = local
+
+dotnet_naming_symbols.public_field_symbol.applicable_accessibilities          = public,protected_internal,internal
+dotnet_naming_symbols.public_field_symbol.applicable_kinds                    = field
+
+dotnet_naming_symbols.private_field_symbol.applicable_accessibilities         = protected,private_protected,private
+dotnet_naming_symbols.private_field_symbol.applicable_kinds                   = field
 
 #########
 # Rules #
 #########
 
-# Use camelCase for parameters
-dotnet_naming_rule.use_camel_case.severity                                    = warning
-dotnet_naming_rule.use_camel_case.symbols                                     = parameter_symbol
-dotnet_naming_rule.use_camel_case.style                                       = camel_case_style
+dotnet_naming_rule.namespace_rule.severity                                    = warning
+dotnet_naming_rule.namespace_rule.symbols                                     = namespace_symbol
+dotnet_naming_rule.namespace_rule.style                                       = pascal_case_style
 
-# Use PascalCase for methods, properties, and public/internal static/const fields
-dotnet_naming_rule.use_pascal_case.severity                                   = warning
-dotnet_naming_rule.use_pascal_case.symbols                                    = method_symbol,property_symbol,public_static_field_symbol
-dotnet_naming_rule.use_pascal_case.style                                      = pascal_case_style
+dotnet_naming_rule.type_parameter_rule.severity                               = warning
+dotnet_naming_rule.type_parameter_rule.symbols                                = type_parameter_symbol
+dotnet_naming_rule.type_parameter_rule.style                                  = type_parameter_style
 
-# Use PascalCase with I prefix for interfaces
-dotnet_naming_rule.interfaces_require_I_prefix.severity                       = warning
-dotnet_naming_rule.interfaces_require_I_prefix.symbols                        = interface_symbol
-dotnet_naming_rule.interfaces_require_I_prefix.style                          = interface_style
+dotnet_naming_rule.interface_rule.severity                                    = warning
+dotnet_naming_rule.interface_rule.symbols                                     = interface_symbol
+dotnet_naming_rule.interface_rule.style                                       = interface_style
 
-# Use PascalCase with Async suffix for async methods
-dotnet_naming_rule.async_methods_require_async_suffix.severity                = warning
-dotnet_naming_rule.async_methods_require_async_suffix.symbols                 = async_method_symbol
-dotnet_naming_rule.async_methods_require_async_suffix.style                   = async_method_style
+dotnet_naming_rule.class_rule.severity                                        = warning
+dotnet_naming_rule.class_rule.symbols                                         = class_symbol
+dotnet_naming_rule.class_rule.style                                           = pascal_case_style
 
-# Use camelCase with _ prefix for instance fields and private static fields
-dotnet_naming_rule.private_instance_fields_require_underscore_prefix.severity = warning
-dotnet_naming_rule.private_instance_fields_require_underscore_prefix.symbols  = private_static_field_symbol
-dotnet_naming_rule.private_instance_fields_require_underscore_prefix.style    = field_style
+dotnet_naming_rule.struct_rule.severity                                       = warning
+dotnet_naming_rule.struct_rule.symbols                                        = struct_symbol
+dotnet_naming_rule.struct_rule.style                                          = pascal_case_style
 
-############
-# C# Style #
-############
+dotnet_naming_rule.enum_rule.severity                                         = warning
+dotnet_naming_rule.enum_rule.symbols                                          = enum_symbol
+dotnet_naming_rule.enum_rule.style                                            = pascal_case_style
+
+dotnet_naming_rule.method_rule.severity                                       = warning
+dotnet_naming_rule.method_rule.symbols                                        = method_symbol
+dotnet_naming_rule.method_rule.style                                          = pascal_case_style
+
+dotnet_naming_rule.local_function_rule.severity                               = warning
+dotnet_naming_rule.local_function_rule.symbols                                = local_function_symbol
+dotnet_naming_rule.local_function_rule.style                                  = pascal_case_style
+
+dotnet_naming_rule.property_rule.severity                                     = warning
+dotnet_naming_rule.property_rule.symbols                                      = property_symbol
+dotnet_naming_rule.property_rule.style                                        = pascal_case_style
+
+dotnet_naming_rule.parameter_rule.severity                                    = warning
+dotnet_naming_rule.parameter_rule.symbols                                     = parameter_symbol
+dotnet_naming_rule.parameter_rule.style                                       = camel_case_style
+
+dotnet_naming_rule.local_rule.severity                                        = warning
+dotnet_naming_rule.local_rule.symbols                                         = local_symbol
+dotnet_naming_rule.local_rule.style                                           = camel_case_style
+
+dotnet_naming_rule.public_field_rule.severity                                 = warning
+dotnet_naming_rule.public_field_rule.symbols                                  = public_field_symbol
+dotnet_naming_rule.public_field_rule.style                                    = pascal_case_style
+
+dotnet_naming_rule.private_field_rule.severity                                = warning
+dotnet_naming_rule.private_field_rule.symbols                                 = private_field_symbol
+dotnet_naming_rule.private_field_rule.style                                   = field_style
 
 # Namespace preferences
 csharp_style_namespace_declarations                                           = file_scoped : warning
@@ -189,6 +216,9 @@ csharp_preserve_single_line_statements                                        = 
 ######################
 # Diagnostics: Error #
 ######################
+
+# Because this call is not awaited, execution of the current method continues before the call is completed. Consider applying the 'await' operator to the result of the call.
+dotnet_diagnostic.CS4014.severity                                             = error
 
 # Null-forgiving operator without justification
 dotnet_diagnostic.NX0001.severity                                             = error
@@ -306,6 +336,9 @@ dotnet_diagnostic.SA1008.severity                                             = 
 # Closing parenthesis should be followed by a space.
 dotnet_diagnostic.SA1009.severity                                             = none
 
+# Opening square brackets should not be followed/preceded by a space.
+dotnet_diagnostic.SA1010.severity                                             = none
+
 # Closing square bracket should be followed by a space.
 dotnet_diagnostic.SA1011.severity                                             = none
 
@@ -338,6 +371,9 @@ dotnet_diagnostic.SA1303.severity                                             = 
 
 # Field should not begin with an underscore.
 dotnet_diagnostic.SA1309.severity                                             = none
+
+# Field should not contain an underscore.
+dotnet_diagnostic.SA1310.severity                                             = none
 
 # Static readonly fields should begin with upper-case letter.
 dotnet_diagnostic.SA1311.severity                                             = none
