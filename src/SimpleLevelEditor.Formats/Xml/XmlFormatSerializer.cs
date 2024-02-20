@@ -1,18 +1,19 @@
 using SimpleLevelEditor.Formats.Model.EntityConfig;
 using SimpleLevelEditor.Formats.Model.Level;
-using SimpleLevelEditor.State;
+using SimpleLevelEditor.Formats.Utils;
 using System.Globalization;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
 
-namespace SimpleLevelEditor.Formats;
+namespace SimpleLevelEditor.Formats.Xml;
 
 public static class XmlFormatSerializer
 {
-	private static readonly Exception _invalidFormat = new("Invalid format");
-	private static readonly XmlWriterSettings _xmlWriterSettings = new() { Indent = true, Encoding = new UTF8Encoding(false) };
-	private static readonly XmlWriterSettings _xmlWriterSettingsCompact = new() { Indent = false, Encoding = new UTF8Encoding(false) };
+	private static readonly InvalidDataException _invalidFormat = new("Invalid format");
+	private static readonly Encoding _encoding = new UTF8Encoding(false);
+	private static readonly XmlWriterSettings _xmlWriterSettings = new() { Indent = true, Encoding = _encoding };
+	private static readonly XmlWriterSettings _xmlWriterSettingsCompact = new() { Indent = false, Encoding = _encoding };
 	private static readonly XmlSerializer _entityConfigSerializer = new(typeof(EntityConfigData));
 
 	public static EntityConfigData ReadEntityConfig(XmlReader reader)
@@ -96,9 +97,9 @@ public static class XmlFormatSerializer
 					Id = worldObjectIndex,
 					Mesh = reader.GetAttribute("Mesh") ?? throw _invalidFormat,
 					Texture = reader.GetAttribute("Texture") ?? throw _invalidFormat,
-					Position = DataFormatter.ReadVector3(reader.GetAttribute("Position") ?? throw _invalidFormat),
-					Rotation = DataFormatter.ReadVector3(reader.GetAttribute("Rotation") ?? throw _invalidFormat),
-					Scale = DataFormatter.ReadVector3(reader.GetAttribute("Scale") ?? throw _invalidFormat),
+					Position = ParseUtils.ReadVector3(reader.GetAttribute("Position") ?? throw _invalidFormat),
+					Rotation = ParseUtils.ReadVector3(reader.GetAttribute("Rotation") ?? throw _invalidFormat),
+					Scale = ParseUtils.ReadVector3(reader.GetAttribute("Scale") ?? throw _invalidFormat),
 					Flags = reader.GetAttribute("Flags")?.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries).ToList() ?? [],
 				};
 				worldObjects.Add(worldObject);
@@ -143,7 +144,7 @@ public static class XmlFormatSerializer
 				{
 					Id = entityIndex,
 					Name = reader.GetAttribute("Name") ?? throw _invalidFormat,
-					Position = DataFormatter.ReadVector3(reader.GetAttribute("Position") ?? throw _invalidFormat),
+					Position = ParseUtils.ReadVector3(reader.GetAttribute("Position") ?? throw _invalidFormat),
 					Shape = DataFormatter.ReadShape(reader.GetAttribute("Shape") ?? throw _invalidFormat),
 					Properties = properties,
 				};
@@ -202,9 +203,9 @@ public static class XmlFormatSerializer
 			writer.WriteStartElement("WorldObject");
 			writer.WriteAttributeString("Mesh", worldObject.Mesh);
 			writer.WriteAttributeString("Texture", worldObject.Texture);
-			writer.WriteAttributeString("Position", DataFormatter.Write(worldObject.Position));
-			writer.WriteAttributeString("Rotation", DataFormatter.Write(worldObject.Rotation));
-			writer.WriteAttributeString("Scale", DataFormatter.Write(worldObject.Scale));
+			writer.WriteAttributeString("Position", DataFormatter.WriteProperty(worldObject.Position));
+			writer.WriteAttributeString("Rotation", DataFormatter.WriteProperty(worldObject.Rotation));
+			writer.WriteAttributeString("Scale", DataFormatter.WriteProperty(worldObject.Scale));
 			writer.WriteAttributeString("Flags", string.Join(',', worldObject.Flags.Select(s => s.Trim())));
 			writer.WriteEndElement();
 		}
@@ -216,18 +217,15 @@ public static class XmlFormatSerializer
 		{
 			writer.WriteStartElement("Entity");
 			writer.WriteAttributeString("Name", entity.Name.Trim());
-			writer.WriteAttributeString("Position", DataFormatter.Write(entity.Position));
-			writer.WriteAttributeString("Shape", DataFormatter.Write(entity.Shape));
+			writer.WriteAttributeString("Position", DataFormatter.WriteProperty(entity.Position));
+			writer.WriteAttributeString("Shape", DataFormatter.WriteShape(entity.Shape));
 
 			foreach (EntityProperty property in entity.Properties)
 			{
 				if (property.Key.Length == 0 || !char.IsLetter(property.Key[0]) || property.Key is "Name" or "Position" or "Shape")
-				{
-					DebugState.AddWarning($"Skipping invalid property key: {property.Key}");
 					continue;
-				}
 
-				writer.WriteAttributeString(property.Key.Trim(), $"{DataFormatter.WritePropertyType(property.Value)} {DataFormatter.Write(property.Value)}");
+				writer.WriteAttributeString(property.Key.Trim(), $"{DataFormatter.WritePropertyType(property.Value)} {DataFormatter.WriteProperty(property.Value)}");
 			}
 
 			writer.WriteEndElement();

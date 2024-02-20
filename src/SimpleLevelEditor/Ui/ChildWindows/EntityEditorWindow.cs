@@ -2,11 +2,11 @@ using Detach;
 using Detach.Numerics;
 using ImGuiNET;
 using OneOf;
-using SimpleLevelEditor.Formats;
 using SimpleLevelEditor.Formats.Model;
 using SimpleLevelEditor.Formats.Model.EntityConfig;
 using SimpleLevelEditor.Formats.Model.Level;
 using SimpleLevelEditor.Formats.Model.Level.EntityShapes;
+using SimpleLevelEditor.Formats.Utils;
 using SimpleLevelEditor.State;
 using SimpleLevelEditor.Utils;
 using System.Diagnostics;
@@ -73,15 +73,15 @@ public static class EntityEditorWindow
 						Key = p.Name,
 						Value = p.Type switch
 						{
-							EntityPropertyType.Bool => DataFormatter.TryReadBool(p.DefaultValue, out bool b) && b,
-							EntityPropertyType.Int => DataFormatter.TryReadInt(p.DefaultValue, out int int32) ? int32 : 0,
-							EntityPropertyType.Float => DataFormatter.TryReadFloat(p.DefaultValue, out float f) ? f : 0f,
-							EntityPropertyType.Vector2 => DataFormatter.TryReadVector2(p.DefaultValue, out Vector2 v2) ? v2 : Vector2.Zero,
-							EntityPropertyType.Vector3 => DataFormatter.TryReadVector3(p.DefaultValue, out Vector3 v3) ? v3 : Vector3.Zero,
-							EntityPropertyType.Vector4 => DataFormatter.TryReadVector4(p.DefaultValue, out Vector4 v4) ? v4 : Vector4.Zero,
+							EntityPropertyType.Bool => ParseUtils.TryReadBool(p.DefaultValue, out bool b) && b,
+							EntityPropertyType.Int => ParseUtils.TryReadInt(p.DefaultValue, out int int32) ? int32 : 0,
+							EntityPropertyType.Float => ParseUtils.TryReadFloat(p.DefaultValue, out float f) ? f : 0f,
+							EntityPropertyType.Vector2 => ParseUtils.TryReadVector2(p.DefaultValue, out Vector2 v2) ? v2 : Vector2.Zero,
+							EntityPropertyType.Vector3 => ParseUtils.TryReadVector3(p.DefaultValue, out Vector3 v3) ? v3 : Vector3.Zero,
+							EntityPropertyType.Vector4 => ParseUtils.TryReadVector4(p.DefaultValue, out Vector4 v4) ? v4 : Vector4.Zero,
 							EntityPropertyType.String => p.DefaultValue ?? string.Empty,
-							EntityPropertyType.Rgb => DataFormatter.TryReadRgb(p.DefaultValue, out Rgb rgb) ? rgb : new(0, 0, 0),
-							EntityPropertyType.Rgba => DataFormatter.TryReadRgba(p.DefaultValue, out Rgba rgba) ? rgba : new(0, 0, 0, 0),
+							EntityPropertyType.Rgb => ParseUtils.TryReadRgb(p.DefaultValue, out Rgb rgb) ? rgb : new(0, 0, 0),
+							EntityPropertyType.Rgba => ParseUtils.TryReadRgba(p.DefaultValue, out Rgba rgba) ? rgba : new(0, 0, 0, 0),
 							_ => throw new UnreachableException($"Invalid entity property type: {p.Type}"),
 						},
 					});
@@ -134,22 +134,22 @@ public static class EntityEditorWindow
 
 			OneOf<int, float> step = property.Value.Value switch
 			{
-				int => DataFormatter.TryReadInt(propertyDescriptor.Step, out int s) ? s : 1,
-				float or Vector2 or Vector3 or Vector4 => DataFormatter.TryReadFloat(propertyDescriptor.Step, out float s) ? s : 0.1f,
+				int => ParseUtils.TryReadInt(propertyDescriptor.Step, out int s) ? s : 1,
+				float or Vector2 or Vector3 or Vector4 => ParseUtils.TryReadFloat(propertyDescriptor.Step, out float s) ? s : 0.1f,
 				_ => 0,
 			};
 
 			OneOf<int, float> minValue = property.Value.Value switch
 			{
-				int => DataFormatter.TryReadInt(propertyDescriptor.MinValue, out int min) ? min : int.MinValue,
-				float or Vector2 or Vector3 or Vector4 => DataFormatter.TryReadFloat(propertyDescriptor.MinValue, out float min) ? min : float.MinValue,
+				int => ParseUtils.TryReadInt(propertyDescriptor.MinValue, out int min) ? min : int.MinValue,
+				float or Vector2 or Vector3 or Vector4 => ParseUtils.TryReadFloat(propertyDescriptor.MinValue, out float min) ? min : float.MinValue,
 				_ => 0,
 			};
 
 			OneOf<int, float> maxValue = property.Value.Value switch
 			{
-				int => DataFormatter.TryReadInt(propertyDescriptor.MaxValue, out int max) ? max : int.MaxValue,
-				float or Vector2 or Vector3 or Vector4 => DataFormatter.TryReadFloat(propertyDescriptor.MaxValue, out float max) ? max : float.MaxValue,
+				int => ParseUtils.TryReadInt(propertyDescriptor.MaxValue, out int max) ? max : int.MaxValue,
+				float or Vector2 or Vector3 or Vector4 => ParseUtils.TryReadFloat(propertyDescriptor.MaxValue, out float max) ? max : float.MaxValue,
 				_ => 0,
 			};
 
