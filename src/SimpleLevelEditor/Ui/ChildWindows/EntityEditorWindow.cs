@@ -66,20 +66,22 @@ public static class EntityEditorWindow
 						EntityShape.Aabb => new Aabb(-Vector3.One, Vector3.One),
 						_ => throw new UnreachableException($"Invalid entity shape: {descriptor.Shape}"),
 					};
+
+					// TODO: Report warning when TryRead calls fail.
 					entity.Properties = descriptor.Properties.ConvertAll(p => new EntityProperty
 					{
 						Key = p.Name,
 						Value = p.Type switch
 						{
-							EntityPropertyType.Bool => false,
-							EntityPropertyType.Int => 0,
-							EntityPropertyType.Float => 0f,
-							EntityPropertyType.Vector2 => Vector2.Zero,
-							EntityPropertyType.Vector3 => Vector3.Zero,
-							EntityPropertyType.Vector4 => Vector4.Zero,
-							EntityPropertyType.String => string.Empty,
-							EntityPropertyType.Rgb => new Rgb(0, 0, 0),
-							EntityPropertyType.Rgba => new Rgba(0, 0, 0, 0),
+							EntityPropertyType.Bool => DataFormatter.TryReadBool(p.DefaultValue, out bool b) && b,
+							EntityPropertyType.Int => DataFormatter.TryReadInt(p.DefaultValue, out int int32) ? int32 : 0,
+							EntityPropertyType.Float => DataFormatter.TryReadFloat(p.DefaultValue, out float f) ? f : 0f,
+							EntityPropertyType.Vector2 => DataFormatter.TryReadVector2(p.DefaultValue, out Vector2 v2) ? v2 : Vector2.Zero,
+							EntityPropertyType.Vector3 => DataFormatter.TryReadVector3(p.DefaultValue, out Vector3 v3) ? v3 : Vector3.Zero,
+							EntityPropertyType.Vector4 => DataFormatter.TryReadVector4(p.DefaultValue, out Vector4 v4) ? v4 : Vector4.Zero,
+							EntityPropertyType.String => p.DefaultValue ?? string.Empty,
+							EntityPropertyType.Rgb => DataFormatter.TryReadRgb(p.DefaultValue, out Rgb rgb) ? rgb : new(0, 0, 0),
+							EntityPropertyType.Rgba => DataFormatter.TryReadRgba(p.DefaultValue, out Rgba rgba) ? rgba : new(0, 0, 0, 0),
 							_ => throw new UnreachableException($"Invalid entity property type: {p.Type}"),
 						},
 					});
@@ -127,47 +129,29 @@ public static class EntityEditorWindow
 		{
 			EntityPropertyDescriptor propertyDescriptor = entityDescriptor.Properties[i];
 			EntityProperty? property = entity.Properties.Find(p => p.Key == propertyDescriptor.Name);
+			if (property == null)
+				throw new InvalidOperationException("Entity property not found");
 
-			OneOf<bool, int, float, Vector2, Vector3, Vector4, string, Rgb, Rgba> value = property?.Value ?? propertyDescriptor.Type switch
-			{
-				EntityPropertyType.Bool => DataFormatter.TryReadBool(propertyDescriptor.DefaultValue, out bool b) && b,
-				EntityPropertyType.Int => DataFormatter.TryReadInt(propertyDescriptor.DefaultValue, out int int32) ? int32 : 0,
-				EntityPropertyType.Float => DataFormatter.TryReadFloat(propertyDescriptor.DefaultValue, out float f) ? f : 0f,
-				EntityPropertyType.Vector2 => DataFormatter.TryReadVector2(propertyDescriptor.DefaultValue, out Vector2 v2) ? v2 : Vector2.Zero,
-				EntityPropertyType.Vector3 => DataFormatter.TryReadVector3(propertyDescriptor.DefaultValue, out Vector3 v3) ? v3 : Vector3.Zero,
-				EntityPropertyType.Vector4 => DataFormatter.TryReadVector4(propertyDescriptor.DefaultValue, out Vector4 v4) ? v4 : Vector4.Zero,
-				EntityPropertyType.String => propertyDescriptor.DefaultValue ?? string.Empty,
-				EntityPropertyType.Rgb => DataFormatter.TryReadRgb(propertyDescriptor.DefaultValue, out Rgb rgb) ? rgb : new(0, 0, 0),
-				EntityPropertyType.Rgba => DataFormatter.TryReadRgba(propertyDescriptor.DefaultValue, out Rgba rgba) ? rgba : new(0, 0, 0, 0),
-				_ => throw new UnreachableException($"Invalid entity property type: {propertyDescriptor.Type}"),
-			};
-
-			OneOf<int, float> step = value.Value switch
+			OneOf<int, float> step = property.Value.Value switch
 			{
 				int => DataFormatter.TryReadInt(propertyDescriptor.Step, out int s) ? s : 1,
 				float or Vector2 or Vector3 or Vector4 => DataFormatter.TryReadFloat(propertyDescriptor.Step, out float s) ? s : 0.1f,
 				_ => 0,
 			};
 
-			OneOf<int, float> minValue = value.Value switch
+			OneOf<int, float> minValue = property.Value.Value switch
 			{
 				int => DataFormatter.TryReadInt(propertyDescriptor.MinValue, out int min) ? min : int.MinValue,
 				float or Vector2 or Vector3 or Vector4 => DataFormatter.TryReadFloat(propertyDescriptor.MinValue, out float min) ? min : float.MinValue,
 				_ => 0,
 			};
 
-			OneOf<int, float> maxValue = value.Value switch
+			OneOf<int, float> maxValue = property.Value.Value switch
 			{
 				int => DataFormatter.TryReadInt(propertyDescriptor.MaxValue, out int max) ? max : int.MaxValue,
 				float or Vector2 or Vector3 or Vector4 => DataFormatter.TryReadFloat(propertyDescriptor.MaxValue, out float max) ? max : float.MaxValue,
 				_ => 0,
 			};
-
-			if (property == null)
-			{
-				property = new() { Key = propertyDescriptor.Name, Value = value };
-				entity.Properties.Add(property);
-			}
 
 			ImGui.Text(propertyDescriptor.Name);
 			if (!string.IsNullOrWhiteSpace(propertyDescriptor.Description))
@@ -178,7 +162,7 @@ public static class EntityEditorWindow
 					ImGui.SetTooltip(propertyDescriptor.Description);
 			}
 
-			property.Value = value.Value switch
+			property.Value = property.Value.Value switch
 			{
 				bool b when ImGui.Checkbox(Inline.Span($"##property_value{entity.Id}_{i}"), ref b) => b,
 				int int32 when ImGui.DragInt(Inline.Span($"##property_value{entity.Id}_{i}"), ref int32, step.AsT0, minValue.AsT0, maxValue.AsT0) => int32,
