@@ -1,4 +1,4 @@
-namespace SimpleLevelEditor.Formats.Model.Level;
+namespace SimpleLevelEditor.Formats.Level.Model;
 
 public record Level3dData
 {

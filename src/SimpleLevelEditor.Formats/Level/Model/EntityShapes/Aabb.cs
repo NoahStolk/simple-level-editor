@@ -1,4 +1,4 @@
-namespace SimpleLevelEditor.Formats.Model.Level.EntityShapes;
+namespace SimpleLevelEditor.Formats.Level.Model.EntityShapes;
 
 public record Aabb(Vector3 Min, Vector3 Max)
 {

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<EntityConfigData Version="1">
+	<Entity Name="PlayerSpawn" Shape="Point"/>
+	<Entity Name="Light" Shape="Point">
+		<Property Name="Color" Type="Rgb" DefaultValue="255 255 255" Description="Point light color"/>
+		<Property Name="Radius" Type="Float" DefaultValue="5" Step="1" MinValue="1" MaxValue="1000" Description="Point light radius"/>
+		<Property Name="Shadow" Type="Bool" Description="Whether the light casts shadows"/>
+	</Entity>
+	<Entity Name="DynamicObject" Shape="Point">
+		<Property Name="Mesh" Type="String" Description="File name (without extension) of the mesh to be used"/>
+		<Property Name="Texture" Type="String" Description="File name (without extension) of the texture to be used"/>
+		<Property Name="Scale" Type="Vector3" DefaultValue="1 1 1" Step="0.1" MinValue="0.01" MaxValue="1000" Description="The scale of the mesh used"/>
+		<Property Name="Mass" Type="Float" DefaultValue="1" Step="0.1" MinValue="0.01" MaxValue="1000" Description="The mass of the dynamic physics object"/>
+	</Entity>
+</EntityConfigData>

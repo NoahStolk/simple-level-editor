@@ -1,8 +1,15 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
-  <ItemGroup Label="External dependencies">
-    <PackageReference Include="OneOf" Version="3.0.263"/>
-    <PackageReference Include="OneOf.Extended" Version="3.0.263"/>
+  <PropertyGroup>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
+    <PackageReference Include="MSTest.TestAdapter" Version="3.2.1" />
+    <PackageReference Include="MSTest.TestFramework" Version="3.2.1" />
+    <PackageReference Include="coverlet.collector" Version="6.0.0" />
   </ItemGroup>
 
   <ItemGroup Label="Static code analysis">
@@ -28,8 +35,14 @@
     </PackageReference>
   </ItemGroup>
 
-<!--  <ItemGroup>-->
-<!--    <InternalsVisibleTo Include="SimpleLevelEditor" />-->
-<!--  </ItemGroup>-->
+  <ItemGroup>
+    <None Update="Resources\**\*">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SimpleLevelEditor.Formats\SimpleLevelEditor.Formats.csproj" />
+  </ItemGroup>
 
 </Project>

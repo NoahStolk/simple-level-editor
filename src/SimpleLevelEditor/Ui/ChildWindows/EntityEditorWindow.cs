@@ -2,10 +2,11 @@ using Detach;
 using Detach.Numerics;
 using ImGuiNET;
 using OneOf;
-using SimpleLevelEditor.Formats.Model;
-using SimpleLevelEditor.Formats.Model.EntityConfig;
-using SimpleLevelEditor.Formats.Model.Level;
-using SimpleLevelEditor.Formats.Model.Level.EntityShapes;
+using SimpleLevelEditor.Formats;
+using SimpleLevelEditor.Formats.EntityConfig.Model;
+using SimpleLevelEditor.Formats.EntityConfig.Model.PropertyTypes;
+using SimpleLevelEditor.Formats.Level.Model;
+using SimpleLevelEditor.Formats.Level.Model.EntityShapes;
 using SimpleLevelEditor.Formats.Utils;
 using SimpleLevelEditor.State;
 using SimpleLevelEditor.Utils;
@@ -67,21 +68,20 @@ public static class EntityEditorWindow
 						_ => throw new UnreachableException($"Invalid entity shape: {descriptor.Shape}"),
 					};
 
-					// TODO: Report warning when TryRead calls fail.
 					entity.Properties = descriptor.Properties.ConvertAll(p => new EntityProperty
 					{
 						Key = p.Name,
-						Value = p.Type switch
+						Value = p.Type.Value switch
 						{
-							EntityPropertyType.Bool => ParseUtils.TryReadBool(p.DefaultValue, out bool b) && b,
-							EntityPropertyType.Int => ParseUtils.TryReadInt(p.DefaultValue, out int int32) ? int32 : 0,
-							EntityPropertyType.Float => ParseUtils.TryReadFloat(p.DefaultValue, out float f) ? f : 0f,
-							EntityPropertyType.Vector2 => ParseUtils.TryReadVector2(p.DefaultValue, out Vector2 v2) ? v2 : Vector2.Zero,
-							EntityPropertyType.Vector3 => ParseUtils.TryReadVector3(p.DefaultValue, out Vector3 v3) ? v3 : Vector3.Zero,
-							EntityPropertyType.Vector4 => ParseUtils.TryReadVector4(p.DefaultValue, out Vector4 v4) ? v4 : Vector4.Zero,
-							EntityPropertyType.String => p.DefaultValue ?? string.Empty,
-							EntityPropertyType.Rgb => ParseUtils.TryReadRgb(p.DefaultValue, out Rgb rgb) ? rgb : new(0, 0, 0),
-							EntityPropertyType.Rgba => ParseUtils.TryReadRgba(p.DefaultValue, out Rgba rgba) ? rgba : new(0, 0, 0, 0),
+							BoolPropertyType b => b.DefaultValue,
+							IntPropertyType int32 => int32.DefaultValue,
+							FloatPropertyType f => f.DefaultValue,
+							Vector2PropertyType v2 => v2.DefaultValue,
+							Vector3PropertyType v3 => v3.DefaultValue,
+							Vector4PropertyType v4 => v4.DefaultValue,
+							StringPropertyType str => str.DefaultValue,
+							RgbPropertyType rgb => rgb.DefaultValue,
+							RgbaPropertyType rgba => rgba.DefaultValue,
 							_ => throw new UnreachableException($"Invalid entity property type: {p.Type}"),
 						},
 					});
@@ -132,24 +132,33 @@ public static class EntityEditorWindow
 			if (property == null)
 				throw new InvalidOperationException("Entity property not found");
 
-			OneOf<int, float> step = property.Value.Value switch
+			OneOf<int, float> step = propertyDescriptor.Type.Value switch
 			{
-				int => ParseUtils.TryReadInt(propertyDescriptor.Step, out int s) ? s : 1,
-				float or Vector2 or Vector3 or Vector4 => ParseUtils.TryReadFloat(propertyDescriptor.Step, out float s) ? s : 0.1f,
+				IntPropertyType int32 => int32.Step ?? 0,
+				FloatPropertyType f => f.Step ?? 0,
+				Vector2PropertyType v2 => v2.Step ?? 0,
+				Vector3PropertyType v3 => v3.Step ?? 0,
+				Vector4PropertyType v4 => v4.Step ?? 0,
 				_ => 0,
 			};
 
-			OneOf<int, float> minValue = property.Value.Value switch
+			OneOf<int, float> minValue = propertyDescriptor.Type.Value switch
 			{
-				int => ParseUtils.TryReadInt(propertyDescriptor.MinValue, out int min) ? min : int.MinValue,
-				float or Vector2 or Vector3 or Vector4 => ParseUtils.TryReadFloat(propertyDescriptor.MinValue, out float min) ? min : float.MinValue,
+				IntPropertyType int32 => int32.MinValue ?? 0,
+				FloatPropertyType f => f.MinValue ?? 0,
+				Vector2PropertyType v2 => v2.MinValue ?? 0,
+				Vector3PropertyType v3 => v3.MinValue ?? 0,
+				Vector4PropertyType v4 => v4.MinValue ?? 0,
 				_ => 0,
 			};
 
-			OneOf<int, float> maxValue = property.Value.Value switch
+			OneOf<int, float> maxValue = propertyDescriptor.Type.Value switch
 			{
-				int => ParseUtils.TryReadInt(propertyDescriptor.MaxValue, out int max) ? max : int.MaxValue,
-				float or Vector2 or Vector3 or Vector4 => ParseUtils.TryReadFloat(propertyDescriptor.MaxValue, out float max) ? max : float.MaxValue,
+				IntPropertyType int32 => int32.MaxValue ?? 0,
+				FloatPropertyType f => f.MaxValue ?? 0,
+				Vector2PropertyType v2 => v2.MaxValue ?? 0,
+				Vector3PropertyType v3 => v3.MaxValue ?? 0,
+				Vector4PropertyType v4 => v4.MaxValue ?? 0,
 				_ => 0,
 			};
 

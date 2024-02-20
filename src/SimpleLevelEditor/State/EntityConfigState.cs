@@ -1,5 +1,5 @@
-using SimpleLevelEditor.Formats.Model.EntityConfig;
-using SimpleLevelEditor.Formats.Xml;
+using SimpleLevelEditor.Formats.EntityConfig;
+using SimpleLevelEditor.Formats.EntityConfig.Model;
 using System.Xml;
 
 namespace SimpleLevelEditor.State;
@@ -12,7 +12,7 @@ public static class EntityConfigState
 	{
 		using FileStream fs = new(path, FileMode.Open);
 		using XmlReader reader = XmlReader.Create(fs);
-		EntityConfig = XmlFormatSerializer.ReadEntityConfig(reader);
+		EntityConfig = EntityConfigXmlDeserializer.ReadEntityConfig(reader);
 
 		LevelEditorState.RenderFilter.Clear();
 		LevelEditorState.RenderFilter.Add("WorldObjects", true);

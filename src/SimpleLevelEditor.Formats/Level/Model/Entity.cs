@@ -1,13 +1,15 @@
 using OneOf;
-using SimpleLevelEditor.Formats.Model.Level.EntityShapes;
+using SimpleLevelEditor.Formats.Level.Model.EntityShapes;
+using System.Diagnostics;
 
-namespace SimpleLevelEditor.Formats.Model.Level;
+namespace SimpleLevelEditor.Formats.Level.Model;
 
 public record Entity
 {
 	/// <summary>
 	/// The Id is only used to keep track of the object in the editor.
 	/// </summary>
+	// TODO: Move to UI layer.
 	public required int Id;
 
 	public required string Name;
@@ -22,7 +24,7 @@ public record Entity
 			Point point => point.DeepCopy(),
 			Sphere sphere => sphere.DeepCopy(),
 			Aabb aabb => aabb.DeepCopy(),
-			_ => throw new NotImplementedException(),
+			_ => throw new UnreachableException(),
 		};
 
 		List<EntityProperty> newEntityProperties = [];

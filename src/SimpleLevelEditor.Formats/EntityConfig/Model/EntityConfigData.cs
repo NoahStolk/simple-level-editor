@@ -1,13 +1,9 @@
-using System.Xml.Serialization;
-
-namespace SimpleLevelEditor.Formats.Model.EntityConfig;
+namespace SimpleLevelEditor.Formats.EntityConfig.Model;
 
 public record EntityConfigData
 {
-	[XmlAttribute]
 	public required int Version;
 
-	[XmlElement("Entity")]
 	public required List<EntityDescriptor> Entities;
 
 	public static EntityConfigData CreateDefault()

@@ -1,4 +1,3 @@
-using SimpleLevelEditor.Formats.Model;
 using System.Globalization;
 
 namespace SimpleLevelEditor.Formats.Utils;

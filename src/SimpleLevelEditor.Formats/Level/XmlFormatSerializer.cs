@@ -1,12 +1,10 @@
-using SimpleLevelEditor.Formats.Model.EntityConfig;
-using SimpleLevelEditor.Formats.Model.Level;
+using SimpleLevelEditor.Formats.Level.Model;
 using SimpleLevelEditor.Formats.Utils;
 using System.Globalization;
 using System.Text;
 using System.Xml;
-using System.Xml.Serialization;
 
-namespace SimpleLevelEditor.Formats.Xml;
+namespace SimpleLevelEditor.Formats.Level;
 
 public static class XmlFormatSerializer
 {
@@ -14,12 +12,6 @@ public static class XmlFormatSerializer
 	private static readonly Encoding _encoding = new UTF8Encoding(false);
 	private static readonly XmlWriterSettings _xmlWriterSettings = new() { Indent = true, Encoding = _encoding };
 	private static readonly XmlWriterSettings _xmlWriterSettingsCompact = new() { Indent = false, Encoding = _encoding };
-	private static readonly XmlSerializer _entityConfigSerializer = new(typeof(EntityConfigData));
-
-	public static EntityConfigData ReadEntityConfig(XmlReader reader)
-	{
-		return _entityConfigSerializer.Deserialize(reader) as EntityConfigData ?? throw _invalidFormat;
-	}
 
 	#region Read level
 
