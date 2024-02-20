@@ -188,7 +188,7 @@ public static class MainLogic
 			if (!LevelEditorState.ShouldRenderEntity(entity))
 				continue;
 
-			float? intersection = entity.Shape switch
+			float? intersection = entity.Shape.Value switch
 			{
 				Point => IntersectsSphere(entity.Position, SceneRenderer.PointScale),
 				Sphere sphere => IntersectsSphere(entity.Position, sphere.Radius),

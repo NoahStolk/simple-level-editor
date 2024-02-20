@@ -107,7 +107,7 @@ public static class EntityEditorWindow
 			LevelState.Track("Changed entity position");
 		}
 
-		switch (entity.Shape)
+		switch (entity.Shape.Value)
 		{
 			case Sphere sphere: RenderSphereInputs(entity.Id, sphere); break;
 			case Aabb aabb: RenderAabbInputs(entity.Id, aabb); break;

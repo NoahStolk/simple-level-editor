@@ -1,3 +1,4 @@
+using OneOf;
 using SimpleLevelEditor.Model.Level.EntityShapes;
 
 namespace SimpleLevelEditor.Model.Level;
@@ -11,15 +12,15 @@ public record Entity
 
 	public required string Name;
 	public required Vector3 Position;
-	public required IEntityShape Shape;
+	public required OneOf<Point, Sphere, Aabb> Shape;
 	public required List<EntityProperty> Properties;
 
 	public Entity DeepCopy()
 	{
-		IEntityShape newShape = Shape switch
+		OneOf<Point, Sphere, Aabb> newShape = Shape.Value switch
 		{
-			Sphere sphere => sphere.DeepCopy(),
 			Point point => point.DeepCopy(),
+			Sphere sphere => sphere.DeepCopy(),
 			Aabb aabb => aabb.DeepCopy(),
 			_ => throw new NotImplementedException(),
 		};

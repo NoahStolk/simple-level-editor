@@ -1,6 +1,6 @@
 namespace SimpleLevelEditor.Model.Level.EntityShapes;
 
-public record Sphere(float Radius) : IEntityShape
+public record Sphere(float Radius)
 {
 	public float Radius = Radius;
 

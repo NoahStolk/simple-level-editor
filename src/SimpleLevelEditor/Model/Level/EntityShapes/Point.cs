@@ -1,6 +1,6 @@
 namespace SimpleLevelEditor.Model.Level.EntityShapes;
 
-public record Point : IEntityShape
+public record Point
 {
 	public Point DeepCopy()
 	{

@@ -159,7 +159,7 @@ public static class DataFormatter
 		};
 	}
 
-	public static IEntityShape ReadShape(string str)
+	public static OneOf<Point, Sphere, Aabb> ReadShape(string str)
 	{
 		int indexOfFirstSpace = str.IndexOf(' ', StringComparison.Ordinal);
 		string shapeId = indexOfFirstSpace == -1 ? str : str[..indexOfFirstSpace];
@@ -241,9 +241,9 @@ public static class DataFormatter
 		};
 	}
 
-	public static string Write(IEntityShape shape)
+	public static string Write(OneOf<Point, Sphere, Aabb> shape)
 	{
-		return shape switch
+		return shape.Value switch
 		{
 			Point => FormatConstants.PointId,
 			Sphere sphere => $"{FormatConstants.SphereId} {sphere.Radius}",
