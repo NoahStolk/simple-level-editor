@@ -1,4 +1,4 @@
-namespace SimpleLevelEditor.Model.Level.EntityShapes;
+namespace SimpleLevelEditor.Formats.Model.Level.EntityShapes;
 
 public record Point
 {

@@ -1,5 +1,5 @@
 using SimpleLevelEditor.Formats;
-using SimpleLevelEditor.Model.Level;
+using SimpleLevelEditor.Formats.Model.Level;
 using SimpleLevelEditor.Rendering;
 using SimpleLevelEditor.Ui.ChildWindows;
 using System.Security.Cryptography;

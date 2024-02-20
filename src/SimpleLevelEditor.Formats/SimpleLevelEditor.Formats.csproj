@@ -1,0 +1,8 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup Label="External dependencies">
+    <PackageReference Include="OneOf" Version="3.0.263"/>
+    <PackageReference Include="OneOf.Extended" Version="3.0.263"/>
+  </ItemGroup>
+
+</Project>

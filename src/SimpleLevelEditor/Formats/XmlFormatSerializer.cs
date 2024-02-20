@@ -1,5 +1,5 @@
-using SimpleLevelEditor.Model.EntityConfig;
-using SimpleLevelEditor.Model.Level;
+using SimpleLevelEditor.Formats.Model.EntityConfig;
+using SimpleLevelEditor.Formats.Model.Level;
 using SimpleLevelEditor.State;
 using System.Globalization;
 using System.Text;

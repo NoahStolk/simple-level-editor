@@ -1,12 +1,13 @@
 using Detach.Collisions;
 using Silk.NET.GLFW;
-using SimpleLevelEditor.Model.Level;
-using SimpleLevelEditor.Model.Level.EntityShapes;
+using SimpleLevelEditor.Extensions;
+using SimpleLevelEditor.Formats.Model.Level;
+using SimpleLevelEditor.Formats.Model.Level.EntityShapes;
 using SimpleLevelEditor.Rendering;
 using SimpleLevelEditor.State;
 using SimpleLevelEditor.Ui.ChildWindows;
 using System.Diagnostics;
-using Sphere = SimpleLevelEditor.Model.Level.EntityShapes.Sphere;
+using Sphere = SimpleLevelEditor.Formats.Model.Level.EntityShapes.Sphere;
 
 namespace SimpleLevelEditor.Logic;
 

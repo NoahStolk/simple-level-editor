@@ -1,4 +1,4 @@
-namespace SimpleLevelEditor.Model.EntityConfig;
+namespace SimpleLevelEditor.Formats.Model.EntityConfig;
 
 #pragma warning disable CA1720 // Identifier contains type name.
 public enum EntityPropertyType

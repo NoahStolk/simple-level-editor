@@ -1,7 +1,6 @@
 using OneOf;
-using SimpleLevelEditor.Data;
 
-namespace SimpleLevelEditor.Model.Level;
+namespace SimpleLevelEditor.Formats.Model.Level;
 
 public record EntityProperty
 {

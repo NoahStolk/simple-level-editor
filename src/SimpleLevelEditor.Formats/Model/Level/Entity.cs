@@ -1,7 +1,7 @@
 using OneOf;
-using SimpleLevelEditor.Model.Level.EntityShapes;
+using SimpleLevelEditor.Formats.Model.Level.EntityShapes;
 
-namespace SimpleLevelEditor.Model.Level;
+namespace SimpleLevelEditor.Formats.Model.Level;
 
 public record Entity
 {

@@ -1,6 +1,6 @@
 using System.Xml.Serialization;
 
-namespace SimpleLevelEditor.Model.EntityConfig;
+namespace SimpleLevelEditor.Formats.Model.EntityConfig;
 
 public record EntityConfigData
 {

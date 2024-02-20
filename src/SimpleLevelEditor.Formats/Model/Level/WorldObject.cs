@@ -1,6 +1,4 @@
-using Detach.Utils;
-
-namespace SimpleLevelEditor.Model.Level;
+namespace SimpleLevelEditor.Formats.Model.Level;
 
 public record WorldObject
 {
@@ -49,10 +47,5 @@ public record WorldObject
 		{
 			Flags = newFlags,
 		};
-	}
-
-	public Matrix4x4 GetModelMatrix()
-	{
-		return Matrix4x4.CreateScale(Scale) * MathUtils.CreateRotationMatrixFromEulerAngles(MathUtils.ToRadians(Rotation)) * Matrix4x4.CreateTranslation(Position);
 	}
 }

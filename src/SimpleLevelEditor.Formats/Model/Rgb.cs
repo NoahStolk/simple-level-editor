@@ -1,4 +1,4 @@
-namespace SimpleLevelEditor.Data;
+namespace SimpleLevelEditor.Formats.Model;
 
 public record struct Rgb(byte R, byte G, byte B)
 {

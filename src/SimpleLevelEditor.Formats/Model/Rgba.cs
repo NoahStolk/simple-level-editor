@@ -1,4 +1,4 @@
-namespace SimpleLevelEditor.Data;
+namespace SimpleLevelEditor.Formats.Model;
 
 public record struct Rgba(byte R, byte G, byte B, byte A)
 {

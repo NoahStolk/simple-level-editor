@@ -1,6 +1,6 @@
 using Detach;
 using ImGuiNET;
-using SimpleLevelEditor.Model.Level;
+using SimpleLevelEditor.Formats.Model.Level;
 using SimpleLevelEditor.Rendering;
 using SimpleLevelEditor.State;
 
