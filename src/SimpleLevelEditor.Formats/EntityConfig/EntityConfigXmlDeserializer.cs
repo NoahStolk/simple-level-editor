@@ -22,7 +22,13 @@ public static class EntityConfigXmlDeserializer
 			Entities = xmlEntityConfigData.Entities.ConvertAll(e => new EntityDescriptor
 			{
 				Name = e.Name,
-				Shape = e.Shape,
+				Shape = e.Shape switch
+				{
+					XmlEntityConfigEntityShape.Point => EntityShape.Point,
+					XmlEntityConfigEntityShape.Sphere => EntityShape.Sphere,
+					XmlEntityConfigEntityShape.Aabb => EntityShape.Aabb,
+					_ => throw new InvalidOperationException($"Unknown entity shape: {e.Shape}"),
+				},
 				Properties = e.Properties.ConvertAll(p => new EntityPropertyDescriptor
 				{
 					Name = p.Name,
