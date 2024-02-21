@@ -33,7 +33,89 @@ public static class LevelInfoWindow
 		ImGui.Text(Inline.Span($"Meshes: {level.Meshes.Count}"));
 		ImGui.Text(Inline.Span($"Textures: {level.Textures.Count}"));
 		ImGui.Text(Inline.Span($"WorldObjects: {level.WorldObjects.Count}"));
+		if (ImGui.TreeNode("World objects"))
+		{
+			if (ImGui.BeginTable("WorldObjectsTable", 7, ImGuiTableFlags.Resizable))
+			{
+				ImGui.TableSetupColumn("Mesh");
+				ImGui.TableSetupColumn("Texture");
+				ImGui.TableSetupColumn("Scale");
+				ImGui.TableSetupColumn("Rotation");
+				ImGui.TableSetupColumn("Position");
+				ImGui.TableSetupColumn("Flags");
+				ImGui.TableSetupColumn("Hash");
+				ImGui.TableHeadersRow();
+
+				foreach (WorldObject worldObject in level.WorldObjects.OrderBy(wo => wo.GetHashCode()))
+				{
+					ImGui.TableNextRow();
+
+					ImGui.TableNextColumn();
+					ImGui.Text(worldObject.Mesh);
+
+					ImGui.TableNextColumn();
+					ImGui.Text(worldObject.Texture);
+
+					ImGui.TableNextColumn();
+					ImGui.Text(Inline.Span(worldObject.Scale, "0.00", CultureInfo.InvariantCulture));
+
+					ImGui.TableNextColumn();
+					ImGui.Text(Inline.Span(worldObject.Rotation, "0.00", CultureInfo.InvariantCulture));
+
+					ImGui.TableNextColumn();
+					ImGui.Text(Inline.Span(worldObject.Position, "0.00", CultureInfo.InvariantCulture));
+
+					ImGui.TableNextColumn();
+					ImGui.Text(string.Join(", ", worldObject.Flags));
+
+					ImGui.TableNextColumn();
+					ImGui.Text(worldObject.GetHashCode().ToString(CultureInfo.InvariantCulture));
+				}
+
+				ImGui.EndTable();
+			}
+
+			ImGui.TreePop();
+		}
+
 		ImGui.Text(Inline.Span($"Entities: {level.Entities.Count}"));
+		if (ImGui.TreeNode("Entities"))
+		{
+			if (ImGui.BeginTable("EntitiesTable", 5, ImGuiTableFlags.Resizable))
+			{
+				ImGui.TableSetupColumn("Name");
+				ImGui.TableSetupColumn("Position");
+				ImGui.TableSetupColumn("Shape");
+				ImGui.TableSetupColumn("Properties");
+				ImGui.TableSetupColumn("Hash");
+				ImGui.TableHeadersRow();
+
+				foreach (Entity entity in level.Entities.OrderBy(wo => wo.GetHashCode()))
+				{
+					ImGui.TableNextRow();
+
+					ImGui.TableNextColumn();
+					ImGui.Text(entity.Name);
+
+					ImGui.TableNextColumn();
+					ImGui.Text(Inline.Span(entity.Position, "0.00", CultureInfo.InvariantCulture));
+
+					ImGui.TableNextColumn();
+					ImGui.Text(entity.Shape.ToString());
+
+					ImGui.TableNextColumn();
+					ImGui.Text(Inline.Span(entity.Properties.Count));
+
+					ImGui.TableNextColumn();
+					ImGui.Text(entity.GetHashCode().ToString(CultureInfo.InvariantCulture));
+				}
+
+				ImGui.EndTable();
+			}
+
+			ImGui.TreePop();
+		}
+
 		ImGui.SeparatorText("Entity config");
 		ImGui.TextWrapped(level.EntityConfigPath ?? "<No entity config loaded>");
 		if (level.EntityConfigPath != null)
@@ -113,7 +195,7 @@ public static class LevelInfoWindow
 					string defaultValue = property.Type.Value switch
 					{
 						BoolPropertyType boolProperty => boolProperty.DefaultValue.ToString(),
-						IntPropertyType intProperty => intProperty.DefaultValue.ToString(),
+						IntPropertyType intProperty => intProperty.DefaultValue.ToString(CultureInfo.InvariantCulture),
 						FloatPropertyType floatProperty => floatProperty.DefaultValue.ToString(CultureInfo.InvariantCulture),
 						Vector2PropertyType vector2Property => vector2Property.DefaultValue.ToString(),
 						Vector3PropertyType vector3Property => vector3Property.DefaultValue.ToString(),
@@ -125,7 +207,7 @@ public static class LevelInfoWindow
 					};
 					string? step = property.Type.Value switch
 					{
-						IntPropertyType intProperty => intProperty.Step?.ToString(),
+						IntPropertyType intProperty => intProperty.Step?.ToString(CultureInfo.InvariantCulture),
 						FloatPropertyType floatProperty => floatProperty.Step?.ToString(CultureInfo.InvariantCulture),
 						Vector2PropertyType vector2Property => vector2Property.Step?.ToString(CultureInfo.InvariantCulture),
 						Vector3PropertyType vector3Property => vector3Property.Step?.ToString(CultureInfo.InvariantCulture),
@@ -134,7 +216,7 @@ public static class LevelInfoWindow
 					};
 					string? minValue = property.Type.Value switch
 					{
-						IntPropertyType intProperty => intProperty.MinValue?.ToString(),
+						IntPropertyType intProperty => intProperty.MinValue?.ToString(CultureInfo.InvariantCulture),
 						FloatPropertyType floatProperty => floatProperty.MinValue?.ToString(CultureInfo.InvariantCulture),
 						Vector2PropertyType vector2Property => vector2Property.MinValue?.ToString(CultureInfo.InvariantCulture),
 						Vector3PropertyType vector3Property => vector3Property.MinValue?.ToString(CultureInfo.InvariantCulture),
@@ -143,7 +225,7 @@ public static class LevelInfoWindow
 					};
 					string? maxValue = property.Type.Value switch
 					{
-						IntPropertyType intProperty => intProperty.MaxValue?.ToString(),
+						IntPropertyType intProperty => intProperty.MaxValue?.ToString(CultureInfo.InvariantCulture),
 						FloatPropertyType floatProperty => floatProperty.MaxValue?.ToString(CultureInfo.InvariantCulture),
 						Vector2PropertyType vector2Property => vector2Property.MaxValue?.ToString(CultureInfo.InvariantCulture),
 						Vector3PropertyType vector3Property => vector3Property.MaxValue?.ToString(CultureInfo.InvariantCulture),
