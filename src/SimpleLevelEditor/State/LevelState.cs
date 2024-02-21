@@ -189,6 +189,12 @@ public static class LevelState
 		string? baseDirectory = Path.GetDirectoryName(levelFilePath);
 		if (baseDirectory != null)
 			RefreshAssetFileWatcher(baseDirectory, level.Meshes.Concat(level.Textures));
+
+		foreach (WorldObject worldObject in level.WorldObjects)
+			LevelEditorState.AddWorldObject(worldObject);
+
+		foreach (Entity entity in level.Entities)
+			LevelEditorState.AddEntity(entity);
 	}
 
 	private static void RefreshAssetFileWatcher(string baseDirectory, IEnumerable<string> assetPaths)

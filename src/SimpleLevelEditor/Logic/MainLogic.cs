@@ -62,12 +62,11 @@ public static class MainLogic
 		if (referenceWorldObject.Mesh.Length == 0 || referenceWorldObject.Texture.Length == 0)
 			return;
 
-		WorldObject worldObject = referenceWorldObject.DeepCopy() with
-		{
-			Position = LevelEditorState.TargetPosition.Value,
-		};
+		WorldObject worldObject = referenceWorldObject.DeepCopy();
+		worldObject.Position = LevelEditorState.TargetPosition.Value;
 		LevelState.Level.WorldObjects.Add(worldObject);
 
+		LevelEditorState.AddWorldObject(worldObject);
 		LevelEditorState.SetSelectedWorldObject(worldObject);
 		LevelEditorState.SetHighlightedWorldObject(worldObject);
 		LevelState.Track("Added object");
@@ -80,12 +79,11 @@ public static class MainLogic
 
 		Entity referenceEntity = LevelEditorState.SelectedEntity ?? EntityEditorWindow.DefaultEntity;
 
-		Entity entity = referenceEntity.DeepCopy() with
-		{
-			Position = LevelEditorState.TargetPosition.Value,
-		};
+		Entity entity = referenceEntity.DeepCopy();
+		entity.Position = LevelEditorState.TargetPosition.Value;
 		LevelState.Level.Entities.Add(entity);
 
+		LevelEditorState.AddEntity(entity);
 		LevelEditorState.SetSelectedEntity(entity);
 		LevelEditorState.SetHighlightedEntity(entity);
 		LevelState.Track("Added entity");

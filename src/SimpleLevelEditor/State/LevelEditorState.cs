@@ -4,8 +4,12 @@ namespace SimpleLevelEditor.State;
 
 public static class LevelEditorState
 {
-	private static int _selectedWorldObjectHash = -1;
-	private static int _selectedEntityHash = -1;
+	// Store immutable ids to keep track of selected objects when undoing/redoing.
+	private static readonly Dictionary<WorldObject, int> _worldObjectsById = [];
+	private static readonly Dictionary<Entity, int> _entitiesById = [];
+
+	private static int _selectedWorldObjectId = -1;
+	private static int _selectedEntityId = -1;
 
 	public static float TargetHeight;
 	public static int GridCellCount = 64;
@@ -59,21 +63,41 @@ public static class LevelEditorState
 	public static void ClearSelectedWorldObject()
 	{
 		SelectedWorldObject = null;
-		_selectedWorldObjectHash = -1;
+		_selectedWorldObjectId = -1;
 	}
 
 	public static void ClearSelectedEntity()
 	{
 		SelectedEntity = null;
-		_selectedEntityHash = -1;
+		_selectedEntityId = -1;
+	}
+
+	public static void AddWorldObject(WorldObject worldObject)
+	{
+		_worldObjectsById[worldObject] = _worldObjectsById.Count + 1;
+	}
+
+	public static void AddEntity(Entity entity)
+	{
+		_entitiesById[entity] = _entitiesById.Count + 1;
+	}
+
+	public static int GetWorldObjectIdForDebugging(WorldObject worldObject)
+	{
+		return _worldObjectsById[worldObject];
+	}
+
+	public static int GetEntityIdForDebugging(Entity entity)
+	{
+		return _entitiesById[entity];
 	}
 
 	public static void SetSelectedWorldObject(WorldObject? worldObject)
 	{
 		SelectedWorldObject = worldObject;
-		_selectedWorldObjectHash = SelectedWorldObject?.GetHashCode() ?? -1;
+		_selectedWorldObjectId = worldObject == null ? -1 : _worldObjectsById[worldObject];
 
-		_selectedEntityHash = -1;
+		_selectedEntityId = -1;
 		SelectedEntity = null;
 
 		Mode = EditMode.WorldObjects;
@@ -81,14 +105,14 @@ public static class LevelEditorState
 
 	public static void UpdateSelectedWorldObject()
 	{
-		WorldObject? selectedWorldObject = LevelState.Level.WorldObjects.Find(o => o.GetHashCode() == _selectedWorldObjectHash);
+		WorldObject? selectedWorldObject = LevelState.Level.WorldObjects.Find(o => _worldObjectsById.TryGetValue(o, out int id) && id == _selectedWorldObjectId);
 		if (selectedWorldObject != null)
 		{
 			SetSelectedWorldObject(selectedWorldObject);
 		}
 		else
 		{
-			_selectedWorldObjectHash = -1;
+			_selectedWorldObjectId = -1;
 			SelectedWorldObject = null;
 		}
 	}
@@ -96,9 +120,9 @@ public static class LevelEditorState
 	public static void SetSelectedEntity(Entity? entity)
 	{
 		SelectedEntity = entity;
-		_selectedEntityHash = SelectedEntity?.GetHashCode() ?? -1;
+		_selectedEntityId = entity == null ? -1 : _entitiesById[entity];
 
-		_selectedWorldObjectHash = -1;
+		_selectedWorldObjectId = -1;
 		SelectedWorldObject = null;
 
 		Mode = EditMode.Entities;
@@ -106,14 +130,14 @@ public static class LevelEditorState
 
 	public static void UpdateSelectedEntity()
 	{
-		Entity? selectedEntity = LevelState.Level.Entities.Find(o => o.GetHashCode() == _selectedEntityHash);
+		Entity? selectedEntity = LevelState.Level.Entities.Find(o => _entitiesById.TryGetValue(o, out int id) && id == _selectedEntityId);
 		if (selectedEntity != null)
 		{
 			SetSelectedEntity(selectedEntity);
 		}
 		else
 		{
-			_selectedEntityHash = -1;
+			_selectedEntityId = -1;
 			SelectedEntity = null;
 		}
 	}

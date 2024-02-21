@@ -69,7 +69,7 @@ public static class LevelInfoWindow
 					ImGui.Text(string.Join(", ", worldObject.Flags));
 
 					ImGui.TableNextColumn();
-					ImGui.Text(worldObject.GetHashCode().ToString(CultureInfo.InvariantCulture));
+					ImGui.Text(Inline.Span(LevelEditorState.GetWorldObjectIdForDebugging(worldObject)));
 				}
 
 				ImGui.EndTable();
@@ -107,7 +107,7 @@ public static class LevelInfoWindow
 					ImGui.Text(Inline.Span(entity.Properties.Count));
 
 					ImGui.TableNextColumn();
-					ImGui.Text(entity.GetHashCode().ToString(CultureInfo.InvariantCulture));
+					ImGui.Text(Inline.Span(LevelEditorState.GetEntityIdForDebugging(entity)));
 				}
 
 				ImGui.EndTable();
