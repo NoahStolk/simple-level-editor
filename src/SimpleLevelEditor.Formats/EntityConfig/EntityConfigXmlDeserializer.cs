@@ -93,50 +93,54 @@ public static class EntityConfigXmlDeserializer
 		}
 	}
 
+#pragma warning disable CA1034 // Nested types should not be visible. (Types must be public for XML deserialization to work.)
+#pragma warning disable CA1002 // Do not expose generic lists. (This is required for XML deserialization to work.)
+#pragma warning disable CA1720 // Identifiers must not contain type names.
+#pragma warning disable SA1201 // Elements must appear in the correct order.
 	[XmlRoot("EntityConfigData")]
 	public record XmlEntityConfigData
 	{
 		[XmlAttribute]
-		public required int Version { get; set; }
+		public required int Version { get; init; }
 
 		[XmlElement("Entity")]
-		public required List<XmlEntity> Entities { get; set; }
+		public required List<XmlEntity> Entities { get; init; }
 	}
 
 	public record XmlEntity
 	{
 		[XmlAttribute]
-		public required string Name { get; set; }
+		public required string Name { get; init; }
 
 		[XmlAttribute]
-		public required EntityShape Shape { get; set; }
+		public required EntityShape Shape { get; init; }
 
 		[XmlElement("Property")]
-		public required List<XmlProperty> Properties { get; set; }
+		public required List<XmlProperty> Properties { get; init; }
 	}
 
 	public record XmlProperty
 	{
 		[XmlAttribute]
-		public required string Name { get; set; }
+		public required string Name { get; init; }
 
 		[XmlAttribute]
-		public required XmlPropertyType Type { get; set; }
+		public required XmlPropertyType Type { get; init; }
 
 		[XmlAttribute]
-		public string? Description { get; set; }
+		public string? Description { get; init; }
 
 		[XmlAttribute]
-		public string? DefaultValue { get; set; }
+		public string? DefaultValue { get; init; }
 
 		[XmlAttribute]
-		public string? Step { get; set; }
+		public string? Step { get; init; }
 
 		[XmlAttribute]
-		public string? MinValue { get; set; }
+		public string? MinValue { get; init; }
 
 		[XmlAttribute]
-		public string? MaxValue { get; set; }
+		public string? MaxValue { get; init; }
 	}
 
 	public enum XmlPropertyType
@@ -151,4 +155,5 @@ public static class EntityConfigXmlDeserializer
 		Rgb,
 		Rgba,
 	}
+#pragma warning restore SA1201, CA1720, CA1002, CA1034
 }
