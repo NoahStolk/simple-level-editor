@@ -28,8 +28,4 @@
     </PackageReference>
   </ItemGroup>
 
-<!--  <ItemGroup>-->
-<!--    <InternalsVisibleTo Include="SimpleLevelEditor" />-->
-<!--  </ItemGroup>-->
-
 </Project>

@@ -2,11 +2,11 @@ namespace SimpleLevelEditor.Formats.EntityConfig.Model.PropertyTypes;
 
 public record IntPropertyType
 {
-	public int DefaultValue;
+	public required int DefaultValue;
 
-	public int? Step;
+	public required int? Step;
 
-	public int? MinValue;
+	public required int? MinValue;
 
-	public int? MaxValue;
+	public required int? MaxValue;
 }

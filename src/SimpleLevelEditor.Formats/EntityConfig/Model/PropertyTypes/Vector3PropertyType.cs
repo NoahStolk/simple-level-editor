@@ -2,11 +2,11 @@ namespace SimpleLevelEditor.Formats.EntityConfig.Model.PropertyTypes;
 
 public record Vector3PropertyType
 {
-	public Vector3 DefaultValue;
+	public required Vector3 DefaultValue;
 
-	public float? Step;
+	public required float? Step;
 
-	public float? MinValue;
+	public required float? MinValue;
 
-	public float? MaxValue;
+	public required float? MaxValue;
 }

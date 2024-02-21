@@ -2,5 +2,5 @@ namespace SimpleLevelEditor.Formats.EntityConfig.Model.PropertyTypes;
 
 public record StringPropertyType
 {
-	public string DefaultValue = string.Empty;
+	public required string DefaultValue;
 }
