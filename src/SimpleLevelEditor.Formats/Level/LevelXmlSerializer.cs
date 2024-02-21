@@ -1,88 +1,59 @@
 using SimpleLevelEditor.Formats.Level.Model;
-using System.Globalization;
+using SimpleLevelEditor.Formats.Level.XmlModel;
 using System.Text;
 using System.Xml;
+using System.Xml.Serialization;
 
 namespace SimpleLevelEditor.Formats.Level;
 
 public static class LevelXmlSerializer
 {
-	private static readonly Encoding _encoding = new UTF8Encoding(false);
-	private static readonly XmlWriterSettings _xmlWriterSettings = new() { Indent = true, IndentChars = "\t", Encoding = _encoding };
+	private const int _version = 2;
 
-	// TODO: Remove this when custom binary serialization is implemented.
-	private static readonly XmlWriterSettings _xmlWriterSettingsCompact = new() { Indent = false, Encoding = _encoding };
-
-	public static void WriteLevel(MemoryStream ms, Level3dData level, bool writeCompact)
+	private static readonly XmlSerializer _serializer = new(typeof(XmlLevel));
+	private static readonly XmlWriterSettings _xmlWriterSettings = new()
 	{
-		using XmlWriter writer = XmlWriter.Create(ms, writeCompact ? _xmlWriterSettingsCompact : _xmlWriterSettings);
-		WriteLevel(level, writer);
-		writer.Flush();
-		ms.Write("\n"u8);
-	}
+		Encoding = new UTF8Encoding(false),
+		Indent = true,
+		IndentChars = "\t",
+	};
 
-	private static void WriteLevel(Level3dData level, XmlWriter writer)
+	public static void WriteLevel(MemoryStream ms, Level3dData level)
 	{
-		writer.WriteStartElement("Level");
-		writer.WriteAttributeString("Version", level.Version.ToString(CultureInfo.InvariantCulture));
-		writer.WriteAttributeString("EntityConfig", level.EntityConfigPath ?? string.Empty);
+		XmlSerializerNamespaces ns = new();
+		ns.Add(string.Empty, string.Empty);
 
-		writer.WriteStartElement("Meshes");
-		foreach (string mesh in level.Meshes)
+		XmlLevel xmlLevel = new()
 		{
-			writer.WriteStartElement("Mesh");
-			writer.WriteAttributeString("Path", mesh);
-			writer.WriteEndElement();
-		}
-
-		writer.WriteEndElement();
-
-		writer.WriteStartElement("Textures");
-		foreach (string texture in level.Textures)
-		{
-			writer.WriteStartElement("Texture");
-			writer.WriteAttributeString("Path", texture);
-			writer.WriteEndElement();
-		}
-
-		writer.WriteEndElement();
-
-		writer.WriteStartElement("WorldObjects");
-		foreach (WorldObject worldObject in level.WorldObjects)
-		{
-			writer.WriteStartElement("WorldObject");
-			writer.WriteAttributeString("Mesh", worldObject.Mesh);
-			writer.WriteAttributeString("Texture", worldObject.Texture);
-			writer.WriteAttributeString("Position", DataFormatter.WriteProperty(worldObject.Position));
-			writer.WriteAttributeString("Rotation", DataFormatter.WriteProperty(worldObject.Rotation));
-			writer.WriteAttributeString("Scale", DataFormatter.WriteProperty(worldObject.Scale));
-			writer.WriteAttributeString("Flags", string.Join(',', worldObject.Flags.Select(s => s.Trim())));
-			writer.WriteEndElement();
-		}
-
-		writer.WriteEndElement();
-
-		writer.WriteStartElement("Entities");
-		foreach (Entity entity in level.Entities)
-		{
-			writer.WriteStartElement("Entity");
-			writer.WriteAttributeString("Name", entity.Name.Trim());
-			writer.WriteAttributeString("Position", DataFormatter.WriteProperty(entity.Position));
-			writer.WriteAttributeString("Shape", DataFormatter.WriteShape(entity.Shape));
-
-			foreach (EntityProperty property in entity.Properties)
+			Version = _version,
+			EntityConfig = level.EntityConfigPath,
+			Meshes = level.Meshes.ConvertAll(m => new XmlLevelMesh { Path = m }),
+			Textures = level.Textures.ConvertAll(m => new XmlLevelTexture { Path = m }),
+			WorldObjects = level.WorldObjects.ConvertAll(wo => new XmlLevelWorldObject
 			{
-				if (property.Key.Length == 0 || !char.IsLetter(property.Key[0]) || property.Key is "Name" or "Position" or "Shape")
-					continue;
+				Mesh = wo.Mesh,
+				Texture = wo.Texture,
+				Position = DataFormatter.WriteProperty(wo.Position),
+				Rotation = DataFormatter.WriteProperty(wo.Rotation),
+				Scale = DataFormatter.WriteProperty(wo.Scale),
+				Flags = string.Join(',', wo.Flags),
+			}),
+			Entities = level.Entities.ConvertAll(e => new XmlLevelEntity
+			{
+				Name = e.Name,
+				Position = DataFormatter.WriteProperty(e.Position),
+				Shape = DataFormatter.WriteShape(e.Shape),
+				Properties = e.Properties.ConvertAll(p => new XmlLevelEntityProperty
+				{
+					Name = p.Key,
+					Value = $"{DataFormatter.WritePropertyType(p.Value)} {DataFormatter.WriteProperty(p.Value)}",
+				}),
+			}),
+		};
 
-				writer.WriteAttributeString(property.Key.Trim(), $"{DataFormatter.WritePropertyType(property.Value)} {DataFormatter.WriteProperty(property.Value)}");
-			}
-
-			writer.WriteEndElement();
-		}
-
-		writer.WriteEndElement();
-
-		writer.WriteEndElement();
+		using XmlWriter xmlWriter = XmlWriter.Create(ms, _xmlWriterSettings);
+		_serializer.Serialize(xmlWriter, xmlLevel, ns);
+		xmlWriter.Flush();
+		ms.Write("\n"u8);
 	}
 }

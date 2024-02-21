@@ -10,10 +10,14 @@ namespace SimpleLevelEditor.Formats.EntityConfig;
 
 public static class EntityConfigXmlDeserializer
 {
-	public static EntityConfigData ReadEntityConfig(XmlReader reader)
+	private static readonly XmlSerializer _serializer = new(typeof(XmlEntityConfigData));
+
+	public static EntityConfigData ReadEntityConfig(Stream stream)
 	{
-		XmlSerializer serializer = new(typeof(XmlEntityConfigData));
-		if (serializer.Deserialize(reader) is not XmlEntityConfigData xmlEntityConfigData)
+		stream.Position = 0;
+
+		using XmlReader reader = XmlReader.Create(stream);
+		if (_serializer.Deserialize(reader) is not XmlEntityConfigData xmlEntityConfigData)
 			throw new InvalidOperationException("XML is not valid.");
 
 		EntityConfigData entityConfig = new()

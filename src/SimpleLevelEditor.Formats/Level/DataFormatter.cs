@@ -22,19 +22,23 @@ internal static class DataFormatter
 	private const string _rgbId = "rgb";
 	private const string _rgbaId = "rgba";
 
-	public static OneOf<bool, int, float, Vector2, Vector3, Vector4, string, Rgb, Rgba> ReadProperty(string str, string type)
+	public static OneOf<bool, int, float, Vector2, Vector3, Vector4, string, Rgb, Rgba> ReadProperty(string str)
 	{
+		int indexOfSpace = str.IndexOf(' ', StringComparison.Ordinal);
+		string type = str[..indexOfSpace];
+		string value = str[(indexOfSpace + 1)..];
+
 		return type switch
 		{
-			_boolId => ParseUtils.ReadBool(str),
-			_intId => ParseUtils.ReadInt(str),
-			_floatId => ParseUtils.ReadFloat(str),
-			_vector2Id => ParseUtils.ReadVector2(str),
-			_vector3Id => ParseUtils.ReadVector3(str),
-			_vector4Id => ParseUtils.ReadVector4(str),
-			_stringId => ParseUtils.ReadString(str),
-			_rgbId => ParseUtils.ReadRgb(str),
-			_rgbaId => ParseUtils.ReadRgba(str),
+			_boolId => ParseUtils.ReadBool(value),
+			_intId => ParseUtils.ReadInt(value),
+			_floatId => ParseUtils.ReadFloat(value),
+			_vector2Id => ParseUtils.ReadVector2(value),
+			_vector3Id => ParseUtils.ReadVector3(value),
+			_vector4Id => ParseUtils.ReadVector4(value),
+			_stringId => ParseUtils.ReadString(value),
+			_rgbId => ParseUtils.ReadRgb(value),
+			_rgbaId => ParseUtils.ReadRgba(value),
 			_ => throw new UnreachableException(),
 		};
 	}

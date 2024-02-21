@@ -3,7 +3,6 @@ using SimpleLevelEditor.Formats.EntityConfig;
 using SimpleLevelEditor.Formats.EntityConfig.Model;
 using SimpleLevelEditor.Formats.EntityConfig.Model.PropertyTypes;
 using System.Numerics;
-using System.Xml;
 
 namespace SimpleLevelEditor.Formats.Tests;
 
@@ -23,9 +22,8 @@ public class EntityConfigDeserializationTests
 	[TestMethod]
 	public void DeserializeEntityConfig()
 	{
-		string entityConfig = File.ReadAllText(Path.Combine("Resources", "EntityConfig.xml"));
-		using XmlReader xmlReader = XmlReader.Create(new StringReader(entityConfig));
-		EntityConfigData data = EntityConfigXmlDeserializer.ReadEntityConfig(xmlReader);
+		using FileStream fs = File.OpenRead(Path.Combine("Resources", "EntityConfig.xml"));
+		EntityConfigData data = EntityConfigXmlDeserializer.ReadEntityConfig(fs);
 
 		Assert.AreEqual(1, data.Version);
 		Assert.AreEqual(3, data.Entities.Count);

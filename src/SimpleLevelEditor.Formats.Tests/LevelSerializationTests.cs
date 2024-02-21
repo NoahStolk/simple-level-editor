@@ -4,7 +4,6 @@ using SimpleLevelEditor.Formats.Level;
 using SimpleLevelEditor.Formats.Level.Model;
 using SimpleLevelEditor.Formats.Level.Model.EntityShapes;
 using System.Text;
-using System.Xml;
 
 namespace SimpleLevelEditor.Formats.Tests;
 
@@ -146,16 +145,46 @@ public class LevelSerializationTests
 				},
 			],
 		},
+		new()
+		{
+			Id = 5,
+			Name = "Field",
+			Position = new(1, 1, 1),
+			Shape = new Sphere(10),
+			Properties = [],
+		},
 	];
 
 	[TestMethod]
-	public void TestLevelSerialization()
+	public void SerializeAndDeserializeLevel()
 	{
-		string levelXml = SanitizeString(File.ReadAllText(Path.Combine("Resources", "Level.xml")));
-		using XmlReader xmlReader = XmlReader.Create(new StringReader(levelXml));
-		Level3dData level = LevelXmlDeserializer.ReadLevel(xmlReader);
+		string levelV1Path = Path.Combine("Resources", "LevelV1.xml");
+		string levelV2Path = Path.Combine("Resources", "LevelV2.xml");
 
-		Assert.AreEqual(1, level.Version);
+		string levelV2Xml = SanitizeString(File.ReadAllText(levelV2Path));
+
+		using FileStream fsV1 = File.OpenRead(levelV1Path);
+		Level3dData levelV1 = LevelXmlDeserializer.ReadLevel(fsV1);
+		AssertLevelValues(1, levelV1);
+
+		using FileStream fsV2 = File.OpenRead(levelV2Path);
+		Level3dData levelV2 = LevelXmlDeserializer.ReadLevel(fsV2);
+		AssertLevelValues(2, levelV2);
+
+		using MemoryStream msV1 = new();
+		LevelXmlSerializer.WriteLevel(msV1, levelV1);
+		string serializedLevel = SanitizeString(Encoding.UTF8.GetString(msV1.ToArray()));
+		serializedLevel.Should().BeEquivalentTo(levelV2Xml); // Should always write the latest format.
+
+		using MemoryStream msV2 = new();
+		LevelXmlSerializer.WriteLevel(msV2, levelV2);
+		serializedLevel = SanitizeString(Encoding.UTF8.GetString(msV2.ToArray()));
+		serializedLevel.Should().BeEquivalentTo(levelV2Xml);
+	}
+
+	private static void AssertLevelValues(int expectedVersion, Level3dData level)
+	{
+		Assert.AreEqual(expectedVersion, level.Version);
 		Assert.AreEqual("..\\EntityConfig.xml", level.EntityConfigPath);
 		CollectionAssert.AreEqual(_expectedMeshes, level.Meshes);
 		CollectionAssert.AreEqual(_expectedTextures, level.Textures);
@@ -186,15 +215,10 @@ public class LevelSerializationTests
 				Assert.AreEqual(_expectedEntities[i].Properties[j].Value, level.Entities[i].Properties[j].Value);
 			}
 		}
-
-		using MemoryStream ms = new();
-		LevelXmlSerializer.WriteLevel(ms, level, false);
-		string serializedLevel = SanitizeString(Encoding.UTF8.GetString(ms.ToArray()));
-		serializedLevel.Should().BeEquivalentTo(levelXml);
 	}
 
 	private static string SanitizeString(string input)
 	{
-		return input.Trim().Replace("\r", string.Empty, StringComparison.Ordinal);
+		return input.Replace("\r", string.Empty, StringComparison.Ordinal).Trim();
 	}
 }
