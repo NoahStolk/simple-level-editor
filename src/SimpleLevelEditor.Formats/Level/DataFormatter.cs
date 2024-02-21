@@ -1,11 +1,10 @@
 using OneOf;
-using SimpleLevelEditor.Formats.Model;
-using SimpleLevelEditor.Formats.Model.Level.EntityShapes;
+using SimpleLevelEditor.Formats.Level.Model.EntityShapes;
 using SimpleLevelEditor.Formats.Utils;
 using System.Diagnostics;
 using System.Globalization;
 
-namespace SimpleLevelEditor.Formats.Xml;
+namespace SimpleLevelEditor.Formats.Level;
 
 internal static class DataFormatter
 {

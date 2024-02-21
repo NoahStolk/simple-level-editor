@@ -1,10 +1,11 @@
-namespace SimpleLevelEditor.Formats.Model.Level;
+namespace SimpleLevelEditor.Formats.Level.Model;
 
 public record WorldObject
 {
 	/// <summary>
 	/// The Id is only used to keep track of the object in the editor.
 	/// </summary>
+	// TODO: Move to UI layer.
 	public required int Id;
 
 	/// <summary>

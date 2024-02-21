@@ -1,5 +1,5 @@
-using SimpleLevelEditor.Formats.Model.Level;
-using SimpleLevelEditor.Formats.Xml;
+using SimpleLevelEditor.Formats.Level;
+using SimpleLevelEditor.Formats.Level.Model;
 using SimpleLevelEditor.Rendering;
 using SimpleLevelEditor.Ui.ChildWindows;
 using System.Security.Cryptography;
@@ -48,7 +48,7 @@ public static class LevelState
 	private static byte[] GetBytes(Level3dData obj)
 	{
 		using MemoryStream ms = new();
-		XmlFormatSerializer.WriteLevel(ms, obj, true);
+		LevelXmlSerializer.WriteLevel(ms, obj, true);
 		return ms.ToArray();
 	}
 
@@ -74,7 +74,7 @@ public static class LevelState
 		using (FileStream fs = new(path, FileMode.Open))
 		using (XmlReader reader = XmlReader.Create(fs))
 		{
-			Level3dData level = XmlFormatSerializer.ReadLevel(reader);
+			Level3dData level = LevelXmlDeserializer.ReadLevel(reader);
 			SetLevel(path, level);
 		}
 
@@ -174,7 +174,7 @@ public static class LevelState
 	private static void Save(string path)
 	{
 		using MemoryStream ms = new();
-		XmlFormatSerializer.WriteLevel(ms, Level, false);
+		LevelXmlSerializer.WriteLevel(ms, Level, false);
 		File.WriteAllBytes(path, ms.ToArray());
 		SetLevel(path, Level);
 	}
