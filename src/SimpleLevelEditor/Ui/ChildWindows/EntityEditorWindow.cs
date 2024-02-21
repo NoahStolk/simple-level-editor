@@ -7,7 +7,6 @@ using SimpleLevelEditor.Formats.EntityConfig.Model;
 using SimpleLevelEditor.Formats.EntityConfig.Model.PropertyTypes;
 using SimpleLevelEditor.Formats.Level.Model;
 using SimpleLevelEditor.Formats.Level.Model.EntityShapes;
-using SimpleLevelEditor.Formats.Utils;
 using SimpleLevelEditor.State;
 using SimpleLevelEditor.Utils;
 using System.Diagnostics;
