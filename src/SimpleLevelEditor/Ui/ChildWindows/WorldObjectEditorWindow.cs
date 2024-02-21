@@ -12,7 +12,6 @@ public static class WorldObjectEditorWindow
 
 	private static readonly WorldObject _default = new()
 	{
-		Id = 0,
 		Mesh = string.Empty,
 		Position = default,
 		Rotation = default,
@@ -95,7 +94,7 @@ public static class WorldObjectEditorWindow
 		{
 			string value = worldObject.Flags[i];
 
-			if (ImGui.InputText(Inline.Span($"##flag_{worldObject.Id}_{i}"), ref value, 32))
+			if (ImGui.InputText(Inline.Span($"##flag_{worldObject.GenerateHash()}_{i}"), ref value, 32))
 				worldObject.Flags[i] = value;
 
 			if (ImGui.IsItemDeactivatedAfterEdit())

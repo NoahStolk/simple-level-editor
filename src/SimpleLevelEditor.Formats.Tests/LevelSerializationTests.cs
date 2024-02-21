@@ -16,7 +16,6 @@ public class LevelSerializationTests
 	[
 		new()
 		{
-			Id = 1,
 			Mesh = @"..\Meshes\Cube.obj",
 			Texture = @"..\Textures\Blank.tga",
 			Position = new(16, -4, 0),
@@ -26,7 +25,6 @@ public class LevelSerializationTests
 		},
 		new()
 		{
-			Id = 2,
 			Mesh = @"..\Meshes\Crate.obj",
 			Texture = @"..\Textures\TilesColor.tga",
 			Position = new(-4, 0.5f, 1),
@@ -36,7 +34,6 @@ public class LevelSerializationTests
 		},
 		new()
 		{
-			Id = 3,
 			Mesh = @"..\Meshes\Crate.obj",
 			Texture = @"..\Textures\StoneBlue.tga",
 			Position = new(-0.5f, 0.5f, -4.5f),
@@ -46,7 +43,6 @@ public class LevelSerializationTests
 		},
 		new()
 		{
-			Id = 4,
 			Mesh = @"..\Meshes\Crate.obj",
 			Texture = @"..\Textures\StoneBlue.tga",
 			Position = new(-4.5f, 0.5f, -3f),
@@ -56,7 +52,6 @@ public class LevelSerializationTests
 		},
 		new()
 		{
-			Id = 5,
 			Mesh = @"..\Meshes\Sphere.obj",
 			Texture = @"..\Textures\StoneBlue.tga",
 			Position = new(6, 1, 2),
@@ -66,7 +61,6 @@ public class LevelSerializationTests
 		},
 		new()
 		{
-			Id = 6,
 			Mesh = @"..\Meshes\Cube.obj",
 			Texture = @"..\Textures\Blank.tga",
 			Position = new(0, 2, -7.5f),
@@ -79,7 +73,6 @@ public class LevelSerializationTests
 	[
 		new()
 		{
-			Id = 1,
 			Name = "PlayerSpawn",
 			Position = new(0, 1, 0),
 			Shape = new Point(),
@@ -87,7 +80,6 @@ public class LevelSerializationTests
 		},
 		new()
 		{
-			Id = 2,
 			Name = "Light",
 			Position = new(20, 3, 2),
 			Shape = new Point(),
@@ -107,7 +99,6 @@ public class LevelSerializationTests
 		},
 		new()
 		{
-			Id = 3,
 			Name = "Light",
 			Position = new(27, 1, 12),
 			Shape = new Point(),
@@ -127,7 +118,6 @@ public class LevelSerializationTests
 		},
 		new()
 		{
-			Id = 4,
 			Name = "Light",
 			Position = new(33, 1, 2),
 			Shape = new Point(),
@@ -147,7 +137,6 @@ public class LevelSerializationTests
 		},
 		new()
 		{
-			Id = 5,
 			Name = "Field",
 			Position = new(1, 1, 1),
 			Shape = new Sphere(10),
@@ -192,7 +181,6 @@ public class LevelSerializationTests
 		Assert.AreEqual(_expectedWorldObjects.Length, level.WorldObjects.Count);
 		for (int i = 0; i < _expectedWorldObjects.Length; i++)
 		{
-			Assert.AreEqual(_expectedWorldObjects[i].Id, level.WorldObjects[i].Id);
 			Assert.AreEqual(_expectedWorldObjects[i].Mesh, level.WorldObjects[i].Mesh);
 			Assert.AreEqual(_expectedWorldObjects[i].Texture, level.WorldObjects[i].Texture);
 			Assert.AreEqual(_expectedWorldObjects[i].Position, level.WorldObjects[i].Position);
@@ -204,7 +192,6 @@ public class LevelSerializationTests
 		Assert.AreEqual(_expectedEntities.Length, level.Entities.Count);
 		for (int i = 0; i < _expectedEntities.Length; i++)
 		{
-			Assert.AreEqual(_expectedEntities[i].Id, level.Entities[i].Id);
 			Assert.AreEqual(_expectedEntities[i].Name, level.Entities[i].Name);
 			Assert.AreEqual(_expectedEntities[i].Position, level.Entities[i].Position);
 			Assert.AreEqual(_expectedEntities[i].Shape, level.Entities[i].Shape);

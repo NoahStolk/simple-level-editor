@@ -6,12 +6,6 @@ namespace SimpleLevelEditor.Formats.Level.Model;
 
 public record Entity
 {
-	/// <summary>
-	/// The Id is only used to keep track of the object in the editor.
-	/// </summary>
-	// TODO: Move to UI layer.
-	public required int Id;
-
 	public required string Name;
 	public required Vector3 Position;
 	public required OneOf<Point, Sphere, Aabb> Shape;

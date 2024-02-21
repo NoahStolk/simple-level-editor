@@ -24,32 +24,26 @@ internal static class LevelXmlDeserializerV2
 			EntityConfigPath = xmlEntityConfigData.EntityConfig,
 			Meshes = xmlEntityConfigData.Meshes.ConvertAll(m => m.Path),
 			Textures = xmlEntityConfigData.Textures.ConvertAll(m => m.Path),
-			WorldObjects = xmlEntityConfigData.WorldObjects
-				.Select((wo, i) => new WorldObject
+			WorldObjects = xmlEntityConfigData.WorldObjects.ConvertAll(wo => new WorldObject
+			{
+				Mesh = wo.Mesh,
+				Texture = wo.Texture,
+				Position = ParseUtils.TryReadVector3(wo.Position, out Vector3 position) ? position : Vector3.Zero,
+				Rotation = ParseUtils.TryReadVector3(wo.Rotation, out Vector3 rotation) ? rotation : Vector3.Zero,
+				Scale = ParseUtils.TryReadVector3(wo.Scale, out Vector3 scale) ? scale : Vector3.One,
+				Flags = wo.Flags.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).ToList(),
+			}),
+			Entities = xmlEntityConfigData.Entities.ConvertAll(e => new Entity
+			{
+				Shape = DataFormatter.ReadShape(e.Shape),
+				Name = e.Name,
+				Position = ParseUtils.TryReadVector3(e.Position, out Vector3 position) ? position : Vector3.Zero,
+				Properties = e.Properties.ConvertAll(p => new EntityProperty
 				{
-					Id = i + 1,
-					Mesh = wo.Mesh,
-					Texture = wo.Texture,
-					Position = ParseUtils.TryReadVector3(wo.Position, out Vector3 position) ? position : Vector3.Zero,
-					Rotation = ParseUtils.TryReadVector3(wo.Rotation, out Vector3 rotation) ? rotation : Vector3.Zero,
-					Scale = ParseUtils.TryReadVector3(wo.Scale, out Vector3 scale) ? scale : Vector3.One,
-					Flags = wo.Flags.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).ToList(),
-				})
-				.ToList(),
-			Entities = xmlEntityConfigData.Entities
-				.Select((e, i) => new Entity
-				{
-					Id = i + 1,
-					Shape = DataFormatter.ReadShape(e.Shape),
-					Name = e.Name,
-					Position = ParseUtils.TryReadVector3(e.Position, out Vector3 position) ? position : Vector3.Zero,
-					Properties = e.Properties.ConvertAll(p => new EntityProperty
-					{
-						Key = p.Name,
-						Value = DataFormatter.ReadProperty(p.Value),
-					}),
-				})
-				.ToList(),
+					Key = p.Name,
+					Value = DataFormatter.ReadProperty(p.Value),
+				}),
+			}),
 		};
 
 		return level3dData;

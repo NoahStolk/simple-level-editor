@@ -17,7 +17,6 @@ public static class EntityEditorWindow
 {
 	private static readonly Entity _default = new()
 	{
-		Id = 0,
 		Name = string.Empty,
 		Properties = [],
 		Position = default,
@@ -44,14 +43,16 @@ public static class EntityEditorWindow
 
 	private static void RenderEntityInputs(Entity entity)
 	{
-		RenderEntityType(entity);
-		RenderEntityShape(entity);
-		RenderEntityProperties(entity);
+		int hash = entity.GenerateHash();
+
+		RenderEntityType(entity, hash);
+		RenderEntityShape(entity, hash);
+		RenderEntityProperties(entity, hash);
 	}
 
-	private static void RenderEntityType(Entity entity)
+	private static void RenderEntityType(Entity entity, int hash)
 	{
-		if (ImGui.BeginCombo(Inline.Span($"Entity Type##{entity.Id}"), entity.Name))
+		if (ImGui.BeginCombo(Inline.Span($"Entity Type##{hash}"), entity.Name))
 		{
 			for (int i = 0; i < EntityConfigState.EntityConfig.Entities.Count; i++)
 			{
@@ -92,7 +93,7 @@ public static class EntityEditorWindow
 		}
 	}
 
-	private static void RenderEntityShape(Entity entity)
+	private static void RenderEntityShape(Entity entity, int hash)
 	{
 		ImGui.Text("Position");
 
@@ -100,7 +101,7 @@ public static class EntityEditorWindow
 		if (ImGui.IsItemDeactivatedAfterEdit())
 			LevelState.Track("Changed entity position");
 
-		if (RenderResetButton(Inline.Span($"Position_reset##{entity.Id}")))
+		if (RenderResetButton(Inline.Span($"Position_reset##{hash}")))
 		{
 			entity.Position = Vector3.Zero;
 			LevelState.Track("Changed entity position");
@@ -108,12 +109,12 @@ public static class EntityEditorWindow
 
 		switch (entity.Shape.Value)
 		{
-			case Sphere sphere: RenderSphereInputs(entity.Id, sphere); break;
-			case Aabb aabb: RenderAabbInputs(entity.Id, aabb); break;
+			case Sphere sphere: RenderSphereInputs(sphere, hash); break;
+			case Aabb aabb: RenderAabbInputs(aabb, hash); break;
 		}
 	}
 
-	private static void RenderEntityProperties(Entity entity)
+	private static void RenderEntityProperties(Entity entity, int hash)
 	{
 		ImGui.SeparatorText("Properties");
 
@@ -172,15 +173,15 @@ public static class EntityEditorWindow
 
 			property.Value = property.Value.Value switch
 			{
-				bool b when ImGui.Checkbox(Inline.Span($"##property_value{entity.Id}_{i}"), ref b) => b,
-				int int32 when ImGui.DragInt(Inline.Span($"##property_value{entity.Id}_{i}"), ref int32, step.AsT0, minValue.AsT0, maxValue.AsT0) => int32,
-				float f when ImGui.DragFloat(Inline.Span($"##property_value{entity.Id}_{i}"), ref f, step.AsT1, minValue.AsT1, maxValue.AsT1) => f,
-				Vector2 v2 when ImGui.DragFloat2(Inline.Span($"##property_value{entity.Id}_{i}"), ref v2, step.AsT1, minValue.AsT1, maxValue.AsT1) => v2,
-				Vector3 v3 when ImGui.DragFloat3(Inline.Span($"##property_value{entity.Id}_{i}"), ref v3, step.AsT1, minValue.AsT1, maxValue.AsT1) => v3,
-				Vector4 v4 when ImGui.DragFloat4(Inline.Span($"##property_value{entity.Id}_{i}"), ref v4, step.AsT1, minValue.AsT1, maxValue.AsT1) => v4,
-				string s when ImGui.InputText(Inline.Span($"##property_value{entity.Id}_{i}"), ref s, 32) => s,
-				Rgb rgb when ImGuiUtils.ColorEdit3Rgb(Inline.Span($"##property_value{entity.Id}_{i}"), ref rgb) => rgb,
-				Rgba rgba when ImGuiUtils.ColorEdit4Rgba(Inline.Span($"##property_value{entity.Id}_{i}"), ref rgba) => rgba,
+				bool b when ImGui.Checkbox(Inline.Span($"##property_value{hash}_{i}"), ref b) => b,
+				int int32 when ImGui.DragInt(Inline.Span($"##property_value{hash}_{i}"), ref int32, step.AsT0, minValue.AsT0, maxValue.AsT0) => int32,
+				float f when ImGui.DragFloat(Inline.Span($"##property_value{hash}_{i}"), ref f, step.AsT1, minValue.AsT1, maxValue.AsT1) => f,
+				Vector2 v2 when ImGui.DragFloat2(Inline.Span($"##property_value{hash}_{i}"), ref v2, step.AsT1, minValue.AsT1, maxValue.AsT1) => v2,
+				Vector3 v3 when ImGui.DragFloat3(Inline.Span($"##property_value{hash}_{i}"), ref v3, step.AsT1, minValue.AsT1, maxValue.AsT1) => v3,
+				Vector4 v4 when ImGui.DragFloat4(Inline.Span($"##property_value{hash}_{i}"), ref v4, step.AsT1, minValue.AsT1, maxValue.AsT1) => v4,
+				string s when ImGui.InputText(Inline.Span($"##property_value{hash}_{i}"), ref s, 32) => s,
+				Rgb rgb when ImGuiUtils.ColorEdit3Rgb(Inline.Span($"##property_value{hash}_{i}"), ref rgb) => rgb,
+				Rgba rgba when ImGuiUtils.ColorEdit4Rgba(Inline.Span($"##property_value{hash}_{i}"), ref rgba) => rgba,
 				_ => property.Value,
 			};
 
@@ -191,24 +192,24 @@ public static class EntityEditorWindow
 		}
 	}
 
-	private static void RenderSphereInputs(int entityId, Sphere sphere)
+	private static void RenderSphereInputs(Sphere sphere, int hash)
 	{
 		ImGui.Text("Radius");
 
-		ImGui.DragFloat(Inline.Span($"##radius{entityId}"), ref sphere.Radius, 0.1f, 0.1f, float.MaxValue, "%.1f");
+		ImGui.DragFloat(Inline.Span($"##radius{hash}"), ref sphere.Radius, 0.1f, 0.1f, float.MaxValue, "%.1f");
 		if (ImGui.IsItemDeactivatedAfterEdit())
 			LevelState.Track("Changed entity radius");
 	}
 
-	private static void RenderAabbInputs(int entityId, Aabb aabb)
+	private static void RenderAabbInputs(Aabb aabb, int hash)
 	{
 		ImGui.Text("Box Min");
 
-		ImGui.DragFloat3(Inline.Span($"##box_min{entityId}"), ref aabb.Min, 0.1f, float.MinValue, -0.1f, "%.1f");
+		ImGui.DragFloat3(Inline.Span($"##box_min{hash}"), ref aabb.Min, 0.1f, float.MinValue, -0.1f, "%.1f");
 		if (ImGui.IsItemDeactivatedAfterEdit())
 			LevelState.Track("Changed entity box min");
 
-		if (RenderResetButton(Inline.Span($"Box_min_reset{entityId}")))
+		if (RenderResetButton(Inline.Span($"Box_min_reset{hash}")))
 		{
 			aabb.Min = -Vector3.One;
 			LevelState.Track("Changed entity box min");
@@ -216,11 +217,11 @@ public static class EntityEditorWindow
 
 		ImGui.Text("Box Max");
 
-		ImGui.DragFloat3(Inline.Span($"##box_max{entityId}"), ref aabb.Max, 0.1f, 0.1f, float.MaxValue, "%.1f");
+		ImGui.DragFloat3(Inline.Span($"##box_max{hash}"), ref aabb.Max, 0.1f, 0.1f, float.MaxValue, "%.1f");
 		if (ImGui.IsItemDeactivatedAfterEdit())
 			LevelState.Track("Changed entity box max");
 
-		if (RenderResetButton(Inline.Span($"Box_max_reset{entityId}")))
+		if (RenderResetButton(Inline.Span($"Box_max_reset{hash}")))
 		{
 			aabb.Max = Vector3.One;
 			LevelState.Track("Changed entity box max");

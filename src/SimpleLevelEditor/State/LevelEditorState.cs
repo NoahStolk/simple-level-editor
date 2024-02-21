@@ -4,8 +4,8 @@ namespace SimpleLevelEditor.State;
 
 public static class LevelEditorState
 {
-	private static int _selectedWorldObjectId = -1;
-	private static int _selectedEntityId = -1;
+	private static int _selectedWorldObjectHash = -1;
+	private static int _selectedEntityHash = -1;
 
 	public static float TargetHeight;
 	public static int GridCellCount = 64;
@@ -59,21 +59,21 @@ public static class LevelEditorState
 	public static void ClearSelectedWorldObject()
 	{
 		SelectedWorldObject = null;
-		_selectedWorldObjectId = -1;
+		_selectedWorldObjectHash = -1;
 	}
 
 	public static void ClearSelectedEntity()
 	{
 		SelectedEntity = null;
-		_selectedEntityId = -1;
+		_selectedEntityHash = -1;
 	}
 
 	public static void SetSelectedWorldObject(WorldObject? worldObject)
 	{
 		SelectedWorldObject = worldObject;
-		_selectedWorldObjectId = SelectedWorldObject?.Id ?? -1;
+		_selectedWorldObjectHash = SelectedWorldObject?.GenerateHash() ?? -1;
 
-		_selectedEntityId = -1;
+		_selectedEntityHash = -1;
 		SelectedEntity = null;
 
 		Mode = EditMode.WorldObjects;
@@ -81,14 +81,14 @@ public static class LevelEditorState
 
 	public static void UpdateSelectedWorldObject()
 	{
-		WorldObject? selectedWorldObject = LevelState.Level.WorldObjects.Find(o => o.Id == _selectedWorldObjectId);
+		WorldObject? selectedWorldObject = LevelState.Level.WorldObjects.Find(o => o.GenerateHash() == _selectedWorldObjectHash);
 		if (selectedWorldObject != null)
 		{
 			SetSelectedWorldObject(selectedWorldObject);
 		}
 		else
 		{
-			_selectedWorldObjectId = -1;
+			_selectedWorldObjectHash = -1;
 			SelectedWorldObject = null;
 		}
 	}
@@ -96,9 +96,9 @@ public static class LevelEditorState
 	public static void SetSelectedEntity(Entity? entity)
 	{
 		SelectedEntity = entity;
-		_selectedEntityId = SelectedEntity?.Id ?? -1;
+		_selectedEntityHash = SelectedEntity?.GenerateHash() ?? -1;
 
-		_selectedWorldObjectId = -1;
+		_selectedWorldObjectHash = -1;
 		SelectedWorldObject = null;
 
 		Mode = EditMode.Entities;
@@ -106,14 +106,14 @@ public static class LevelEditorState
 
 	public static void UpdateSelectedEntity()
 	{
-		Entity? selectedEntity = LevelState.Level.Entities.Find(o => o.Id == _selectedEntityId);
+		Entity? selectedEntity = LevelState.Level.Entities.Find(o => o.GenerateHash() == _selectedEntityHash);
 		if (selectedEntity != null)
 		{
 			SetSelectedEntity(selectedEntity);
 		}
 		else
 		{
-			_selectedEntityId = -1;
+			_selectedEntityHash = -1;
 			SelectedEntity = null;
 		}
 	}
