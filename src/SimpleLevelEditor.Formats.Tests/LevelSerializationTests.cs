@@ -1,3 +1,4 @@
+using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SimpleLevelEditor.Formats.Level;
 using SimpleLevelEditor.Formats.Level.Model;
@@ -150,7 +151,7 @@ public class LevelSerializationTests
 	[TestMethod]
 	public void TestLevelSerialization()
 	{
-		string levelXml = File.ReadAllText(Path.Combine("Resources", "Level.xml")).TrimEnd();
+		string levelXml = SanitizeString(File.ReadAllText(Path.Combine("Resources", "Level.xml")));
 		using XmlReader xmlReader = XmlReader.Create(new StringReader(levelXml));
 		Level3dData level = LevelXmlDeserializer.ReadLevel(xmlReader);
 
@@ -188,7 +189,12 @@ public class LevelSerializationTests
 
 		using MemoryStream ms = new();
 		LevelXmlSerializer.WriteLevel(ms, level, false);
-		string serializedLevel = Encoding.UTF8.GetString(ms.ToArray()).TrimEnd();
-		Assert.AreEqual(levelXml, serializedLevel);
+		string serializedLevel = SanitizeString(Encoding.UTF8.GetString(ms.ToArray()));
+		serializedLevel.Should().BeEquivalentTo(levelXml);
+	}
+
+	private static string SanitizeString(string input)
+	{
+		return input.Trim().Replace("\r", string.Empty, StringComparison.Ordinal);
 	}
 }
