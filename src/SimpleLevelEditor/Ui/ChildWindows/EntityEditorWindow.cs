@@ -43,7 +43,7 @@ public static class EntityEditorWindow
 
 	private static void RenderEntityInputs(Entity entity)
 	{
-		int hash = entity.GenerateHash();
+		int hash = entity.GetHashCode();
 
 		RenderEntityType(entity, hash);
 		RenderEntityShape(entity, hash);

@@ -71,7 +71,7 @@ public static class LevelEditorState
 	public static void SetSelectedWorldObject(WorldObject? worldObject)
 	{
 		SelectedWorldObject = worldObject;
-		_selectedWorldObjectHash = SelectedWorldObject?.GenerateHash() ?? -1;
+		_selectedWorldObjectHash = SelectedWorldObject?.GetHashCode() ?? -1;
 
 		_selectedEntityHash = -1;
 		SelectedEntity = null;
@@ -81,7 +81,7 @@ public static class LevelEditorState
 
 	public static void UpdateSelectedWorldObject()
 	{
-		WorldObject? selectedWorldObject = LevelState.Level.WorldObjects.Find(o => o.GenerateHash() == _selectedWorldObjectHash);
+		WorldObject? selectedWorldObject = LevelState.Level.WorldObjects.Find(o => o.GetHashCode() == _selectedWorldObjectHash);
 		if (selectedWorldObject != null)
 		{
 			SetSelectedWorldObject(selectedWorldObject);
@@ -96,7 +96,7 @@ public static class LevelEditorState
 	public static void SetSelectedEntity(Entity? entity)
 	{
 		SelectedEntity = entity;
-		_selectedEntityHash = SelectedEntity?.GenerateHash() ?? -1;
+		_selectedEntityHash = SelectedEntity?.GetHashCode() ?? -1;
 
 		_selectedWorldObjectHash = -1;
 		SelectedWorldObject = null;
@@ -106,7 +106,7 @@ public static class LevelEditorState
 
 	public static void UpdateSelectedEntity()
 	{
-		Entity? selectedEntity = LevelState.Level.Entities.Find(o => o.GenerateHash() == _selectedEntityHash);
+		Entity? selectedEntity = LevelState.Level.Entities.Find(o => o.GetHashCode() == _selectedEntityHash);
 		if (selectedEntity != null)
 		{
 			SetSelectedEntity(selectedEntity);

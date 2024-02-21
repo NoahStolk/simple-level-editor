@@ -94,7 +94,7 @@ public static class WorldObjectEditorWindow
 		{
 			string value = worldObject.Flags[i];
 
-			if (ImGui.InputText(Inline.Span($"##flag_{worldObject.GenerateHash()}_{i}"), ref value, 32))
+			if (ImGui.InputText(Inline.Span($"##flag_{worldObject.GetHashCode()}_{i}"), ref value, 32))
 				worldObject.Flags[i] = value;
 
 			if (ImGui.IsItemDeactivatedAfterEdit())
