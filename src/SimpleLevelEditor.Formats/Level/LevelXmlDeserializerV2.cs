@@ -20,7 +20,6 @@ internal static class LevelXmlDeserializerV2
 
 		Level3dData level3dData = new()
 		{
-			Version = xmlEntityConfigData.Version,
 			EntityConfigPath = xmlEntityConfigData.EntityConfig,
 			Meshes = xmlEntityConfigData.Meshes.ConvertAll(m => m.Path),
 			Textures = xmlEntityConfigData.Textures.ConvertAll(m => m.Path),

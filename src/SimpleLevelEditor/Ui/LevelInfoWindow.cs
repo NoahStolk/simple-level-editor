@@ -29,7 +29,6 @@ public static class LevelInfoWindow
 
 	private static void RenderLevel(Level3dData level)
 	{
-		ImGui.Text(Inline.Span($"Version: {level.Version}"));
 		ImGui.Text(Inline.Span($"Meshes: {level.Meshes.Count}"));
 		ImGui.Text(Inline.Span($"Textures: {level.Textures.Count}"));
 		ImGui.Text(Inline.Span($"WorldObjects: {level.WorldObjects.Count}"));

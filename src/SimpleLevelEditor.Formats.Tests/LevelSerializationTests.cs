@@ -184,7 +184,6 @@ public class LevelSerializationTests
 
 	private static void AssertLevelValues(int expectedVersion, Level3dData level)
 	{
-		Assert.AreEqual(expectedVersion, level.Version);
 		Assert.AreEqual("..\\EntityConfig.xml", level.EntityConfigPath);
 		CollectionAssert.AreEqual(_expectedMeshes, level.Meshes);
 		CollectionAssert.AreEqual(_expectedTextures, level.Textures);

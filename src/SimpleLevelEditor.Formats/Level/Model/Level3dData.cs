@@ -2,7 +2,6 @@ namespace SimpleLevelEditor.Formats.Level.Model;
 
 public record Level3dData
 {
-	public required int Version;
 	public required string? EntityConfigPath;
 	public required List<string> Meshes;
 	public required List<string> Textures;
@@ -13,7 +12,6 @@ public record Level3dData
 	{
 		return new()
 		{
-			Version = 1,
 			EntityConfigPath = null,
 			Meshes = [],
 			Textures = [],
@@ -42,7 +40,6 @@ public record Level3dData
 
 		return new()
 		{
-			Version = Version,
 			EntityConfigPath = EntityConfigPath,
 			Meshes = newMeshes,
 			Textures = newTextures,

@@ -22,10 +22,7 @@ internal static class LevelXmlDeserializerV1
 			{
 				switch (reader.Name)
 				{
-					case "Level":
-						level.Version = int.Parse(reader.GetAttribute("Version") ?? throw _invalidFormat, CultureInfo.InvariantCulture);
-						level.EntityConfigPath = reader.GetAttribute("EntityConfig");
-						break;
+					case "Level": level.EntityConfigPath = reader.GetAttribute("EntityConfig"); break;
 					case "Meshes": level.Meshes = ReadMeshes(reader); break;
 					case "Textures": level.Textures = ReadTextures(reader); break;
 					case "WorldObjects": level.WorldObjects = ReadWorldObjects(reader); break;
