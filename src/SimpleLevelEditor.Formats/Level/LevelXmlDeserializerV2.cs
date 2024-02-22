@@ -39,13 +39,13 @@ internal static class LevelXmlDeserializerV2
 				.Select((e, i) => new Entity
 				{
 					Id = i + 1,
-					Shape = DataFormatter.ReadShape(e.Shape),
+					Shape = LevelXmlDataFormatter.ReadShape(e.Shape),
 					Name = e.Name,
 					Position = ParseUtils.TryReadVector3(e.Position, out Vector3 position) ? position : Vector3.Zero,
 					Properties = e.Properties.ConvertAll(p => new EntityProperty
 					{
 						Key = p.Name,
-						Value = DataFormatter.ReadProperty(p.Value),
+						Value = LevelXmlDataFormatter.ReadProperty(p.Value),
 					}),
 				})
 				.ToList(),

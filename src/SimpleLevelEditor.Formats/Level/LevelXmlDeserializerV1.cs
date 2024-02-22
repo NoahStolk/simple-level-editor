@@ -118,7 +118,7 @@ internal static class LevelXmlDeserializerV1
 					properties.Add(new()
 					{
 						Key = reader.Name,
-						Value = DataFormatter.ReadProperty(reader.Value),
+						Value = LevelXmlDataFormatter.ReadProperty(reader.Value),
 					});
 				}
 
@@ -128,7 +128,7 @@ internal static class LevelXmlDeserializerV1
 					Id = entityIndex,
 					Name = reader.GetAttribute("Name") ?? throw _invalidFormat,
 					Position = ParseUtils.ReadVector3(reader.GetAttribute("Position") ?? throw _invalidFormat),
-					Shape = DataFormatter.ReadShape(reader.GetAttribute("Shape") ?? throw _invalidFormat),
+					Shape = LevelXmlDataFormatter.ReadShape(reader.GetAttribute("Shape") ?? throw _invalidFormat),
 					Properties = properties,
 				};
 				entities.Add(entity);

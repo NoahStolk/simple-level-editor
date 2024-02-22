@@ -6,7 +6,7 @@ using System.Globalization;
 
 namespace SimpleLevelEditor.Formats.Level;
 
-internal static class DataFormatter
+internal static class LevelXmlDataFormatter
 {
 	private const string _pointId = "point";
 	private const string _sphereId = "sphere";
