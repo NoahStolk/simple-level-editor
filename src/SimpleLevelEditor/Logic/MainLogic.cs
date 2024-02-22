@@ -50,6 +50,7 @@ public static class MainLogic
 		{
 			case LevelEditorState.EditMode.WorldObjects: AddNewWorldObject(); break;
 			case LevelEditorState.EditMode.Entities: AddNewEntity(); break;
+			default: throw new UnreachableException($"Unknown edit mode: {LevelEditorState.Mode}");
 		}
 	}
 
@@ -150,7 +151,7 @@ public static class MainLogic
 		for (int i = 0; i < LevelState.Level.WorldObjects.Count; i++)
 		{
 			WorldObject worldObject = LevelState.Level.WorldObjects[i];
-			MeshContainer.Entry? mesh = MeshContainer.GetMesh(worldObject.Mesh);
+			MeshEntry? mesh = MeshContainer.GetMesh(worldObject.Mesh);
 			if (mesh == null)
 				continue;
 

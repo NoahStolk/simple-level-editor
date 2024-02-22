@@ -9,7 +9,7 @@ namespace SimpleLevelEditor.Rendering;
 
 public class MeshPreviewFramebuffer
 {
-	private readonly MeshContainer.Entry _mesh;
+	private readonly MeshEntry _mesh;
 	private readonly float _zoom;
 	private readonly Vector3 _origin;
 	private Vector2 _cachedFramebufferSize;
@@ -18,7 +18,7 @@ public class MeshPreviewFramebuffer
 
 	private uint _framebufferId;
 
-	public MeshPreviewFramebuffer(MeshContainer.Entry mesh)
+	public MeshPreviewFramebuffer(MeshEntry mesh)
 	{
 		_mesh = mesh;
 

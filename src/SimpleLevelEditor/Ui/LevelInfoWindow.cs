@@ -113,7 +113,7 @@ public static class LevelInfoWindow
 					string defaultValue = property.Type.Value switch
 					{
 						BoolPropertyType boolProperty => boolProperty.DefaultValue.ToString(),
-						IntPropertyType intProperty => intProperty.DefaultValue.ToString(),
+						IntPropertyType intProperty => intProperty.DefaultValue.ToString(CultureInfo.InvariantCulture),
 						FloatPropertyType floatProperty => floatProperty.DefaultValue.ToString(CultureInfo.InvariantCulture),
 						Vector2PropertyType vector2Property => vector2Property.DefaultValue.ToString(),
 						Vector3PropertyType vector3Property => vector3Property.DefaultValue.ToString(),
@@ -125,7 +125,7 @@ public static class LevelInfoWindow
 					};
 					string? step = property.Type.Value switch
 					{
-						IntPropertyType intProperty => intProperty.Step?.ToString(),
+						IntPropertyType intProperty => intProperty.Step?.ToString(CultureInfo.InvariantCulture),
 						FloatPropertyType floatProperty => floatProperty.Step?.ToString(CultureInfo.InvariantCulture),
 						Vector2PropertyType vector2Property => vector2Property.Step?.ToString(CultureInfo.InvariantCulture),
 						Vector3PropertyType vector3Property => vector3Property.Step?.ToString(CultureInfo.InvariantCulture),
@@ -134,7 +134,7 @@ public static class LevelInfoWindow
 					};
 					string? minValue = property.Type.Value switch
 					{
-						IntPropertyType intProperty => intProperty.MinValue?.ToString(),
+						IntPropertyType intProperty => intProperty.MinValue?.ToString(CultureInfo.InvariantCulture),
 						FloatPropertyType floatProperty => floatProperty.MinValue?.ToString(CultureInfo.InvariantCulture),
 						Vector2PropertyType vector2Property => vector2Property.MinValue?.ToString(CultureInfo.InvariantCulture),
 						Vector3PropertyType vector3Property => vector3Property.MinValue?.ToString(CultureInfo.InvariantCulture),
@@ -143,7 +143,7 @@ public static class LevelInfoWindow
 					};
 					string? maxValue = property.Type.Value switch
 					{
-						IntPropertyType intProperty => intProperty.MaxValue?.ToString(),
+						IntPropertyType intProperty => intProperty.MaxValue?.ToString(CultureInfo.InvariantCulture),
 						FloatPropertyType floatProperty => floatProperty.MaxValue?.ToString(CultureInfo.InvariantCulture),
 						Vector2PropertyType vector2Property => vector2Property.MaxValue?.ToString(CultureInfo.InvariantCulture),
 						Vector3PropertyType vector3Property => vector3Property.MaxValue?.ToString(CultureInfo.InvariantCulture),

@@ -122,7 +122,7 @@ public static class LevelState
 			return;
 
 		CurrentHistoryIndex = Math.Clamp(index, 0, History.Count - 1);
-		Level = History[CurrentHistoryIndex].Object.DeepCopy();
+		Level = History[CurrentHistoryIndex].Level3dData.DeepCopy();
 
 		LevelEditorState.ClearHighlight();
 		LevelEditorState.UpdateSelectedWorldObject();
@@ -140,7 +140,7 @@ public static class LevelState
 		}
 		else
 		{
-			byte[] originalHash = History[CurrentHistoryIndex].Hash;
+			IReadOnlyList<byte> originalHash = History[CurrentHistoryIndex].Hash;
 
 			if (originalHash.SequenceEqual(hash))
 				return;
@@ -227,6 +227,4 @@ public static class LevelState
 			return false;
 		}
 	}
-
-	public sealed record HistoryEntry(Level3dData Object, byte[] Hash, string EditDescription);
 }

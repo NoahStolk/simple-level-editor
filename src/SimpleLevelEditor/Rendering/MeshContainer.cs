@@ -9,12 +9,12 @@ namespace SimpleLevelEditor.Rendering;
 
 public static class MeshContainer
 {
-	private static readonly Dictionary<string, Entry> _meshes = new();
+	private static readonly Dictionary<string, MeshEntry> _meshes = new();
 	private static readonly Dictionary<string, MeshPreviewFramebuffer> _meshPreviewFramebuffers = new();
 
-	public static Entry? GetMesh(string path)
+	public static MeshEntry? GetMesh(string path)
 	{
-		if (_meshes.TryGetValue(path, out Entry? data))
+		if (_meshes.TryGetValue(path, out MeshEntry? data))
 			return data;
 
 		DebugState.AddWarning($"Cannot find mesh '{path}'");
@@ -96,7 +96,7 @@ public static class MeshContainer
 				lineIndices.Add(edge.Key.B);
 			}
 
-			Entry entry = new(mainMesh, vao, lineIndices.ToArray(), VaoUtils.CreateLineVao(modelData.Positions.ToArray()), boundingMin, boundingMax);
+			MeshEntry entry = new(mainMesh, vao, lineIndices.ToArray(), VaoUtils.CreateLineVao(modelData.Positions.ToArray()), boundingMin, boundingMax);
 			_meshes.Add(meshPath, entry);
 			_meshPreviewFramebuffers.Add(meshPath, new(entry));
 		}
@@ -159,8 +159,6 @@ public static class MeshContainer
 
 		return vao;
 	}
-
-	public record Entry(Mesh Mesh, uint MeshVao, uint[] LineIndices, uint LineVao, Vector3 BoundingMin, Vector3 BoundingMax);
 
 	private sealed record Edge(uint A, uint B)
 	{

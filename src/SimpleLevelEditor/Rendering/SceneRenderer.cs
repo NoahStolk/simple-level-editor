@@ -221,7 +221,7 @@ public static class SceneRenderer
 
 	private static unsafe void RenderEdges(ShaderCacheEntry lineShader, WorldObject worldObject, Vector4 color)
 	{
-		MeshContainer.Entry? mesh = MeshContainer.GetMesh(worldObject.Mesh);
+		MeshEntry? mesh = MeshContainer.GetMesh(worldObject.Mesh);
 		if (mesh == null)
 			return;
 
@@ -247,7 +247,7 @@ public static class SceneRenderer
 			WorldObject worldObject = LevelState.Level.WorldObjects[i];
 			Gl.UniformMatrix4x4(modelUniform, worldObject.GetModelMatrix());
 
-			MeshContainer.Entry? mesh = MeshContainer.GetMesh(worldObject.Mesh);
+			MeshEntry? mesh = MeshContainer.GetMesh(worldObject.Mesh);
 			if (mesh == null)
 				continue;
 

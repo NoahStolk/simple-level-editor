@@ -7,6 +7,6 @@ namespace SimpleLevelEditor.Utils;
 public static class LogUtils
 {
 	public static Logger Log { get; } = new LoggerConfiguration()
-		.WriteTo.File($"simple-level-editor-{AssemblyUtils.VersionString}.log", rollingInterval: RollingInterval.Infinite, formatProvider: CultureInfo.InvariantCulture)
+		.WriteTo.File($"simple-level-editor-{AssemblyUtils.VersionString}.log", formatProvider: CultureInfo.InvariantCulture, rollingInterval: RollingInterval.Infinite)
 		.CreateLogger();
 }
