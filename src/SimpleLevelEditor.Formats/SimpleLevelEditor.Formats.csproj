@@ -1,5 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+  <PropertyGroup Label="Package information">
+    <PackageId>NoahStolk.SimpleLevelEditor.Formats</PackageId>
+    <Authors>Noah Stolk</Authors>
+    <Copyright>Copyright © Noah Stolk</Copyright>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/NoahStolk/simple-level-editor</RepositoryUrl>
+    <Version>0.1.0</Version>
+  </PropertyGroup>
+
   <ItemGroup Label="External dependencies">
     <PackageReference Include="OneOf" Version="3.0.263"/>
     <PackageReference Include="OneOf.Extended" Version="3.0.263"/>
