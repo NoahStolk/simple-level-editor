@@ -34,7 +34,7 @@ public static class Graphics
 		}
 	}
 
-	public static unsafe void CreateWindow(string title, int width, int height)
+	public static unsafe void CreateWindow(string title, int width, int height, bool startMaximized)
 	{
 		if (_windowIsCreated)
 			throw new InvalidOperationException("Window is already created. Cannot create window again.");
@@ -54,11 +54,6 @@ public static class Graphics
 		_glfw.WindowHint(WindowHintBool.Resizable, true);
 		CheckGlfwError(_glfw);
 
-		(int primaryMonitorWidth, int primaryMonitorHeight) = (1024, 768);
-		Monitor* primaryMonitor = _glfw.GetPrimaryMonitor();
-		if (primaryMonitor != (Monitor*)0)
-			_glfw.GetMonitorWorkarea(primaryMonitor, out _, out _, out primaryMonitorWidth, out primaryMonitorHeight);
-
 		Window = _glfw.CreateWindow(width, height, title, null, null);
 		CheckGlfwError(_glfw);
 		if (Window == (WindowHandle*)0)
@@ -72,10 +67,21 @@ public static class Graphics
 		_glfw.SetKeyCallback(Window, (_, keys, _, state, _) => Input.GlfwInput.KeyCallback(keys, state));
 		_glfw.SetCharCallback(Window, (_, codepoint) => Input.GlfwInput.CharCallback(codepoint));
 
-		int x = (primaryMonitorWidth - Width) / 2;
-		int y = (primaryMonitorHeight - Height) / 2;
+		if (startMaximized)
+		{
+			_glfw.MaximizeWindow(Window);
+		}
+		else
+		{
+			Monitor* primaryMonitor = _glfw.GetPrimaryMonitor();
+			int primaryMonitorWidth, primaryMonitorHeight;
+			if (primaryMonitor != null)
+				_glfw.GetMonitorWorkarea(primaryMonitor, out _, out _, out primaryMonitorWidth, out primaryMonitorHeight);
+			else
+				(primaryMonitorWidth, primaryMonitorHeight) = (1024, 768);
 
-		_glfw.SetWindowPos(Window, x, y);
+			_glfw.SetWindowPos(Window, (primaryMonitorWidth - width) / 2, (primaryMonitorHeight - height) / 2);
+		}
 
 		_glfw.MakeContextCurrent(Window);
 		_gl = GL.GetApi(_glfw.GetProcAddress);

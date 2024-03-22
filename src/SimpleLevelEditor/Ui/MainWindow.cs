@@ -5,18 +5,22 @@ namespace SimpleLevelEditor.Ui;
 
 public static class MainWindow
 {
-	private static bool _showDemoWindow;
 	private static bool _showControlsWindow;
+	private static bool _showSettingsWindow;
+	private static bool _showDemoWindow;
 	private static bool _showInputDebugWindow;
 	private static bool _showDebugWindow;
 
 	public static void Render()
 	{
-		if (_showDemoWindow)
-			ImGui.ShowDemoWindow(ref _showDemoWindow);
-
 		if (_showControlsWindow)
 			ControlsWindow.Render(ref _showControlsWindow);
+
+		if (_showSettingsWindow)
+			SettingsWindow.Render(ref _showSettingsWindow);
+
+		if (_showDemoWindow)
+			ImGui.ShowDemoWindow(ref _showDemoWindow);
 
 		if (_showInputDebugWindow)
 			InputDebugWindow.Render(ref _showInputDebugWindow);
@@ -43,6 +47,14 @@ public static class MainWindow
 
 				if (ImGui.MenuItem("Save As", Shortcuts.GetKeyDescription(Shortcuts.SaveAs)))
 					LevelState.SaveAs();
+
+				ImGui.EndMenu();
+			}
+
+			if (ImGui.BeginMenu("Settings"))
+			{
+				if (ImGui.MenuItem("Settings"))
+					_showSettingsWindow = true;
 
 				ImGui.EndMenu();
 			}

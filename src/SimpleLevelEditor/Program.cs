@@ -9,7 +9,9 @@ using SimpleLevelEditor.Utils;
 
 AppDomain.CurrentDomain.UnhandledException += (_, args) => LogUtils.Log.Fatal(args.ExceptionObject.ToString());
 
-Graphics.CreateWindow($"Simple Level Editor v{AssemblyUtils.VersionString}", Constants.WindowWidth, Constants.WindowHeight);
+UserSettings.LoadSettings();
+
+Graphics.CreateWindow($"Simple Level Editor v{AssemblyUtils.VersionString}", Constants.WindowWidth, Constants.WindowHeight, UserSettings.Settings.StartMaximized);
 Graphics.SetWindowSizeLimits(1024, 768, 4096, 2160);
 
 foreach (string filePath in Directory.GetFiles(Path.Combine("Resources", "Shaders")).DistinctBy(Path.GetFileNameWithoutExtension))
@@ -47,6 +49,13 @@ Graphics.OnChangeWindowSize = (w, h) =>
 	Graphics.Gl.Viewport(0, 0, (uint)w, (uint)h);
 	imGuiController.WindowResized(w, h);
 };
+
+unsafe
+{
+	// Always invoke this in case of window size change via StartMaximized.
+	Graphics.Glfw.GetWindowSize(Graphics.Window, out int width, out int height);
+	Graphics.OnChangeWindowSize.Invoke(width, height);
+}
 
 App.Instance = new(imGuiController);
 App.Instance.Run();
