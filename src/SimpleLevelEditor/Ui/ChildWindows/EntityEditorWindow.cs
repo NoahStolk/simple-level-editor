@@ -129,7 +129,26 @@ public static class EntityEditorWindow
 			EntityPropertyDescriptor propertyDescriptor = entityDescriptor.Properties[i];
 			EntityProperty? property = entity.Properties.Find(p => p.Key == propertyDescriptor.Name);
 			if (property == null)
-				throw new InvalidOperationException("Entity property not found");
+			{
+				property = new()
+				{
+					Key = propertyDescriptor.Name,
+					Value = propertyDescriptor.Type.Value switch
+					{
+						BoolPropertyType b => b.DefaultValue,
+						IntPropertyType int32 => int32.DefaultValue,
+						FloatPropertyType f => f.DefaultValue,
+						Vector2PropertyType v2 => v2.DefaultValue,
+						Vector3PropertyType v3 => v3.DefaultValue,
+						Vector4PropertyType v4 => v4.DefaultValue,
+						StringPropertyType str => str.DefaultValue,
+						RgbPropertyType rgb => rgb.DefaultValue,
+						RgbaPropertyType rgba => rgba.DefaultValue,
+						_ => throw new UnreachableException($"Invalid entity property type: {propertyDescriptor.Type}"),
+					},
+				};
+				entity.Properties.Add(property);
+			}
 
 			OneOf<int, float> step = propertyDescriptor.Type.Value switch
 			{
