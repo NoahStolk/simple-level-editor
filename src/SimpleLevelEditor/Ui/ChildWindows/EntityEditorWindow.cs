@@ -93,8 +93,8 @@ public static class EntityEditorWindow
 
 		switch (entity.Shape)
 		{
-			case Level.ShapeDescriptor.Sphere sphere: RenderSphereInputs(entity.Id, sphere); break;
-			case Level.ShapeDescriptor.Aabb aabb: RenderAabbInputs(entity.Id, aabb); break;
+			case Level.ShapeDescriptor.Sphere sphere: RenderSphereInputs(entity.Id, ref sphere); break;
+			case Level.ShapeDescriptor.Aabb aabb: RenderAabbInputs(entity.Id, ref aabb); break;
 		}
 	}
 
@@ -136,19 +136,55 @@ public static class EntityEditorWindow
 					ImGui.SetTooltip(propertyDescriptor.Description);
 			}
 
-			property.Value = property.Value switch
+			switch (property.Value)
 			{
-				Level.EntityPropertyValue.Bool b when ImGui.Checkbox(Inline.Span($"##property_value{entity.Id}_{i}"), ref b.Value) => b,
-				Level.EntityPropertyValue.Int int32 when ImGui.DragInt(Inline.Span($"##property_value{entity.Id}_{i}"), ref int32.Value, (int)step, (int)minValue, (int)maxValue) => int32,
-				Level.EntityPropertyValue.Float f when ImGui.DragFloat(Inline.Span($"##property_value{entity.Id}_{i}"), ref f.Value, step, minValue, maxValue) => f,
-				Level.EntityPropertyValue.Vector2 v2 when ImGui.DragFloat2(Inline.Span($"##property_value{entity.Id}_{i}"), ref v2.Value, step, minValue, maxValue) => v2,
-				Level.EntityPropertyValue.Vector3 v3 when ImGui.DragFloat3(Inline.Span($"##property_value{entity.Id}_{i}"), ref v3.Value, step, minValue, maxValue) => v3,
-				Level.EntityPropertyValue.Vector4 v4 when ImGui.DragFloat4(Inline.Span($"##property_value{entity.Id}_{i}"), ref v4.Value, step, minValue, maxValue) => v4,
-				Level.EntityPropertyValue.String s when ImGui.InputText(Inline.Span($"##property_value{entity.Id}_{i}"), ref s.Value, 32) => s,
-				Level.EntityPropertyValue.Rgb rgb when ImGuiUtils.ColorEdit3Rgb(Inline.Span($"##property_value{entity.Id}_{i}"), ref rgb.Value) => rgb,
-				Level.EntityPropertyValue.Rgba rgba when ImGuiUtils.ColorEdit4Rgba(Inline.Span($"##property_value{entity.Id}_{i}"), ref rgba.Value) => rgba,
-				_ => property.Value,
-			};
+				case Level.EntityPropertyValue.Bool b:
+					bool boolValue = b.Value;
+					if (ImGui.Checkbox(Inline.Span($"##property_value{entity.Id}_{i}"), ref boolValue))
+						property.Value = Level.EntityPropertyValue.NewBool(boolValue);
+					break;
+				case Level.EntityPropertyValue.Int int32:
+					int intValue = int32.Value;
+					if (ImGui.DragInt(Inline.Span($"##property_value{entity.Id}_{i}"), ref intValue, (int)step, (int)minValue, (int)maxValue))
+						property.Value = Level.EntityPropertyValue.NewInt(intValue);
+					break;
+				case Level.EntityPropertyValue.Float f:
+					float floatValue = f.Value;
+					if (ImGui.DragFloat(Inline.Span($"##property_value{entity.Id}_{i}"), ref floatValue, step, minValue, maxValue))
+						property.Value = Level.EntityPropertyValue.NewFloat(floatValue);
+					break;
+				case Level.EntityPropertyValue.Vector2 v2:
+					Vector2 vector2Value = v2.Value;
+					if (ImGui.DragFloat2(Inline.Span($"##property_value{entity.Id}_{i}"), ref vector2Value, step, minValue, maxValue))
+						property.Value = Level.EntityPropertyValue.NewVector2(vector2Value);
+					break;
+				case Level.EntityPropertyValue.Vector3 v3:
+					Vector3 vector3Value = v3.Value;
+					if (ImGui.DragFloat3(Inline.Span($"##property_value{entity.Id}_{i}"), ref vector3Value, step, minValue, maxValue))
+						property.Value = Level.EntityPropertyValue.NewVector3(vector3Value);
+					break;
+				case Level.EntityPropertyValue.Vector4 v4:
+					Vector4 vector4Value = v4.Value;
+					if (ImGui.DragFloat4(Inline.Span($"##property_value{entity.Id}_{i}"), ref vector4Value, step, minValue, maxValue))
+						property.Value = Level.EntityPropertyValue.NewVector4(vector4Value);
+					break;
+				case Level.EntityPropertyValue.String s:
+					string stringValue = s.Value;
+					if (ImGui.InputText(Inline.Span($"##property_value{entity.Id}_{i}"), ref stringValue, 32))
+						property.Value = Level.EntityPropertyValue.NewString(stringValue);
+					break;
+				case Level.EntityPropertyValue.Rgb rgb:
+					Formats.Types.Color.Rgb rgbValue = rgb.Value;
+					if (ImGuiUtils.ColorEdit3Rgb(Inline.Span($"##property_value{entity.Id}_{i}"), ref rgbValue))
+						property.Value = Level.EntityPropertyValue.NewRgb(rgbValue);
+					break;
+				case Level.EntityPropertyValue.Rgba rgba:
+					Formats.Types.Color.Rgba rgbaValue = rgba.Value;
+					if (ImGuiUtils.ColorEdit4Rgba(Inline.Span($"##property_value{entity.Id}_{i}"), ref rgbaValue))
+						property.Value = Level.EntityPropertyValue.NewRgba(rgbaValue);
+					break;
+				default: throw new UnreachableException();
+			}
 
 			if (ImGui.IsItemDeactivatedAfterEdit())
 				LevelState.Track("Changed entity property value");
@@ -157,38 +193,44 @@ public static class EntityEditorWindow
 		}
 	}
 
-	private static void RenderSphereInputs(int entityId, Level.ShapeDescriptor.Sphere sphere)
+	private static void RenderSphereInputs(int entityId, ref Level.ShapeDescriptor.Sphere sphere)
 	{
 		ImGui.Text("Radius");
 
-		ImGui.DragFloat(Inline.Span($"##radius{entityId}"), ref sphere.Radius, 0.1f, 0.1f, float.MaxValue, "%.1f");
+		float radius = sphere.Radius;
+		if (ImGui.DragFloat(Inline.Span($"##radius{entityId}"), ref radius, 0.1f, 0.1f, float.MaxValue, "%.1f"))
+			sphere = (Level.ShapeDescriptor.Sphere)Level.ShapeDescriptor.NewSphere(radius);
 		if (ImGui.IsItemDeactivatedAfterEdit())
 			LevelState.Track("Changed entity radius");
 	}
 
-	private static void RenderAabbInputs(int entityId, Level.ShapeDescriptor.Aabb aabb)
+	private static void RenderAabbInputs(int entityId, ref Level.ShapeDescriptor.Aabb aabb)
 	{
 		ImGui.Text("Box Min");
 
-		ImGui.DragFloat3(Inline.Span($"##box_min{entityId}"), ref aabb.Min, 0.1f, float.MinValue, -0.1f, "%.1f");
+		Vector3 min = aabb.Min;
+		if (ImGui.DragFloat3(Inline.Span($"##box_min{entityId}"), ref min, 0.1f, float.MinValue, -0.1f, "%.1f"))
+			aabb = (Level.ShapeDescriptor.Aabb)Level.ShapeDescriptor.NewAabb(min, aabb.Max);
 		if (ImGui.IsItemDeactivatedAfterEdit())
 			LevelState.Track("Changed entity box min");
 
 		if (RenderResetButton(Inline.Span($"Box_min_reset{entityId}")))
 		{
-			aabb.Min = -Vector3.One;
+			aabb = (Level.ShapeDescriptor.Aabb)Level.ShapeDescriptor.NewAabb(-Vector3.One, aabb.Max);
 			LevelState.Track("Changed entity box min");
 		}
 
 		ImGui.Text("Box Max");
 
-		ImGui.DragFloat3(Inline.Span($"##box_max{entityId}"), ref aabb.Max, 0.1f, 0.1f, float.MaxValue, "%.1f");
+		Vector3 max = aabb.Max;
+		if (ImGui.DragFloat3(Inline.Span($"##box_max{entityId}"), ref max, 0.1f, 0.1f, float.MaxValue, "%.1f"))
+			aabb = (Level.ShapeDescriptor.Aabb)Level.ShapeDescriptor.NewAabb(aabb.Min, max);
 		if (ImGui.IsItemDeactivatedAfterEdit())
 			LevelState.Track("Changed entity box max");
 
 		if (RenderResetButton(Inline.Span($"Box_max_reset{entityId}")))
 		{
-			aabb.Max = Vector3.One;
+			aabb = (Level.ShapeDescriptor.Aabb)Level.ShapeDescriptor.NewAabb(aabb.Min, Vector3.One);
 			LevelState.Track("Changed entity box max");
 		}
 	}
