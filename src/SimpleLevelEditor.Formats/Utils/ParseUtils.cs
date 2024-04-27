@@ -118,108 +118,19 @@ internal static class ParseUtils
 
 	#region Read
 
-	public static bool ReadBool(string str)
-	{
-		return bool.Parse(str);
-	}
-
-	public static byte ReadByte(string str)
-	{
-		return byte.Parse(str, CultureInfo.InvariantCulture);
-	}
-
-	public static int ReadInt(string str)
-	{
-		return int.Parse(str, CultureInfo.InvariantCulture);
-	}
-
-	public static float ReadFloat(string str)
-	{
-		return float.Parse(str, CultureInfo.InvariantCulture);
-	}
-
-	public static Vector2 ReadVector2(string str)
-	{
-		string[] parts = str.Split(' ');
-		return new(float.Parse(parts[0], CultureInfo.InvariantCulture), float.Parse(parts[1], CultureInfo.InvariantCulture));
-	}
-
 	public static Vector3 ReadVector3(string str)
 	{
 		string[] parts = str.Split(' ');
-		return new(float.Parse(parts[0], CultureInfo.InvariantCulture), float.Parse(parts[1], CultureInfo.InvariantCulture), float.Parse(parts[2], CultureInfo.InvariantCulture));
-	}
-
-	public static Vector4 ReadVector4(string str)
-	{
-		string[] parts = str.Split(' ');
-		return new(float.Parse(parts[0], CultureInfo.InvariantCulture), float.Parse(parts[1], CultureInfo.InvariantCulture), float.Parse(parts[2], CultureInfo.InvariantCulture), float.Parse(parts[3], CultureInfo.InvariantCulture));
-	}
-
-	public static string ReadString(string str)
-	{
-		return str;
-	}
-
-	public static Color.Rgb ReadRgb(string str)
-	{
-		string[] parts = str.Split(' ');
-		return new(byte.Parse(parts[0], CultureInfo.InvariantCulture), byte.Parse(parts[1], CultureInfo.InvariantCulture), byte.Parse(parts[2], CultureInfo.InvariantCulture));
-	}
-
-	public static Color.Rgba ReadRgba(string str)
-	{
-		string[] parts = str.Split(' ');
-		return new(byte.Parse(parts[0], CultureInfo.InvariantCulture), byte.Parse(parts[1], CultureInfo.InvariantCulture), byte.Parse(parts[2], CultureInfo.InvariantCulture), byte.Parse(parts[3], CultureInfo.InvariantCulture));
+		return new Vector3(float.Parse(parts[0], CultureInfo.InvariantCulture), float.Parse(parts[1], CultureInfo.InvariantCulture), float.Parse(parts[2], CultureInfo.InvariantCulture));
 	}
 
 	#endregion Read
 
 	#region Write
 
-	public static string Write(bool data)
-	{
-		return data.ToString(CultureInfo.InvariantCulture).ToLowerInvariant();
-	}
-
-	public static string Write(int data)
-	{
-		return data.ToString(CultureInfo.InvariantCulture);
-	}
-
 	public static string Write(float data)
 	{
 		return data.ToString(CultureInfo.InvariantCulture);
-	}
-
-	public static string Write(Vector2 data)
-	{
-		return $"{Write(data.X)} {Write(data.Y)}";
-	}
-
-	public static string Write(Vector3 data)
-	{
-		return $"{Write(data.X)} {Write(data.Y)} {Write(data.Z)}";
-	}
-
-	public static string Write(Vector4 data)
-	{
-		return $"{Write(data.X)} {Write(data.Y)} {Write(data.Z)} {Write(data.W)}";
-	}
-
-	public static string Write(string data)
-	{
-		return data;
-	}
-
-	public static string Write(Color.Rgb data)
-	{
-		return $"{Write(data.R)} {Write(data.G)} {Write(data.B)}";
-	}
-
-	public static string Write(Color.Rgba data)
-	{
-		return $"{Write(data.R)} {Write(data.G)} {Write(data.B)} {Write(data.A)}";
 	}
 
 	#endregion Write

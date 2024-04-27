@@ -96,64 +96,16 @@ public static class LevelInfoWindow
 						EntityConfig.EntityPropertyTypeDescriptor.RgbaProperty => new Vector4(1, 1, 0, 1),
 						_ => new Vector4(1, 0, 0, 1),
 					};
-					string type = property.Type switch
-					{
-						EntityConfig.EntityPropertyTypeDescriptor.BoolProperty => "bool",
-						EntityConfig.EntityPropertyTypeDescriptor.IntProperty => "int",
-						EntityConfig.EntityPropertyTypeDescriptor.FloatProperty => "float",
-						EntityConfig.EntityPropertyTypeDescriptor.Vector2Property => "Vector2",
-						EntityConfig.EntityPropertyTypeDescriptor.Vector3Property => "Vector3",
-						EntityConfig.EntityPropertyTypeDescriptor.Vector4Property => "Vector4",
-						EntityConfig.EntityPropertyTypeDescriptor.StringProperty => "string",
-						EntityConfig.EntityPropertyTypeDescriptor.RgbProperty => "Rgb",
-						EntityConfig.EntityPropertyTypeDescriptor.RgbaProperty => "Rgba",
-						_ => "unknown",
-					};
-					string defaultValue = property.Type switch
-					{
-						EntityConfig.EntityPropertyTypeDescriptor.BoolProperty boolProperty => boolProperty.DefaultValue.ToString(),
-						EntityConfig.EntityPropertyTypeDescriptor.IntProperty intProperty => intProperty.DefaultValue.ToString(CultureInfo.InvariantCulture),
-						EntityConfig.EntityPropertyTypeDescriptor.FloatProperty floatProperty => floatProperty.DefaultValue.ToString(CultureInfo.InvariantCulture),
-						EntityConfig.EntityPropertyTypeDescriptor.Vector2Property vector2Property => vector2Property.DefaultValue.ToString(),
-						EntityConfig.EntityPropertyTypeDescriptor.Vector3Property vector3Property => vector3Property.DefaultValue.ToString(),
-						EntityConfig.EntityPropertyTypeDescriptor.Vector4Property vector4Property => vector4Property.DefaultValue.ToString(),
-						EntityConfig.EntityPropertyTypeDescriptor.StringProperty stringProperty => stringProperty.DefaultValue,
-						EntityConfig.EntityPropertyTypeDescriptor.RgbProperty rgbProperty => rgbProperty.DefaultValue.ToString(),
-						EntityConfig.EntityPropertyTypeDescriptor.RgbaProperty rgbaProperty => rgbaProperty.DefaultValue.ToString(),
-						_ => "unknown",
-					};
-					string? step = property.Type switch
-					{
-						EntityConfig.EntityPropertyTypeDescriptor.IntProperty intProperty => intProperty.Step?.ToString(CultureInfo.InvariantCulture),
-						EntityConfig.EntityPropertyTypeDescriptor.FloatProperty floatProperty => floatProperty.Step?.ToString(CultureInfo.InvariantCulture),
-						EntityConfig.EntityPropertyTypeDescriptor.Vector2Property vector2Property => vector2Property.Step?.ToString(CultureInfo.InvariantCulture),
-						EntityConfig.EntityPropertyTypeDescriptor.Vector3Property vector3Property => vector3Property.Step?.ToString(CultureInfo.InvariantCulture),
-						EntityConfig.EntityPropertyTypeDescriptor.Vector4Property vector4Property => vector4Property.Step?.ToString(CultureInfo.InvariantCulture),
-						_ => null,
-					};
-					string? minValue = property.Type switch
-					{
-						EntityConfig.EntityPropertyTypeDescriptor.IntProperty intProperty => intProperty.MinValue?.ToString(CultureInfo.InvariantCulture),
-						EntityConfig.EntityPropertyTypeDescriptor.FloatProperty floatProperty => floatProperty.MinValue?.ToString(CultureInfo.InvariantCulture),
-						EntityConfig.EntityPropertyTypeDescriptor.Vector2Property vector2Property => vector2Property.MinValue?.ToString(CultureInfo.InvariantCulture),
-						EntityConfig.EntityPropertyTypeDescriptor.Vector3Property vector3Property => vector3Property.MinValue?.ToString(CultureInfo.InvariantCulture),
-						EntityConfig.EntityPropertyTypeDescriptor.Vector4Property vector4Property => vector4Property.MinValue?.ToString(CultureInfo.InvariantCulture),
-						_ => null,
-					};
-					string? maxValue = property.Type switch
-					{
-						EntityConfig.EntityPropertyTypeDescriptor.IntProperty intProperty => intProperty.MaxValue?.ToString(CultureInfo.InvariantCulture),
-						EntityConfig.EntityPropertyTypeDescriptor.FloatProperty floatProperty => floatProperty.MaxValue?.ToString(CultureInfo.InvariantCulture),
-						EntityConfig.EntityPropertyTypeDescriptor.Vector2Property vector2Property => vector2Property.MaxValue?.ToString(CultureInfo.InvariantCulture),
-						EntityConfig.EntityPropertyTypeDescriptor.Vector3Property vector3Property => vector3Property.MaxValue?.ToString(CultureInfo.InvariantCulture),
-						EntityConfig.EntityPropertyTypeDescriptor.Vector4Property vector4Property => vector4Property.MaxValue?.ToString(CultureInfo.InvariantCulture),
-						_ => null,
-					};
+					string typeId = property.Type.GetTypeId();
+					string defaultValue = property.Type.DefaultValue.ToString(); // TODO: Test this.
+					string step = property.Type.Step.ToString(CultureInfo.InvariantCulture);
+					string minValue = property.Type.MinValue.ToString(CultureInfo.InvariantCulture);
+					string maxValue = property.Type.MaxValue.ToString(CultureInfo.InvariantCulture);
 
 					ImGui.TableNextRow();
 
 					ImGui.TableNextColumn();
-					ImGui.TextColored(color, type);
+					ImGui.TextColored(color, typeId);
 
 					ImGui.TableNextColumn();
 					ImGui.Text(property.Name);
@@ -162,13 +114,13 @@ public static class LevelInfoWindow
 					ImGuiUtils.TextOptional(defaultValue);
 
 					ImGui.TableNextColumn();
-					ImGuiUtils.TextOptional(step);
+					ImGuiUtils.TextOptional(step, property.Type.Step == 0); // TODO: Test this.
 
 					ImGui.TableNextColumn();
-					ImGuiUtils.TextOptional(minValue);
+					ImGuiUtils.TextOptional(minValue, property.Type.MinValue == 0);
 
 					ImGui.TableNextColumn();
-					ImGuiUtils.TextOptional(maxValue);
+					ImGuiUtils.TextOptional(maxValue, property.Type.MaxValue == 0);
 				}
 
 				ImGui.EndTable();

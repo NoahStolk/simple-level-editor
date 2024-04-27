@@ -54,3 +54,15 @@ type EntityPropertyTypeDescriptor =
         | Vector3Property (_, _, _, max) -> if max.HasValue then max.Value else 0f
         | Vector4Property (_, _, _, max) -> if max.HasValue then max.Value else 0f
         | _ -> 0f
+
+    member this.GetTypeId() =
+        match this with
+        | BoolProperty    _ -> BoolId
+        | IntProperty     _ -> IntId
+        | FloatProperty   _ -> FloatId
+        | Vector2Property _ -> Vector2Id
+        | Vector3Property _ -> Vector3Id
+        | Vector4Property _ -> Vector4Id
+        | StringProperty  _ -> StringId
+        | RgbProperty     _ -> RgbId
+        | RgbaProperty    _ -> RgbaId
