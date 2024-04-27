@@ -3,9 +3,9 @@ module SimpleLevelEditor.Formats.Types.Color
 [<Struct>]
 type Rgb =
     struct
-        val R: byte
-        val G: byte
-        val B: byte
+        val mutable R: byte
+        val mutable G: byte
+        val mutable B: byte
 
         new (r, g, b) = { R = r; G = g; B = b }
     end
@@ -13,10 +13,10 @@ type Rgb =
 [<Struct>]
 type Rgba =
     struct
-        val R: byte
-        val G: byte
-        val B: byte
-        val A: byte
+        val mutable R: byte
+        val mutable G: byte
+        val mutable B: byte
+        val mutable A: byte
 
         new (r, g, b, a) = { R = r; G = g; B = b; A = a }
     end

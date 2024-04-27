@@ -69,12 +69,12 @@ type EntityPropertyTypeDescriptor =
 
     member this.GetDisplayColor() =
         match this with
-        | BoolProperty    _ -> new Vector4(0f, 0.25f, 1f, 1f)
-        | IntProperty     _ -> new Vector4(0f, 0.5f, 1f, 1f)
-        | FloatProperty   _ -> new Vector4(0f, 0.7f, 0f, 1f)
-        | Vector2Property _ -> new Vector4(0f, 0.8f, 0f, 1f)
-        | Vector3Property _ -> new Vector4(0f, 0.9f, 0f, 1f)
-        | Vector4Property _ -> new Vector4(0f, 1f, 0f, 1f)
-        | StringProperty  _ -> new Vector4(1f, 0.5f, 0f, 1f)
-        | RgbProperty     _ -> new Vector4(1f, 0.75f, 0f, 1f)
-        | RgbaProperty    _ -> new Vector4(1f, 1f, 0f, 1f)
+        | BoolProperty    _ -> new Vector4(0.00f, 0.25f, 1.00f, 1.00f)
+        | IntProperty     _ -> new Vector4(0.00f, 0.50f, 1.00f, 1.00f)
+        | FloatProperty   _ -> new Vector4(0.00f, 0.70f, 0.00f, 1.00f)
+        | Vector2Property _ -> new Vector4(0.00f, 0.80f, 0.00f, 1.00f)
+        | Vector3Property _ -> new Vector4(0.00f, 0.90f, 0.00f, 1.00f)
+        | Vector4Property _ -> new Vector4(0.00f, 1.00f, 0.00f, 1.00f)
+        | StringProperty  _ -> new Vector4(1.00f, 0.50f, 0.00f, 1.00f)
+        | RgbProperty     _ -> new Vector4(1.00f, 0.75f, 0.00f, 1.00f)
+        | RgbaProperty    _ -> new Vector4(1.00f, 1.00f, 0.00f, 1.00f)

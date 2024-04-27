@@ -139,10 +139,10 @@ type EntityPropertyValue =
         | StringId  -> EntityPropertyValue.String(value)
         | RgbId     ->
             let split = value.Split(' ')
-            let rgb: Color.Rgb = { R = Byte.Parse(split[0], CultureInfo.InvariantCulture); G = Byte.Parse(split[1], CultureInfo.InvariantCulture); B = Byte.Parse(split[2], CultureInfo.InvariantCulture) };
+            let rgb = Color.Rgb(Byte.Parse(split[0], CultureInfo.InvariantCulture), Byte.Parse(split[1], CultureInfo.InvariantCulture), Byte.Parse(split[2], CultureInfo.InvariantCulture));
             EntityPropertyValue.Rgb(rgb)
         | RgbaId    ->
             let split = value.Split(' ')
-            let rgba: Color.Rgba = { R = Byte.Parse(split[0], CultureInfo.InvariantCulture); G = Byte.Parse(split[1], CultureInfo.InvariantCulture); B = Byte.Parse(split[2], CultureInfo.InvariantCulture); A = Byte.Parse(split[3], CultureInfo.InvariantCulture) }
+            let rgba = Color.Rgba(Byte.Parse(split[0], CultureInfo.InvariantCulture), Byte.Parse(split[1], CultureInfo.InvariantCulture), Byte.Parse(split[2], CultureInfo.InvariantCulture), Byte.Parse(split[3], CultureInfo.InvariantCulture));
             EntityPropertyValue.Rgba(rgba)
         | _         -> failwithf $"Unknown type id: %s{typeId}"
