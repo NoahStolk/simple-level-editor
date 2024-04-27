@@ -123,35 +123,9 @@ public static class EntityEditorWindow
 				entity.Properties.Add(property);
 			}
 
-			float step = propertyDescriptor.Type switch
-			{
-				EntityConfig.EntityPropertyTypeDescriptor.IntProperty int32 => int32.Step ?? 0,
-				EntityConfig.EntityPropertyTypeDescriptor.FloatProperty f => f.Step ?? 0,
-				EntityConfig.EntityPropertyTypeDescriptor.Vector2Property v2 => v2.Step ?? 0,
-				EntityConfig.EntityPropertyTypeDescriptor.Vector3Property v3 => v3.Step ?? 0,
-				EntityConfig.EntityPropertyTypeDescriptor.Vector4Property v4 => v4.Step ?? 0,
-				_ => 0,
-			};
-
-			float minValue = propertyDescriptor.Type switch
-			{
-				EntityConfig.EntityPropertyTypeDescriptor.IntProperty int32 => int32.MinValue ?? 0,
-				EntityConfig.EntityPropertyTypeDescriptor.FloatProperty f => f.MinValue ?? 0,
-				EntityConfig.EntityPropertyTypeDescriptor.Vector2Property v2 => v2.MinValue ?? 0,
-				EntityConfig.EntityPropertyTypeDescriptor.Vector3Property v3 => v3.MinValue ?? 0,
-				EntityConfig.EntityPropertyTypeDescriptor.Vector4Property v4 => v4.MinValue ?? 0,
-				_ => 0,
-			};
-
-			float maxValue = propertyDescriptor.Type switch
-			{
-				EntityConfig.EntityPropertyTypeDescriptor.IntProperty int32 => int32.MaxValue ?? 0,
-				EntityConfig.EntityPropertyTypeDescriptor.FloatProperty f => f.MaxValue ?? 0,
-				EntityConfig.EntityPropertyTypeDescriptor.Vector2Property v2 => v2.MaxValue ?? 0,
-				EntityConfig.EntityPropertyTypeDescriptor.Vector3Property v3 => v3.MaxValue ?? 0,
-				EntityConfig.EntityPropertyTypeDescriptor.Vector4Property v4 => v4.MaxValue ?? 0,
-				_ => 0,
-			};
+			float step = propertyDescriptor.Type.Step;
+			float minValue = propertyDescriptor.Type.MinValue;
+			float maxValue = propertyDescriptor.Type.MaxValue;
 
 			ImGui.Text(propertyDescriptor.Name);
 			if (!string.IsNullOrWhiteSpace(propertyDescriptor.Description))
@@ -164,15 +138,15 @@ public static class EntityEditorWindow
 
 			property.Value = property.Value switch
 			{
-				bool b when ImGui.Checkbox(Inline.Span($"##property_value{entity.Id}_{i}"), ref b) => b,
-				int int32 when ImGui.DragInt(Inline.Span($"##property_value{entity.Id}_{i}"), ref int32, (int)step, (int)minValue, (int)maxValue) => int32,
-				float f when ImGui.DragFloat(Inline.Span($"##property_value{entity.Id}_{i}"), ref f, step, minValue, maxValue) => f,
-				Vector2 v2 when ImGui.DragFloat2(Inline.Span($"##property_value{entity.Id}_{i}"), ref v2, step, minValue, maxValue) => v2,
-				Vector3 v3 when ImGui.DragFloat3(Inline.Span($"##property_value{entity.Id}_{i}"), ref v3, step, minValue, maxValue) => v3,
-				Vector4 v4 when ImGui.DragFloat4(Inline.Span($"##property_value{entity.Id}_{i}"), ref v4, step, minValue, maxValue) => v4,
-				string s when ImGui.InputText(Inline.Span($"##property_value{entity.Id}_{i}"), ref s, 32) => s,
-				Formats.Types.Color.Rgb rgb when ImGuiUtils.ColorEdit3Rgb(Inline.Span($"##property_value{entity.Id}_{i}"), ref rgb) => rgb,
-				Formats.Types.Color.Rgba rgba when ImGuiUtils.ColorEdit4Rgba(Inline.Span($"##property_value{entity.Id}_{i}"), ref rgba) => rgba,
+				Level.EntityPropertyValue.Bool b when ImGui.Checkbox(Inline.Span($"##property_value{entity.Id}_{i}"), ref b.Value) => b,
+				Level.EntityPropertyValue.Int int32 when ImGui.DragInt(Inline.Span($"##property_value{entity.Id}_{i}"), ref int32.Value, (int)step, (int)minValue, (int)maxValue) => int32,
+				Level.EntityPropertyValue.Float f when ImGui.DragFloat(Inline.Span($"##property_value{entity.Id}_{i}"), ref f.Value, step, minValue, maxValue) => f,
+				Level.EntityPropertyValue.Vector2 v2 when ImGui.DragFloat2(Inline.Span($"##property_value{entity.Id}_{i}"), ref v2.Value, step, minValue, maxValue) => v2,
+				Level.EntityPropertyValue.Vector3 v3 when ImGui.DragFloat3(Inline.Span($"##property_value{entity.Id}_{i}"), ref v3.Value, step, minValue, maxValue) => v3,
+				Level.EntityPropertyValue.Vector4 v4 when ImGui.DragFloat4(Inline.Span($"##property_value{entity.Id}_{i}"), ref v4.Value, step, minValue, maxValue) => v4,
+				Level.EntityPropertyValue.String s when ImGui.InputText(Inline.Span($"##property_value{entity.Id}_{i}"), ref s.Value, 32) => s,
+				Level.EntityPropertyValue.Rgb rgb when ImGuiUtils.ColorEdit3Rgb(Inline.Span($"##property_value{entity.Id}_{i}"), ref rgb.Value) => rgb,
+				Level.EntityPropertyValue.Rgba rgba when ImGuiUtils.ColorEdit4Rgba(Inline.Span($"##property_value{entity.Id}_{i}"), ref rgba.Value) => rgba,
 				_ => property.Value,
 			};
 

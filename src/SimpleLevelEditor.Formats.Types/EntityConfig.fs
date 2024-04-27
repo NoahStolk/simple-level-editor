@@ -18,12 +18,48 @@ type EntityPropertyTypeDescriptor =
 
     member this.DefaultValue =
         match this with
-        | BoolProperty    value -> EntityPropertyValue.Bool value
-        | IntProperty     (value, _, _, _) -> EntityPropertyValue.Int value
-        | FloatProperty   (value, _, _, _) -> EntityPropertyValue.Float value
+        | BoolProperty    value            -> EntityPropertyValue.Bool    value
+        | IntProperty     (value, _, _, _) -> EntityPropertyValue.Int     value
+        | FloatProperty   (value, _, _, _) -> EntityPropertyValue.Float   value
         | Vector2Property (value, _, _, _) -> EntityPropertyValue.Vector2 value
         | Vector3Property (value, _, _, _) -> EntityPropertyValue.Vector3 value
         | Vector4Property (value, _, _, _) -> EntityPropertyValue.Vector4 value
-        | StringProperty  value -> EntityPropertyValue.String value
-        | RgbProperty     value -> EntityPropertyValue.Rgb value
-        | RgbaProperty    value -> EntityPropertyValue.Rgba value
+        | StringProperty  value            -> EntityPropertyValue.String  value
+        | RgbProperty     value            -> EntityPropertyValue.Rgb     value
+        | RgbaProperty    value            -> EntityPropertyValue.Rgba    value
+
+    member this.Step : float32 =
+        match this with
+        | BoolProperty    _ -> 0f
+        | IntProperty     (_, step, _, _) -> if step.HasValue then float32 step.Value else 0f
+        | FloatProperty   (_, step, _, _) -> if step.HasValue then step.Value else 0f
+        | Vector2Property (_, step, _, _) -> if step.HasValue then step.Value else 0f
+        | Vector3Property (_, step, _, _) -> if step.HasValue then step.Value else 0f
+        | Vector4Property (_, step, _, _) -> if step.HasValue then step.Value else 0f
+        | StringProperty  _ -> 0f
+        | RgbProperty     _ -> 0f
+        | RgbaProperty    _ -> 0f
+
+    member this.MinValue : float32 =
+        match this with
+        | BoolProperty    _ -> 0f
+        | IntProperty     (_, _, min, _) -> if min.HasValue then float32 min.Value else 0f
+        | FloatProperty   (_, _, min, _) -> if min.HasValue then min.Value else 0f
+        | Vector2Property (_, _, min, _) -> if min.HasValue then min.Value else 0f
+        | Vector3Property (_, _, min, _) -> if min.HasValue then min.Value else 0f
+        | Vector4Property (_, _, min, _) -> if min.HasValue then min.Value else 0f
+        | StringProperty  _ -> 0f
+        | RgbProperty     _ -> 0f
+        | RgbaProperty    _ -> 0f
+
+    member this.MaxValue : float32 =
+        match this with
+        | BoolProperty    _ -> 0f
+        | IntProperty     (_, _, _, max) -> if max.HasValue then float32 max.Value else 0f
+        | FloatProperty   (_, _, _, max) -> if max.HasValue then max.Value else 0f
+        | Vector2Property (_, _, _, max) -> if max.HasValue then max.Value else 0f
+        | Vector3Property (_, _, _, max) -> if max.HasValue then max.Value else 0f
+        | Vector4Property (_, _, _, max) -> if max.HasValue then max.Value else 0f
+        | StringProperty  _ -> 0f
+        | RgbProperty     _ -> 0f
+        | RgbaProperty    _ -> 0f

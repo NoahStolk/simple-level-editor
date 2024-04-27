@@ -2,6 +2,7 @@ using Detach.Collisions;
 using Silk.NET.GLFW;
 using SimpleLevelEditor.Extensions;
 using SimpleLevelEditor.Formats.Level.Model;
+using SimpleLevelEditor.Formats.Types;
 using SimpleLevelEditor.Rendering;
 using SimpleLevelEditor.State;
 using SimpleLevelEditor.Ui.ChildWindows;
@@ -188,13 +189,7 @@ public static class MainLogic
 			if (!LevelEditorState.ShouldRenderEntity(entity))
 				continue;
 
-			float? intersection = entity.Shape switch
-			{
-				ShapeDescriptor.Point => IntersectsSphere(entity.Position, SceneRenderer.PointScale),
-				ShapeDescriptor.Sphere sphere => IntersectsSphere(entity.Position, sphere.Radius),
-				ShapeDescriptor.Aabb aabb => Ray.IntersectsAxisAlignedBoundingBox(rayStartPosition, rayDirection, entity.Position + aabb.Min, entity.Position + aabb.Max)?.Distance,
-				_ => throw new UnreachableException($"Unknown entity shape: {entity.Shape}"),
-			};
+			float? intersection = GetIntersection(entity);
 			if (!intersection.HasValue)
 				continue;
 
@@ -212,6 +207,19 @@ public static class MainLogic
 				return null;
 
 			return (rayStartPosition - intersection.Value).Length();
+		}
+
+		float? GetIntersection(Entity entity)
+		{
+			if (entity.Shape.IsPoint)
+				return IntersectsSphere(entity.Position, SceneRenderer.PointScale);
+
+			return entity.Shape switch
+			{
+				Level.ShapeDescriptor.Sphere sphere => IntersectsSphere(entity.Position, sphere.Radius),
+				Level.ShapeDescriptor.Aabb aabb => Ray.IntersectsAxisAlignedBoundingBox(rayStartPosition, rayDirection, entity.Position + aabb.Min, entity.Position + aabb.Max)?.Distance,
+				_ => throw new UnreachableException($"Unknown entity shape: {entity.Shape}"),
+			};
 		}
 	}
 }
