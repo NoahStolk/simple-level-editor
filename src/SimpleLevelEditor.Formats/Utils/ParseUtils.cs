@@ -80,15 +80,7 @@ internal static class ParseUtils
 		if (parts.Length != 3)
 			return false;
 
-		if (!TryReadByte(parts[0], out byte r) ||
-		    !TryReadByte(parts[1], out byte g) ||
-		    !TryReadByte(parts[2], out byte b))
-		{
-			return false;
-		}
-
-		result = new Color.Rgb(r, g, b);
-		return true;
+		return TryReadByte(parts[0], out result.R) && TryReadByte(parts[1], out result.G) && TryReadByte(parts[2], out result.B);
 	}
 
 	public static bool TryReadRgba(string? str, out Color.Rgba result)
@@ -102,16 +94,7 @@ internal static class ParseUtils
 		if (parts.Length != 4)
 			return false;
 
-		if (!TryReadByte(parts[0], out byte r) ||
-		    !TryReadByte(parts[1], out byte g) ||
-		    !TryReadByte(parts[2], out byte b) ||
-		    !TryReadByte(parts[3], out byte a))
-		{
-			return false;
-		}
-
-		result = new Color.Rgba(r, g, b, a);
-		return true;
+		return TryReadByte(parts[0], out result.R) && TryReadByte(parts[1], out result.G) && TryReadByte(parts[2], out result.B) && TryReadByte(parts[3], out result.A);
 	}
 
 	#endregion TryRead
