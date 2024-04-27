@@ -2,7 +2,8 @@ using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SimpleLevelEditor.Formats.Level;
 using SimpleLevelEditor.Formats.Level.Model;
-using SimpleLevelEditor.Formats.Level.Model.EntityShapes;
+using SimpleLevelEditor.Formats.Types;
+using System.Numerics;
 using System.Text;
 
 namespace SimpleLevelEditor.Formats.Tests;
@@ -14,143 +15,143 @@ public class LevelSerializationTests
 	private static readonly string[] _expectedTextures = [@"..\Textures\Blank.tga", @"..\Textures\StoneBlue.tga", @"..\Textures\TilesColor.tga"];
 	private static readonly WorldObject[] _expectedWorldObjects =
 	[
-		new()
+		new WorldObject
 		{
 			Id = 1,
 			Mesh = @"..\Meshes\Cube.obj",
 			Texture = @"..\Textures\Blank.tga",
-			Position = new(16, -4, 0),
-			Rotation = new(0, 0, 0),
-			Scale = new(64, 8, 64),
+			Position = new Vector3(16, -4, 0),
+			Rotation = new Vector3(0, 0, 0),
+			Scale = new Vector3(64, 8, 64),
 			Flags = ["Transparent"],
 		},
-		new()
+		new WorldObject
 		{
 			Id = 2,
 			Mesh = @"..\Meshes\Crate.obj",
 			Texture = @"..\Textures\TilesColor.tga",
-			Position = new(-4, 0.5f, 1),
-			Rotation = new(0, 0, 0),
-			Scale = new(1, 1, 1),
+			Position = new Vector3(-4, 0.5f, 1),
+			Rotation = new Vector3(0, 0, 0),
+			Scale = new Vector3(1, 1, 1),
 			Flags = ["Dynamic"],
 		},
-		new()
+		new WorldObject
 		{
 			Id = 3,
 			Mesh = @"..\Meshes\Crate.obj",
 			Texture = @"..\Textures\StoneBlue.tga",
-			Position = new(-0.5f, 0.5f, -4.5f),
-			Rotation = new(0, 0, 0),
-			Scale = new(1, 1, 1),
+			Position = new Vector3(-0.5f, 0.5f, -4.5f),
+			Rotation = new Vector3(0, 0, 0),
+			Scale = new Vector3(1, 1, 1),
 			Flags = ["Transparent", "Dynamic"],
 		},
-		new()
+		new WorldObject
 		{
 			Id = 4,
 			Mesh = @"..\Meshes\Crate.obj",
 			Texture = @"..\Textures\StoneBlue.tga",
-			Position = new(-4.5f, 0.5f, -3f),
-			Rotation = new(90, 0, 0),
-			Scale = new(1, 1, 1),
+			Position = new Vector3(-4.5f, 0.5f, -3f),
+			Rotation = new Vector3(90, 0, 0),
+			Scale = new Vector3(1, 1, 1),
 			Flags = [],
 		},
-		new()
+		new WorldObject
 		{
 			Id = 5,
 			Mesh = @"..\Meshes\Sphere.obj",
 			Texture = @"..\Textures\StoneBlue.tga",
-			Position = new(6, 1, 2),
-			Rotation = new(0, 90, 0),
-			Scale = new(1, 1, 1),
+			Position = new Vector3(6, 1, 2),
+			Rotation = new Vector3(0, 90, 0),
+			Scale = new Vector3(1, 1, 1),
 			Flags = [],
 		},
-		new()
+		new WorldObject
 		{
 			Id = 6,
 			Mesh = @"..\Meshes\Cube.obj",
 			Texture = @"..\Textures\Blank.tga",
-			Position = new(0, 2, -7.5f),
-			Rotation = new(0, 0, 0),
-			Scale = new(16, 4, 1),
+			Position = new Vector3(0, 2, -7.5f),
+			Rotation = new Vector3(0, 0, 0),
+			Scale = new Vector3(16, 4, 1),
 			Flags = [],
 		},
 	];
 	private static readonly Entity[] _expectedEntities =
 	[
-		new()
+		new Entity
 		{
 			Id = 1,
 			Name = "PlayerSpawn",
-			Position = new(0, 1, 0),
-			Shape = new Point(),
+			Position = new Vector3(0, 1, 0),
+			Shape = Types.Level.ShapeDescriptor.Point,
 			Properties = [],
 		},
-		new()
+		new Entity
 		{
 			Id = 2,
 			Name = "Light",
-			Position = new(20, 3, 2),
-			Shape = new Point(),
+			Position = new Vector3(20, 3, 2),
+			Shape = Types.Level.ShapeDescriptor.Point,
 			Properties =
 			[
-				new()
+				new EntityProperty
 				{
 					Key = "Color",
-					Value = new Rgb(255, 255, 255),
+					Value = Types.Level.EntityPropertyValue.NewRgb(new Color.Rgb(255, 255, 255)),
 				},
-				new()
+				new EntityProperty
 				{
 					Key = "Radius",
-					Value = 20f,
+					Value = Types.Level.EntityPropertyValue.NewFloat(20f),
 				},
 			],
 		},
-		new()
+		new Entity
 		{
 			Id = 3,
 			Name = "Light",
-			Position = new(27, 1, 12),
-			Shape = new Point(),
+			Position = new Vector3(27, 1, 12),
+			Shape = Types.Level.ShapeDescriptor.Point,
 			Properties =
 			[
-				new()
+				new EntityProperty
 				{
 					Key = "Color",
-					Value = new Rgb(255, 47, 0),
+					Value = Types.Level.EntityPropertyValue.NewRgb(new Color.Rgb(255, 47, 0)),
 				},
-				new()
+				new EntityProperty
 				{
 					Key = "Radius",
-					Value = 6f,
+					Value = Types.Level.EntityPropertyValue.NewFloat(6f),
 				},
 			],
 		},
-		new()
+		new Entity
 		{
 			Id = 4,
 			Name = "Light",
-			Position = new(33, 1, 2),
-			Shape = new Point(),
+			Position = new Vector3(33, 1, 2),
+			Shape = Types.Level.ShapeDescriptor.Point,
 			Properties =
 			[
-				new()
+				new EntityProperty
 				{
 					Key = "Color",
-					Value = new Rgb(0, 40, 255),
+					Value = Types.Level.EntityPropertyValue.NewRgb(new Color.Rgb(0, 40, 255)),
 				},
-				new()
+				new EntityProperty
 				{
 					Key = "Radius",
-					Value = 20f,
+					Value = Types.Level.EntityPropertyValue.NewFloat(20f),
 				},
 			],
 		},
-		new()
+		new Entity
 		{
 			Id = 5,
 			Name = "Field",
-			Position = new(1, 1, 1),
-			Shape = new Sphere(10),
+			Position = new Vector3(1, 1, 1),
+			Shape = Types.Level.ShapeDescriptor.NewSphere(10),
 			Properties = [],
 		},
 	];
@@ -165,11 +166,11 @@ public class LevelSerializationTests
 
 		using FileStream fsV1 = File.OpenRead(levelV1Path);
 		Level3dData levelV1 = LevelXmlDeserializer.ReadLevel(fsV1);
-		AssertLevelValues(1, levelV1);
+		AssertLevelValues(levelV1);
 
 		using FileStream fsV2 = File.OpenRead(levelV2Path);
 		Level3dData levelV2 = LevelXmlDeserializer.ReadLevel(fsV2);
-		AssertLevelValues(2, levelV2);
+		AssertLevelValues(levelV2);
 
 		using MemoryStream msV1 = new();
 		LevelXmlSerializer.WriteLevel(msV1, levelV1);
@@ -182,7 +183,7 @@ public class LevelSerializationTests
 		serializedLevel.Should().BeEquivalentTo(levelV2Xml);
 	}
 
-	private static void AssertLevelValues(int expectedVersion, Level3dData level)
+	private static void AssertLevelValues(Level3dData level)
 	{
 		Assert.AreEqual("..\\EntityConfig.xml", level.EntityConfigPath);
 		CollectionAssert.AreEqual(_expectedMeshes, level.Meshes);

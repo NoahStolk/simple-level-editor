@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <LangVersion>8.0</LangVersion>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="Color.fs"/>
+    <Compile Include="Level.fs"/>
+    <Compile Include="EntityConfig.fs"/>
+  </ItemGroup>
+
+</Project>

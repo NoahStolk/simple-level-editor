@@ -33,20 +33,20 @@ public static class LevelXmlSerializer
 			{
 				Mesh = wo.Mesh,
 				Texture = wo.Texture,
-				Position = LevelXmlDataFormatter.WriteProperty(wo.Position),
-				Rotation = LevelXmlDataFormatter.WriteProperty(wo.Rotation),
-				Scale = LevelXmlDataFormatter.WriteProperty(wo.Scale),
+				Position = Types.Level.EntityPropertyValue.NewVector3(wo.Position).WriteValue(),
+				Rotation = Types.Level.EntityPropertyValue.NewVector3(wo.Rotation).WriteValue(),
+				Scale = Types.Level.EntityPropertyValue.NewVector3(wo.Scale).WriteValue(),
 				Flags = string.Join(',', wo.Flags),
 			}),
 			Entities = level.Entities.ConvertAll(e => new XmlLevelEntity
 			{
 				Name = e.Name,
-				Position = LevelXmlDataFormatter.WriteProperty(e.Position),
-				Shape = LevelXmlDataFormatter.WriteShape(e.Shape),
+				Position = Types.Level.EntityPropertyValue.NewVector3(e.Position).WriteValue(),
+				Shape = $"{e.Shape.GetShapeId()} {e.Shape.WriteValue()}".TrimEnd(),
 				Properties = e.Properties.ConvertAll(p => new XmlLevelEntityProperty
 				{
 					Name = p.Key,
-					Value = $"{LevelXmlDataFormatter.WritePropertyType(p.Value)} {LevelXmlDataFormatter.WriteProperty(p.Value)}",
+					Value = $"{p.Value.GetTypeId()} {p.Value.WriteValue()}",
 				}),
 			}),
 		};

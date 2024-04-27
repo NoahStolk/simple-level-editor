@@ -1,8 +1,8 @@
 using Detach;
 using ImGuiNET;
 using SimpleLevelEditor.Formats.EntityConfig.Model;
-using SimpleLevelEditor.Formats.EntityConfig.Model.PropertyTypes;
 using SimpleLevelEditor.Formats.Level.Model;
+using SimpleLevelEditor.Formats.Types;
 using SimpleLevelEditor.State;
 using SimpleLevelEditor.Utils;
 using System.Globalization;
@@ -83,77 +83,17 @@ public static class LevelInfoWindow
 				for (int j = 0; j < entity.Properties.Count; j++)
 				{
 					EntityPropertyDescriptor property = entity.Properties[j];
-					Vector4 color = property.Type.Value switch
-					{
-						BoolPropertyType => new(0, 0.25f, 1, 1),
-						IntPropertyType => new(0, 0.5f, 1, 1),
-						FloatPropertyType => new(0, 0.7f, 0, 1),
-						Vector2PropertyType => new(0, 0.8f, 0, 1),
-						Vector3PropertyType => new(0, 0.9f, 0, 1),
-						Vector4PropertyType => new(0, 1, 0, 1),
-						StringPropertyType => new(1, 0.5f, 0, 1),
-						RgbPropertyType => new(1, 0.75f, 0, 1),
-						RgbaPropertyType => new(1, 1, 0, 1),
-						_ => new(1, 0, 0, 1),
-					};
-					string type = property.Type.Value switch
-					{
-						BoolPropertyType => "bool",
-						IntPropertyType => "int",
-						FloatPropertyType => "float",
-						Vector2PropertyType => "Vector2",
-						Vector3PropertyType => "Vector3",
-						Vector4PropertyType => "Vector4",
-						StringPropertyType => "string",
-						RgbPropertyType => "Rgb",
-						RgbaPropertyType => "Rgba",
-						_ => "unknown",
-					};
-					string defaultValue = property.Type.Value switch
-					{
-						BoolPropertyType boolProperty => boolProperty.DefaultValue.ToString(),
-						IntPropertyType intProperty => intProperty.DefaultValue.ToString(CultureInfo.InvariantCulture),
-						FloatPropertyType floatProperty => floatProperty.DefaultValue.ToString(CultureInfo.InvariantCulture),
-						Vector2PropertyType vector2Property => vector2Property.DefaultValue.ToString(),
-						Vector3PropertyType vector3Property => vector3Property.DefaultValue.ToString(),
-						Vector4PropertyType vector4Property => vector4Property.DefaultValue.ToString(),
-						StringPropertyType stringProperty => stringProperty.DefaultValue,
-						RgbPropertyType rgbProperty => rgbProperty.DefaultValue.ToString(),
-						RgbaPropertyType rgbaProperty => rgbaProperty.DefaultValue.ToString(),
-						_ => "unknown",
-					};
-					string? step = property.Type.Value switch
-					{
-						IntPropertyType intProperty => intProperty.Step?.ToString(CultureInfo.InvariantCulture),
-						FloatPropertyType floatProperty => floatProperty.Step?.ToString(CultureInfo.InvariantCulture),
-						Vector2PropertyType vector2Property => vector2Property.Step?.ToString(CultureInfo.InvariantCulture),
-						Vector3PropertyType vector3Property => vector3Property.Step?.ToString(CultureInfo.InvariantCulture),
-						Vector4PropertyType vector4Property => vector4Property.Step?.ToString(CultureInfo.InvariantCulture),
-						_ => null,
-					};
-					string? minValue = property.Type.Value switch
-					{
-						IntPropertyType intProperty => intProperty.MinValue?.ToString(CultureInfo.InvariantCulture),
-						FloatPropertyType floatProperty => floatProperty.MinValue?.ToString(CultureInfo.InvariantCulture),
-						Vector2PropertyType vector2Property => vector2Property.MinValue?.ToString(CultureInfo.InvariantCulture),
-						Vector3PropertyType vector3Property => vector3Property.MinValue?.ToString(CultureInfo.InvariantCulture),
-						Vector4PropertyType vector4Property => vector4Property.MinValue?.ToString(CultureInfo.InvariantCulture),
-						_ => null,
-					};
-					string? maxValue = property.Type.Value switch
-					{
-						IntPropertyType intProperty => intProperty.MaxValue?.ToString(CultureInfo.InvariantCulture),
-						FloatPropertyType floatProperty => floatProperty.MaxValue?.ToString(CultureInfo.InvariantCulture),
-						Vector2PropertyType vector2Property => vector2Property.MaxValue?.ToString(CultureInfo.InvariantCulture),
-						Vector3PropertyType vector3Property => vector3Property.MaxValue?.ToString(CultureInfo.InvariantCulture),
-						Vector4PropertyType vector4Property => vector4Property.MaxValue?.ToString(CultureInfo.InvariantCulture),
-						_ => null,
-					};
+					Vector4 color = property.Type.GetDisplayColor();
+					string typeId = property.Type.GetTypeId();
+					string defaultValue = property.Type.DefaultValue.WriteValue();
+					string step = property.Type.Step.ToString(CultureInfo.InvariantCulture);
+					string minValue = property.Type.MinValue.ToString(CultureInfo.InvariantCulture);
+					string maxValue = property.Type.MaxValue.ToString(CultureInfo.InvariantCulture);
 
 					ImGui.TableNextRow();
 
 					ImGui.TableNextColumn();
-					ImGui.TextColored(color, type);
+					ImGui.TextColored(color, typeId);
 
 					ImGui.TableNextColumn();
 					ImGui.Text(property.Name);
@@ -162,13 +102,13 @@ public static class LevelInfoWindow
 					ImGuiUtils.TextOptional(defaultValue);
 
 					ImGui.TableNextColumn();
-					ImGuiUtils.TextOptional(step);
+					ImGuiUtils.TextOptional(step, property.Type.Step == 0);
 
 					ImGui.TableNextColumn();
-					ImGuiUtils.TextOptional(minValue);
+					ImGuiUtils.TextOptional(minValue, property.Type.MinValue == 0);
 
 					ImGui.TableNextColumn();
-					ImGuiUtils.TextOptional(maxValue);
+					ImGuiUtils.TextOptional(maxValue, property.Type.MaxValue == 0);
 				}
 
 				ImGui.EndTable();
