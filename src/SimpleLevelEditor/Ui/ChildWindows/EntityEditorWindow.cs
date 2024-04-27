@@ -1,6 +1,5 @@
 using Detach;
 using ImGuiNET;
-using OneOf;
 using SimpleLevelEditor.Formats.EntityConfig.Model;
 using SimpleLevelEditor.Formats.Level.Model;
 using SimpleLevelEditor.Formats.Types;
@@ -68,19 +67,7 @@ public static class EntityEditorWindow
 					entity.Properties = descriptor.Properties.ConvertAll(p => new EntityProperty
 					{
 						Key = p.Name,
-						Value = p.Type.Value switch
-						{
-							BoolPropertyType b => b.DefaultValue,
-							IntPropertyType int32 => int32.DefaultValue,
-							FloatPropertyType f => f.DefaultValue,
-							Vector2PropertyType v2 => v2.DefaultValue,
-							Vector3PropertyType v3 => v3.DefaultValue,
-							Vector4PropertyType v4 => v4.DefaultValue,
-							StringPropertyType str => str.DefaultValue,
-							RgbPropertyType rgb => rgb.DefaultValue,
-							RgbaPropertyType rgba => rgba.DefaultValue,
-							_ => throw new UnreachableException($"Invalid entity property type: {p.Type}"),
-						},
+						Value = p.Type.DefaultValue,
 					});
 					LevelState.Track("Changed entity type");
 				}
@@ -128,7 +115,7 @@ public static class EntityEditorWindow
 			EntityProperty? property = entity.Properties.Find(p => p.Key == propertyDescriptor.Name);
 			if (property == null)
 			{
-				property = new()
+				property = new EntityProperty
 				{
 					Key = propertyDescriptor.Name,
 					Value = propertyDescriptor.Type.DefaultValue,
@@ -136,33 +123,33 @@ public static class EntityEditorWindow
 				entity.Properties.Add(property);
 			}
 
-			OneOf<int, float> step = propertyDescriptor.Type.Value switch
+			float step = propertyDescriptor.Type switch
 			{
-				IntPropertyType int32 => int32.Step ?? 0,
-				FloatPropertyType f => f.Step ?? 0,
-				Vector2PropertyType v2 => v2.Step ?? 0,
-				Vector3PropertyType v3 => v3.Step ?? 0,
-				Vector4PropertyType v4 => v4.Step ?? 0,
+				EntityConfig.EntityPropertyTypeDescriptor.IntProperty int32 => int32.Step ?? 0,
+				EntityConfig.EntityPropertyTypeDescriptor.FloatProperty f => f.Step ?? 0,
+				EntityConfig.EntityPropertyTypeDescriptor.Vector2Property v2 => v2.Step ?? 0,
+				EntityConfig.EntityPropertyTypeDescriptor.Vector3Property v3 => v3.Step ?? 0,
+				EntityConfig.EntityPropertyTypeDescriptor.Vector4Property v4 => v4.Step ?? 0,
 				_ => 0,
 			};
 
-			OneOf<int, float> minValue = propertyDescriptor.Type.Value switch
+			float minValue = propertyDescriptor.Type switch
 			{
-				IntPropertyType int32 => int32.MinValue ?? 0,
-				FloatPropertyType f => f.MinValue ?? 0,
-				Vector2PropertyType v2 => v2.MinValue ?? 0,
-				Vector3PropertyType v3 => v3.MinValue ?? 0,
-				Vector4PropertyType v4 => v4.MinValue ?? 0,
+				EntityConfig.EntityPropertyTypeDescriptor.IntProperty int32 => int32.MinValue ?? 0,
+				EntityConfig.EntityPropertyTypeDescriptor.FloatProperty f => f.MinValue ?? 0,
+				EntityConfig.EntityPropertyTypeDescriptor.Vector2Property v2 => v2.MinValue ?? 0,
+				EntityConfig.EntityPropertyTypeDescriptor.Vector3Property v3 => v3.MinValue ?? 0,
+				EntityConfig.EntityPropertyTypeDescriptor.Vector4Property v4 => v4.MinValue ?? 0,
 				_ => 0,
 			};
 
-			OneOf<int, float> maxValue = propertyDescriptor.Type.Value switch
+			float maxValue = propertyDescriptor.Type switch
 			{
-				IntPropertyType int32 => int32.MaxValue ?? 0,
-				FloatPropertyType f => f.MaxValue ?? 0,
-				Vector2PropertyType v2 => v2.MaxValue ?? 0,
-				Vector3PropertyType v3 => v3.MaxValue ?? 0,
-				Vector4PropertyType v4 => v4.MaxValue ?? 0,
+				EntityConfig.EntityPropertyTypeDescriptor.IntProperty int32 => int32.MaxValue ?? 0,
+				EntityConfig.EntityPropertyTypeDescriptor.FloatProperty f => f.MaxValue ?? 0,
+				EntityConfig.EntityPropertyTypeDescriptor.Vector2Property v2 => v2.MaxValue ?? 0,
+				EntityConfig.EntityPropertyTypeDescriptor.Vector3Property v3 => v3.MaxValue ?? 0,
+				EntityConfig.EntityPropertyTypeDescriptor.Vector4Property v4 => v4.MaxValue ?? 0,
 				_ => 0,
 			};
 
@@ -178,11 +165,11 @@ public static class EntityEditorWindow
 			property.Value = property.Value switch
 			{
 				bool b when ImGui.Checkbox(Inline.Span($"##property_value{entity.Id}_{i}"), ref b) => b,
-				int int32 when ImGui.DragInt(Inline.Span($"##property_value{entity.Id}_{i}"), ref int32, step.AsT0, minValue.AsT0, maxValue.AsT0) => int32,
-				float f when ImGui.DragFloat(Inline.Span($"##property_value{entity.Id}_{i}"), ref f, step.AsT1, minValue.AsT1, maxValue.AsT1) => f,
-				Vector2 v2 when ImGui.DragFloat2(Inline.Span($"##property_value{entity.Id}_{i}"), ref v2, step.AsT1, minValue.AsT1, maxValue.AsT1) => v2,
-				Vector3 v3 when ImGui.DragFloat3(Inline.Span($"##property_value{entity.Id}_{i}"), ref v3, step.AsT1, minValue.AsT1, maxValue.AsT1) => v3,
-				Vector4 v4 when ImGui.DragFloat4(Inline.Span($"##property_value{entity.Id}_{i}"), ref v4, step.AsT1, minValue.AsT1, maxValue.AsT1) => v4,
+				int int32 when ImGui.DragInt(Inline.Span($"##property_value{entity.Id}_{i}"), ref int32, (int)step, (int)minValue, (int)maxValue) => int32,
+				float f when ImGui.DragFloat(Inline.Span($"##property_value{entity.Id}_{i}"), ref f, step, minValue, maxValue) => f,
+				Vector2 v2 when ImGui.DragFloat2(Inline.Span($"##property_value{entity.Id}_{i}"), ref v2, step, minValue, maxValue) => v2,
+				Vector3 v3 when ImGui.DragFloat3(Inline.Span($"##property_value{entity.Id}_{i}"), ref v3, step, minValue, maxValue) => v3,
+				Vector4 v4 when ImGui.DragFloat4(Inline.Span($"##property_value{entity.Id}_{i}"), ref v4, step, minValue, maxValue) => v4,
 				string s when ImGui.InputText(Inline.Span($"##property_value{entity.Id}_{i}"), ref s, 32) => s,
 				Formats.Types.Color.Rgb rgb when ImGuiUtils.ColorEdit3Rgb(Inline.Span($"##property_value{entity.Id}_{i}"), ref rgb) => rgb,
 				Formats.Types.Color.Rgba rgba when ImGuiUtils.ColorEdit4Rgba(Inline.Span($"##property_value{entity.Id}_{i}"), ref rgba) => rgba,

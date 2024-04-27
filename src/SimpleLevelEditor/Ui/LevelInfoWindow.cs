@@ -2,6 +2,7 @@ using Detach;
 using ImGuiNET;
 using SimpleLevelEditor.Formats.EntityConfig.Model;
 using SimpleLevelEditor.Formats.Level.Model;
+using SimpleLevelEditor.Formats.Types;
 using SimpleLevelEditor.State;
 using SimpleLevelEditor.Utils;
 using System.Globalization;
@@ -82,70 +83,70 @@ public static class LevelInfoWindow
 				for (int j = 0; j < entity.Properties.Count; j++)
 				{
 					EntityPropertyDescriptor property = entity.Properties[j];
-					Vector4 color = property.Type.Value switch
+					Vector4 color = property.Type switch
 					{
-						BoolPropertyType => new(0, 0.25f, 1, 1),
-						IntPropertyType => new(0, 0.5f, 1, 1),
-						FloatPropertyType => new(0, 0.7f, 0, 1),
-						Vector2PropertyType => new(0, 0.8f, 0, 1),
-						Vector3PropertyType => new(0, 0.9f, 0, 1),
-						Vector4PropertyType => new(0, 1, 0, 1),
-						StringPropertyType => new(1, 0.5f, 0, 1),
-						RgbPropertyType => new(1, 0.75f, 0, 1),
-						RgbaPropertyType => new(1, 1, 0, 1),
-						_ => new(1, 0, 0, 1),
+						EntityConfig.EntityPropertyTypeDescriptor.BoolProperty => new Vector4(0, 0.25f, 1, 1),
+						EntityConfig.EntityPropertyTypeDescriptor.IntProperty => new Vector4(0, 0.5f, 1, 1),
+						EntityConfig.EntityPropertyTypeDescriptor.FloatProperty => new Vector4(0, 0.7f, 0, 1),
+						EntityConfig.EntityPropertyTypeDescriptor.Vector2Property => new Vector4(0, 0.8f, 0, 1),
+						EntityConfig.EntityPropertyTypeDescriptor.Vector3Property => new Vector4(0, 0.9f, 0, 1),
+						EntityConfig.EntityPropertyTypeDescriptor.Vector4Property => new Vector4(0, 1, 0, 1),
+						EntityConfig.EntityPropertyTypeDescriptor.StringProperty => new Vector4(1, 0.5f, 0, 1),
+						EntityConfig.EntityPropertyTypeDescriptor.RgbProperty => new Vector4(1, 0.75f, 0, 1),
+						EntityConfig.EntityPropertyTypeDescriptor.RgbaProperty => new Vector4(1, 1, 0, 1),
+						_ => new Vector4(1, 0, 0, 1),
 					};
-					string type = property.Type.Value switch
+					string type = property.Type switch
 					{
-						BoolPropertyType => "bool",
-						IntPropertyType => "int",
-						FloatPropertyType => "float",
-						Vector2PropertyType => "Vector2",
-						Vector3PropertyType => "Vector3",
-						Vector4PropertyType => "Vector4",
-						StringPropertyType => "string",
-						RgbPropertyType => "Rgb",
-						RgbaPropertyType => "Rgba",
+						EntityConfig.EntityPropertyTypeDescriptor.BoolProperty => "bool",
+						EntityConfig.EntityPropertyTypeDescriptor.IntProperty => "int",
+						EntityConfig.EntityPropertyTypeDescriptor.FloatProperty => "float",
+						EntityConfig.EntityPropertyTypeDescriptor.Vector2Property => "Vector2",
+						EntityConfig.EntityPropertyTypeDescriptor.Vector3Property => "Vector3",
+						EntityConfig.EntityPropertyTypeDescriptor.Vector4Property => "Vector4",
+						EntityConfig.EntityPropertyTypeDescriptor.StringProperty => "string",
+						EntityConfig.EntityPropertyTypeDescriptor.RgbProperty => "Rgb",
+						EntityConfig.EntityPropertyTypeDescriptor.RgbaProperty => "Rgba",
 						_ => "unknown",
 					};
-					string defaultValue = property.Type.Value switch
+					string defaultValue = property.Type switch
 					{
-						BoolPropertyType boolProperty => boolProperty.DefaultValue.ToString(),
-						IntPropertyType intProperty => intProperty.DefaultValue.ToString(CultureInfo.InvariantCulture),
-						FloatPropertyType floatProperty => floatProperty.DefaultValue.ToString(CultureInfo.InvariantCulture),
-						Vector2PropertyType vector2Property => vector2Property.DefaultValue.ToString(),
-						Vector3PropertyType vector3Property => vector3Property.DefaultValue.ToString(),
-						Vector4PropertyType vector4Property => vector4Property.DefaultValue.ToString(),
-						StringPropertyType stringProperty => stringProperty.DefaultValue,
-						RgbPropertyType rgbProperty => rgbProperty.DefaultValue.ToString(),
-						RgbaPropertyType rgbaProperty => rgbaProperty.DefaultValue.ToString(),
+						EntityConfig.EntityPropertyTypeDescriptor.BoolProperty boolProperty => boolProperty.DefaultValue.ToString(),
+						EntityConfig.EntityPropertyTypeDescriptor.IntProperty intProperty => intProperty.DefaultValue.ToString(CultureInfo.InvariantCulture),
+						EntityConfig.EntityPropertyTypeDescriptor.FloatProperty floatProperty => floatProperty.DefaultValue.ToString(CultureInfo.InvariantCulture),
+						EntityConfig.EntityPropertyTypeDescriptor.Vector2Property vector2Property => vector2Property.DefaultValue.ToString(),
+						EntityConfig.EntityPropertyTypeDescriptor.Vector3Property vector3Property => vector3Property.DefaultValue.ToString(),
+						EntityConfig.EntityPropertyTypeDescriptor.Vector4Property vector4Property => vector4Property.DefaultValue.ToString(),
+						EntityConfig.EntityPropertyTypeDescriptor.StringProperty stringProperty => stringProperty.DefaultValue,
+						EntityConfig.EntityPropertyTypeDescriptor.RgbProperty rgbProperty => rgbProperty.DefaultValue.ToString(),
+						EntityConfig.EntityPropertyTypeDescriptor.RgbaProperty rgbaProperty => rgbaProperty.DefaultValue.ToString(),
 						_ => "unknown",
 					};
-					string? step = property.Type.Value switch
+					string? step = property.Type switch
 					{
-						IntPropertyType intProperty => intProperty.Step?.ToString(CultureInfo.InvariantCulture),
-						FloatPropertyType floatProperty => floatProperty.Step?.ToString(CultureInfo.InvariantCulture),
-						Vector2PropertyType vector2Property => vector2Property.Step?.ToString(CultureInfo.InvariantCulture),
-						Vector3PropertyType vector3Property => vector3Property.Step?.ToString(CultureInfo.InvariantCulture),
-						Vector4PropertyType vector4Property => vector4Property.Step?.ToString(CultureInfo.InvariantCulture),
+						EntityConfig.EntityPropertyTypeDescriptor.IntProperty intProperty => intProperty.Step?.ToString(CultureInfo.InvariantCulture),
+						EntityConfig.EntityPropertyTypeDescriptor.FloatProperty floatProperty => floatProperty.Step?.ToString(CultureInfo.InvariantCulture),
+						EntityConfig.EntityPropertyTypeDescriptor.Vector2Property vector2Property => vector2Property.Step?.ToString(CultureInfo.InvariantCulture),
+						EntityConfig.EntityPropertyTypeDescriptor.Vector3Property vector3Property => vector3Property.Step?.ToString(CultureInfo.InvariantCulture),
+						EntityConfig.EntityPropertyTypeDescriptor.Vector4Property vector4Property => vector4Property.Step?.ToString(CultureInfo.InvariantCulture),
 						_ => null,
 					};
-					string? minValue = property.Type.Value switch
+					string? minValue = property.Type switch
 					{
-						IntPropertyType intProperty => intProperty.MinValue?.ToString(CultureInfo.InvariantCulture),
-						FloatPropertyType floatProperty => floatProperty.MinValue?.ToString(CultureInfo.InvariantCulture),
-						Vector2PropertyType vector2Property => vector2Property.MinValue?.ToString(CultureInfo.InvariantCulture),
-						Vector3PropertyType vector3Property => vector3Property.MinValue?.ToString(CultureInfo.InvariantCulture),
-						Vector4PropertyType vector4Property => vector4Property.MinValue?.ToString(CultureInfo.InvariantCulture),
+						EntityConfig.EntityPropertyTypeDescriptor.IntProperty intProperty => intProperty.MinValue?.ToString(CultureInfo.InvariantCulture),
+						EntityConfig.EntityPropertyTypeDescriptor.FloatProperty floatProperty => floatProperty.MinValue?.ToString(CultureInfo.InvariantCulture),
+						EntityConfig.EntityPropertyTypeDescriptor.Vector2Property vector2Property => vector2Property.MinValue?.ToString(CultureInfo.InvariantCulture),
+						EntityConfig.EntityPropertyTypeDescriptor.Vector3Property vector3Property => vector3Property.MinValue?.ToString(CultureInfo.InvariantCulture),
+						EntityConfig.EntityPropertyTypeDescriptor.Vector4Property vector4Property => vector4Property.MinValue?.ToString(CultureInfo.InvariantCulture),
 						_ => null,
 					};
-					string? maxValue = property.Type.Value switch
+					string? maxValue = property.Type switch
 					{
-						IntPropertyType intProperty => intProperty.MaxValue?.ToString(CultureInfo.InvariantCulture),
-						FloatPropertyType floatProperty => floatProperty.MaxValue?.ToString(CultureInfo.InvariantCulture),
-						Vector2PropertyType vector2Property => vector2Property.MaxValue?.ToString(CultureInfo.InvariantCulture),
-						Vector3PropertyType vector3Property => vector3Property.MaxValue?.ToString(CultureInfo.InvariantCulture),
-						Vector4PropertyType vector4Property => vector4Property.MaxValue?.ToString(CultureInfo.InvariantCulture),
+						EntityConfig.EntityPropertyTypeDescriptor.IntProperty intProperty => intProperty.MaxValue?.ToString(CultureInfo.InvariantCulture),
+						EntityConfig.EntityPropertyTypeDescriptor.FloatProperty floatProperty => floatProperty.MaxValue?.ToString(CultureInfo.InvariantCulture),
+						EntityConfig.EntityPropertyTypeDescriptor.Vector2Property vector2Property => vector2Property.MaxValue?.ToString(CultureInfo.InvariantCulture),
+						EntityConfig.EntityPropertyTypeDescriptor.Vector3Property vector3Property => vector3Property.MaxValue?.ToString(CultureInfo.InvariantCulture),
+						EntityConfig.EntityPropertyTypeDescriptor.Vector4Property vector4Property => vector4Property.MaxValue?.ToString(CultureInfo.InvariantCulture),
 						_ => null,
 					};
 

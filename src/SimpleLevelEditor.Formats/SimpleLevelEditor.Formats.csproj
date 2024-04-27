@@ -9,11 +9,6 @@
     <Version>0.1.0</Version>
   </PropertyGroup>
 
-  <ItemGroup Label="External dependencies">
-    <PackageReference Include="OneOf" Version="3.0.263"/>
-    <PackageReference Include="OneOf.Extended" Version="3.0.263"/>
-  </ItemGroup>
-
   <ItemGroup Label="Static code analysis">
     <PackageReference Include="Microsoft.CodeAnalysis.BannedApiAnalyzers" Version="3.3.4">
       <PrivateAssets>all</PrivateAssets>
