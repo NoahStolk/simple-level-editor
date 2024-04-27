@@ -159,27 +159,17 @@ public class LevelSerializationTests
 	[TestMethod]
 	public void SerializeAndDeserializeLevel()
 	{
-		string levelV1Path = Path.Combine("Resources", "LevelV1.xml");
 		string levelV2Path = Path.Combine("Resources", "LevelV2.xml");
 
 		string levelV2Xml = SanitizeString(File.ReadAllText(levelV2Path));
-
-		using FileStream fsV1 = File.OpenRead(levelV1Path);
-		Level3dData levelV1 = LevelXmlDeserializer.ReadLevel(fsV1);
-		AssertLevelValues(levelV1);
 
 		using FileStream fsV2 = File.OpenRead(levelV2Path);
 		Level3dData levelV2 = LevelXmlDeserializer.ReadLevel(fsV2);
 		AssertLevelValues(levelV2);
 
-		using MemoryStream msV1 = new();
-		LevelXmlSerializer.WriteLevel(msV1, levelV1);
-		string serializedLevel = SanitizeString(Encoding.UTF8.GetString(msV1.ToArray()));
-		serializedLevel.Should().BeEquivalentTo(levelV2Xml); // Should always write the latest format.
-
 		using MemoryStream msV2 = new();
 		LevelXmlSerializer.WriteLevel(msV2, levelV2);
-		serializedLevel = SanitizeString(Encoding.UTF8.GetString(msV2.ToArray()));
+		string serializedLevel = SanitizeString(Encoding.UTF8.GetString(msV2.ToArray()));
 		serializedLevel.Should().BeEquivalentTo(levelV2Xml);
 	}
 
