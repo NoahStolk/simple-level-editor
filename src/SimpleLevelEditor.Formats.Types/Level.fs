@@ -4,11 +4,22 @@ open System
 open System.Globalization
 open System.Numerics
 
+// Shapes
+[<Literal>]
+let PointId = "point"
+
+[<Literal>]
+let SphereId = "sphere"
+
+[<Literal>]
+let AabbId = "aabb"
+
+// Properties
 [<Literal>]
 let BoolId = "bool"
 
 [<Literal>]
-let IntId = "s32";
+let IntId = "s32"
 
 [<Literal>]
 let FloatId = "float"
@@ -17,7 +28,7 @@ let FloatId = "float"
 let Vector2Id = "float2"
 
 [<Literal>]
-let Vector3Id = "float3";
+let Vector3Id = "float3"
 
 [<Literal>]
 let Vector4Id = "float4"
@@ -29,7 +40,7 @@ let StringId = "str"
 let RgbId = "rgb"
 
 [<Literal>]
-let RgbaId = "rgba";
+let RgbaId = "rgba"
 
 type Shape =
     | Point  of Vector3
@@ -52,6 +63,29 @@ type ShapeDescriptor =
         | Point           -> Point
         | Sphere r        -> Sphere r
         | Aabb (min, max) -> Aabb (min, max)
+
+    member this.GetShapeId() =
+        match this with
+        | Point    -> PointId
+        | Sphere _ -> SphereId
+        | Aabb _   -> AabbId
+
+    member this.WriteValue() =
+        match this with
+        | Point           -> ""
+        | Sphere r        -> r.ToString(CultureInfo.InvariantCulture)
+        | Aabb (min, max) -> $"{min.X.ToString(CultureInfo.InvariantCulture)} {min.Y.ToString(CultureInfo.InvariantCulture)} {min.Z.ToString(CultureInfo.InvariantCulture)} {max.X.ToString(CultureInfo.InvariantCulture)} {max.Y.ToString(CultureInfo.InvariantCulture)} {max.Z.ToString(CultureInfo.InvariantCulture)}"
+
+    static member FromShapeId(shapeId: string, value: string) =
+        match shapeId with
+        | PointId  -> Point
+        | SphereId -> Sphere(Single.Parse(value, CultureInfo.InvariantCulture))
+        | AabbId   ->
+            let split = value.Split(' ')
+            Aabb(
+                Vector3(Single.Parse(split[0], CultureInfo.InvariantCulture), Single.Parse(split[1], CultureInfo.InvariantCulture), Single.Parse(split[2], CultureInfo.InvariantCulture)),
+                Vector3(Single.Parse(split[3], CultureInfo.InvariantCulture), Single.Parse(split[4], CultureInfo.InvariantCulture), Single.Parse(split[5], CultureInfo.InvariantCulture)))
+        | _        -> failwithf $"Unknown shape id: %s{shapeId}"
 
 type EntityPropertyValue =
     | Bool    of Value: bool

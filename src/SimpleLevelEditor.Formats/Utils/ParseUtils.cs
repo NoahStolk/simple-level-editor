@@ -125,13 +125,4 @@ internal static class ParseUtils
 	}
 
 	#endregion Read
-
-	#region Write
-
-	public static string Write(float data)
-	{
-		return data.ToString(CultureInfo.InvariantCulture);
-	}
-
-	#endregion Write
 }
