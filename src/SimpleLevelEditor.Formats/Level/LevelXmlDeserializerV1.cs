@@ -1,6 +1,5 @@
 using SimpleLevelEditor.Formats.Level.Model;
 using SimpleLevelEditor.Formats.Utils;
-using System.Globalization;
 using System.Xml;
 
 namespace SimpleLevelEditor.Formats.Level;
