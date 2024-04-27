@@ -83,19 +83,7 @@ public static class LevelInfoWindow
 				for (int j = 0; j < entity.Properties.Count; j++)
 				{
 					EntityPropertyDescriptor property = entity.Properties[j];
-					Vector4 color = property.Type switch
-					{
-						EntityConfig.EntityPropertyTypeDescriptor.BoolProperty => new Vector4(0, 0.25f, 1, 1),
-						EntityConfig.EntityPropertyTypeDescriptor.IntProperty => new Vector4(0, 0.5f, 1, 1),
-						EntityConfig.EntityPropertyTypeDescriptor.FloatProperty => new Vector4(0, 0.7f, 0, 1),
-						EntityConfig.EntityPropertyTypeDescriptor.Vector2Property => new Vector4(0, 0.8f, 0, 1),
-						EntityConfig.EntityPropertyTypeDescriptor.Vector3Property => new Vector4(0, 0.9f, 0, 1),
-						EntityConfig.EntityPropertyTypeDescriptor.Vector4Property => new Vector4(0, 1, 0, 1),
-						EntityConfig.EntityPropertyTypeDescriptor.StringProperty => new Vector4(1, 0.5f, 0, 1),
-						EntityConfig.EntityPropertyTypeDescriptor.RgbProperty => new Vector4(1, 0.75f, 0, 1),
-						EntityConfig.EntityPropertyTypeDescriptor.RgbaProperty => new Vector4(1, 1, 0, 1),
-						_ => new Vector4(1, 0, 0, 1),
-					};
+					Vector4 color = property.Type.GetDisplayColor();
 					string typeId = property.Type.GetTypeId();
 					string defaultValue = property.Type.DefaultValue.WriteValue();
 					string step = property.Type.Step.ToString(CultureInfo.InvariantCulture);

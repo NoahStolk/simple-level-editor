@@ -66,3 +66,15 @@ type EntityPropertyTypeDescriptor =
         | StringProperty  _ -> StringId
         | RgbProperty     _ -> RgbId
         | RgbaProperty    _ -> RgbaId
+
+    member this.GetDisplayColor() =
+        match this with
+        | BoolProperty    _ -> new Vector4(0f, 0.25f, 1f, 1f)
+        | IntProperty     _ -> new Vector4(0f, 0.5f, 1f, 1f)
+        | FloatProperty   _ -> new Vector4(0f, 0.7f, 0f, 1f)
+        | Vector2Property _ -> new Vector4(0f, 0.8f, 0f, 1f)
+        | Vector3Property _ -> new Vector4(0f, 0.9f, 0f, 1f)
+        | Vector4Property _ -> new Vector4(0f, 1f, 0f, 1f)
+        | StringProperty  _ -> new Vector4(1f, 0.5f, 0f, 1f)
+        | RgbProperty     _ -> new Vector4(1f, 0.75f, 0f, 1f)
+        | RgbaProperty    _ -> new Vector4(1f, 1f, 0f, 1f)
