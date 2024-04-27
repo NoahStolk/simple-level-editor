@@ -1,6 +1,6 @@
 # Simple Level Editor (ALPHA)
 
-Simple cross-platform 3D level editor written in C# and F# (.NET 8) using OpenGL and ImGui.
+Simple cross-platform 3D level editor written in C# and F# using .NET 8, OpenGL and ImGui.
 
 ## Features
 
