@@ -1,5 +1,5 @@
 using OneOf;
-using SimpleLevelEditor.Formats.Level.Model.EntityShapes;
+using SimpleLevelEditor.Formats.Types;
 using SimpleLevelEditor.Formats.Utils;
 using System.Diagnostics;
 using System.Globalization;
@@ -43,23 +43,25 @@ internal static class LevelXmlDataFormatter
 		};
 	}
 
-	public static OneOf<Point, Sphere, Aabb> ReadShape(string str)
+	public static ShapeDescriptor ReadShape(string str)
 	{
 		int indexOfFirstSpace = str.IndexOf(' ', StringComparison.Ordinal);
 		string shapeId = indexOfFirstSpace == -1 ? str : str[..indexOfFirstSpace];
 		string shapeData = indexOfFirstSpace == -1 ? string.Empty : str[(indexOfFirstSpace + 1)..];
 		return shapeId switch
 		{
-			_pointId => new Point(),
-			_sphereId => new Sphere(float.Parse(shapeData, CultureInfo.InvariantCulture)),
+			_pointId => ShapeDescriptor.Point,
+			_sphereId => ShapeDescriptor.NewSphere(float.Parse(shapeData, CultureInfo.InvariantCulture)),
 			_aabbId => ReadAabb(shapeData),
 			_ => throw new FormatException(),
 		};
 
-		static Aabb ReadAabb(string str)
+		static ShapeDescriptor ReadAabb(string str)
 		{
 			string[] parts = str.Split(' ');
-			return new(new(float.Parse(parts[0], CultureInfo.InvariantCulture), float.Parse(parts[1], CultureInfo.InvariantCulture), float.Parse(parts[2], CultureInfo.InvariantCulture)), new(float.Parse(parts[3], CultureInfo.InvariantCulture), float.Parse(parts[4], CultureInfo.InvariantCulture), float.Parse(parts[5], CultureInfo.InvariantCulture)));
+			return ShapeDescriptor.NewAabb(
+				new Vector3(float.Parse(parts[0], CultureInfo.InvariantCulture), float.Parse(parts[1], CultureInfo.InvariantCulture), float.Parse(parts[2], CultureInfo.InvariantCulture)),
+				new Vector3(float.Parse(parts[3], CultureInfo.InvariantCulture), float.Parse(parts[4], CultureInfo.InvariantCulture), float.Parse(parts[5], CultureInfo.InvariantCulture)));
 		}
 	}
 
@@ -80,13 +82,15 @@ internal static class LevelXmlDataFormatter
 		};
 	}
 
-	public static string WriteShape(OneOf<Point, Sphere, Aabb> shape)
+	public static string WriteShape(ShapeDescriptor shape)
 	{
-		return shape.Value switch
+		if (shape.IsPoint)
+			return _pointId;
+
+		return shape switch
 		{
-			Point => _pointId,
-			Sphere sphere => $"{_sphereId} {ParseUtils.Write(sphere.Radius)}",
-			Aabb aabb => $"{_aabbId} {ParseUtils.Write(aabb.Min.X)} {ParseUtils.Write(aabb.Min.Y)} {ParseUtils.Write(aabb.Min.Z)} {ParseUtils.Write(aabb.Max.X)} {ParseUtils.Write(aabb.Max.Y)} {ParseUtils.Write(aabb.Max.Z)}",
+			ShapeDescriptor.Sphere sphere => $"{_sphereId} {ParseUtils.Write(sphere.Radius)}",
+			ShapeDescriptor.Aabb aabb => $"{_aabbId} {ParseUtils.Write(aabb.Min.X)} {ParseUtils.Write(aabb.Min.Y)} {ParseUtils.Write(aabb.Min.Z)} {ParseUtils.Write(aabb.Max.X)} {ParseUtils.Write(aabb.Max.Y)} {ParseUtils.Write(aabb.Max.Z)}",
 			_ => throw new UnreachableException(),
 		};
 	}

@@ -1,6 +1,4 @@
-using OneOf;
-using SimpleLevelEditor.Formats.Level.Model.EntityShapes;
-using System.Diagnostics;
+using SimpleLevelEditor.Formats.Types;
 
 namespace SimpleLevelEditor.Formats.Level.Model;
 
@@ -14,18 +12,12 @@ public record Entity
 
 	public required string Name;
 	public required Vector3 Position;
-	public required OneOf<Point, Sphere, Aabb> Shape;
+	public required ShapeDescriptor Shape;
 	public required List<EntityProperty> Properties;
 
 	public Entity DeepCopy()
 	{
-		OneOf<Point, Sphere, Aabb> newShape = Shape.Value switch
-		{
-			Point point => point.DeepCopy(),
-			Sphere sphere => sphere.DeepCopy(),
-			Aabb aabb => aabb.DeepCopy(),
-			_ => throw new UnreachableException(),
-		};
+		ShapeDescriptor newShape = Shape.DeepCopy();
 
 		List<EntityProperty> newEntityProperties = [];
 		for (int i = 0; i < Properties.Count; i++)

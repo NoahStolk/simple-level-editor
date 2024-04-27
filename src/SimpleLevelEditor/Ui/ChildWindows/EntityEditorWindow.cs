@@ -6,7 +6,7 @@ using SimpleLevelEditor.Formats;
 using SimpleLevelEditor.Formats.EntityConfig.Model;
 using SimpleLevelEditor.Formats.EntityConfig.Model.PropertyTypes;
 using SimpleLevelEditor.Formats.Level.Model;
-using SimpleLevelEditor.Formats.Level.Model.EntityShapes;
+using SimpleLevelEditor.Formats.Types;
 using SimpleLevelEditor.State;
 using SimpleLevelEditor.Utils;
 using System.Diagnostics;
@@ -21,7 +21,7 @@ public static class EntityEditorWindow
 		Name = string.Empty,
 		Properties = [],
 		Position = default,
-		Shape = new Point(),
+		Shape = ShapeDescriptor.Point,
 	};
 	public static Entity DefaultEntity { get; private set; } = _default.DeepCopy();
 
@@ -61,9 +61,9 @@ public static class EntityEditorWindow
 					entity.Name = descriptor.Name;
 					entity.Shape = descriptor.Shape switch
 					{
-						EntityShape.Point => new Point(),
-						EntityShape.Sphere => new Sphere(2),
-						EntityShape.Aabb => new Aabb(-Vector3.One, Vector3.One),
+						EntityShape.Point => ShapeDescriptor.Point,
+						EntityShape.Sphere => ShapeDescriptor.NewSphere(2),
+						EntityShape.Aabb => ShapeDescriptor.NewAabb(-Vector3.One, Vector3.One),
 						_ => throw new UnreachableException($"Invalid entity shape: {descriptor.Shape}"),
 					};
 
@@ -106,10 +106,10 @@ public static class EntityEditorWindow
 			LevelState.Track("Changed entity position");
 		}
 
-		switch (entity.Shape.Value)
+		switch (entity.Shape)
 		{
-			case Sphere sphere: RenderSphereInputs(entity.Id, sphere); break;
-			case Aabb aabb: RenderAabbInputs(entity.Id, aabb); break;
+			case ShapeDescriptor.Sphere sphere: RenderSphereInputs(entity.Id, sphere); break;
+			case ShapeDescriptor.Aabb aabb: RenderAabbInputs(entity.Id, aabb); break;
 		}
 	}
 
@@ -210,7 +210,7 @@ public static class EntityEditorWindow
 		}
 	}
 
-	private static void RenderSphereInputs(int entityId, Sphere sphere)
+	private static void RenderSphereInputs(int entityId, ShapeDescriptor.Sphere sphere)
 	{
 		ImGui.Text("Radius");
 
@@ -219,7 +219,7 @@ public static class EntityEditorWindow
 			LevelState.Track("Changed entity radius");
 	}
 
-	private static void RenderAabbInputs(int entityId, Aabb aabb)
+	private static void RenderAabbInputs(int entityId, ShapeDescriptor.Aabb aabb)
 	{
 		ImGui.Text("Box Min");
 

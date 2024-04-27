@@ -37,4 +37,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\SimpleLevelEditor.Formats.Types\SimpleLevelEditor.Formats.Types.fsproj" />
+  </ItemGroup>
+
 </Project>
