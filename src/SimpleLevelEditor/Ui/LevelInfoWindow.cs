@@ -2,7 +2,6 @@ using Detach;
 using ImGuiNET;
 using SimpleLevelEditor.Formats.EntityConfig.Model;
 using SimpleLevelEditor.Formats.Level.Model;
-using SimpleLevelEditor.Formats.Types;
 using SimpleLevelEditor.State;
 using SimpleLevelEditor.Utils;
 using System.Globalization;

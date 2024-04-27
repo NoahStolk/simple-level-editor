@@ -20,7 +20,7 @@ public static class LevelXmlDeserializer
 
 		return version switch
 		{
-			1 => LevelXmlDeserializerV1.ReadLevel(stream),
+			1 => throw new NotSupportedException($"Version {version} is no longer supported. Use an older version of the editor to convert the level to a newer version."),
 			2 => LevelXmlDeserializerV2.ReadLevel(stream),
 			_ => throw new NotSupportedException($"Version {version} is not supported."),
 		};

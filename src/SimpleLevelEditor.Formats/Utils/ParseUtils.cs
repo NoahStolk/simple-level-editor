@@ -5,8 +5,6 @@ namespace SimpleLevelEditor.Formats.Utils;
 
 internal static class ParseUtils
 {
-	#region TryRead
-
 	public static bool TryReadBool(string? str, out bool result)
 	{
 		return bool.TryParse(str, out result);
@@ -96,17 +94,4 @@ internal static class ParseUtils
 
 		return TryReadByte(parts[0], out result.R) && TryReadByte(parts[1], out result.G) && TryReadByte(parts[2], out result.B) && TryReadByte(parts[3], out result.A);
 	}
-
-	#endregion TryRead
-
-	#region Read
-
-	[Obsolete("Remove V1 format.")]
-	public static Vector3 ReadVector3(string str)
-	{
-		string[] parts = str.Split(' ');
-		return new Vector3(float.Parse(parts[0], CultureInfo.InvariantCulture), float.Parse(parts[1], CultureInfo.InvariantCulture), float.Parse(parts[2], CultureInfo.InvariantCulture));
-	}
-
-	#endregion Read
 }
