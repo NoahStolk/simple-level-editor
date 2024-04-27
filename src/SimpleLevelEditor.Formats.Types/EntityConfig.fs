@@ -10,6 +10,12 @@ type EntityShape =
     | Sphere
     | Aabb
 
+    member this.GetDefaultDescriptor() =
+        match this with
+        | Point  -> ShapeDescriptor.Point
+        | Sphere -> ShapeDescriptor.Sphere 2f
+        | Aabb   -> ShapeDescriptor.Aabb (-Vector3.One, Vector3.One)
+
 type EntityPropertyTypeDescriptor =
     | BoolProperty    of DefaultValue: bool
     | IntProperty     of DefaultValue: int     * Step: Nullable<int>     * MinValue: Nullable<int>     * MaxValue: Nullable<int>
