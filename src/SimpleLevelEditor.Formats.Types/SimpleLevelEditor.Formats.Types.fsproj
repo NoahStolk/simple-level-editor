@@ -1,17 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<TargetFramework>net8.0</TargetFramework>
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
     <LangVersion>8.0</LangVersion>
-		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-	</PropertyGroup>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
 
-	<ItemGroup>
-    <Compile Include="Color.fs" />
-		<Compile Include="Level\Shape.fs" />
-		<Compile Include="Level\ShapeDescriptor.fs" />
-		<Compile Include="Level\EntityPropertyValue.fs" />
-		<Compile Include="EntityConfig\EntityPropertyTypeDescriptor.fs" />
-	</ItemGroup>
+  <ItemGroup>
+    <Compile Include="Color.fs"/>
+    <Compile Include="Level.fs"/>
+    <Compile Include="EntityConfig.fs"/>
+  </ItemGroup>
 
 </Project>

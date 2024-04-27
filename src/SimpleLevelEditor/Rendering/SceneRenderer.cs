@@ -3,7 +3,6 @@ using Silk.NET.OpenGL;
 using SimpleLevelEditor.Content;
 using SimpleLevelEditor.Extensions;
 using SimpleLevelEditor.Formats.Level.Model;
-using SimpleLevelEditor.Formats.Types.Level;
 using SimpleLevelEditor.State;
 using SimpleLevelEditor.Utils;
 using static SimpleLevelEditor.Graphics;

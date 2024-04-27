@@ -2,7 +2,6 @@ using Detach.Collisions;
 using Silk.NET.GLFW;
 using SimpleLevelEditor.Extensions;
 using SimpleLevelEditor.Formats.Level.Model;
-using SimpleLevelEditor.Formats.Types.Level;
 using SimpleLevelEditor.Rendering;
 using SimpleLevelEditor.State;
 using SimpleLevelEditor.Ui.ChildWindows;

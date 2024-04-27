@@ -1,11 +1,9 @@
-using SimpleLevelEditor.Formats.Types.Level;
-
 namespace SimpleLevelEditor.Formats.Level.Model;
 
 public record EntityProperty
 {
 	public required string Key;
-	public required EntityPropertyValue Value;
+	public required Types.Level.EntityPropertyValue Value;
 
 	public EntityProperty DeepCopy()
 	{

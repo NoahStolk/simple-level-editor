@@ -3,7 +3,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SimpleLevelEditor.Formats.Level;
 using SimpleLevelEditor.Formats.Level.Model;
 using SimpleLevelEditor.Formats.Types;
-using SimpleLevelEditor.Formats.Types.Level;
 using System.Text;
 
 namespace SimpleLevelEditor.Formats.Tests;
@@ -83,7 +82,7 @@ public class LevelSerializationTests
 			Id = 1,
 			Name = "PlayerSpawn",
 			Position = new(0, 1, 0),
-			Shape = ShapeDescriptor.Point,
+			Shape = Types.Level.ShapeDescriptor.Point,
 			Properties = [],
 		},
 		new()
@@ -91,18 +90,18 @@ public class LevelSerializationTests
 			Id = 2,
 			Name = "Light",
 			Position = new(20, 3, 2),
-			Shape = ShapeDescriptor.Point,
+			Shape = Types.Level.ShapeDescriptor.Point,
 			Properties =
 			[
 				new()
 				{
 					Key = "Color",
-					Value = EntityPropertyValue.NewRgb(new Color.Rgb(255, 255, 255)),
+					Value = Types.Level.EntityPropertyValue.NewRgb(new Color.Rgb(255, 255, 255)),
 				},
 				new()
 				{
 					Key = "Radius",
-					Value = EntityPropertyValue.NewFloat(20f),
+					Value = Types.Level.EntityPropertyValue.NewFloat(20f),
 				},
 			],
 		},
@@ -111,18 +110,18 @@ public class LevelSerializationTests
 			Id = 3,
 			Name = "Light",
 			Position = new(27, 1, 12),
-			Shape = ShapeDescriptor.Point,
+			Shape = Types.Level.ShapeDescriptor.Point,
 			Properties =
 			[
 				new()
 				{
 					Key = "Color",
-					Value = EntityPropertyValue.NewRgb(new Color.Rgb(255, 47, 0)),
+					Value = Types.Level.EntityPropertyValue.NewRgb(new Color.Rgb(255, 47, 0)),
 				},
 				new()
 				{
 					Key = "Radius",
-					Value = EntityPropertyValue.NewFloat(6f),
+					Value = Types.Level.EntityPropertyValue.NewFloat(6f),
 				},
 			],
 		},
@@ -131,18 +130,18 @@ public class LevelSerializationTests
 			Id = 4,
 			Name = "Light",
 			Position = new(33, 1, 2),
-			Shape = ShapeDescriptor.Point,
+			Shape = Types.Level.ShapeDescriptor.Point,
 			Properties =
 			[
 				new()
 				{
 					Key = "Color",
-					Value = EntityPropertyValue.NewRgb(new Color.Rgb(0, 40, 255)),
+					Value = Types.Level.EntityPropertyValue.NewRgb(new Color.Rgb(0, 40, 255)),
 				},
 				new()
 				{
 					Key = "Radius",
-					Value = EntityPropertyValue.NewFloat(20f),
+					Value = Types.Level.EntityPropertyValue.NewFloat(20f),
 				},
 			],
 		},
@@ -151,7 +150,7 @@ public class LevelSerializationTests
 			Id = 5,
 			Name = "Field",
 			Position = new(1, 1, 1),
-			Shape = ShapeDescriptor.NewSphere(10),
+			Shape = Types.Level.ShapeDescriptor.NewSphere(10),
 			Properties = [],
 		},
 	];

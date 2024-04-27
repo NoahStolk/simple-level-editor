@@ -1,13 +1,13 @@
 using Detach;
-using Detach.Numerics;
 using ImGuiNET;
 using OneOf;
 using SimpleLevelEditor.Formats.EntityConfig.Model;
 using SimpleLevelEditor.Formats.Level.Model;
-using SimpleLevelEditor.Formats.Types.Level;
+using SimpleLevelEditor.Formats.Types;
 using SimpleLevelEditor.State;
 using SimpleLevelEditor.Utils;
 using System.Diagnostics;
+using Color = Detach.Numerics.Color;
 
 namespace SimpleLevelEditor.Ui.ChildWindows;
 
@@ -19,7 +19,7 @@ public static class EntityEditorWindow
 		Name = string.Empty,
 		Properties = [],
 		Position = default,
-		Shape = ShapeDescriptor.Point,
+		Shape = Level.ShapeDescriptor.Point,
 	};
 	public static Entity DefaultEntity { get; private set; } = _default.DeepCopy();
 
@@ -59,9 +59,9 @@ public static class EntityEditorWindow
 					entity.Name = descriptor.Name;
 					entity.Shape = descriptor.Shape switch
 					{
-						EntityShape.Point => ShapeDescriptor.Point,
-						EntityShape.Sphere => ShapeDescriptor.NewSphere(2),
-						EntityShape.Aabb => ShapeDescriptor.NewAabb(-Vector3.One, Vector3.One),
+						EntityShape.Point => Level.ShapeDescriptor.Point,
+						EntityShape.Sphere => Level.ShapeDescriptor.NewSphere(2),
+						EntityShape.Aabb => Level.ShapeDescriptor.NewAabb(-Vector3.One, Vector3.One),
 						_ => throw new UnreachableException($"Invalid entity shape: {descriptor.Shape}"),
 					};
 
@@ -106,8 +106,8 @@ public static class EntityEditorWindow
 
 		switch (entity.Shape)
 		{
-			case ShapeDescriptor.Sphere sphere: RenderSphereInputs(entity.Id, sphere); break;
-			case ShapeDescriptor.Aabb aabb: RenderAabbInputs(entity.Id, aabb); break;
+			case Level.ShapeDescriptor.Sphere sphere: RenderSphereInputs(entity.Id, sphere); break;
+			case Level.ShapeDescriptor.Aabb aabb: RenderAabbInputs(entity.Id, aabb); break;
 		}
 	}
 
@@ -131,19 +131,7 @@ public static class EntityEditorWindow
 				property = new()
 				{
 					Key = propertyDescriptor.Name,
-					Value = propertyDescriptor.Type.Value switch
-					{
-						BoolPropertyType b => b.DefaultValue,
-						IntPropertyType int32 => int32.DefaultValue,
-						FloatPropertyType f => f.DefaultValue,
-						Vector2PropertyType v2 => v2.DefaultValue,
-						Vector3PropertyType v3 => v3.DefaultValue,
-						Vector4PropertyType v4 => v4.DefaultValue,
-						StringPropertyType str => str.DefaultValue,
-						RgbPropertyType rgb => rgb.DefaultValue,
-						RgbaPropertyType rgba => rgba.DefaultValue,
-						_ => throw new UnreachableException($"Invalid entity property type: {propertyDescriptor.Type}"),
-					},
+					Value = propertyDescriptor.Type.DefaultValue,
 				};
 				entity.Properties.Add(property);
 			}
@@ -187,7 +175,7 @@ public static class EntityEditorWindow
 					ImGui.SetTooltip(propertyDescriptor.Description);
 			}
 
-			property.Value = property.Value.Value switch
+			property.Value = property.Value switch
 			{
 				bool b when ImGui.Checkbox(Inline.Span($"##property_value{entity.Id}_{i}"), ref b) => b,
 				int int32 when ImGui.DragInt(Inline.Span($"##property_value{entity.Id}_{i}"), ref int32, step.AsT0, minValue.AsT0, maxValue.AsT0) => int32,
@@ -196,8 +184,8 @@ public static class EntityEditorWindow
 				Vector3 v3 when ImGui.DragFloat3(Inline.Span($"##property_value{entity.Id}_{i}"), ref v3, step.AsT1, minValue.AsT1, maxValue.AsT1) => v3,
 				Vector4 v4 when ImGui.DragFloat4(Inline.Span($"##property_value{entity.Id}_{i}"), ref v4, step.AsT1, minValue.AsT1, maxValue.AsT1) => v4,
 				string s when ImGui.InputText(Inline.Span($"##property_value{entity.Id}_{i}"), ref s, 32) => s,
-				Rgb rgb when ImGuiUtils.ColorEdit3Rgb(Inline.Span($"##property_value{entity.Id}_{i}"), ref rgb) => rgb,
-				Rgba rgba when ImGuiUtils.ColorEdit4Rgba(Inline.Span($"##property_value{entity.Id}_{i}"), ref rgba) => rgba,
+				Formats.Types.Color.Rgb rgb when ImGuiUtils.ColorEdit3Rgb(Inline.Span($"##property_value{entity.Id}_{i}"), ref rgb) => rgb,
+				Formats.Types.Color.Rgba rgba when ImGuiUtils.ColorEdit4Rgba(Inline.Span($"##property_value{entity.Id}_{i}"), ref rgba) => rgba,
 				_ => property.Value,
 			};
 
@@ -208,7 +196,7 @@ public static class EntityEditorWindow
 		}
 	}
 
-	private static void RenderSphereInputs(int entityId, ShapeDescriptor.Sphere sphere)
+	private static void RenderSphereInputs(int entityId, Level.ShapeDescriptor.Sphere sphere)
 	{
 		ImGui.Text("Radius");
 
@@ -217,7 +205,7 @@ public static class EntityEditorWindow
 			LevelState.Track("Changed entity radius");
 	}
 
-	private static void RenderAabbInputs(int entityId, ShapeDescriptor.Aabb aabb)
+	private static void RenderAabbInputs(int entityId, Level.ShapeDescriptor.Aabb aabb)
 	{
 		ImGui.Text("Box Min");
 
