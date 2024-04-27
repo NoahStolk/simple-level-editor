@@ -42,7 +42,7 @@ public static class LevelXmlSerializer
 			{
 				Name = e.Name,
 				Position = Types.Level.EntityPropertyValue.NewVector3(e.Position).WriteValue(),
-				Shape = $"{e.Shape.GetShapeId()} {e.Shape.WriteValue()}",
+				Shape = $"{e.Shape.GetShapeId()} {e.Shape.WriteValue()}".TrimEnd(),
 				Properties = e.Properties.ConvertAll(p => new XmlLevelEntityProperty
 				{
 					Name = p.Key,
