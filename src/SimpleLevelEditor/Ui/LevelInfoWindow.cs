@@ -97,7 +97,7 @@ public static class LevelInfoWindow
 						_ => new Vector4(1, 0, 0, 1),
 					};
 					string typeId = property.Type.GetTypeId();
-					string defaultValue = property.Type.DefaultValue.ToString(); // TODO: Test this.
+					string defaultValue = property.Type.DefaultValue.WriteValue();
 					string step = property.Type.Step.ToString(CultureInfo.InvariantCulture);
 					string minValue = property.Type.MinValue.ToString(CultureInfo.InvariantCulture);
 					string maxValue = property.Type.MaxValue.ToString(CultureInfo.InvariantCulture);
@@ -114,7 +114,7 @@ public static class LevelInfoWindow
 					ImGuiUtils.TextOptional(defaultValue);
 
 					ImGui.TableNextColumn();
-					ImGuiUtils.TextOptional(step, property.Type.Step == 0); // TODO: Test this.
+					ImGuiUtils.TextOptional(step, property.Type.Step == 0);
 
 					ImGui.TableNextColumn();
 					ImGuiUtils.TextOptional(minValue, property.Type.MinValue == 0);
