@@ -101,6 +101,7 @@ internal static class ParseUtils
 
 	#region Read
 
+	[Obsolete("Remove V1 format.")]
 	public static Vector3 ReadVector3(string str)
 	{
 		string[] parts = str.Split(' ');

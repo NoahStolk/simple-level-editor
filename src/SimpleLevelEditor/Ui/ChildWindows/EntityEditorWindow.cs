@@ -93,8 +93,14 @@ public static class EntityEditorWindow
 
 		switch (entity.Shape)
 		{
-			case Level.ShapeDescriptor.Sphere sphere: RenderSphereInputs(entity.Id, ref sphere); break;
-			case Level.ShapeDescriptor.Aabb aabb: RenderAabbInputs(entity.Id, ref aabb); break;
+			case Level.ShapeDescriptor.Sphere sphere:
+				RenderSphereInputs(entity.Id, ref sphere);
+				entity.Shape = sphere;
+				break;
+			case Level.ShapeDescriptor.Aabb aabb:
+				RenderAabbInputs(entity.Id, ref aabb);
+				entity.Shape = aabb;
+				break;
 		}
 	}
 
