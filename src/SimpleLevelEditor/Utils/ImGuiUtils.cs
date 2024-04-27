@@ -1,6 +1,5 @@
 using Detach.Numerics;
 using ImGuiNET;
-using SimpleLevelEditor.Formats;
 
 namespace SimpleLevelEditor.Utils;
 

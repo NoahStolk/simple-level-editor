@@ -1,15 +1,15 @@
-using OneOf;
+using SimpleLevelEditor.Formats.Types.Level;
 
 namespace SimpleLevelEditor.Formats.Level.Model;
 
 public record EntityProperty
 {
 	public required string Key;
-	public required OneOf<bool, int, float, Vector2, Vector3, Vector4, string, Rgb, Rgba> Value;
+	public required EntityPropertyValue Value;
 
 	public EntityProperty DeepCopy()
 	{
-		return new()
+		return new EntityProperty
 		{
 			Key = Key,
 			Value = Value,

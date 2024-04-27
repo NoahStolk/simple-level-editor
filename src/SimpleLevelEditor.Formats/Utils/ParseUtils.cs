@@ -1,3 +1,4 @@
+using SimpleLevelEditor.Formats.Types;
 using System.Globalization;
 
 namespace SimpleLevelEditor.Formats.Utils;
@@ -68,7 +69,7 @@ internal static class ParseUtils
 		return TryReadFloat(parts[0], out result.X) && TryReadFloat(parts[1], out result.Y) && TryReadFloat(parts[2], out result.Z) && TryReadFloat(parts[3], out result.W);
 	}
 
-	public static bool TryReadRgb(string? str, out Rgb result)
+	public static bool TryReadRgb(string? str, out Color.Rgb result)
 	{
 		result = default;
 
@@ -79,10 +80,18 @@ internal static class ParseUtils
 		if (parts.Length != 3)
 			return false;
 
-		return TryReadByte(parts[0], out result.R) && TryReadByte(parts[1], out result.G) && TryReadByte(parts[2], out result.B);
+		if (!TryReadByte(parts[0], out byte r) ||
+		    !TryReadByte(parts[1], out byte g) ||
+		    !TryReadByte(parts[2], out byte b))
+		{
+			return false;
+		}
+
+		result = new Color.Rgb(r, g, b);
+		return true;
 	}
 
-	public static bool TryReadRgba(string? str, out Rgba result)
+	public static bool TryReadRgba(string? str, out Color.Rgba result)
 	{
 		result = default;
 
@@ -93,7 +102,16 @@ internal static class ParseUtils
 		if (parts.Length != 4)
 			return false;
 
-		return TryReadByte(parts[0], out result.R) && TryReadByte(parts[1], out result.G) && TryReadByte(parts[2], out result.B) && TryReadByte(parts[3], out result.A);
+		if (!TryReadByte(parts[0], out byte r) ||
+		    !TryReadByte(parts[1], out byte g) ||
+		    !TryReadByte(parts[2], out byte b) ||
+		    !TryReadByte(parts[3], out byte a))
+		{
+			return false;
+		}
+
+		result = new Color.Rgba(r, g, b, a);
+		return true;
 	}
 
 	#endregion TryRead
@@ -143,13 +161,13 @@ internal static class ParseUtils
 		return str;
 	}
 
-	public static Rgb ReadRgb(string str)
+	public static Color.Rgb ReadRgb(string str)
 	{
 		string[] parts = str.Split(' ');
 		return new(byte.Parse(parts[0], CultureInfo.InvariantCulture), byte.Parse(parts[1], CultureInfo.InvariantCulture), byte.Parse(parts[2], CultureInfo.InvariantCulture));
 	}
 
-	public static Rgba ReadRgba(string str)
+	public static Color.Rgba ReadRgba(string str)
 	{
 		string[] parts = str.Split(' ');
 		return new(byte.Parse(parts[0], CultureInfo.InvariantCulture), byte.Parse(parts[1], CultureInfo.InvariantCulture), byte.Parse(parts[2], CultureInfo.InvariantCulture), byte.Parse(parts[3], CultureInfo.InvariantCulture));
@@ -194,12 +212,12 @@ internal static class ParseUtils
 		return data;
 	}
 
-	public static string Write(Rgb data)
+	public static string Write(Color.Rgb data)
 	{
 		return $"{Write(data.R)} {Write(data.G)} {Write(data.B)}";
 	}
 
-	public static string Write(Rgba data)
+	public static string Write(Color.Rgba data)
 	{
 		return $"{Write(data.R)} {Write(data.G)} {Write(data.B)} {Write(data.A)}";
 	}

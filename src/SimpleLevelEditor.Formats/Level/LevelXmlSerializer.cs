@@ -1,5 +1,6 @@
 using SimpleLevelEditor.Formats.Level.Model;
 using SimpleLevelEditor.Formats.Level.XmlModel;
+using SimpleLevelEditor.Formats.Types.Level;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
@@ -33,15 +34,15 @@ public static class LevelXmlSerializer
 			{
 				Mesh = wo.Mesh,
 				Texture = wo.Texture,
-				Position = LevelXmlDataFormatter.WriteProperty(wo.Position),
-				Rotation = LevelXmlDataFormatter.WriteProperty(wo.Rotation),
-				Scale = LevelXmlDataFormatter.WriteProperty(wo.Scale),
+				Position = LevelXmlDataFormatter.WriteProperty(EntityPropertyValue.NewVector3(wo.Position)),
+				Rotation = LevelXmlDataFormatter.WriteProperty(EntityPropertyValue.NewVector3(wo.Rotation)),
+				Scale = LevelXmlDataFormatter.WriteProperty(EntityPropertyValue.NewVector3(wo.Scale)),
 				Flags = string.Join(',', wo.Flags),
 			}),
 			Entities = level.Entities.ConvertAll(e => new XmlLevelEntity
 			{
 				Name = e.Name,
-				Position = LevelXmlDataFormatter.WriteProperty(e.Position),
+				Position = LevelXmlDataFormatter.WriteProperty(EntityPropertyValue.NewVector3(e.Position)),
 				Shape = LevelXmlDataFormatter.WriteShape(e.Shape),
 				Properties = e.Properties.ConvertAll(p => new XmlLevelEntityProperty
 				{

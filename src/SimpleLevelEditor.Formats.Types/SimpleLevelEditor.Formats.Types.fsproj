@@ -7,7 +7,11 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Compile Include="Shape.fs"/>
+    <Compile Include="Color.fs" />
+		<Compile Include="Level\Shape.fs" />
+		<Compile Include="Level\ShapeDescriptor.fs" />
+		<Compile Include="Level\EntityPropertyValue.fs" />
+		<Compile Include="EntityConfig\EntityPropertyTypeDescriptor.fs" />
 	</ItemGroup>
 
 </Project>

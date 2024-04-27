@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SimpleLevelEditor.Formats.Level;
 using SimpleLevelEditor.Formats.Level.Model;
 using SimpleLevelEditor.Formats.Types;
+using SimpleLevelEditor.Formats.Types.Level;
 using System.Text;
 
 namespace SimpleLevelEditor.Formats.Tests;
@@ -96,12 +97,12 @@ public class LevelSerializationTests
 				new()
 				{
 					Key = "Color",
-					Value = new Rgb(255, 255, 255),
+					Value = EntityPropertyValue.NewRgb(new Color.Rgb(255, 255, 255)),
 				},
 				new()
 				{
 					Key = "Radius",
-					Value = 20f,
+					Value = EntityPropertyValue.NewFloat(20f),
 				},
 			],
 		},
@@ -116,12 +117,12 @@ public class LevelSerializationTests
 				new()
 				{
 					Key = "Color",
-					Value = new Rgb(255, 47, 0),
+					Value = EntityPropertyValue.NewRgb(new Color.Rgb(255, 47, 0)),
 				},
 				new()
 				{
 					Key = "Radius",
-					Value = 6f,
+					Value = EntityPropertyValue.NewFloat(6f),
 				},
 			],
 		},
@@ -136,12 +137,12 @@ public class LevelSerializationTests
 				new()
 				{
 					Key = "Color",
-					Value = new Rgb(0, 40, 255),
+					Value = EntityPropertyValue.NewRgb(new Color.Rgb(0, 40, 255)),
 				},
 				new()
 				{
 					Key = "Radius",
-					Value = 20f,
+					Value = EntityPropertyValue.NewFloat(20f),
 				},
 			],
 		},

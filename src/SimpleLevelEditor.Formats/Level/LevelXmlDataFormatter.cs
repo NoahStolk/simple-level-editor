@@ -1,5 +1,4 @@
-using OneOf;
-using SimpleLevelEditor.Formats.Types;
+using SimpleLevelEditor.Formats.Types.Level;
 using SimpleLevelEditor.Formats.Utils;
 using System.Diagnostics;
 using System.Globalization;
@@ -22,7 +21,7 @@ internal static class LevelXmlDataFormatter
 	private const string _rgbId = "rgb";
 	private const string _rgbaId = "rgba";
 
-	public static OneOf<bool, int, float, Vector2, Vector3, Vector4, string, Rgb, Rgba> ReadProperty(string str)
+	public static EntityPropertyValue ReadProperty(string str)
 	{
 		int indexOfSpace = str.IndexOf(' ', StringComparison.Ordinal);
 		string type = str[..indexOfSpace];
@@ -30,15 +29,15 @@ internal static class LevelXmlDataFormatter
 
 		return type switch
 		{
-			_boolId => ParseUtils.ReadBool(value),
-			_intId => ParseUtils.ReadInt(value),
-			_floatId => ParseUtils.ReadFloat(value),
-			_vector2Id => ParseUtils.ReadVector2(value),
-			_vector3Id => ParseUtils.ReadVector3(value),
-			_vector4Id => ParseUtils.ReadVector4(value),
-			_stringId => ParseUtils.ReadString(value),
-			_rgbId => ParseUtils.ReadRgb(value),
-			_rgbaId => ParseUtils.ReadRgba(value),
+			_boolId => EntityPropertyValue.NewBool(ParseUtils.ReadBool(value)),
+			_intId => EntityPropertyValue.NewInt(ParseUtils.ReadInt(value)),
+			_floatId => EntityPropertyValue.NewFloat(ParseUtils.ReadFloat(value)),
+			_vector2Id => EntityPropertyValue.NewVector2(ParseUtils.ReadVector2(value)),
+			_vector3Id => EntityPropertyValue.NewVector3(ParseUtils.ReadVector3(value)),
+			_vector4Id => EntityPropertyValue.NewVector4(ParseUtils.ReadVector4(value)),
+			_stringId => EntityPropertyValue.NewString(ParseUtils.ReadString(value)),
+			_rgbId => EntityPropertyValue.NewRgb(ParseUtils.ReadRgb(value)),
+			_rgbaId => EntityPropertyValue.NewRgba(ParseUtils.ReadRgba(value)),
 			_ => throw new UnreachableException(),
 		};
 	}
@@ -65,19 +64,19 @@ internal static class LevelXmlDataFormatter
 		}
 	}
 
-	public static string WriteProperty(OneOf<bool, int, float, Vector2, Vector3, Vector4, string, Rgb, Rgba> value)
+	public static string WriteProperty(EntityPropertyValue value)
 	{
-		return value.Value switch
+		return value switch
 		{
-			bool b => ParseUtils.Write(b),
-			int i => ParseUtils.Write(i),
-			float f => ParseUtils.Write(f),
-			Vector2 v => ParseUtils.Write(v),
-			Vector3 v => ParseUtils.Write(v),
-			Vector4 v => ParseUtils.Write(v),
-			string s => ParseUtils.Write(s),
-			Rgb rgb => ParseUtils.Write(rgb),
-			Rgba rgba => ParseUtils.Write(rgba),
+			EntityPropertyValue.Bool b => ParseUtils.Write(b.Value),
+			EntityPropertyValue.Int i => ParseUtils.Write(i.Value),
+			EntityPropertyValue.Float f => ParseUtils.Write(f.Value),
+			EntityPropertyValue.Vector2 v => ParseUtils.Write(v.Value),
+			EntityPropertyValue.Vector3 v => ParseUtils.Write(v.Value),
+			EntityPropertyValue.Vector4 v => ParseUtils.Write(v.Value),
+			EntityPropertyValue.String s => ParseUtils.Write(s.Value),
+			EntityPropertyValue.Rgb rgb => ParseUtils.Write(rgb.Value),
+			EntityPropertyValue.Rgba rgba => ParseUtils.Write(rgba.Value),
 			_ => throw new UnreachableException(),
 		};
 	}
@@ -95,19 +94,19 @@ internal static class LevelXmlDataFormatter
 		};
 	}
 
-	public static string WritePropertyType(OneOf<bool, int, float, Vector2, Vector3, Vector4, string, Rgb, Rgba> value)
+	public static string WritePropertyType(EntityPropertyValue value)
 	{
-		return value.Value switch
+		return value switch
 		{
-			bool => _boolId,
-			int => _intId,
-			float => _floatId,
-			Vector2 => _vector2Id,
-			Vector3 => _vector3Id,
-			Vector4 => _vector4Id,
-			string => _stringId,
-			Rgb => _rgbId,
-			Rgba => _rgbaId,
+			EntityPropertyValue.Bool => _boolId,
+			EntityPropertyValue.Int => _intId,
+			EntityPropertyValue.Float => _floatId,
+			EntityPropertyValue.Vector2 => _vector2Id,
+			EntityPropertyValue.Vector3 => _vector3Id,
+			EntityPropertyValue.Vector4 => _vector4Id,
+			EntityPropertyValue.String => _stringId,
+			EntityPropertyValue.Rgb => _rgbId,
+			EntityPropertyValue.Rgba => _rgbaId,
 			_ => throw new UnreachableException(),
 		};
 	}

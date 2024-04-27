@@ -1,4 +1,4 @@
-using SimpleLevelEditor.Formats.Types;
+using SimpleLevelEditor.Formats.Types.Level;
 
 namespace SimpleLevelEditor.Formats.Level.Model;
 
