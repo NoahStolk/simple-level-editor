@@ -56,11 +56,11 @@ public static class EntityEditorWindow
 				if (ImGui.Selectable(descriptor.Name))
 				{
 					entity.Name = descriptor.Name;
-					entity.Shape = descriptor.Shape switch
+					entity.Shape = descriptor.Shape.Tag switch
 					{
-						EntityShape.Point => Level.ShapeDescriptor.Point,
-						EntityShape.Sphere => Level.ShapeDescriptor.NewSphere(2),
-						EntityShape.Aabb => Level.ShapeDescriptor.NewAabb(-Vector3.One, Vector3.One),
+						EntityConfig.EntityShape.Tags.Point => Level.ShapeDescriptor.Point,
+						EntityConfig.EntityShape.Tags.Sphere => Level.ShapeDescriptor.NewSphere(2),
+						EntityConfig.EntityShape.Tags.Aabb => Level.ShapeDescriptor.NewAabb(-Vector3.One, Vector3.One),
 						_ => throw new UnreachableException($"Invalid entity shape: {descriptor.Shape}"),
 					};
 

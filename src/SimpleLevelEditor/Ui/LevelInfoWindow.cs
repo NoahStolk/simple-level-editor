@@ -51,7 +51,7 @@ public static class LevelInfoWindow
 				if (ImGui.TreeNode(entity.Name))
 				{
 					ImGui.Text(Inline.Span($"Name: {entity.Name}"));
-					ImGui.Text(Inline.Span($"Shape: {entity.Shape}"));
+					ImGui.Text(Inline.Span($"Shape: {entity.Shape.ToString()}"));
 					if (entity.Properties.Count > 0)
 					{
 						RenderEntityProperties(i, entity);

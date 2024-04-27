@@ -29,12 +29,12 @@ public class EntityConfigDeserializationTests
 
 		EntityDescriptor entity = data.Entities[0];
 		Assert.AreEqual("PlayerSpawn", entity.Name);
-		Assert.AreEqual(EntityShape.Point, entity.Shape);
+		Assert.AreEqual(Types.EntityConfig.EntityShape.Point, entity.Shape);
 		Assert.AreEqual(0, entity.Properties.Count);
 
 		entity = data.Entities[1];
 		Assert.AreEqual("Light", entity.Name);
-		Assert.AreEqual(EntityShape.Point, entity.Shape);
+		Assert.AreEqual(Types.EntityConfig.EntityShape.Point, entity.Shape);
 		Assert.AreEqual(3, entity.Properties.Count);
 
 		EntityPropertyDescriptor property = entity.Properties[0];
@@ -62,7 +62,7 @@ public class EntityConfigDeserializationTests
 
 		entity = data.Entities[2];
 		Assert.AreEqual("DynamicObject", entity.Name);
-		Assert.AreEqual(EntityShape.Point, entity.Shape);
+		Assert.AreEqual(Types.EntityConfig.EntityShape.Point, entity.Shape);
 		Assert.AreEqual(4, entity.Properties.Count);
 
 		property = entity.Properties[0];

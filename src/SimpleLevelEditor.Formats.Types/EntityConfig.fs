@@ -5,6 +5,11 @@ open System.Numerics
 open SimpleLevelEditor.Formats.Types
 open SimpleLevelEditor.Formats.Types.Level
 
+type EntityShape =
+    | Point
+    | Sphere
+    | Aabb
+
 type EntityPropertyTypeDescriptor =
     | BoolProperty    of DefaultValue: bool
     | IntProperty     of DefaultValue: int     * Step: Nullable<int>     * MinValue: Nullable<int>     * MaxValue: Nullable<int>

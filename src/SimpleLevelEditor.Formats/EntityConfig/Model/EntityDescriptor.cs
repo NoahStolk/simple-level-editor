@@ -4,7 +4,7 @@ public record EntityDescriptor
 {
 	public required string Name;
 
-	public required EntityShape Shape;
+	public required Types.EntityConfig.EntityShape Shape;
 
 	public required List<EntityPropertyDescriptor> Properties;
 }

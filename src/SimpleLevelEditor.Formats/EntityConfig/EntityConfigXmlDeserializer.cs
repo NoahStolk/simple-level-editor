@@ -27,9 +27,9 @@ public static class EntityConfigXmlDeserializer
 				Name = e.Name,
 				Shape = e.Shape switch
 				{
-					XmlEntityConfigEntityShape.Point => EntityShape.Point,
-					XmlEntityConfigEntityShape.Sphere => EntityShape.Sphere,
-					XmlEntityConfigEntityShape.Aabb => EntityShape.Aabb,
+					XmlEntityConfigEntityShape.Point => Types.EntityConfig.EntityShape.Point,
+					XmlEntityConfigEntityShape.Sphere => Types.EntityConfig.EntityShape.Sphere,
+					XmlEntityConfigEntityShape.Aabb => Types.EntityConfig.EntityShape.Aabb,
 					_ => throw new InvalidOperationException($"Unknown entity shape: {e.Shape}"),
 				},
 				Properties = e.Properties.ConvertAll(p => new EntityPropertyDescriptor
