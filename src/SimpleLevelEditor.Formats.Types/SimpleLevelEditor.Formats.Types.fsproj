@@ -11,8 +11,10 @@
     <Compile Include="DataFormatExtensions.fs" />
     <Compile Include="ShapeIds.fs" />
     <Compile Include="TypeIds.fs" />
+    <Compile Include="PointEntityVisualizationIds.fs" />
     <Compile Include="Level\ShapeDescriptor.fs" />
     <Compile Include="Level\EntityPropertyValue.fs" />
+    <Compile Include="EntityConfig\PointEntityVisualization.fs" />
     <Compile Include="EntityConfig\EntityType.fs" />
     <Compile Include="EntityConfig\EntityPropertyTypeDescriptor.fs" />
   </ItemGroup>

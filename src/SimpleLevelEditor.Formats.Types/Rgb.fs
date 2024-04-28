@@ -1,5 +1,8 @@
 namespace SimpleLevelEditor.Formats.Types
 
+open System
+open System.Globalization
+
 [<Struct>]
 type Rgb =
     struct
