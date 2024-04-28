@@ -20,22 +20,18 @@ public static class EntityConfigXmlDeserializer
 		if (_serializer.Deserialize(reader) is not XmlEntityConfigData xmlEntityConfigData)
 			throw new InvalidOperationException("XML is not valid.");
 
+		if (xmlEntityConfigData.Version != 2)
+			throw new InvalidOperationException($"Unsupported entity config version '{xmlEntityConfigData.Version}'.");
+
 		EntityConfigData entityConfig = new()
 		{
 			Version = xmlEntityConfigData.Version,
 			Entities = xmlEntityConfigData.Entities.ConvertAll(e =>
 			{
-				int indexOfFirstDelimiter = e.Shape.IndexOf(';', StringComparison.Ordinal);
-				if (indexOfFirstDelimiter == -1)
-					throw new InvalidOperationException("Invalid shape format.");
-
-				string shapeId = e.Shape[..indexOfFirstDelimiter];
-				string shapeData = e.Shape[(indexOfFirstDelimiter + 1)..];
-
 				return new EntityDescriptor
 				{
 					Name = e.Name,
-					Shape = EntityShape.FromIdData(shapeId, shapeData),
+					Shape = EntityShape.FromShapeText(e.Shape),
 					Properties = e.Properties.ConvertAll(p => new EntityPropertyDescriptor
 					{
 						Name = p.Name,

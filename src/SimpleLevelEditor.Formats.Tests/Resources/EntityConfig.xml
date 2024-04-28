@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<EntityConfigData Version="1">
+<EntityConfigData Version="2">
 	<Entity Name="PlayerSpawn" Shape="point;billboard_sprite;PlayerIcon;32" />
 	<Entity Name="Light" Shape="point;simple_sphere;255 127 255;0.25">
 		<Property Name="Color" Type="Rgb" DefaultValue="255 255 255" Description="Point light color" />

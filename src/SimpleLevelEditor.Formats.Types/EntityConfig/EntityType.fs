@@ -16,12 +16,18 @@ type EntityShape =
         | Sphere _ -> ShapeDescriptor.Sphere 2f
         | Aabb _   -> ShapeDescriptor.Aabb (-System.Numerics.Vector3.One, System.Numerics.Vector3.One)
 
-    static member FromIdData(id: string, data: string) =
-        match id with
-        | ShapeIds.PointId  -> EntityShape.ParsePointData data
-        | ShapeIds.SphereId -> Sphere(Rgb.FromString data)
-        | ShapeIds.AabbId   -> Aabb(Rgb.FromString data)
-        | _                 -> failwithf $"Unknown entity shape type: %s{id}"
+    static member FromShapeText(shapeText: string) =
+        let indexOfFirstDelimiter = shapeText.IndexOf(';', StringComparison.Ordinal)
+        if indexOfFirstDelimiter = -1 then failwithf $"Invalid shape data: %s{shapeText}"
+
+        let shapeId = shapeText[..(indexOfFirstDelimiter - 1)]
+        let shapeData = shapeText[(indexOfFirstDelimiter + 1)..]
+
+        match shapeId with
+        | ShapeIds.PointId  -> EntityShape.ParsePointData shapeData
+        | ShapeIds.SphereId -> Sphere(Rgb.FromString shapeData)
+        | ShapeIds.AabbId   -> Aabb(Rgb.FromString shapeData)
+        | _                 -> failwithf $"Unknown entity shape type: %s{shapeId}"
 
     static member private ParsePointData(data: string) : EntityShape =
         let indexOfFirstDelimiter = data.IndexOf(';')
