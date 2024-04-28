@@ -16,4 +16,8 @@
     <Compile Include="EntityConfig\EntityPropertyTypeDescriptor.fs" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Update="FSharp.Core" Version="8.0.200" />
+  </ItemGroup>
+
 </Project>

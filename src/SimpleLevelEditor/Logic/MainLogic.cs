@@ -22,7 +22,7 @@ public static class MainLogic
 		if (Input.GlfwInput.IsKeyDown(Keys.ControlLeft) || Input.GlfwInput.IsKeyDown(Keys.ControlRight))
 		{
 			float scroll = Input.GlfwInput.MouseWheelY;
-			if (scroll != 0)
+			if (!scroll.IsZero())
 				LevelEditorState.TargetHeight = Math.Clamp(LevelEditorState.TargetHeight - scroll, -512, 512);
 		}
 

@@ -180,13 +180,13 @@ public static class SceneRenderer
 		for (int i = min; i <= max; i++)
 		{
 			// Prevent rendering grid lines on top of origin lines (Z-fighting).
-			if (LevelEditorState.TargetHeight != 0 || i * LevelEditorState.GridCellSize + offset.X != 0)
+			if (!LevelEditorState.TargetHeight.IsZero() || !(i * LevelEditorState.GridCellSize + offset.X).IsZero())
 			{
 				Gl.UniformMatrix4x4(lineModelUniform, scaleMat * Matrix4x4.CreateTranslation(new Vector3(i * LevelEditorState.GridCellSize, LevelEditorState.TargetHeight, min * LevelEditorState.GridCellSize) + offset));
 				Gl.DrawArrays(PrimitiveType.Lines, 0, 2);
 			}
 
-			if (LevelEditorState.TargetHeight != 0 || i * LevelEditorState.GridCellSize + offset.Z != 0)
+			if (!LevelEditorState.TargetHeight.IsZero() || !(i * LevelEditorState.GridCellSize + offset.Z).IsZero())
 			{
 				Gl.UniformMatrix4x4(lineModelUniform, scaleMat * Matrix4x4.CreateFromAxisAngle(Vector3.UnitY, MathF.PI / 2) * Matrix4x4.CreateTranslation(new Vector3(min * LevelEditorState.GridCellSize, LevelEditorState.TargetHeight, i * LevelEditorState.GridCellSize) + offset));
 				Gl.DrawArrays(PrimitiveType.Lines, 0, 2);

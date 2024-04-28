@@ -1,4 +1,5 @@
 using Silk.NET.GLFW;
+using SimpleLevelEditor.Extensions;
 
 namespace SimpleLevelEditor.Rendering;
 
@@ -44,7 +45,7 @@ public static class Camera3d
 			HandleMouse();
 
 			float scroll = Input.GlfwInput.MouseWheelY;
-			if (scroll != 0 && !Input.GlfwInput.IsKeyDown(Keys.ControlLeft) && !Input.GlfwInput.IsKeyDown(Keys.ControlRight))
+			if (!scroll.IsZero() && !Input.GlfwInput.IsKeyDown(Keys.ControlLeft) && !Input.GlfwInput.IsKeyDown(Keys.ControlRight))
 				_zoom = Math.Max(_zoom - scroll, 1);
 
 			if (!Input.GlfwInput.IsKeyDown(Keys.ControlLeft) && !Input.GlfwInput.IsKeyDown(Keys.ControlRight))

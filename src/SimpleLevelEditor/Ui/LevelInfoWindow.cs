@@ -1,5 +1,6 @@
 using Detach;
 using ImGuiNET;
+using SimpleLevelEditor.Extensions;
 using SimpleLevelEditor.Formats.EntityConfig.Model;
 using SimpleLevelEditor.Formats.Level.Model;
 using SimpleLevelEditor.State;
@@ -101,13 +102,13 @@ public static class LevelInfoWindow
 					ImGuiUtils.TextOptional(defaultValue);
 
 					ImGui.TableNextColumn();
-					ImGuiUtils.TextOptional(step, property.Type.Step == 0);
+					ImGuiUtils.TextOptional(step, property.Type.Step.IsZero());
 
 					ImGui.TableNextColumn();
-					ImGuiUtils.TextOptional(minValue, property.Type.MinValue == 0);
+					ImGuiUtils.TextOptional(minValue, property.Type.MinValue.IsZero());
 
 					ImGui.TableNextColumn();
-					ImGuiUtils.TextOptional(maxValue, property.Type.MaxValue == 0);
+					ImGuiUtils.TextOptional(maxValue, property.Type.MaxValue.IsZero());
 				}
 
 				ImGui.EndTable();
