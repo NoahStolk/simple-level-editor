@@ -97,7 +97,7 @@ public class LevelSerializationTests
 				new EntityProperty
 				{
 					Key = "Color",
-					Value = Types.Level.EntityPropertyValue.NewRgb(new Color.Rgb(255, 255, 255)),
+					Value = Types.Level.EntityPropertyValue.NewRgb(new Rgb(255, 255, 255)),
 				},
 				new EntityProperty
 				{
@@ -117,7 +117,7 @@ public class LevelSerializationTests
 				new EntityProperty
 				{
 					Key = "Color",
-					Value = Types.Level.EntityPropertyValue.NewRgb(new Color.Rgb(255, 47, 0)),
+					Value = Types.Level.EntityPropertyValue.NewRgb(new Rgb(255, 47, 0)),
 				},
 				new EntityProperty
 				{
@@ -137,7 +137,7 @@ public class LevelSerializationTests
 				new EntityProperty
 				{
 					Key = "Color",
-					Value = Types.Level.EntityPropertyValue.NewRgb(new Color.Rgb(0, 40, 255)),
+					Value = Types.Level.EntityPropertyValue.NewRgb(new Rgb(0, 40, 255)),
 				},
 				new EntityProperty
 				{

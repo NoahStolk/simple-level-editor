@@ -74,8 +74,8 @@ public static class EntityConfigXmlDeserializer
 					ParseUtils.TryReadFloat(property.MinValue, out float minValue) ? minValue : float.MinValue,
 					ParseUtils.TryReadFloat(property.MaxValue, out float maxValue) ? maxValue : float.MaxValue),
 				XmlEntityConfigPropertyType.String => Types.EntityConfig.EntityPropertyTypeDescriptor.NewStringProperty(property.DefaultValue ?? string.Empty),
-				XmlEntityConfigPropertyType.Rgb => Types.EntityConfig.EntityPropertyTypeDescriptor.NewRgbProperty(ParseUtils.TryReadRgb(property.DefaultValue, out Color.Rgb value) ? value : default),
-				XmlEntityConfigPropertyType.Rgba => Types.EntityConfig.EntityPropertyTypeDescriptor.NewRgbaProperty(ParseUtils.TryReadRgba(property.DefaultValue, out Color.Rgba value) ? value : default),
+				XmlEntityConfigPropertyType.Rgb => Types.EntityConfig.EntityPropertyTypeDescriptor.NewRgbProperty(ParseUtils.TryReadRgb(property.DefaultValue, out Rgb value) ? value : default),
+				XmlEntityConfigPropertyType.Rgba => Types.EntityConfig.EntityPropertyTypeDescriptor.NewRgbaProperty(ParseUtils.TryReadRgba(property.DefaultValue, out Rgba value) ? value : default),
 				_ => throw new InvalidOperationException($"Unknown property type: {property.Type}"),
 			};
 		}

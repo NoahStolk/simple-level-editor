@@ -6,9 +6,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="Color.fs"/>
-    <Compile Include="Level.fs"/>
-    <Compile Include="EntityConfig.fs"/>
+    <Compile Include="Rgb.fs" />
+    <Compile Include="Rgba.fs" />
+    <Compile Include="ShapeIds.fs" />
+    <Compile Include="PropertyIds.fs" />
+    <Compile Include="Level\ShapeDescriptor.fs" />
+    <Compile Include="Level\EntityPropertyValue.fs" />
+    <Compile Include="EntityConfig\EntityType.fs" />
+    <Compile Include="EntityConfig\EntityPropertyTypeDescriptor.fs" />
   </ItemGroup>
 
 </Project>

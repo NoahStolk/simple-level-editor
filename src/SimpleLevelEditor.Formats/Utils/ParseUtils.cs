@@ -67,7 +67,7 @@ internal static class ParseUtils
 		return TryReadFloat(parts[0], out result.X) && TryReadFloat(parts[1], out result.Y) && TryReadFloat(parts[2], out result.Z) && TryReadFloat(parts[3], out result.W);
 	}
 
-	public static bool TryReadRgb(string? str, out Color.Rgb result)
+	public static bool TryReadRgb(string? str, out Rgb result)
 	{
 		result = default;
 
@@ -81,7 +81,7 @@ internal static class ParseUtils
 		return TryReadByte(parts[0], out result.R) && TryReadByte(parts[1], out result.G) && TryReadByte(parts[2], out result.B);
 	}
 
-	public static bool TryReadRgba(string? str, out Color.Rgba result)
+	public static bool TryReadRgba(string? str, out Rgba result)
 	{
 		result = default;
 

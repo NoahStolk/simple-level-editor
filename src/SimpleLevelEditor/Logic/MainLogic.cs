@@ -2,7 +2,7 @@ using Detach.Collisions;
 using Silk.NET.GLFW;
 using SimpleLevelEditor.Extensions;
 using SimpleLevelEditor.Formats.Level.Model;
-using SimpleLevelEditor.Formats.Types;
+using SimpleLevelEditor.Formats.Types.Level;
 using SimpleLevelEditor.Rendering;
 using SimpleLevelEditor.State;
 using SimpleLevelEditor.Ui.ChildWindows;
@@ -216,8 +216,8 @@ public static class MainLogic
 
 			return entity.Shape switch
 			{
-				Level.ShapeDescriptor.Sphere sphere => IntersectsSphere(entity.Position, sphere.Radius),
-				Level.ShapeDescriptor.Aabb aabb => Ray.IntersectsAxisAlignedBoundingBox(rayStartPosition, rayDirection, entity.Position + aabb.Min, entity.Position + aabb.Max)?.Distance,
+				ShapeDescriptor.Sphere sphere => IntersectsSphere(entity.Position, sphere.Radius),
+				ShapeDescriptor.Aabb aabb => Ray.IntersectsAxisAlignedBoundingBox(rayStartPosition, rayDirection, entity.Position + aabb.Min, entity.Position + aabb.Max)?.Distance,
 				_ => throw new UnreachableException($"Unknown entity shape: {entity.Shape}"),
 			};
 		}

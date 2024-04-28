@@ -53,6 +53,7 @@ public static class MeshContainer
 			if (modelData.Meshes.Count == 0)
 				continue;
 
+			// TODO: Support multiple meshes.
 			Mesh mainMesh = GetMesh(modelData, modelData.Meshes[0]);
 			uint vao = CreateFromMesh(mainMesh);
 

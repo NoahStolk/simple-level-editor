@@ -1,20 +1,9 @@
-module SimpleLevelEditor.Formats.Types.EntityConfig
+namespace SimpleLevelEditor.Formats.Types.EntityConfig
 
 open System
 open System.Numerics
 open SimpleLevelEditor.Formats.Types
 open SimpleLevelEditor.Formats.Types.Level
-
-type EntityShape =
-    | Point
-    | Sphere
-    | Aabb
-
-    member this.GetDefaultDescriptor() =
-        match this with
-        | Point  -> ShapeDescriptor.Point
-        | Sphere -> ShapeDescriptor.Sphere 2f
-        | Aabb   -> ShapeDescriptor.Aabb (-Vector3.One, Vector3.One)
 
 type EntityPropertyTypeDescriptor =
     | BoolProperty    of DefaultValue: bool
@@ -24,8 +13,8 @@ type EntityPropertyTypeDescriptor =
     | Vector3Property of DefaultValue: Vector3 * Step: Nullable<float32> * MinValue: Nullable<float32> * MaxValue: Nullable<float32>
     | Vector4Property of DefaultValue: Vector4 * Step: Nullable<float32> * MinValue: Nullable<float32> * MaxValue: Nullable<float32>
     | StringProperty  of DefaultValue: string
-    | RgbProperty     of DefaultValue: Color.Rgb
-    | RgbaProperty    of DefaultValue: Color.Rgba
+    | RgbProperty     of DefaultValue: Rgb
+    | RgbaProperty    of DefaultValue: Rgba
 
     member this.DefaultValue =
         match this with
@@ -68,15 +57,15 @@ type EntityPropertyTypeDescriptor =
 
     member this.GetTypeId() =
         match this with
-        | BoolProperty    _ -> BoolId
-        | IntProperty     _ -> IntId
-        | FloatProperty   _ -> FloatId
-        | Vector2Property _ -> Vector2Id
-        | Vector3Property _ -> Vector3Id
-        | Vector4Property _ -> Vector4Id
-        | StringProperty  _ -> StringId
-        | RgbProperty     _ -> RgbId
-        | RgbaProperty    _ -> RgbaId
+        | BoolProperty    _ -> PropertyIds.BoolId
+        | IntProperty     _ -> PropertyIds.IntId
+        | FloatProperty   _ -> PropertyIds.FloatId
+        | Vector2Property _ -> PropertyIds.Vector2Id
+        | Vector3Property _ -> PropertyIds.Vector3Id
+        | Vector4Property _ -> PropertyIds.Vector4Id
+        | StringProperty  _ -> PropertyIds.StringId
+        | RgbProperty     _ -> PropertyIds.RgbId
+        | RgbaProperty    _ -> PropertyIds.RgbaId
 
     member this.GetDisplayColor() =
         match this with

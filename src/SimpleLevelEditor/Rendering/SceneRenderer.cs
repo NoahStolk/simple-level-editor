@@ -3,7 +3,7 @@ using Silk.NET.OpenGL;
 using SimpleLevelEditor.Content;
 using SimpleLevelEditor.Extensions;
 using SimpleLevelEditor.Formats.Level.Model;
-using SimpleLevelEditor.Formats.Types;
+using SimpleLevelEditor.Formats.Types.Level;
 using SimpleLevelEditor.State;
 using SimpleLevelEditor.Utils;
 using static SimpleLevelEditor.Graphics;
@@ -286,7 +286,7 @@ public static class SceneRenderer
 			else
 				color = new(0.75f, 0, 0.75f, 1);
 
-			if (entity.Shape is Level.ShapeDescriptor.Aabb aabb)
+			if (entity.Shape is ShapeDescriptor.Aabb aabb)
 			{
 				Vector3 size = aabb.Max - aabb.Min;
 				Vector3 center = (aabb.Max + aabb.Min) / 2;
@@ -295,7 +295,7 @@ public static class SceneRenderer
 				Gl.BindVertexArray(_cubeVao);
 				Gl.DrawArrays(PrimitiveType.Lines, 0, 24);
 			}
-			else if (entity.Shape is Level.ShapeDescriptor.Sphere sphere)
+			else if (entity.Shape is ShapeDescriptor.Sphere sphere)
 			{
 				Gl.UniformMatrix4x4(modelUniform, Matrix4x4.CreateScale(sphere.Radius) * Matrix4x4.CreateTranslation(entity.Position));
 				Gl.Uniform4(colorUniform, color);
