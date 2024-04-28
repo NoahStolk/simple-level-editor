@@ -3,8 +3,10 @@ using ImGuiNET;
 using SimpleLevelEditor.Extensions;
 using SimpleLevelEditor.Formats.EntityConfig.Model;
 using SimpleLevelEditor.Formats.Level.Model;
+using SimpleLevelEditor.Formats.Types.EntityConfig;
 using SimpleLevelEditor.State;
 using SimpleLevelEditor.Utils;
+using System.Diagnostics;
 using System.Globalization;
 
 namespace SimpleLevelEditor.Ui;
@@ -49,10 +51,54 @@ public static class LevelInfoWindow
 			for (int i = 0; i < entityConfig.Entities.Count; i++)
 			{
 				EntityDescriptor entity = entityConfig.Entities[i];
+				ImGui.SetNextItemOpen(true, ImGuiCond.Appearing);
 				if (ImGui.TreeNode(entity.Name))
 				{
-					ImGui.Text(Inline.Span($"Name: {entity.Name}"));
-					ImGui.Text(Inline.Span($"Shape: {entity.Shape.ToString()}"));
+					ImGui.Text(Inline.Span($"Shape: {entity.Shape.GetTypeId()}"));
+
+					ImGui.SetNextItemOpen(true, ImGuiCond.Appearing);
+					if (ImGui.TreeNode(Inline.Span($"Editor visualization##{entity.Name}")))
+					{
+						if (entity.Shape is EntityShape.Point point)
+						{
+							ImGui.Text(Inline.Span($"Type: {point.Visualization.GetTypeId()}"));
+							if (point.Visualization is PointEntityVisualization.SimpleSphere simpleSphere)
+							{
+								ImGui.Text(Inline.Span($"Color: {simpleSphere.Color.ToString()}"));
+								ImGui.Text(Inline.Span($"Radius: {simpleSphere.Radius}"));
+							}
+							else if (point.Visualization is PointEntityVisualization.BillboardSprite billboardSprite)
+							{
+								ImGui.Text(Inline.Span($"Texture: {billboardSprite.TextureName}"));
+								ImGui.Text(Inline.Span($"Size: {billboardSprite.Size}"));
+							}
+							else if (point.Visualization is PointEntityVisualization.Mesh mesh)
+							{
+								ImGui.Text(Inline.Span($"Mesh: {mesh.MeshName}"));
+								ImGui.Text(Inline.Span($"Texture: {mesh.TextureName}"));
+								ImGui.Text(Inline.Span($"Scale: {mesh.Size}"));
+							}
+							else
+							{
+								throw new UnreachableException($"Unknown point visualization type: {point.Visualization.GetTypeId()}");
+							}
+						}
+						else if (entity.Shape is EntityShape.Sphere sphere)
+						{
+							ImGui.Text(Inline.Span($"Color: {sphere.Color.ToString()}"));
+						}
+						else if (entity.Shape is EntityShape.Aabb aabb)
+						{
+							ImGui.Text(Inline.Span($"Color: {aabb.Color.ToString()}"));
+						}
+						else
+						{
+							throw new UnreachableException($"Unknown entity shape type: {entity.Shape.GetTypeId()}");
+						}
+
+						ImGui.TreePop();
+					}
+
 					if (entity.Properties.Count > 0)
 					{
 						RenderEntityProperties(i, entity);
@@ -68,6 +114,7 @@ public static class LevelInfoWindow
 
 	private static void RenderEntityProperties(int i, EntityDescriptor entity)
 	{
+		ImGui.SetNextItemOpen(true, ImGuiCond.Appearing);
 		if (ImGui.TreeNode(Inline.Span($"Properties##{i}")))
 		{
 			if (ImGui.BeginTable(Inline.Span($"PropertiesTable{i}"), 6))
