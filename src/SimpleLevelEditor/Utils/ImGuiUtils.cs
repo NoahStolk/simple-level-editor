@@ -30,7 +30,7 @@ public static class ImGuiUtils
 		ImGui.TextColored(text == null ? Color.Gray(0.5f) : Color.White, text ?? "N/A");
 	}
 
-	public static void TextOptional(string text, bool isOptional)
+	public static void TextOptional(ReadOnlySpan<char> text, bool isOptional)
 	{
 		ImGui.TextColored(isOptional ? Color.Gray(0.5f) : Color.White, isOptional ? "N/A" : text);
 	}

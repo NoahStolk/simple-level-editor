@@ -1,4 +1,5 @@
 using Detach;
+using Detach.Numerics;
 using ImGuiNET;
 using SimpleLevelEditor.Extensions;
 using SimpleLevelEditor.Formats.EntityConfig.Model;
@@ -54,61 +55,82 @@ public static class LevelInfoWindow
 				ImGui.SetNextItemOpen(true, ImGuiCond.Appearing);
 				if (ImGui.TreeNode(entity.Name))
 				{
-					ImGui.Text(Inline.Span($"Shape: {entity.Shape.GetTypeId()}"));
-
-					ImGui.SetNextItemOpen(true, ImGuiCond.Appearing);
-					if (ImGui.TreeNode(Inline.Span($"Editor visualization##{entity.Name}")))
-					{
-						if (entity.Shape is EntityShape.Point point)
-						{
-							ImGui.Text(Inline.Span($"Type: {point.Visualization.GetTypeId()}"));
-							if (point.Visualization is PointEntityVisualization.SimpleSphere simpleSphere)
-							{
-								ImGui.Text(Inline.Span($"Color: {simpleSphere.Color.ToString()}"));
-								ImGui.Text(Inline.Span($"Radius: {simpleSphere.Radius}"));
-							}
-							else if (point.Visualization is PointEntityVisualization.BillboardSprite billboardSprite)
-							{
-								ImGui.Text(Inline.Span($"Texture: {billboardSprite.TextureName}"));
-								ImGui.Text(Inline.Span($"Size: {billboardSprite.Size}"));
-							}
-							else if (point.Visualization is PointEntityVisualization.Mesh mesh)
-							{
-								ImGui.Text(Inline.Span($"Mesh: {mesh.MeshName}"));
-								ImGui.Text(Inline.Span($"Texture: {mesh.TextureName}"));
-								ImGui.Text(Inline.Span($"Scale: {mesh.Size}"));
-							}
-							else
-							{
-								throw new UnreachableException($"Unknown point visualization type: {point.Visualization.GetTypeId()}");
-							}
-						}
-						else if (entity.Shape is EntityShape.Sphere sphere)
-						{
-							ImGui.Text(Inline.Span($"Color: {sphere.Color.ToString()}"));
-						}
-						else if (entity.Shape is EntityShape.Aabb aabb)
-						{
-							ImGui.Text(Inline.Span($"Color: {aabb.Color.ToString()}"));
-						}
-						else
-						{
-							throw new UnreachableException($"Unknown entity shape type: {entity.Shape.GetTypeId()}");
-						}
-
-						ImGui.TreePop();
-					}
-
-					if (entity.Properties.Count > 0)
-					{
-						RenderEntityProperties(i, entity);
-					}
-
+					RenderEntity(i, entity);
 					ImGui.TreePop();
 				}
 			}
 
 			ImGui.TreePop();
+		}
+	}
+
+	private static void RenderEntity(int i, EntityDescriptor entity)
+	{
+		ImGui.Text(Inline.Span($"Shape: {entity.Shape.GetTypeId()}"));
+
+		ImGui.SetNextItemOpen(true, ImGuiCond.Appearing);
+		if (ImGui.TreeNode(Inline.Span($"Editor visualization##{entity.Name}")))
+		{
+			if (ImGui.BeginTable(Inline.Span($"EditorVisualizationTable{i}"), 2))
+			{
+				ImGui.TableSetupColumn("Property", ImGuiTableColumnFlags.WidthFixed, 96);
+				ImGui.TableSetupColumn("Value");
+				ImGui.TableHeadersRow();
+
+				switch (entity.Shape)
+				{
+					case EntityShape.Point point:
+						NextColumnTextColored(Color.Green, "Type");
+						NextColumnText(point.Visualization.GetTypeId());
+
+						switch (point.Visualization)
+						{
+							case PointEntityVisualization.SimpleSphere simpleSphere:
+								NextColumnTextColored(Color.Yellow, "Color");
+								NextColumnText(simpleSphere.Color.ToString());
+								NextColumnTextColored(Color.Orange, "Radius");
+								NextColumnText(simpleSphere.Radius.ToString(CultureInfo.InvariantCulture));
+								break;
+							case PointEntityVisualization.BillboardSprite billboardSprite:
+								NextColumnTextColored(Color.Purple, "Texture");
+								NextColumnText(billboardSprite.TextureName);
+								NextColumnTextColored(Color.Aqua, "Size");
+								NextColumnText(billboardSprite.Size.ToString(CultureInfo.InvariantCulture));
+								break;
+							case PointEntityVisualization.Mesh mesh:
+								NextColumnTextColored(Color.Red, "Mesh");
+								NextColumnText(mesh.MeshName);
+								NextColumnTextColored(Color.Purple, "Texture");
+								NextColumnText(mesh.TextureName);
+								NextColumnTextColored(Color.Aqua, "Size");
+								NextColumnText(mesh.Size.ToString(CultureInfo.InvariantCulture));
+								break;
+							default:
+								throw new UnreachableException($"Unknown point visualization type: {point.Visualization.GetTypeId()}");
+						}
+
+						break;
+					case EntityShape.Sphere sphere:
+						NextColumnTextColored(Color.Yellow, "Color");
+						NextColumnText(sphere.Color.ToString());
+						break;
+					case EntityShape.Aabb aabb:
+						NextColumnTextColored(Color.Yellow, "Color");
+						NextColumnText(aabb.Color.ToString());
+						break;
+					default:
+						throw new UnreachableException($"Unknown entity shape type: {entity.Shape.GetTypeId()}");
+				}
+
+				ImGui.EndTable();
+			}
+
+			ImGui.TreePop();
+		}
+
+		if (entity.Properties.Count > 0)
+		{
+			RenderEntityProperties(i, entity);
 		}
 	}
 
@@ -139,23 +161,12 @@ public static class LevelInfoWindow
 
 					ImGui.TableNextRow();
 
-					ImGui.TableNextColumn();
-					ImGui.TextColored(color, typeId);
-
-					ImGui.TableNextColumn();
-					ImGui.Text(property.Name);
-
-					ImGui.TableNextColumn();
-					ImGuiUtils.TextOptional(defaultValue);
-
-					ImGui.TableNextColumn();
-					ImGuiUtils.TextOptional(step, property.Type.Step.IsZero());
-
-					ImGui.TableNextColumn();
-					ImGuiUtils.TextOptional(minValue, property.Type.MinValue.IsZero());
-
-					ImGui.TableNextColumn();
-					ImGuiUtils.TextOptional(maxValue, property.Type.MaxValue.IsZero());
+					NextColumnTextColored(color, typeId);
+					NextColumnText(property.Name);
+					NextColumnTextOptional(defaultValue);
+					NextColumnTextOptional(step, property.Type.Step.IsZero());
+					NextColumnTextOptional(minValue, property.Type.MinValue.IsZero());
+					NextColumnTextOptional(maxValue, property.Type.MaxValue.IsZero());
 				}
 
 				ImGui.EndTable();
@@ -163,5 +174,29 @@ public static class LevelInfoWindow
 
 			ImGui.TreePop();
 		}
+	}
+
+	private static void NextColumnText(ReadOnlySpan<char> text)
+	{
+		ImGui.TableNextColumn();
+		ImGui.Text(text);
+	}
+
+	private static void NextColumnTextColored(Vector4 color, ReadOnlySpan<char> text)
+	{
+		ImGui.TableNextColumn();
+		ImGui.TextColored(color, text);
+	}
+
+	private static void NextColumnTextOptional(string? text)
+	{
+		ImGui.TableNextColumn();
+		ImGuiUtils.TextOptional(text);
+	}
+
+	private static void NextColumnTextOptional(ReadOnlySpan<char> text, bool condition)
+	{
+		ImGui.TableNextColumn();
+		ImGuiUtils.TextOptional(text, condition);
 	}
 }
