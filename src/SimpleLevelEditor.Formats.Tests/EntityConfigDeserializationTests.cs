@@ -26,7 +26,7 @@ public class EntityConfigDeserializationTests
 		using FileStream fs = File.OpenRead(Path.Combine("Resources", "EntityConfig.xml"));
 		EntityConfigData data = EntityConfigXmlDeserializer.ReadEntityConfig(fs);
 
-		Assert.AreEqual(1, data.Version);
+		Assert.AreEqual(2, data.Version);
 		Assert.AreEqual(3, data.Entities.Count);
 
 		EntityDescriptor entity = data.Entities[0];
