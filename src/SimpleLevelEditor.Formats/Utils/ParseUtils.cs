@@ -3,6 +3,7 @@ using System.Globalization;
 
 namespace SimpleLevelEditor.Formats.Utils;
 
+[Obsolete("Use DataFormatExtensions from the F# library instead.")]
 internal static class ParseUtils
 {
 	public static bool TryReadBool(string? str, out bool result)

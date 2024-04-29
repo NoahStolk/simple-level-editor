@@ -43,6 +43,7 @@ public static class EntityConfigXmlDeserializer
 
 		return entityConfig;
 
+		// TODO: Move this to F#.
 		static Types.EntityConfig.EntityPropertyTypeDescriptor CreatePropertyType(XmlEntityConfigProperty property)
 		{
 			return property.Type switch
