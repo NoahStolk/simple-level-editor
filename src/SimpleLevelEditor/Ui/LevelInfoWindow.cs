@@ -4,6 +4,7 @@ using ImGuiNET;
 using SimpleLevelEditor.Extensions;
 using SimpleLevelEditor.Formats.EntityConfig.Model;
 using SimpleLevelEditor.Formats.Level.Model;
+using SimpleLevelEditor.Formats.Types;
 using SimpleLevelEditor.Formats.Types.EntityConfig;
 using SimpleLevelEditor.State;
 using SimpleLevelEditor.Utils;
@@ -87,7 +88,7 @@ public static class LevelInfoWindow
 						{
 							case PointEntityVisualization.SimpleSphere simpleSphere:
 								NextColumnTextColored(Color.Yellow, "Color");
-								NextColumnText(simpleSphere.Color.ToString());
+								NextColumnText(ToColorString(simpleSphere.Color));
 								NextColumnTextColored(Color.Orange, "Radius");
 								NextColumnText(simpleSphere.Radius.ToString(CultureInfo.InvariantCulture));
 								break;
@@ -112,11 +113,11 @@ public static class LevelInfoWindow
 						break;
 					case EntityShape.Sphere sphere:
 						NextColumnTextColored(Color.Yellow, "Color");
-						NextColumnText(sphere.Color.ToString());
+						NextColumnText(ToColorString(sphere.Color));
 						break;
 					case EntityShape.Aabb aabb:
 						NextColumnTextColored(Color.Yellow, "Color");
-						NextColumnText(aabb.Color.ToString());
+						NextColumnText(ToColorString(aabb.Color));
 						break;
 					default:
 						throw new UnreachableException($"Unknown entity shape type: {entity.Shape.GetTypeId()}");
@@ -132,6 +133,12 @@ public static class LevelInfoWindow
 		{
 			RenderEntityProperties(i, entity);
 		}
+	}
+
+	private static string ToColorString(Rgb rgb)
+	{
+		// TODO: Use F# ToDataString instead.
+		return $"{rgb.R} {rgb.G} {rgb.B}";
 	}
 
 	private static void RenderEntityProperties(int i, EntityDescriptor entity)

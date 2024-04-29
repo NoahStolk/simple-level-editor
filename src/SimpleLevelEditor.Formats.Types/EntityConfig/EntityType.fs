@@ -1,7 +1,6 @@
 namespace SimpleLevelEditor.Formats.Types.EntityConfig
 
 open System
-open System.Globalization
 open SimpleLevelEditor.Formats.Types
 open SimpleLevelEditor.Formats.Types.Level
 
@@ -31,8 +30,8 @@ type EntityShape =
 
         match shapeId with
         | ShapeIds.PointId  -> EntityShape.ParsePointData shapeData
-        | ShapeIds.SphereId -> Sphere(Rgb.FromString shapeData)
-        | ShapeIds.AabbId   -> Aabb(Rgb.FromString shapeData)
+        | ShapeIds.SphereId -> Sphere(Rgb.FromDataString shapeData)
+        | ShapeIds.AabbId   -> Aabb(Rgb.FromDataString shapeData)
         | _                 -> failwithf $"Unknown entity shape type: %s{shapeId}"
 
     static member private ParsePointData(data: string) : EntityShape =
@@ -50,15 +49,15 @@ type EntityShape =
     static member private ParsePointSimpleSphereData(data: string) : PointEntityVisualization =
         let parts = data.Split(';')
         if parts.Length <> 2 then failwithf $"Invalid point simple sphere data: %s{data}"
-        let rgb = Rgb.FromString parts[0]
-        let radius = Single.Parse(parts[1], CultureInfo.InvariantCulture)
+        let rgb = Rgb.FromDataString parts[0]
+        let radius = Single.FromDataString(parts[1])
         PointEntityVisualization.SimpleSphere (rgb, radius)
 
     static member private ParsePointBillboardSpriteData(data: string) : PointEntityVisualization =
         let parts = data.Split(';')
         if parts.Length <> 2 then failwithf $"Invalid point billboard sprite data: %s{data}"
         let textureId = parts[0]
-        let size = Single.Parse(parts[1], CultureInfo.InvariantCulture)
+        let size = Single.FromDataString(parts[1])
         PointEntityVisualization.BillboardSprite (textureId, size)
 
     static member private ParsePointMeshData(data: string) : PointEntityVisualization =
@@ -66,5 +65,5 @@ type EntityShape =
         if parts.Length <> 3 then failwithf $"Invalid point mesh data: %s{data}"
         let meshName = parts[0]
         let textureName = parts[1]
-        let size = Single.Parse(parts[2], CultureInfo.InvariantCulture)
+        let size = Single.FromDataString(parts[2])
         PointEntityVisualization.Mesh (meshName, textureName, size)
