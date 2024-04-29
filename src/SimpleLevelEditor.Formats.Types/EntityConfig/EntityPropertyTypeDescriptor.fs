@@ -57,15 +57,15 @@ type EntityPropertyTypeDescriptor =
 
     member this.GetTypeId() =
         match this with
-        | BoolProperty    _ -> PropertyIds.BoolId
-        | IntProperty     _ -> PropertyIds.IntId
-        | FloatProperty   _ -> PropertyIds.FloatId
-        | Vector2Property _ -> PropertyIds.Vector2Id
-        | Vector3Property _ -> PropertyIds.Vector3Id
-        | Vector4Property _ -> PropertyIds.Vector4Id
-        | StringProperty  _ -> PropertyIds.StringId
-        | RgbProperty     _ -> PropertyIds.RgbId
-        | RgbaProperty    _ -> PropertyIds.RgbaId
+        | BoolProperty    _ -> TypeIds.BoolId
+        | IntProperty     _ -> TypeIds.IntId
+        | FloatProperty   _ -> TypeIds.FloatId
+        | Vector2Property _ -> TypeIds.Vector2Id
+        | Vector3Property _ -> TypeIds.Vector3Id
+        | Vector4Property _ -> TypeIds.Vector4Id
+        | StringProperty  _ -> TypeIds.StringId
+        | RgbProperty     _ -> TypeIds.RgbId
+        | RgbaProperty    _ -> TypeIds.RgbaId
 
     member this.GetDisplayColor() =
         match this with

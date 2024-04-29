@@ -10,7 +10,7 @@
     <Compile Include="Rgba.fs" />
     <Compile Include="DataFormatExtensions.fs" />
     <Compile Include="ShapeIds.fs" />
-    <Compile Include="PropertyIds.fs" />
+    <Compile Include="TypeIds.fs" />
     <Compile Include="Level\ShapeDescriptor.fs" />
     <Compile Include="Level\EntityPropertyValue.fs" />
     <Compile Include="EntityConfig\EntityType.fs" />

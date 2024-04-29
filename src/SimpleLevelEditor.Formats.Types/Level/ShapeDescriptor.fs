@@ -27,19 +27,19 @@ type ShapeDescriptor =
         | Sphere r        -> r.ToDataString
         | Aabb (min, max) -> $"{min.ToDataString} {max.ToDataString}"
 
-    static member FromShapeId(shapeId: string, shapeData: string) =
-        match shapeId with
+    static member FromShapeId(id: string, data: string) =
+        match id with
         | ShapeIds.PointId  -> Point
-        | ShapeIds.SphereId -> ShapeDescriptor.ParseSphereData(shapeData)
-        | ShapeIds.AabbId   -> ShapeDescriptor.ParseAabbData(shapeData)
-        | _                 -> failwithf $"Unknown shape id: %s{shapeId}"
+        | ShapeIds.SphereId -> ShapeDescriptor.ParseSphereData(data)
+        | ShapeIds.AabbId   -> ShapeDescriptor.ParseAabbData(data)
+        | _                 -> failwithf $"Unknown shape id: %s{id}"
 
-    static member private ParseSphereData(sphereData: String) =
-        Sphere(Single.FromDataString(sphereData))
+    static member private ParseSphereData(data: String) =
+        Sphere(Single.FromDataString(data))
 
-    static member private ParseAabbData(aabbData: String) =
-        let parts = aabbData.Split(' ')
-        if parts.Length <> 6 then failwithf $"Invalid point data: %s{aabbData}"
+    static member private ParseAabbData(data: String) =
+        let parts = data.Split(' ')
+        if parts.Length <> 6 then failwithf $"Invalid point data: %s{data}"
         Aabb(
             Vector3(Single.FromDataString(parts[0]), Single.FromDataString(parts[1]), Single.FromDataString(parts[2])),
             Vector3(Single.FromDataString(parts[3]), Single.FromDataString(parts[4]), Single.FromDataString(parts[5])))

@@ -17,15 +17,15 @@ type EntityPropertyValue =
 
     member this.GetTypeId() =
         match this with
-        | Bool    _ -> PropertyIds.BoolId
-        | Int     _ -> PropertyIds.IntId
-        | Float   _ -> PropertyIds.FloatId
-        | Vector2 _ -> PropertyIds.Vector2Id
-        | Vector3 _ -> PropertyIds.Vector3Id
-        | Vector4 _ -> PropertyIds.Vector4Id
-        | String  _ -> PropertyIds.StringId
-        | Rgb     _ -> PropertyIds.RgbId
-        | Rgba    _ -> PropertyIds.RgbaId
+        | Bool    _ -> TypeIds.BoolId
+        | Int     _ -> TypeIds.IntId
+        | Float   _ -> TypeIds.FloatId
+        | Vector2 _ -> TypeIds.Vector2Id
+        | Vector3 _ -> TypeIds.Vector3Id
+        | Vector4 _ -> TypeIds.Vector4Id
+        | String  _ -> TypeIds.StringId
+        | Rgb     _ -> TypeIds.RgbId
+        | Rgba    _ -> TypeIds.RgbaId
 
     member this.WriteValue() =
         match this with
@@ -39,15 +39,15 @@ type EntityPropertyValue =
         | Rgb     v -> v.ToDataString
         | Rgba    v -> v.ToDataString
 
-    static member FromTypeId(typeId: string, value: string) =
-        match typeId with
-        | PropertyIds.BoolId    -> EntityPropertyValue.Bool(bool.FromDataString(value))
-        | PropertyIds.IntId     -> EntityPropertyValue.Int(Int32.FromDataString(value))
-        | PropertyIds.FloatId   -> EntityPropertyValue.Float(Single.FromDataString(value))
-        | PropertyIds.Vector2Id -> EntityPropertyValue.Vector2(Vector2.FromDataString(value))
-        | PropertyIds.Vector3Id -> EntityPropertyValue.Vector3(Vector3.FromDataString(value))
-        | PropertyIds.Vector4Id -> EntityPropertyValue.Vector4(Vector4.FromDataString(value))
-        | PropertyIds.StringId  -> EntityPropertyValue.String(value)
-        | PropertyIds.RgbId     -> EntityPropertyValue.Rgb(Rgb.FromDataString(value))
-        | PropertyIds.RgbaId    -> EntityPropertyValue.Rgba(Rgba.FromDataString(value))
-        | _         -> failwithf $"Unknown type id: %s{typeId}"
+    static member FromTypeId(id: string, data: string) =
+        match id with
+        | TypeIds.BoolId    -> EntityPropertyValue.Bool(bool.FromDataString(data))
+        | TypeIds.IntId     -> EntityPropertyValue.Int(Int32.FromDataString(data))
+        | TypeIds.FloatId   -> EntityPropertyValue.Float(Single.FromDataString(data))
+        | TypeIds.Vector2Id -> EntityPropertyValue.Vector2(Vector2.FromDataString(data))
+        | TypeIds.Vector3Id -> EntityPropertyValue.Vector3(Vector3.FromDataString(data))
+        | TypeIds.Vector4Id -> EntityPropertyValue.Vector4(Vector4.FromDataString(data))
+        | TypeIds.StringId  -> EntityPropertyValue.String(data)
+        | TypeIds.RgbId     -> EntityPropertyValue.Rgb(Rgb.FromDataString(data))
+        | TypeIds.RgbaId    -> EntityPropertyValue.Rgba(Rgba.FromDataString(data))
+        | _         -> failwithf $"Unknown type id: %s{id}"

@@ -1,6 +1,6 @@
 namespace SimpleLevelEditor.Formats.Types
 
-module PropertyIds =
+module TypeIds =
     [<Literal>]
     let BoolId = "bool"
 
