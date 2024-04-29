@@ -8,6 +8,7 @@
   <ItemGroup>
     <Compile Include="Rgb.fs" />
     <Compile Include="Rgba.fs" />
+    <Compile Include="DataFormatExtensions.fs" />
     <Compile Include="ShapeIds.fs" />
     <Compile Include="PropertyIds.fs" />
     <Compile Include="Level\ShapeDescriptor.fs" />

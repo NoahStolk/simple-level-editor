@@ -1,7 +1,6 @@
 namespace SimpleLevelEditor.Formats.Types.Level
 
 open System
-open System.Globalization
 open System.Numerics
 open SimpleLevelEditor.Formats.Types
 
@@ -30,37 +29,25 @@ type EntityPropertyValue =
 
     member this.WriteValue() =
         match this with
-        | Bool    v -> v.ToString(CultureInfo.InvariantCulture).ToLowerInvariant()
-        | Int     v -> v.ToString(CultureInfo.InvariantCulture)
-        | Float   v -> v.ToString(CultureInfo.InvariantCulture)
-        | Vector2 v -> $"{v.X.ToString(CultureInfo.InvariantCulture)} {v.Y.ToString(CultureInfo.InvariantCulture)}";
-        | Vector3 v -> $"{v.X.ToString(CultureInfo.InvariantCulture)} {v.Y.ToString(CultureInfo.InvariantCulture)} {v.Z.ToString(CultureInfo.InvariantCulture)}"
-        | Vector4 v -> $"{v.X.ToString(CultureInfo.InvariantCulture)} {v.Y.ToString(CultureInfo.InvariantCulture)} {v.Z.ToString(CultureInfo.InvariantCulture)} {v.W.ToString(CultureInfo.InvariantCulture)}"
+        | Bool    v -> v.ToDataString
+        | Int     v -> v.ToDataString
+        | Float   v -> v.ToDataString
+        | Vector2 v -> v.ToDataString
+        | Vector3 v -> v.ToDataString
+        | Vector4 v -> v.ToDataString
         | String  v -> v
-        | Rgb     v -> $"{v.R.ToString(CultureInfo.InvariantCulture)} {v.G.ToString(CultureInfo.InvariantCulture)} {v.B.ToString(CultureInfo.InvariantCulture)}"
-        | Rgba    v -> $"{v.R.ToString(CultureInfo.InvariantCulture)} {v.G.ToString(CultureInfo.InvariantCulture)} {v.B.ToString(CultureInfo.InvariantCulture)} {v.A.ToString(CultureInfo.InvariantCulture)}"
+        | Rgb     v -> v.ToDataString
+        | Rgba    v -> v.ToDataString
 
     static member FromTypeId(typeId: string, value: string) =
         match typeId with
-        | PropertyIds.BoolId    -> EntityPropertyValue.Bool(bool.Parse(value))
-        | PropertyIds.IntId     -> EntityPropertyValue.Int(Int32.Parse(value, CultureInfo.InvariantCulture))
-        | PropertyIds.FloatId   -> EntityPropertyValue.Float(Single.Parse(value, CultureInfo.InvariantCulture))
-        | PropertyIds.Vector2Id ->
-            let split = value.Split(' ')
-            EntityPropertyValue.Vector2(new Vector2(Single.Parse(split[0], CultureInfo.InvariantCulture), Single.Parse(split[1], CultureInfo.InvariantCulture)))
-        | PropertyIds.Vector3Id ->
-            let split = value.Split(' ')
-            EntityPropertyValue.Vector3(new Vector3(Single.Parse(split[0], CultureInfo.InvariantCulture), Single.Parse(split[1], CultureInfo.InvariantCulture), Single.Parse(split[2], CultureInfo.InvariantCulture)))
-        | PropertyIds.Vector4Id ->
-            let split = value.Split(' ')
-            EntityPropertyValue.Vector4(new Vector4(Single.Parse(split[0], CultureInfo.InvariantCulture), Single.Parse(split[1], CultureInfo.InvariantCulture), Single.Parse(split[2], CultureInfo.InvariantCulture), Single.Parse(split[3], CultureInfo.InvariantCulture)))
+        | PropertyIds.BoolId    -> EntityPropertyValue.Bool(bool.FromDataString(value))
+        | PropertyIds.IntId     -> EntityPropertyValue.Int(Int32.FromDataString(value))
+        | PropertyIds.FloatId   -> EntityPropertyValue.Float(Single.FromDataString(value))
+        | PropertyIds.Vector2Id -> EntityPropertyValue.Vector2(Vector2.FromDataString(value))
+        | PropertyIds.Vector3Id -> EntityPropertyValue.Vector3(Vector3.FromDataString(value))
+        | PropertyIds.Vector4Id -> EntityPropertyValue.Vector4(Vector4.FromDataString(value))
         | PropertyIds.StringId  -> EntityPropertyValue.String(value)
-        | PropertyIds.RgbId     ->
-            let split = value.Split(' ')
-            let rgb = SimpleLevelEditor.Formats.Types.Rgb(Byte.Parse(split[0], CultureInfo.InvariantCulture), Byte.Parse(split[1], CultureInfo.InvariantCulture), Byte.Parse(split[2], CultureInfo.InvariantCulture));
-            EntityPropertyValue.Rgb(rgb)
-        | PropertyIds.RgbaId    ->
-            let split = value.Split(' ')
-            let rgba = SimpleLevelEditor.Formats.Types.Rgba(Byte.Parse(split[0], CultureInfo.InvariantCulture), Byte.Parse(split[1], CultureInfo.InvariantCulture), Byte.Parse(split[2], CultureInfo.InvariantCulture), Byte.Parse(split[3], CultureInfo.InvariantCulture));
-            EntityPropertyValue.Rgba(rgba)
+        | PropertyIds.RgbId     -> EntityPropertyValue.Rgb(Rgb.FromDataString(value))
+        | PropertyIds.RgbaId    -> EntityPropertyValue.Rgba(Rgba.FromDataString(value))
         | _         -> failwithf $"Unknown type id: %s{typeId}"

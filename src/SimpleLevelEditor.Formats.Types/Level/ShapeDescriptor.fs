@@ -1,7 +1,6 @@
 namespace SimpleLevelEditor.Formats.Types.Level
 
 open System
-open System.Globalization
 open System.Numerics
 open SimpleLevelEditor.Formats.Types
 
@@ -25,16 +24,22 @@ type ShapeDescriptor =
     member this.WriteValue() =
         match this with
         | Point           -> ""
-        | Sphere r        -> r.ToString(CultureInfo.InvariantCulture)
-        | Aabb (min, max) -> $"{min.X.ToString(CultureInfo.InvariantCulture)} {min.Y.ToString(CultureInfo.InvariantCulture)} {min.Z.ToString(CultureInfo.InvariantCulture)} {max.X.ToString(CultureInfo.InvariantCulture)} {max.Y.ToString(CultureInfo.InvariantCulture)} {max.Z.ToString(CultureInfo.InvariantCulture)}"
+        | Sphere r        -> r.ToDataString
+        | Aabb (min, max) -> $"{min.ToDataString} {max.ToDataString}"
 
-    static member FromShapeId(shapeId: string, value: string) =
+    static member FromShapeId(shapeId: string, shapeData: string) =
         match shapeId with
         | ShapeIds.PointId  -> Point
-        | ShapeIds.SphereId -> Sphere(Single.Parse(value, CultureInfo.InvariantCulture))
-        | ShapeIds.AabbId   ->
-            let split = value.Split(' ')
-            Aabb(
-                Vector3(Single.Parse(split[0], CultureInfo.InvariantCulture), Single.Parse(split[1], CultureInfo.InvariantCulture), Single.Parse(split[2], CultureInfo.InvariantCulture)),
-                Vector3(Single.Parse(split[3], CultureInfo.InvariantCulture), Single.Parse(split[4], CultureInfo.InvariantCulture), Single.Parse(split[5], CultureInfo.InvariantCulture)))
-        | _        -> failwithf $"Unknown shape id: %s{shapeId}"
+        | ShapeIds.SphereId -> ShapeDescriptor.ParseSphereData(shapeData)
+        | ShapeIds.AabbId   -> ShapeDescriptor.ParseAabbData(shapeData)
+        | _                 -> failwithf $"Unknown shape id: %s{shapeId}"
+
+    static member private ParseSphereData(sphereData: String) =
+        Sphere(Single.FromDataString(sphereData))
+
+    static member private ParseAabbData(aabbData: String) =
+        let parts = aabbData.Split(' ')
+        if parts.Length <> 6 then failwithf $"Invalid point data: %s{aabbData}"
+        Aabb(
+            Vector3(Single.FromDataString(parts[0]), Single.FromDataString(parts[1]), Single.FromDataString(parts[2])),
+            Vector3(Single.FromDataString(parts[3]), Single.FromDataString(parts[4]), Single.FromDataString(parts[5])))

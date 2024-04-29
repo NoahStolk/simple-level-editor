@@ -7,5 +7,5 @@ type Rgb =
         val mutable G: byte
         val mutable B: byte
 
-        new (r, g, b) = { R = r; G = g; B = b }
+        new(r, g, b) = { R = r; G = g; B = b }
     end

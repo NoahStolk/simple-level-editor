@@ -8,5 +8,5 @@ type Rgba =
         val mutable B: byte
         val mutable A: byte
 
-        new (r, g, b, a) = { R = r; G = g; B = b; A = a }
+        new(r, g, b, a) = { R = r; G = g; B = b; A = a }
     end
