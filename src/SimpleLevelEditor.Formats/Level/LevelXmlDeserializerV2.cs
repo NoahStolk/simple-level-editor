@@ -1,5 +1,7 @@
+using Microsoft.FSharp.Core;
 using SimpleLevelEditor.Formats.Level.Model;
 using SimpleLevelEditor.Formats.Level.XmlModel;
+using SimpleLevelEditor.Formats.Types.Level;
 using SimpleLevelEditor.Formats.Utils;
 using System.Xml;
 using System.Xml.Serialization;
@@ -36,17 +38,31 @@ internal static class LevelXmlDeserializerV2
 				})
 				.ToList(),
 			Entities = xmlEntityConfigData.Entities
-				.Select((e, i) => new Entity
+				.Select((e, i) =>
 				{
-					Id = i + 1,
-					Shape = LevelXmlDataFormatter.ReadShape(e.Shape),
-					Name = e.Name,
-					Position = ParseUtils.TryReadVector3(e.Position, out Vector3 position) ? position : Vector3.Zero,
-					Properties = e.Properties.ConvertAll(p => new EntityProperty
+					FSharpOption<ShapeDescriptor>? shape = ShapeDescriptor.FromShapeData(e.Shape);
+					if (shape == null)
+						throw new InvalidOperationException($"Shape {e.Shape} is not valid.");
+
+					return new Entity
 					{
-						Key = p.Name,
-						Value = LevelXmlDataFormatter.ReadProperty(p.Value),
-					}),
+						Id = i + 1,
+						Shape = shape.Value,
+						Name = e.Name,
+						Position = ParseUtils.TryReadVector3(e.Position, out Vector3 position) ? position : Vector3.Zero,
+						Properties = e.Properties.ConvertAll(p =>
+						{
+							FSharpOption<EntityPropertyValue>? value = EntityPropertyValue.FromTypeData(p.Value);
+							if (value == null)
+								throw new InvalidOperationException($"Property {p.Value} value is not valid.");
+
+							return new EntityProperty
+							{
+								Key = p.Name,
+								Value = value.Value,
+							};
+						}),
+					};
 				})
 				.ToList(),
 		};
