@@ -52,14 +52,15 @@ public static class SceneRenderer
 	private static readonly Vector3[] _pointVertices = GetSphereVertexPositions(3, 6, 1);
 	private static readonly uint _pointVao = VaoUtils.CreateLineVao(_pointVertices);
 
-	private static readonly Vector2[] _planeVertices =
+	private static readonly float[] _planeVertices =
 	[
-		new(-0.5f, -0.5f),
-		new(0.5f, -0.5f),
-		new(0.5f, 0.5f),
-		new(-0.5f, 0.5f),
+		-0.5f, -0.5f, 0, 0, 0,
+		-0.5f, 0.5f, 0, 0, 1,
+		0.5f, -0.5f, 0, 1, 0,
+		0.5f, 0.5f, 0, 1, 1,
 	];
 	private static readonly uint _planeVao = VaoUtils.CreatePlaneVao(_planeVertices);
+	private static readonly uint[] _planeIndices = [0, 1, 2, 2, 1, 3];
 
 	private static Vector3[] GetSphereVertexPositions(uint horizontalLines, uint verticalLines, float radius)
 	{
@@ -131,6 +132,9 @@ public static class SceneRenderer
 
 		ShaderCacheEntry spriteShader = InternalContent.Shaders["Sprite"];
 		Gl.UseProgram(spriteShader.Id);
+
+		Gl.UniformMatrix4x4(spriteShader.GetUniformLocation("view"), Camera3d.ViewMatrix);
+		Gl.UniformMatrix4x4(spriteShader.GetUniformLocation("projection"), Camera3d.Projection);
 
 		RenderEntitiesWithSpriteShader(spriteShader);
 	}
@@ -264,7 +268,6 @@ public static class SceneRenderer
 		for (int i = 0; i < LevelState.Level.WorldObjects.Count; i++)
 		{
 			WorldObject worldObject = LevelState.Level.WorldObjects[i];
-			Gl.UniformMatrix4x4(modelUniform, worldObject.GetModelMatrix());
 
 			MeshEntry? mesh = MeshContainer.GetMesh(worldObject.Mesh);
 			if (mesh == null)
@@ -273,6 +276,8 @@ public static class SceneRenderer
 			uint? textureId = TextureContainer.GetTexture(worldObject.Texture);
 			if (textureId == null)
 				continue;
+
+			Gl.UniformMatrix4x4(modelUniform, worldObject.GetModelMatrix());
 
 			Gl.BindTexture(TextureTarget.Texture2D, textureId.Value);
 
@@ -335,8 +340,6 @@ public static class SceneRenderer
 			EntityShape? entityShape = GetEntityShape(entity);
 			if (entityShape is EntityShape.Point { Visualization: PointEntityVisualization.Mesh meshVisualization })
 			{
-				Gl.UniformMatrix4x4(modelUniform, Matrix4x4.CreateTranslation(entity.Position));
-
 				MeshEntry? mesh = MeshContainer.GetMesh(meshVisualization.MeshName);
 				if (mesh == null)
 					continue;
@@ -344,6 +347,8 @@ public static class SceneRenderer
 				uint? textureId = TextureContainer.GetTexture(meshVisualization.TextureName);
 				if (textureId == null)
 					continue;
+
+				Gl.UniformMatrix4x4(modelUniform, Matrix4x4.CreateTranslation(entity.Position));
 
 				Gl.BindTexture(TextureTarget.Texture2D, textureId.Value);
 
@@ -354,9 +359,9 @@ public static class SceneRenderer
 		}
 	}
 
-	// TODO: Implement sprite rendering.
 	private static unsafe void RenderEntitiesWithSpriteShader(ShaderCacheEntry spriteShader)
 	{
+		int modelUniform = spriteShader.GetUniformLocation("model");
 		for (int i = 0; i < LevelState.Level.Entities.Count; i++)
 		{
 			Entity entity = LevelState.Level.Entities[i];
@@ -370,11 +375,16 @@ public static class SceneRenderer
 				if (textureId == null)
 					continue;
 
+				// Negate the camera up vector because rendered textures are flipped vertically.
+				Matrix4x4 billboardMatrix = Matrix4x4.CreateBillboard(entity.Position, Camera3d.Position, -Camera3d.UpDirection, Camera3d.LookDirection);
+
+				Gl.UniformMatrix4x4(modelUniform, Matrix4x4.CreateScale(new Vector3(billboardSprite.Size, billboardSprite.Size, 1)) * billboardMatrix);
+
 				Gl.BindTexture(TextureTarget.Texture2D, textureId.Value);
 
 				Gl.BindVertexArray(_planeVao);
-				// fixed (uint* indexPtr = &_mesh.Indices[0])
-				// 	Gl.DrawElements((PrimitiveType)_mesh.TriangleRenderMode, (uint)_mesh.Indices.Length, DrawElementsType.UnsignedInt, indexPtr);
+				fixed (uint* indexPtr = &_planeIndices[0])
+					Gl.DrawElements(PrimitiveType.Triangles, (uint)_planeIndices.Length, DrawElementsType.UnsignedInt, indexPtr);
 			}
 		}
 	}

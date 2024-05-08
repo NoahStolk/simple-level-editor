@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <EntityConfigData Version="2">
 	<Entity Name="Point_SimpleSphere" Shape="point;simple_sphere;255 127 255;0.25"/>
-	<Entity Name="Point_BillboardSprite" Shape="point;billboard_sprite;tex\Blue.tga;32"/>
+	<Entity Name="Point_BillboardSprite" Shape="point;billboard_sprite;tex\Blue.tga;0.5"/>
 	<Entity Name="Point_Mesh" Shape="point;mesh;mesh\DebugArrow.obj;tex\Bricks.tga;0.5"/>
 	<Entity Name="Sphere" Shape="sphere;255 0 0"/>
 	<Entity Name="Aabb" Shape="aabb;0 255 255"/>
-	<Entity Name="Light" Shape="point;billboard_sprite;tex\LightIcon.tga;32">
+	<Entity Name="Light" Shape="point;billboard_sprite;tex\LightIcon.tga;0.5">
 		<Property Name="Color" Type="Rgb" DefaultValue="255 255 255" Description="Point light color"/>
 		<Property Name="Radius" Type="Float" DefaultValue="5" Step="1" MinValue="1" MaxValue="1000" Description="Point light radius"/>
 		<Property Name="Shadow" Type="Bool" Description="Whether the light casts shadows"/>
@@ -16,7 +16,7 @@
 		<Property Name="Scale" Type="Vector3" DefaultValue="1 1 1" Step="0.1" MinValue="0.01" MaxValue="1000" Description="The scale of the mesh used"/>
 		<Property Name="Mass" Type="Float" DefaultValue="1" Step="0.1" MinValue="0.01" MaxValue="1000" Description="The mass of the dynamic physics object"/>
 	</Entity>
-	<Entity Name="AudioSource" Shape="point;billboard_sprite;tex\AudioSourceIcon.tga;32">
+	<Entity Name="AudioSource" Shape="point;billboard_sprite;tex\AudioSourceIcon.tga;0.5">
 		<Property Name="Audio" Type="String" Description="File name (without extension) of the audio to be played"/>
 		<Property Name="Gain" Type="Float" DefaultValue="1" Step="0.1" MinValue="0" MaxValue="1" Description="The gain of the audio"/>
 		<Property Name="Pitch" Type="Float" DefaultValue="1" Step="0.1" MinValue="0.05" MaxValue="2" Description="The pitch of the audio"/>

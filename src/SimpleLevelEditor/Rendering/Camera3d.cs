@@ -27,6 +27,9 @@ public static class Camera3d
 	public static CameraMode Mode { get; private set; }
 	public static Vector3 FocusPointTarget { get; private set; }
 
+	public static Vector3 UpDirection => Vector3.Transform(Vector3.UnitY, Rotation);
+	public static Vector3 LookDirection => Vector3.Transform(Vector3.UnitZ, Rotation);
+
 	public static void SetFocusPoint(Vector3 focusPoint)
 	{
 		FocusPointTarget = focusPoint;
@@ -73,9 +76,7 @@ public static class Camera3d
 		_focusPoint = Vector3.Lerp(_focusPoint, FocusPointTarget, dt * 10);
 		Position = _focusPoint + Vector3.Transform(new(0, 0, -_zoom), Rotation);
 
-		Vector3 upDirection = Vector3.Transform(Vector3.UnitY, Rotation);
-		Vector3 lookDirection = Vector3.Transform(Vector3.UnitZ, Rotation);
-		ViewMatrix = Matrix4x4.CreateLookAt(Position, Position + lookDirection, upDirection);
+		ViewMatrix = Matrix4x4.CreateLookAt(Position, Position + LookDirection, UpDirection);
 
 		const float nearPlaneDistance = 0.05f;
 		const float farPlaneDistance = 10000f;

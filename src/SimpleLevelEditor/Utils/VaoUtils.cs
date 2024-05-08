@@ -26,7 +26,7 @@ public static class VaoUtils
 		return lineVao;
 	}
 
-	public static unsafe uint CreatePlaneVao(Vector2[] vertices)
+	public static unsafe uint CreatePlaneVao(float[] vertexComponents)
 	{
 		uint planeVao = Gl.GenVertexArray();
 		Gl.BindVertexArray(planeVao);
@@ -34,11 +34,15 @@ public static class VaoUtils
 		uint vbo = Gl.GenBuffer();
 		Gl.BindBuffer(BufferTargetARB.ArrayBuffer, vbo);
 
-		fixed (Vector2* v = &vertices[0])
-			Gl.BufferData(BufferTargetARB.ArrayBuffer, (uint)(vertices.Length * sizeof(Vector2)), v, BufferUsageARB.StaticDraw);
+		const int vertexSize = 5 * sizeof(float);
+		fixed (float* v = &vertexComponents[0])
+			Gl.BufferData(BufferTargetARB.ArrayBuffer, (uint)(vertexComponents.Length * vertexSize), v, BufferUsageARB.StaticDraw);
 
 		Gl.EnableVertexAttribArray(0);
-		Gl.VertexAttribPointer(0, 2, VertexAttribPointerType.Float, false, (uint)sizeof(Vector2), (void*)0);
+		Gl.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, vertexSize, (void*)0);
+
+		Gl.EnableVertexAttribArray(1);
+		Gl.VertexAttribPointer(1, 2, VertexAttribPointerType.Float, false, vertexSize, (void*)(3 * sizeof(float)));
 
 		Gl.BindVertexArray(0);
 		Gl.BindBuffer(BufferTargetARB.ArrayBuffer, 0);
