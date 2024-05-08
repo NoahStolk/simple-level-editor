@@ -25,4 +25,25 @@ public static class VaoUtils
 
 		return lineVao;
 	}
+
+	public static unsafe uint CreatePlaneVao(Vector2[] vertices)
+	{
+		uint planeVao = Gl.GenVertexArray();
+		Gl.BindVertexArray(planeVao);
+
+		uint vbo = Gl.GenBuffer();
+		Gl.BindBuffer(BufferTargetARB.ArrayBuffer, vbo);
+
+		fixed (Vector2* v = &vertices[0])
+			Gl.BufferData(BufferTargetARB.ArrayBuffer, (uint)(vertices.Length * sizeof(Vector2)), v, BufferUsageARB.StaticDraw);
+
+		Gl.EnableVertexAttribArray(0);
+		Gl.VertexAttribPointer(0, 2, VertexAttribPointerType.Float, false, (uint)sizeof(Vector2), (void*)0);
+
+		Gl.BindVertexArray(0);
+		Gl.BindBuffer(BufferTargetARB.ArrayBuffer, 0);
+		Gl.DeleteBuffer(vbo);
+
+		return planeVao;
+	}
 }

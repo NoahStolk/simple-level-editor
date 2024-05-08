@@ -1,18 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Level Version="2" EntityConfig="EntityConfig.xml">
 	<Meshes>
+		<Mesh Path="mesh\ActivatorButton.obj" />
+		<Mesh Path="mesh\Base.obj" />
+		<Mesh Path="mesh\Bullet.obj" />
 		<Mesh Path="mesh\Cone.obj" />
 		<Mesh Path="mesh\Cube.obj" />
 		<Mesh Path="mesh\Cylinder.obj" />
+		<Mesh Path="mesh\DebugArrow.obj" />
+		<Mesh Path="mesh\ExitBase.obj" />
+		<Mesh Path="mesh\ExitSpiral.obj" />
+		<Mesh Path="mesh\Hook.obj" />
 		<Mesh Path="mesh\PillarBase.obj" />
 		<Mesh Path="mesh\Plane.obj" />
 		<Mesh Path="mesh\Ramp.obj" />
+		<Mesh Path="mesh\Relic.obj" />
+		<Mesh Path="mesh\Sphere.obj" />
+		<Mesh Path="mesh\Top.obj" />
+		<Mesh Path="mesh\Weapon.obj" />
 	</Meshes>
 	<Textures>
+		<Texture Path="tex\AudioSourceIcon.tga" />
+		<Texture Path="tex\Blue.tga" />
 		<Texture Path="tex\Bricks.tga" />
+		<Texture Path="tex\BricksGreen.tga" />
+		<Texture Path="tex\BricksMoss0.tga" />
+		<Texture Path="tex\BricksMoss1.tga" />
+		<Texture Path="tex\BricksMoss2.tga" />
+		<Texture Path="tex\BricksVertical.tga" />
+		<Texture Path="tex\Combine0.tga" />
 		<Texture Path="tex\Dirt.tga" />
 		<Texture Path="tex\Grass1.tga" />
+		<Texture Path="tex\Grass2.tga" />
 		<Texture Path="tex\Gravel.tga" />
+		<Texture Path="tex\LightIcon.tga" />
+		<Texture Path="tex\TileBlueWhite.tga" />
+		<Texture Path="tex\TileOrangeWhite.tga" />
 		<Texture Path="tex\TilesGray.tga" />
 	</Textures>
 	<WorldObjects>
