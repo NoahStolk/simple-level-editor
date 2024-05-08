@@ -12,4 +12,6 @@ type Rgba =
         val mutable A: byte
 
         new(r, g, b, a) = { R = r; G = g; B = b; A = a }
+
+        static member Default = Rgba(0uy, 0uy, 0uy, 0uy)
     end

@@ -8,7 +8,7 @@ public record XmlEntityConfigProperty
 	public required string Name { get; init; }
 
 	[XmlAttribute]
-	public required XmlEntityConfigPropertyType Type { get; init; }
+	public required string Type { get; init; }
 
 	[XmlAttribute]
 	public string? Description { get; init; }

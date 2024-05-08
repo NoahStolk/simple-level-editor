@@ -7,11 +7,11 @@ open SimpleLevelEditor.Formats.Types.Level
 
 type EntityPropertyTypeDescriptor =
     | BoolProperty    of DefaultValue: bool
-    | IntProperty     of DefaultValue: int     * Step: Nullable<int>     * MinValue: Nullable<int>     * MaxValue: Nullable<int>
-    | FloatProperty   of DefaultValue: float32 * Step: Nullable<float32> * MinValue: Nullable<float32> * MaxValue: Nullable<float32>
-    | Vector2Property of DefaultValue: Vector2 * Step: Nullable<float32> * MinValue: Nullable<float32> * MaxValue: Nullable<float32>
-    | Vector3Property of DefaultValue: Vector3 * Step: Nullable<float32> * MinValue: Nullable<float32> * MaxValue: Nullable<float32>
-    | Vector4Property of DefaultValue: Vector4 * Step: Nullable<float32> * MinValue: Nullable<float32> * MaxValue: Nullable<float32>
+    | IntProperty     of DefaultValue: int     * Step: Option<int>     * MinValue: Option<int>     * MaxValue: Option<int>
+    | FloatProperty   of DefaultValue: float32 * Step: Option<float32> * MinValue: Option<float32> * MaxValue: Option<float32>
+    | Vector2Property of DefaultValue: Vector2 * Step: Option<float32> * MinValue: Option<float32> * MaxValue: Option<float32>
+    | Vector3Property of DefaultValue: Vector3 * Step: Option<float32> * MinValue: Option<float32> * MaxValue: Option<float32>
+    | Vector4Property of DefaultValue: Vector4 * Step: Option<float32> * MinValue: Option<float32> * MaxValue: Option<float32>
     | StringProperty  of DefaultValue: string
     | RgbProperty     of DefaultValue: Rgb
     | RgbaProperty    of DefaultValue: Rgba
@@ -30,29 +30,29 @@ type EntityPropertyTypeDescriptor =
 
     member this.Step : float32 =
         match this with
-        | IntProperty     (_, step, _, _) -> if step.HasValue then float32 step.Value else 0f
-        | FloatProperty   (_, step, _, _) -> if step.HasValue then step.Value else 0f
-        | Vector2Property (_, step, _, _) -> if step.HasValue then step.Value else 0f
-        | Vector3Property (_, step, _, _) -> if step.HasValue then step.Value else 0f
-        | Vector4Property (_, step, _, _) -> if step.HasValue then step.Value else 0f
+        | IntProperty     (_, step, _, _) -> if step.IsSome then float32 step.Value else 0f
+        | FloatProperty   (_, step, _, _) -> if step.IsSome then step.Value else 0f
+        | Vector2Property (_, step, _, _) -> if step.IsSome then step.Value else 0f
+        | Vector3Property (_, step, _, _) -> if step.IsSome then step.Value else 0f
+        | Vector4Property (_, step, _, _) -> if step.IsSome then step.Value else 0f
         | _ -> 0f
 
     member this.MinValue : float32 =
         match this with
-        | IntProperty     (_, _, min, _) -> if min.HasValue then float32 min.Value else 0f
-        | FloatProperty   (_, _, min, _) -> if min.HasValue then min.Value else 0f
-        | Vector2Property (_, _, min, _) -> if min.HasValue then min.Value else 0f
-        | Vector3Property (_, _, min, _) -> if min.HasValue then min.Value else 0f
-        | Vector4Property (_, _, min, _) -> if min.HasValue then min.Value else 0f
+        | IntProperty     (_, _, min, _) -> if min.IsSome then float32 min.Value else 0f
+        | FloatProperty   (_, _, min, _) -> if min.IsSome then min.Value else 0f
+        | Vector2Property (_, _, min, _) -> if min.IsSome then min.Value else 0f
+        | Vector3Property (_, _, min, _) -> if min.IsSome then min.Value else 0f
+        | Vector4Property (_, _, min, _) -> if min.IsSome then min.Value else 0f
         | _ -> 0f
 
     member this.MaxValue : float32 =
         match this with
-        | IntProperty     (_, _, _, max) -> if max.HasValue then float32 max.Value else 0f
-        | FloatProperty   (_, _, _, max) -> if max.HasValue then max.Value else 0f
-        | Vector2Property (_, _, _, max) -> if max.HasValue then max.Value else 0f
-        | Vector3Property (_, _, _, max) -> if max.HasValue then max.Value else 0f
-        | Vector4Property (_, _, _, max) -> if max.HasValue then max.Value else 0f
+        | IntProperty     (_, _, _, max) -> if max.IsSome then float32 max.Value else 0f
+        | FloatProperty   (_, _, _, max) -> if max.IsSome then max.Value else 0f
+        | Vector2Property (_, _, _, max) -> if max.IsSome then max.Value else 0f
+        | Vector3Property (_, _, _, max) -> if max.IsSome then max.Value else 0f
+        | Vector4Property (_, _, _, max) -> if max.IsSome then max.Value else 0f
         | _ -> 0f
 
     member this.GetTypeId() =
@@ -78,3 +78,16 @@ type EntityPropertyTypeDescriptor =
         | StringProperty  _ -> new Vector4(1.00f, 0.50f, 0.00f, 1.00f)
         | RgbProperty     _ -> new Vector4(1.00f, 0.75f, 0.00f, 1.00f)
         | RgbaProperty    _ -> new Vector4(1.00f, 1.00f, 0.00f, 1.00f)
+
+    static member FromXmlData(propertyType: string, defaultValue: Option<string>, step: Option<string>, minValue: Option<string>, maxValue: Option<string>) : EntityPropertyTypeDescriptor =
+        match propertyType with
+        | "Bool"    -> BoolProperty    (defaultValue.IsSome && Boolean.FromDataString defaultValue.Value)
+        | "Int"     -> IntProperty     ((if defaultValue.IsNone then 0            else Int32.FromDataString   defaultValue.Value), step |> Option.map int32,   minValue |> Option.map int32,   maxValue |> Option.map int32)
+        | "Float"   -> FloatProperty   ((if defaultValue.IsNone then 0f           else Single.FromDataString  defaultValue.Value), step |> Option.map float32, minValue |> Option.map float32, maxValue |> Option.map float32)
+        | "Vector2" -> Vector2Property ((if defaultValue.IsNone then Vector2.Zero else Vector2.FromDataString defaultValue.Value), step |> Option.map float32, minValue |> Option.map float32, maxValue |> Option.map float32)
+        | "Vector3" -> Vector3Property ((if defaultValue.IsNone then Vector3.Zero else Vector3.FromDataString defaultValue.Value), step |> Option.map float32, minValue |> Option.map float32, maxValue |> Option.map float32)
+        | "Vector4" -> Vector4Property ((if defaultValue.IsNone then Vector4.Zero else Vector4.FromDataString defaultValue.Value), step |> Option.map float32, minValue |> Option.map float32, maxValue |> Option.map float32)
+        | "String"  -> StringProperty  (if defaultValue.IsSome then defaultValue.Value else String.Empty)
+        | "Rgb"     -> RgbProperty     (if defaultValue.IsNone then Rgb.Default   else Rgb.FromDataString     defaultValue.Value)
+        | "Rgba"    -> RgbaProperty    (if defaultValue.IsNone then Rgba.Default  else Rgba.FromDataString    defaultValue.Value)
+        | _ -> failwithf $"Unknown property type: %s{propertyType}"
