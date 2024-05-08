@@ -288,9 +288,7 @@ public static class SceneRenderer
 
 			if (entity.Shape is ShapeDescriptor.Aabb aabb)
 			{
-				Vector3 size = aabb.Max - aabb.Min;
-				Vector3 center = (aabb.Max + aabb.Min) / 2;
-				Gl.UniformMatrix4x4(modelUniform, Matrix4x4.CreateScale(size) * Matrix4x4.CreateTranslation(entity.Position + center));
+				Gl.UniformMatrix4x4(modelUniform, Matrix4x4.CreateScale(aabb.Size) * Matrix4x4.CreateTranslation(entity.Position));
 				Gl.Uniform4(colorUniform, color);
 				Gl.BindVertexArray(_cubeVao);
 				Gl.DrawArrays(PrimitiveType.Lines, 0, 24);

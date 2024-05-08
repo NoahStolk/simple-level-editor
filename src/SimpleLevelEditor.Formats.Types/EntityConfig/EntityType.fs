@@ -13,7 +13,7 @@ type EntityShape =
         match this with
         | Point _  -> ShapeDescriptor.Point
         | Sphere _ -> ShapeDescriptor.Sphere 2f
-        | Aabb _   -> ShapeDescriptor.Aabb (-System.Numerics.Vector3.One, System.Numerics.Vector3.One)
+        | Aabb _   -> ShapeDescriptor.Aabb System.Numerics.Vector3.One
 
     member this.GetTypeId() =
         match this with
@@ -30,8 +30,8 @@ type EntityShape =
 
         match shapeId with
         | ShapeIds.PointId  -> EntityShape.ParsePointData shapeData
-        | ShapeIds.SphereId -> Sphere(Rgb.FromDataString shapeData)
-        | ShapeIds.AabbId   -> Aabb(Rgb.FromDataString shapeData)
+        | ShapeIds.SphereId -> Sphere(Rgb.FromDataString(Some shapeData) |> Option.defaultValue Rgb.Default)
+        | ShapeIds.AabbId   -> Aabb(Rgb.FromDataString(Some shapeData) |> Option.defaultValue Rgb.Default)
         | _                 -> failwithf $"Unknown entity shape type: %s{shapeId}"
 
     static member private ParsePointData(data: string) : EntityShape =
@@ -48,22 +48,22 @@ type EntityShape =
 
     static member private ParsePointSimpleSphereData(data: string) : PointEntityVisualization =
         let parts = data.Split(';')
-        if parts.Length <> 2 then failwithf $"Invalid point simple sphere data: %s{data}"
-        let rgb = Rgb.FromDataString parts[0]
-        let radius = Single.FromDataString(parts[1])
-        PointEntityVisualization.SimpleSphere (rgb, radius)
+        if parts.Length <> 2 then failwithf $"Invalid point simple sphere data: %s{data}" // TODO: Return Option<PointEntityVisualization> instead.
+        let rgb = Rgb.FromDataString(Some parts[0]) |> Option.defaultValue Rgb.Default
+        let radius = Single.FromDataString(Some parts[1]) |> Option.defaultValue 1f
+        PointEntityVisualization.SimpleSphere(rgb, radius)
 
     static member private ParsePointBillboardSpriteData(data: string) : PointEntityVisualization =
         let parts = data.Split(';')
         if parts.Length <> 2 then failwithf $"Invalid point billboard sprite data: %s{data}"
         let textureId = parts[0]
-        let size = Single.FromDataString(parts[1])
-        PointEntityVisualization.BillboardSprite (textureId, size)
+        let size = Single.FromDataString(Some parts[1]) |> Option.defaultValue 1f
+        PointEntityVisualization.BillboardSprite(textureId, size)
 
     static member private ParsePointMeshData(data: string) : PointEntityVisualization =
         let parts = data.Split(';')
         if parts.Length <> 3 then failwithf $"Invalid point mesh data: %s{data}"
         let meshName = parts[0]
         let textureName = parts[1]
-        let size = Single.FromDataString(parts[2])
-        PointEntityVisualization.Mesh (meshName, textureName, size)
+        let size = Single.FromDataString(Some parts[2]) |> Option.defaultValue 1f
+        PointEntityVisualization.Mesh(meshName, textureName, size)

@@ -39,15 +39,33 @@ type EntityPropertyValue =
         | Rgb     v -> v.ToDataString
         | Rgba    v -> v.ToDataString
 
-    static member FromTypeId(id: string, data: string) =
+    static member FromTypeId(id: string, data: string) : Option<EntityPropertyValue> =
         match id with
-        | TypeIds.BoolId    -> EntityPropertyValue.Bool(bool.FromDataString(data))
-        | TypeIds.IntId     -> EntityPropertyValue.Int(Int32.FromDataString(data))
-        | TypeIds.FloatId   -> EntityPropertyValue.Float(Single.FromDataString(data))
-        | TypeIds.Vector2Id -> EntityPropertyValue.Vector2(Vector2.FromDataString(data))
-        | TypeIds.Vector3Id -> EntityPropertyValue.Vector3(Vector3.FromDataString(data))
-        | TypeIds.Vector4Id -> EntityPropertyValue.Vector4(Vector4.FromDataString(data))
-        | TypeIds.StringId  -> EntityPropertyValue.String(data)
-        | TypeIds.RgbId     -> EntityPropertyValue.Rgb(Rgb.FromDataString(data))
-        | TypeIds.RgbaId    -> EntityPropertyValue.Rgba(Rgba.FromDataString(data))
-        | _         -> failwithf $"Unknown type id: %s{id}"
+        | TypeIds.BoolId    -> match bool.FromDataString(Some data) with
+                               | Some v -> Some(EntityPropertyValue.Bool(v))
+                               | None   -> None
+        | TypeIds.IntId     -> match Int32.FromDataString(Some data) with
+                               | Some v -> Some(EntityPropertyValue.Int(v))
+                               | None   -> None
+        | TypeIds.FloatId   -> match Single.FromDataString(Some data) with
+                               | Some v -> Some(EntityPropertyValue.Float(v))
+                               | None   -> None
+        | TypeIds.Vector2Id -> match Vector2.FromDataString(Some data) with
+                               | Some v -> Some(EntityPropertyValue.Vector2(v))
+                               | None   -> None
+        | TypeIds.Vector3Id -> match Vector3.FromDataString(Some data) with
+                               | Some v -> Some(EntityPropertyValue.Vector3(v))
+                               | None   -> None
+        | TypeIds.Vector4Id -> match Vector4.FromDataString(Some data) with
+                               | Some v -> Some(EntityPropertyValue.Vector4(v))
+                               | None   -> None
+        | TypeIds.StringId  -> match Some data with
+                               | Some v -> Some(EntityPropertyValue.String(v))
+                               | None   -> None
+        | TypeIds.RgbId     -> match Rgb.FromDataString(Some data) with
+                               | Some v -> Some(EntityPropertyValue.Rgb(v))
+                               | None   -> None
+        | TypeIds.RgbaId    -> match Rgba.FromDataString(Some data) with
+                               | Some v -> Some(EntityPropertyValue.Rgba(v))
+                               | None   -> None
+        | _                 -> None

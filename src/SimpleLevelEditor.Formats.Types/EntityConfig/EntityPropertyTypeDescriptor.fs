@@ -81,13 +81,13 @@ type EntityPropertyTypeDescriptor =
 
     static member FromXmlData(propertyType: string, defaultValue: Option<string>, step: Option<string>, minValue: Option<string>, maxValue: Option<string>) : EntityPropertyTypeDescriptor =
         match propertyType with
-        | "Bool"    -> BoolProperty    (defaultValue.IsSome && Boolean.FromDataString defaultValue.Value)
-        | "Int"     -> IntProperty     ((if defaultValue.IsNone then 0            else Int32.FromDataString   defaultValue.Value), step |> Option.map int32,   minValue |> Option.map int32,   maxValue |> Option.map int32)
-        | "Float"   -> FloatProperty   ((if defaultValue.IsNone then 0f           else Single.FromDataString  defaultValue.Value), step |> Option.map float32, minValue |> Option.map float32, maxValue |> Option.map float32)
-        | "Vector2" -> Vector2Property ((if defaultValue.IsNone then Vector2.Zero else Vector2.FromDataString defaultValue.Value), step |> Option.map float32, minValue |> Option.map float32, maxValue |> Option.map float32)
-        | "Vector3" -> Vector3Property ((if defaultValue.IsNone then Vector3.Zero else Vector3.FromDataString defaultValue.Value), step |> Option.map float32, minValue |> Option.map float32, maxValue |> Option.map float32)
-        | "Vector4" -> Vector4Property ((if defaultValue.IsNone then Vector4.Zero else Vector4.FromDataString defaultValue.Value), step |> Option.map float32, minValue |> Option.map float32, maxValue |> Option.map float32)
-        | "String"  -> StringProperty  (if defaultValue.IsSome then defaultValue.Value else String.Empty)
-        | "Rgb"     -> RgbProperty     (if defaultValue.IsNone then Rgb.Default   else Rgb.FromDataString     defaultValue.Value)
-        | "Rgba"    -> RgbaProperty    (if defaultValue.IsNone then Rgba.Default  else Rgba.FromDataString    defaultValue.Value)
+        | "Bool"    -> BoolProperty    (Boolean.FromDataString defaultValue |> Option.defaultValue false)
+        | "Int"     -> IntProperty     (Int32.FromDataString   defaultValue |> Option.defaultValue 0,            step |> Option.map int32,   minValue |> Option.map int32,   maxValue |> Option.map int32)
+        | "Float"   -> FloatProperty   (Single.FromDataString  defaultValue |> Option.defaultValue 0f,           step |> Option.map float32, minValue |> Option.map float32, maxValue |> Option.map float32)
+        | "Vector2" -> Vector2Property (Vector2.FromDataString defaultValue |> Option.defaultValue Vector2.Zero, step |> Option.map float32, minValue |> Option.map float32, maxValue |> Option.map float32)
+        | "Vector3" -> Vector3Property (Vector3.FromDataString defaultValue |> Option.defaultValue Vector3.Zero, step |> Option.map float32, minValue |> Option.map float32, maxValue |> Option.map float32)
+        | "Vector4" -> Vector4Property (Vector4.FromDataString defaultValue |> Option.defaultValue Vector4.Zero, step |> Option.map float32, minValue |> Option.map float32, maxValue |> Option.map float32)
+        | "String"  -> StringProperty  (defaultValue                        |> Option.defaultValue String.Empty)
+        | "Rgb"     -> RgbProperty     (Rgb.FromDataString     defaultValue |> Option.defaultValue Rgb.Default)
+        | "Rgba"    -> RgbaProperty    (Rgba.FromDataString    defaultValue |> Option.defaultValue Rgba.Default)
         | _ -> failwithf $"Unknown property type: %s{propertyType}"

@@ -217,7 +217,7 @@ public static class MainLogic
 			return entity.Shape switch
 			{
 				ShapeDescriptor.Sphere sphere => IntersectsSphere(entity.Position, sphere.Radius),
-				ShapeDescriptor.Aabb aabb => Ray.IntersectsAxisAlignedBoundingBox(rayStartPosition, rayDirection, entity.Position + aabb.Min, entity.Position + aabb.Max)?.Distance,
+				ShapeDescriptor.Aabb aabb => Ray.IntersectsAxisAlignedBoundingBox(rayStartPosition, rayDirection, entity.Position - aabb.Size / 2f, entity.Position + aabb.Size / 2f)?.Distance,
 				_ => throw new UnreachableException($"Unknown entity shape: {entity.Shape}"),
 			};
 		}
