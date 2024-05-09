@@ -310,7 +310,9 @@ public static class SceneRenderer
 				}
 				else if (point.Visualization is PointEntityVisualization.BillboardSprite billboardSprite)
 				{
-					RenderEdges(lineShader, _planeVao, _planeIndices, Matrix4x4.CreateScale(billboardSprite.Size) * Matrix4x4.CreateTranslation(entity.Position), GetColor(entity, new Rgb(255, 127, 63)));
+					// TODO: Use different VAO and line indices.
+					Matrix4x4 modelMatrix = Matrix4x4.CreateScale(billboardSprite.Size) * EntityMatrixUtils.GetBillboardMatrix(entity);
+					RenderEdges(lineShader, _planeVao, _planeIndices, modelMatrix, GetColor(entity, new Rgb(255, 127, 63)));
 				}
 			}
 			else if (entityShape is EntityShape.Sphere sphere)
@@ -383,10 +385,7 @@ public static class SceneRenderer
 				if (textureId == null)
 					continue;
 
-				// Negate the camera up vector because rendered textures are flipped vertically.
-				Matrix4x4 billboardMatrix = Matrix4x4.CreateBillboard(entity.Position, Camera3d.Position, -Camera3d.UpDirection, Camera3d.LookDirection);
-
-				Gl.UniformMatrix4x4(modelUniform, Matrix4x4.CreateScale(new Vector3(billboardSprite.Size, billboardSprite.Size, 1)) * billboardMatrix);
+				Gl.UniformMatrix4x4(modelUniform, Matrix4x4.CreateScale(new Vector3(billboardSprite.Size, billboardSprite.Size, 1)) * EntityMatrixUtils.GetBillboardMatrix(entity));
 
 				Gl.BindTexture(TextureTarget.Texture2D, textureId.Value);
 
