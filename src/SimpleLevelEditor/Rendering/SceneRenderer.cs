@@ -229,6 +229,9 @@ public static class SceneRenderer
 
 	private static void RenderEdges(ShaderCacheEntry lineShader, WorldObject worldObject, Vector4 color)
 	{
+		if (color.W < float.Epsilon)
+			return;
+
 		MeshEntry? mesh = MeshContainer.GetMesh(worldObject.Mesh);
 		if (mesh == null)
 			return;
@@ -240,6 +243,9 @@ public static class SceneRenderer
 
 	private static void RenderEdges(ShaderCacheEntry lineShader, string meshName, Vector3 position, Vector4 color)
 	{
+		if (color.W < float.Epsilon)
+			return;
+
 		MeshEntry? mesh = MeshContainer.GetMesh(meshName);
 		if (mesh != null)
 			RenderEdges(lineShader, mesh.LineVao, mesh.LineIndices, Matrix4x4.CreateTranslation(position), color);
@@ -247,6 +253,9 @@ public static class SceneRenderer
 
 	private static unsafe void RenderEdges(ShaderCacheEntry lineShader, uint lineVao, uint[] meshLineIndices, Matrix4x4 modelMatrix, Vector4 color)
 	{
+		if (color.W < float.Epsilon)
+			return;
+
 		int lineModelUniform = lineShader.GetUniformLocation("model");
 		int lineColorUniform = lineShader.GetUniformLocation("color");
 

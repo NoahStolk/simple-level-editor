@@ -212,7 +212,7 @@ public static class MainLogic
 				return point.Visualization switch
 				{
 					PointEntityVisualization.SimpleSphere simpleSphere => IntersectsSphere(entity.Position, simpleSphere.Radius),
-					PointEntityVisualization.BillboardSprite billboardSprite => RaycastPlane(Matrix4x4.CreateScale(billboardSprite.Size) * EntityMatrixUtils.GetBillboardMatrix(entity), rayStartPosition, rayDirection),
+					PointEntityVisualization.BillboardSprite billboardSprite => RaycastPlane(Matrix4x4.CreateScale(billboardSprite.Size * 0.5f) * EntityMatrixUtils.GetBillboardMatrix(entity), rayStartPosition, rayDirection),
 					PointEntityVisualization.Mesh mesh => RaycastEntityMesh(Matrix4x4.CreateScale(mesh.Size * 2) * Matrix4x4.CreateTranslation(entity.Position), MeshContainer.GetMesh(mesh.MeshName)?.Mesh, rayStartPosition, rayDirection),
 					_ => throw new InvalidOperationException($"Unknown point entity visualization: {point.Visualization}"),
 				};
@@ -227,11 +227,10 @@ public static class MainLogic
 
 			static float? RaycastPlane(Matrix4x4 modelMatrix, Vector3 rayStartPosition, Vector3 rayDirection)
 			{
-				// TODO: Fix this.
-				Vector3 p1 = Vector3.Transform(new Vector3(-1, 0, -1), modelMatrix);
-				Vector3 p2 = Vector3.Transform(new Vector3(+1, 0, -1), modelMatrix);
-				Vector3 p3 = Vector3.Transform(new Vector3(+1, 0, +1), modelMatrix);
-				Vector3 p4 = Vector3.Transform(new Vector3(-1, 0, +1), modelMatrix);
+				Vector3 p1 = Vector3.Transform(new Vector3(-1, -1, 0), modelMatrix);
+				Vector3 p2 = Vector3.Transform(new Vector3(+1, -1, 0), modelMatrix);
+				Vector3 p3 = Vector3.Transform(new Vector3(+1, +1, 0), modelMatrix);
+				Vector3 p4 = Vector3.Transform(new Vector3(-1, +1, 0), modelMatrix);
 
 				Vector3? t1 = Ray.IntersectsTriangle(rayStartPosition, rayDirection, p1, p2, p3);
 				Vector3? t2 = Ray.IntersectsTriangle(rayStartPosition, rayDirection, p1, p3, p4);
