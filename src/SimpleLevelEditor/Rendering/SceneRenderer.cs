@@ -1,3 +1,4 @@
+using Detach.Numerics;
 using Detach.Utils;
 using Silk.NET.OpenGL;
 using SimpleLevelEditor.Content;
@@ -228,7 +229,7 @@ public static class SceneRenderer
 		for (int i = 0; i < LevelState.Level.WorldObjects.Count; i++)
 		{
 			WorldObject worldObject = LevelState.Level.WorldObjects[i];
-			RenderEdges(lineShader, worldObject, GetColor(worldObject));
+			RenderEdges(lineShader, worldObject, GetWorldObjectColor(worldObject));
 		}
 	}
 
@@ -314,18 +315,18 @@ public static class SceneRenderer
 				if (point.Visualization is PointEntityVisualization.SimpleSphere simpleSphere)
 				{
 					Gl.UniformMatrix4x4(modelUniform, Matrix4x4.CreateScale(simpleSphere.Radius) * Matrix4x4.CreateTranslation(entity.Position));
-					Gl.Uniform4(colorUniform, GetColor(entity, simpleSphere.Color));
+					Gl.Uniform4(colorUniform, GetEntityColor(entity, simpleSphere.Color, simpleSphere.Color.ToVector4()));
 					Gl.BindVertexArray(_pointVao);
 					Gl.DrawArrays(PrimitiveType.Lines, 0, (uint)_pointVertices.Length);
 				}
 				else if (point.Visualization is PointEntityVisualization.Mesh mesh)
 				{
-					RenderEdges(lineShader, mesh.MeshName, entity.Position, GetColor(entity, new Rgb(255, 127, 63)));
+					RenderEdges(lineShader, mesh.MeshName, entity.Position, GetEntityColor(entity, new Rgb(191, 63, 63), Vector4.Zero));
 				}
 				else if (point.Visualization is PointEntityVisualization.BillboardSprite billboardSprite)
 				{
 					Matrix4x4 modelMatrix = Matrix4x4.CreateScale(billboardSprite.Size) * EntityMatrixUtils.GetBillboardMatrix(entity);
-					RenderEdges(lineShader, _planeLineVao, _planeLineIndices, modelMatrix, GetColor(entity, new Rgb(255, 127, 63)));
+					RenderEdges(lineShader, _planeLineVao, _planeLineIndices, modelMatrix, GetEntityColor(entity, new Rgb(63, 63, 191), Vector4.Zero));
 				}
 			}
 			else if (entityShape is EntityShape.Sphere sphere)
@@ -334,7 +335,7 @@ public static class SceneRenderer
 					throw new InvalidOperationException($"Entity '{entity.Name}' is of shape type '{entity.Shape}' which does not match shape type '{entityShape}' from the EntityConfig.");
 
 				Gl.UniformMatrix4x4(modelUniform, Matrix4x4.CreateScale(sphereDescriptor.Radius) * Matrix4x4.CreateTranslation(entity.Position));
-				Gl.Uniform4(colorUniform, GetColor(entity, sphere.Color));
+				Gl.Uniform4(colorUniform, GetEntityColor(entity, sphere.Color, sphere.Color.ToVector4()));
 				Gl.BindVertexArray(_sphereVao);
 				Gl.DrawArrays(PrimitiveType.Lines, 0, (uint)_sphereVertices.Length);
 			}
@@ -344,7 +345,7 @@ public static class SceneRenderer
 					throw new InvalidOperationException($"Entity '{entity.Name}' is of shape type '{entity.Shape}' which does not match shape type '{entityShape}' from the EntityConfig.");
 
 				Gl.UniformMatrix4x4(modelUniform, Matrix4x4.CreateScale(aabbDescriptor.Size) * Matrix4x4.CreateTranslation(entity.Position));
-				Gl.Uniform4(colorUniform, GetColor(entity, aabb.Color));
+				Gl.Uniform4(colorUniform, GetEntityColor(entity, aabb.Color, aabb.Color.ToVector4()));
 				Gl.BindVertexArray(_cubeVao);
 				Gl.DrawArrays(PrimitiveType.Lines, 0, 24);
 			}
@@ -421,10 +422,11 @@ public static class SceneRenderer
 		return entityShape;
 	}
 
-	private static Vector4 GetColor(Entity entity, Rgb rgb)
+	private static Vector4 GetEntityColor(Entity entity, Rgb rgb, Vector4 defaultColor)
 	{
 		float timeAddition = MathF.Sin((float)Glfw.GetTime() * 10) * 0.5f + 0.5f;
 		timeAddition *= 0.5f;
+
 		Vector4 color = rgb.ToVector4();
 		if (entity == LevelEditorState.SelectedEntity && entity == LevelEditorState.HighlightedEntity && Camera3d.Mode == CameraMode.None)
 			return color + new Vector4(0.5f + timeAddition, 1, 0.5f + timeAddition, 1);
@@ -433,10 +435,10 @@ public static class SceneRenderer
 		if (entity == LevelEditorState.HighlightedEntity && Camera3d.Mode == CameraMode.None)
 			return color + new Vector4(1, 0.5f + timeAddition, 1, 1);
 
-		return color + new Vector4(0.75f, 0, 0.75f, 1);
+		return defaultColor;
 	}
 
-	private static Vector4 GetColor(WorldObject worldObject)
+	private static Vector4 GetWorldObjectColor(WorldObject worldObject)
 	{
 		float timeAddition = MathF.Sin((float)Glfw.GetTime() * 10) * 0.5f + 0.5f;
 		timeAddition *= 0.5f;

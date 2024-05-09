@@ -106,6 +106,7 @@
 		<WorldObject Mesh="mesh\Plane.obj" Texture="tex\Dirt.tga" Position="6 4.7683716E-07 6" Rotation="-90 0 0" Scale="2 2 2" Flags="" />
 		<WorldObject Mesh="mesh\Plane.obj" Texture="tex\Dirt.tga" Position="6 0 8" Rotation="-90 0 0" Scale="2 2 2" Flags="" />
 		<WorldObject Mesh="mesh\Plane.obj" Texture="tex\Dirt.tga" Position="6 0 10" Rotation="-90 0 0" Scale="2 2 2" Flags="" />
+		<WorldObject Mesh="mesh\ExitSpiral.obj" Texture="tex\Gravel.tga" Position="-2 0 -14" Rotation="180 -180 -180" Scale="1 1 1" Flags="" />
 	</WorldObjects>
 	<Entities>
 		<Entity Name="Point_SimpleSphere" Position="11 0 -13" Shape="point">
@@ -138,7 +139,7 @@
 				<Property Name="Radius" Value="float 10" />
 			</Properties>
 		</Entity>
-		<Entity Name="DynamicObject" Position="-0 0 -26" Shape="point">
+		<Entity Name="DynamicObject" Position="3 0 -13" Shape="point">
 			<Properties>
 				<Property Name="Mesh" Value="str " />
 				<Property Name="Texture" Value="str " />
@@ -146,7 +147,7 @@
 				<Property Name="Mass" Value="float 1" />
 			</Properties>
 		</Entity>
-		<Entity Name="Item" Position="-5 0 -26" Shape="point">
+		<Entity Name="Item" Position="0 0 -26" Shape="point">
 			<Properties>
 				<Property Name="Type" Value="str " />
 			</Properties>
