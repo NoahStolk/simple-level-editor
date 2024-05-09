@@ -14,36 +14,34 @@ namespace SimpleLevelEditor.Rendering;
 
 public static class SceneRenderer
 {
-	public const float PointScale = 0.3f;
-
 	private static readonly uint _lineVao = VaoUtils.CreateLineVao([Vector3.Zero, Vector3.UnitZ]);
 	private static readonly uint _cubeVao = VaoUtils.CreateLineVao([
-		new(-0.5f, -0.5f, -0.5f),
-		new(-0.5f, -0.5f, 0.5f),
-		new(-0.5f, 0.5f, -0.5f),
-		new(-0.5f, 0.5f, 0.5f),
-		new(0.5f, -0.5f, -0.5f),
-		new(0.5f, -0.5f, 0.5f),
-		new(0.5f, 0.5f, -0.5f),
-		new(0.5f, 0.5f, 0.5f),
+		new Vector3(-0.5f, -0.5f, -0.5f),
+		new Vector3(-0.5f, -0.5f, 0.5f),
+		new Vector3(-0.5f, 0.5f, -0.5f),
+		new Vector3(-0.5f, 0.5f, 0.5f),
+		new Vector3(0.5f, -0.5f, -0.5f),
+		new Vector3(0.5f, -0.5f, 0.5f),
+		new Vector3(0.5f, 0.5f, -0.5f),
+		new Vector3(0.5f, 0.5f, 0.5f),
 
-		new(-0.5f, -0.5f, -0.5f),
-		new(-0.5f, 0.5f, -0.5f),
-		new(-0.5f, -0.5f, 0.5f),
-		new(-0.5f, 0.5f, 0.5f),
-		new(0.5f, -0.5f, -0.5f),
-		new(0.5f, 0.5f, -0.5f),
-		new(0.5f, -0.5f, 0.5f),
-		new(0.5f, 0.5f, 0.5f),
+		new Vector3(-0.5f, -0.5f, -0.5f),
+		new Vector3(-0.5f, 0.5f, -0.5f),
+		new Vector3(-0.5f, -0.5f, 0.5f),
+		new Vector3(-0.5f, 0.5f, 0.5f),
+		new Vector3(0.5f, -0.5f, -0.5f),
+		new Vector3(0.5f, 0.5f, -0.5f),
+		new Vector3(0.5f, -0.5f, 0.5f),
+		new Vector3(0.5f, 0.5f, 0.5f),
 
-		new(-0.5f, -0.5f, -0.5f),
-		new(0.5f, -0.5f, -0.5f),
-		new(-0.5f, -0.5f, 0.5f),
-		new(0.5f, -0.5f, 0.5f),
-		new(-0.5f, 0.5f, -0.5f),
-		new(0.5f, 0.5f, -0.5f),
-		new(-0.5f, 0.5f, 0.5f),
-		new(0.5f, 0.5f, 0.5f),
+		new Vector3(-0.5f, -0.5f, -0.5f),
+		new Vector3(0.5f, -0.5f, -0.5f),
+		new Vector3(-0.5f, -0.5f, 0.5f),
+		new Vector3(0.5f, -0.5f, 0.5f),
+		new Vector3(-0.5f, 0.5f, -0.5f),
+		new Vector3(0.5f, 0.5f, -0.5f),
+		new Vector3(-0.5f, 0.5f, 0.5f),
+		new Vector3(0.5f, 0.5f, 0.5f),
 	]);
 
 	private static readonly Vector3[] _sphereVertices = GetSphereVertexPositions(8, 16, 1);
@@ -52,15 +50,22 @@ public static class SceneRenderer
 	private static readonly Vector3[] _pointVertices = GetSphereVertexPositions(3, 6, 1);
 	private static readonly uint _pointVao = VaoUtils.CreateLineVao(_pointVertices);
 
-	private static readonly float[] _planeVertices =
-	[
+	private static readonly uint _planeVao = VaoUtils.CreatePlaneVao([
 		-0.5f, -0.5f, 0, 0, 0,
 		-0.5f, 0.5f, 0, 0, 1,
 		0.5f, -0.5f, 0, 1, 0,
 		0.5f, 0.5f, 0, 1, 1,
-	];
-	private static readonly uint _planeVao = VaoUtils.CreatePlaneVao(_planeVertices);
+	]);
 	private static readonly uint[] _planeIndices = [0, 1, 2, 2, 1, 3];
+
+	private static readonly uint _planeLineVao = VaoUtils.CreateLineVao([
+		new Vector3(-0.5f, -0.5f, 0),
+		new Vector3(-0.5f, 0.5f, 0),
+		new Vector3(0.5f, 0.5f, 0),
+		new Vector3(0.5f, -0.5f, 0),
+		new Vector3(-0.5f, -0.5f, 0),
+	]);
+	private static readonly uint[] _planeLineIndices = [0, 1, 1, 2, 2, 3, 3, 0];
 
 	private static Vector3[] GetSphereVertexPositions(uint horizontalLines, uint verticalLines, float radius)
 	{
@@ -188,7 +193,7 @@ public static class SceneRenderer
 		int lineModelUniform = lineShader.GetUniformLocation("model");
 		int lineColorUniform = lineShader.GetUniformLocation("color");
 
-		Gl.Uniform4(lineColorUniform, new Vector4(0.5f, 0.5f, 0.5f, 1));
+		Gl.Uniform4(lineColorUniform, new Vector4(1, 1, 1, 0.25f));
 		Gl.LineWidth(1);
 
 		int min = -LevelEditorState.GridCellCount;
@@ -319,9 +324,8 @@ public static class SceneRenderer
 				}
 				else if (point.Visualization is PointEntityVisualization.BillboardSprite billboardSprite)
 				{
-					// TODO: Use different VAO and line indices.
 					Matrix4x4 modelMatrix = Matrix4x4.CreateScale(billboardSprite.Size) * EntityMatrixUtils.GetBillboardMatrix(entity);
-					RenderEdges(lineShader, _planeVao, _planeIndices, modelMatrix, GetColor(entity, new Rgb(255, 127, 63)));
+					RenderEdges(lineShader, _planeLineVao, _planeLineIndices, modelMatrix, GetColor(entity, new Rgb(255, 127, 63)));
 				}
 			}
 			else if (entityShape is EntityShape.Sphere sphere)
