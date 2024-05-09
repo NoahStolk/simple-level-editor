@@ -8,7 +8,7 @@ public record XmlEntityConfigEntity
 	public required string Name { get; init; }
 
 	[XmlAttribute]
-	public required XmlEntityConfigEntityShape Shape { get; init; }
+	public required string Shape { get; init; }
 
 	[XmlElement("Property")]
 	public required List<XmlEntityConfigProperty> Properties { get; init; }

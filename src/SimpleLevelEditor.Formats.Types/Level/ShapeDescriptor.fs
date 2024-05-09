@@ -7,13 +7,13 @@ open SimpleLevelEditor.Formats.Types
 type ShapeDescriptor =
     | Point
     | Sphere of Radius: float32
-    | Aabb   of Min: Vector3 * Max: Vector3 // This should be: X: float * Y: float * Z: float
+    | Aabb   of Size: Vector3
 
     member this.DeepCopy() =
         match this with
-        | Point           -> Point
-        | Sphere r        -> Sphere r
-        | Aabb (min, max) -> Aabb (min, max)
+        | Point    -> Point
+        | Sphere r -> Sphere r
+        | Aabb s   -> Aabb s
 
     member this.GetShapeId() =
         match this with
@@ -23,23 +23,33 @@ type ShapeDescriptor =
 
     member this.WriteValue() =
         match this with
-        | Point           -> ""
-        | Sphere r        -> r.ToDataString
-        | Aabb (min, max) -> $"{min.ToDataString} {max.ToDataString}"
+        | Point    -> ""
+        | Sphere r -> r.ToDataString
+        | Aabb s   -> s.ToDataString
 
-    static member FromShapeId(id: string, data: string) =
-        match id with
-        | ShapeIds.PointId  -> Point
-        | ShapeIds.SphereId -> ShapeDescriptor.ParseSphereData(data)
-        | ShapeIds.AabbId   -> ShapeDescriptor.ParseAabbData(data)
-        | _                 -> failwithf $"Unknown shape id: %s{id}"
+    static member FromShapeData(data: string) : Option<ShapeDescriptor> =
+        if data = null then failwith "Shape data is null."
 
-    static member private ParseSphereData(data: String) =
-        Sphere(Single.FromDataString(data))
+        let indexOfFirstSpace = data.IndexOf(' ')
 
-    static member private ParseAabbData(data: String) =
-        let parts = data.Split(' ')
-        if parts.Length <> 6 then failwithf $"Invalid point data: %s{data}"
-        Aabb(
-            Vector3(Single.FromDataString(parts[0]), Single.FromDataString(parts[1]), Single.FromDataString(parts[2])),
-            Vector3(Single.FromDataString(parts[3]), Single.FromDataString(parts[4]), Single.FromDataString(parts[5])))
+        match indexOfFirstSpace with
+        | -1 -> (data, String.Empty)
+        | _  -> (data[..indexOfFirstSpace - 1], data[indexOfFirstSpace + 1..])
+        |> fun (id, data) ->
+            match id with
+            | ShapeIds.PointId  -> Some Point
+            | ShapeIds.SphereId -> ShapeDescriptor.ParseSphereData(data)
+            | ShapeIds.AabbId   -> ShapeDescriptor.ParseAabbData(data)
+            | _                 -> None
+
+    static member private ParseSphereData(data: string) : Option<ShapeDescriptor> =
+        let radius = Single.FromDataString(Some data)
+        match radius with
+        | Some r -> Some(Sphere r)
+        | None   -> None
+
+    static member private ParseAabbData(data: string) : Option<ShapeDescriptor> =
+        let size = Vector3.FromDataString(Some data)
+        match size with
+        | Some s -> Some(Aabb s)
+        | None   -> None

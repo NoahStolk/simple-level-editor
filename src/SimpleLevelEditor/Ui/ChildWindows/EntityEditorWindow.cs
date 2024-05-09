@@ -206,32 +206,18 @@ public static class EntityEditorWindow
 
 	private static void RenderAabbInputs(int entityId, ref ShapeDescriptor.Aabb aabb)
 	{
-		ImGui.Text("Box Min");
+		ImGui.Text("Box Size");
 
-		Vector3 min = aabb.Min;
-		if (ImGui.DragFloat3(Inline.Span($"##box_min{entityId}"), ref min, 0.1f, float.MinValue, -0.1f, "%.1f"))
-			aabb = (ShapeDescriptor.Aabb)ShapeDescriptor.NewAabb(min, aabb.Max);
+		Vector3 size = aabb.Size;
+		if (ImGui.DragFloat3(Inline.Span($"##box_size{entityId}"), ref size, 0.1f, float.MinValue, -0.1f, "%.1f"))
+			aabb = (ShapeDescriptor.Aabb)ShapeDescriptor.NewAabb(size);
 		if (ImGui.IsItemDeactivatedAfterEdit())
-			LevelState.Track("Changed entity box min");
+			LevelState.Track("Changed entity box size");
 
 		if (RenderResetButton(Inline.Span($"Box_min_reset{entityId}")))
 		{
-			aabb = (ShapeDescriptor.Aabb)ShapeDescriptor.NewAabb(-Vector3.One, aabb.Max);
-			LevelState.Track("Changed entity box min");
-		}
-
-		ImGui.Text("Box Max");
-
-		Vector3 max = aabb.Max;
-		if (ImGui.DragFloat3(Inline.Span($"##box_max{entityId}"), ref max, 0.1f, 0.1f, float.MaxValue, "%.1f"))
-			aabb = (ShapeDescriptor.Aabb)ShapeDescriptor.NewAabb(aabb.Min, max);
-		if (ImGui.IsItemDeactivatedAfterEdit())
-			LevelState.Track("Changed entity box max");
-
-		if (RenderResetButton(Inline.Span($"Box_max_reset{entityId}")))
-		{
-			aabb = (ShapeDescriptor.Aabb)ShapeDescriptor.NewAabb(aabb.Min, Vector3.One);
-			LevelState.Track("Changed entity box max");
+			aabb = (ShapeDescriptor.Aabb)ShapeDescriptor.NewAabb(Vector3.One);
+			LevelState.Track("Changed entity box size");
 		}
 	}
 
