@@ -1,5 +1,6 @@
 using Detach.Collisions;
 using Silk.NET.GLFW;
+using SimpleLevelEditor.Content.Data;
 using SimpleLevelEditor.Extensions;
 using SimpleLevelEditor.Formats.Level.Model;
 using SimpleLevelEditor.Formats.Types.Level;
@@ -162,23 +163,33 @@ public static class MainLogic
 				continue;
 
 			Matrix4x4 modelMatrix = worldObject.GetModelMatrix();
-			for (int j = 0; j < mesh.Mesh.Indices.Length; j += 3)
+			if (RaycastMesh(modelMatrix, mesh.Mesh, rayStartPosition, rayDirection, ref closestIntersection))
 			{
-				Vector3 p1 = Vector3.Transform(mesh.Mesh.Vertices[mesh.Mesh.Indices[j]].Position, modelMatrix);
-				Vector3 p2 = Vector3.Transform(mesh.Mesh.Vertices[mesh.Mesh.Indices[j + 1]].Position, modelMatrix);
-				Vector3 p3 = Vector3.Transform(mesh.Mesh.Vertices[mesh.Mesh.Indices[j + 2]].Position, modelMatrix);
-
-				Vector3? triangleIntersection = Ray.IntersectsTriangle(rayStartPosition, rayDirection, p1, p2, p3);
-				if (triangleIntersection == null)
-					continue;
-
-				if (closestIntersection == null || Vector3.DistanceSquared(Camera3d.Position, triangleIntersection.Value) < Vector3.DistanceSquared(Camera3d.Position, closestIntersection.Value))
-				{
-					closestIntersection = triangleIntersection.Value;
-					LevelEditorState.SetHighlightedWorldObject(worldObject);
-				}
+				LevelEditorState.SetHighlightedWorldObject(worldObject);
 			}
 		}
+	}
+
+	private static bool RaycastMesh(Matrix4x4 modelMatrix, Mesh mesh, Vector3 rayStartPosition, Vector3 rayDirection, ref Vector3? closestIntersection)
+	{
+		for (int i = 0; i < mesh.Indices.Length; i += 3)
+		{
+			Vector3 p1 = Vector3.Transform(mesh.Vertices[mesh.Indices[i + 0]].Position, modelMatrix);
+			Vector3 p2 = Vector3.Transform(mesh.Vertices[mesh.Indices[i + 1]].Position, modelMatrix);
+			Vector3 p3 = Vector3.Transform(mesh.Vertices[mesh.Indices[i + 2]].Position, modelMatrix);
+
+			Vector3? triangleIntersection = Ray.IntersectsTriangle(rayStartPosition, rayDirection, p1, p2, p3);
+			if (triangleIntersection == null)
+				continue;
+
+			if (closestIntersection == null || Vector3.DistanceSquared(Camera3d.Position, triangleIntersection.Value) < Vector3.DistanceSquared(Camera3d.Position, closestIntersection.Value))
+			{
+				closestIntersection = triangleIntersection.Value;
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	private static void RaycastEntities(Vector3 rayStartPosition, Vector3 rayDirection, float? closestDistance)
