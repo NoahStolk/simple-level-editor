@@ -223,43 +223,40 @@ public static class SceneRenderer
 		for (int i = 0; i < LevelState.Level.WorldObjects.Count; i++)
 		{
 			WorldObject worldObject = LevelState.Level.WorldObjects[i];
-
-			float timeAddition = MathF.Sin((float)Glfw.GetTime() * 10) * 0.5f + 0.5f;
-			timeAddition *= 0.5f;
-
-			// TODO: Refactor duplicate code.
-			Vector4 color;
-			if (worldObject == LevelEditorState.SelectedWorldObject && worldObject == LevelEditorState.HighlightedObject && Camera3d.Mode == CameraMode.None)
-				color = new(0.5f + timeAddition, 1, 0.5f + timeAddition, 1);
-			else if (worldObject == LevelEditorState.SelectedWorldObject)
-				color = new(0, 0.75f, 0, 1);
-			else if (worldObject == LevelEditorState.HighlightedObject && Camera3d.Mode == CameraMode.None)
-				color = new(1, 0.5f + timeAddition, 1, 1);
-			else
-				continue;
-
-			RenderEdges(lineShader, worldObject, color);
+			RenderEdges(lineShader, worldObject, GetColor(worldObject));
 		}
 	}
 
-	private static unsafe void RenderEdges(ShaderCacheEntry lineShader, WorldObject worldObject, Vector4 color)
+	private static void RenderEdges(ShaderCacheEntry lineShader, WorldObject worldObject, Vector4 color)
 	{
 		MeshEntry? mesh = MeshContainer.GetMesh(worldObject.Mesh);
 		if (mesh == null)
 			return;
 
+		Matrix4x4 rotationMatrix = MathUtils.CreateRotationMatrixFromEulerAngles(MathUtils.ToRadians(worldObject.Rotation));
+		Matrix4x4 modelMatrix = Matrix4x4.CreateScale(worldObject.Scale) * rotationMatrix * Matrix4x4.CreateTranslation(worldObject.Position);
+		RenderEdges(lineShader, mesh.LineVao, mesh.LineIndices, modelMatrix, color);
+	}
+
+	private static void RenderEdges(ShaderCacheEntry lineShader, string meshName, Vector3 position, Vector4 color)
+	{
+		MeshEntry? mesh = MeshContainer.GetMesh(meshName);
+		if (mesh != null)
+			RenderEdges(lineShader, mesh.LineVao, mesh.LineIndices, Matrix4x4.CreateTranslation(position), color);
+	}
+
+	private static unsafe void RenderEdges(ShaderCacheEntry lineShader, uint lineVao, uint[] meshLineIndices, Matrix4x4 modelMatrix, Vector4 color)
+	{
 		int lineModelUniform = lineShader.GetUniformLocation("model");
 		int lineColorUniform = lineShader.GetUniformLocation("color");
 
 		Gl.Uniform4(lineColorUniform, color);
 
-		Matrix4x4 rotationMatrix = MathUtils.CreateRotationMatrixFromEulerAngles(MathUtils.ToRadians(worldObject.Rotation));
-		Matrix4x4 modelMatrix = Matrix4x4.CreateScale(worldObject.Scale) * rotationMatrix * Matrix4x4.CreateTranslation(worldObject.Position);
 		Gl.UniformMatrix4x4(lineModelUniform, modelMatrix);
 
-		Gl.BindVertexArray(mesh.LineVao);
-		fixed (uint* index = &mesh.LineIndices[0])
-			Gl.DrawElements(PrimitiveType.Lines, (uint)mesh.LineIndices.Length, DrawElementsType.UnsignedInt, index);
+		Gl.BindVertexArray(lineVao);
+		fixed (uint* index = &meshLineIndices[0])
+			Gl.DrawElements(PrimitiveType.Lines, (uint)meshLineIndices.Length, DrawElementsType.UnsignedInt, index);
 	}
 
 	private static unsafe void RenderWorldObjects(ShaderCacheEntry meshShader)
@@ -298,12 +295,23 @@ public static class SceneRenderer
 				continue;
 
 			EntityShape? entityShape = GetEntityShape(entity);
-			if (entityShape is EntityShape.Point { Visualization: PointEntityVisualization.SimpleSphere simpleSphere })
+			if (entityShape is EntityShape.Point point)
 			{
-				Gl.UniformMatrix4x4(modelUniform, Matrix4x4.CreateScale(simpleSphere.Radius) * Matrix4x4.CreateTranslation(entity.Position));
-				Gl.Uniform4(colorUniform, GetColor(entity, simpleSphere.Color));
-				Gl.BindVertexArray(_pointVao);
-				Gl.DrawArrays(PrimitiveType.Lines, 0, (uint)_pointVertices.Length);
+				if (point.Visualization is PointEntityVisualization.SimpleSphere simpleSphere)
+				{
+					Gl.UniformMatrix4x4(modelUniform, Matrix4x4.CreateScale(simpleSphere.Radius) * Matrix4x4.CreateTranslation(entity.Position));
+					Gl.Uniform4(colorUniform, GetColor(entity, simpleSphere.Color));
+					Gl.BindVertexArray(_pointVao);
+					Gl.DrawArrays(PrimitiveType.Lines, 0, (uint)_pointVertices.Length);
+				}
+				else if (point.Visualization is PointEntityVisualization.Mesh mesh)
+				{
+					RenderEdges(lineShader, mesh.MeshName, entity.Position, GetColor(entity, new Rgb(255, 127, 63)));
+				}
+				else if (point.Visualization is PointEntityVisualization.BillboardSprite billboardSprite)
+				{
+					RenderEdges(lineShader, _planeVao, _planeIndices, Matrix4x4.CreateScale(billboardSprite.Size) * Matrix4x4.CreateTranslation(entity.Position), GetColor(entity, new Rgb(255, 127, 63)));
+				}
 			}
 			else if (entityShape is EntityShape.Sphere sphere)
 			{
@@ -414,5 +422,20 @@ public static class SceneRenderer
 			return color + new Vector4(1, 0.5f + timeAddition, 1, 1);
 
 		return color + new Vector4(0.75f, 0, 0.75f, 1);
+	}
+
+	private static Vector4 GetColor(WorldObject worldObject)
+	{
+		float timeAddition = MathF.Sin((float)Glfw.GetTime() * 10) * 0.5f + 0.5f;
+		timeAddition *= 0.5f;
+
+		if (worldObject == LevelEditorState.SelectedWorldObject && worldObject == LevelEditorState.HighlightedObject && Camera3d.Mode == CameraMode.None)
+			return new Vector4(0.5f + timeAddition, 1, 0.5f + timeAddition, 1);
+		if (worldObject == LevelEditorState.SelectedWorldObject)
+			return new Vector4(0, 0.75f, 0, 1);
+		if (worldObject == LevelEditorState.HighlightedObject && Camera3d.Mode == CameraMode.None)
+			return new Vector4(1, 0.5f + timeAddition, 1, 1);
+
+		return Vector4.Zero;
 	}
 }
