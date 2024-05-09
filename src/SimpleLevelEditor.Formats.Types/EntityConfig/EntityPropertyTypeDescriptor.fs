@@ -82,11 +82,11 @@ type EntityPropertyTypeDescriptor =
     static member FromXmlData(propertyType: string, defaultValue: Option<string>, step: Option<string>, minValue: Option<string>, maxValue: Option<string>) : EntityPropertyTypeDescriptor =
         match propertyType with
         | TypeIds.BoolId    -> BoolProperty    (Boolean.FromDataString defaultValue |> Option.defaultValue false)
-        | TypeIds.IntId     -> IntProperty     (Int32.FromDataString   defaultValue |> Option.defaultValue 0,            step |> Option.map int32,   minValue |> Option.map int32,   maxValue |> Option.map int32)
-        | TypeIds.FloatId   -> FloatProperty   (Single.FromDataString  defaultValue |> Option.defaultValue 0f,           step |> Option.map float32, minValue |> Option.map float32, maxValue |> Option.map float32)
-        | TypeIds.Vector2Id -> Vector2Property (Vector2.FromDataString defaultValue |> Option.defaultValue Vector2.Zero, step |> Option.map float32, minValue |> Option.map float32, maxValue |> Option.map float32)
-        | TypeIds.Vector3Id -> Vector3Property (Vector3.FromDataString defaultValue |> Option.defaultValue Vector3.Zero, step |> Option.map float32, minValue |> Option.map float32, maxValue |> Option.map float32)
-        | TypeIds.Vector4Id -> Vector4Property (Vector4.FromDataString defaultValue |> Option.defaultValue Vector4.Zero, step |> Option.map float32, minValue |> Option.map float32, maxValue |> Option.map float32)
+        | TypeIds.IntId     -> IntProperty     (Int32.FromDataString   defaultValue |> Option.defaultValue 0,            Int32.FromDataString  step, Int32.FromDataString  minValue, Int32.FromDataString  maxValue)
+        | TypeIds.FloatId   -> FloatProperty   (Single.FromDataString  defaultValue |> Option.defaultValue 0f,           Single.FromDataString step, Single.FromDataString minValue, Single.FromDataString maxValue)
+        | TypeIds.Vector2Id -> Vector2Property (Vector2.FromDataString defaultValue |> Option.defaultValue Vector2.Zero, Single.FromDataString step, Single.FromDataString minValue, Single.FromDataString maxValue)
+        | TypeIds.Vector3Id -> Vector3Property (Vector3.FromDataString defaultValue |> Option.defaultValue Vector3.Zero, Single.FromDataString step, Single.FromDataString minValue, Single.FromDataString maxValue)
+        | TypeIds.Vector4Id -> Vector4Property (Vector4.FromDataString defaultValue |> Option.defaultValue Vector4.Zero, Single.FromDataString step, Single.FromDataString minValue, Single.FromDataString maxValue)
         | TypeIds.StringId  -> StringProperty  (defaultValue                        |> Option.defaultValue String.Empty)
         | TypeIds.RgbId     -> RgbProperty     (Rgb.FromDataString     defaultValue |> Option.defaultValue Rgb.Default)
         | TypeIds.RgbaId    -> RgbaProperty    (Rgba.FromDataString    defaultValue |> Option.defaultValue Rgba.Default)
