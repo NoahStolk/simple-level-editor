@@ -27,7 +27,7 @@ public class EntityConfigDeserializationTests
 		EntityConfigData data = EntityConfigXmlDeserializer.ReadEntityConfig(fs);
 
 		Assert.AreEqual(2, data.Version);
-		Assert.AreEqual(3, data.Entities.Count);
+		Assert.AreEqual(5, data.Entities.Count);
 
 		EntityDescriptor entity = data.Entities[0];
 		Assert.AreEqual("PlayerSpawn", entity.Name);
@@ -96,5 +96,15 @@ public class EntityConfigDeserializationTests
 		Assert.AreEqual(0.1f, floatPropertyType.Step);
 		Assert.AreEqual(0.01f, floatPropertyType.MinValue);
 		Assert.AreEqual(1000, floatPropertyType.MaxValue);
+
+		entity = data.Entities[3];
+		Assert.AreEqual("Sphere", entity.Name);
+		Assert.AreEqual(EntityShape.NewSphere(new Rgb(240, 120, 60)), entity.Shape);
+		Assert.AreEqual(0, entity.Properties.Count);
+
+		entity = data.Entities[4];
+		Assert.AreEqual("Aabb", entity.Name);
+		Assert.AreEqual(EntityShape.NewAabb(new Rgb(60, 120, 240)), entity.Shape);
+		Assert.AreEqual(0, entity.Properties.Count);
 	}
 }
