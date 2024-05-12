@@ -1,5 +1,5 @@
 using SimpleLevelEditor.Formats.EntityConfig;
-using SimpleLevelEditor.Formats.EntityConfig.Model;
+using SimpleLevelEditor.Formats.Types.EntityConfig;
 
 namespace SimpleLevelEditor.State;
 

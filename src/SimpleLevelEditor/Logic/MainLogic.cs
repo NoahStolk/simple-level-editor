@@ -196,7 +196,7 @@ public static class MainLogic
 		{
 			if (entity.Shape.IsPoint)
 			{
-				EntityShape? entityShape = EntityConfigState.EntityConfig.Entities.Find(e => e.Name == entity.Name)?.Shape;
+				EntityShape? entityShape = EntityConfigState.EntityConfig.Entities.FirstOrDefault(e => e.Name == entity.Name)?.Shape;
 				if (entityShape is not EntityShape.Point point)
 					return null;
 

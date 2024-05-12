@@ -1,8 +1,8 @@
 using Detach;
 using ImGuiNET;
 using Microsoft.FSharp.Collections;
-using SimpleLevelEditor.Formats.EntityConfig.Model;
 using SimpleLevelEditor.Formats.Types;
+using SimpleLevelEditor.Formats.Types.EntityConfig;
 using SimpleLevelEditor.Formats.Types.Level;
 using SimpleLevelEditor.State;
 using SimpleLevelEditor.Utils;
@@ -43,14 +43,14 @@ public static class EntityEditorWindow
 	{
 		if (ImGui.BeginCombo(Inline.Span($"Entity Type##{entity.Id}"), entity.Name))
 		{
-			for (int i = 0; i < EntityConfigState.EntityConfig.Entities.Count; i++)
+			for (int i = 0; i < EntityConfigState.EntityConfig.Entities.Length; i++)
 			{
 				EntityDescriptor descriptor = EntityConfigState.EntityConfig.Entities[i];
 				if (ImGui.Selectable(descriptor.Name))
 				{
 					entity.Name = descriptor.Name;
 					entity.Shape = descriptor.Shape.GetDefaultDescriptor();
-					entity.Properties = ListModule.OfSeq(descriptor.Properties.ConvertAll(p => new EntityProperty(p.Name, p.Type.DefaultValue)));
+					entity.Properties = ListModule.OfSeq(descriptor.Properties.Select(p => new EntityProperty(p.Name, p.Type.DefaultValue)));
 					LevelState.Track("Changed entity type");
 				}
 			}
@@ -93,21 +93,21 @@ public static class EntityEditorWindow
 	{
 		ImGui.SeparatorText("Properties");
 
-		EntityDescriptor? entityDescriptor = EntityConfigState.EntityConfig.Entities.Find(e => e.Name == entity.Name);
+		EntityDescriptor? entityDescriptor = EntityConfigState.EntityConfig.Entities.FirstOrDefault(e => e.Name == entity.Name);
 		if (entityDescriptor == null)
 		{
 			ImGui.TextColored(Color.Red, "Unknown entity type");
 			return;
 		}
 
-		for (int i = 0; i < entityDescriptor.Properties.Count; i++)
+		for (int i = 0; i < entityDescriptor.Properties.Length; i++)
 		{
 			EntityPropertyDescriptor propertyDescriptor = entityDescriptor.Properties[i];
 			EntityProperty? property = entity.Properties.FirstOrDefault(p => p.Key == propertyDescriptor.Name);
 			if (property == null)
 			{
 				property = new EntityProperty(propertyDescriptor.Name, propertyDescriptor.Type.DefaultValue);
-				entity.Properties.Append(property);
+				entity.Properties = ListModule.OfSeq(entity.Properties.Append(property));
 			}
 
 			float step = propertyDescriptor.Type.Step;
@@ -115,12 +115,12 @@ public static class EntityEditorWindow
 			float maxValue = propertyDescriptor.Type.MaxValue;
 
 			ImGui.Text(propertyDescriptor.Name);
-			if (!string.IsNullOrWhiteSpace(propertyDescriptor.Description))
+			if (propertyDescriptor.Description != null && !string.IsNullOrWhiteSpace(propertyDescriptor.Description.Value))
 			{
 				ImGui.SameLine();
 				ImGui.TextColored(Color.Gray(0.5f), "(?)");
 				if (ImGui.IsItemHovered())
-					ImGui.SetTooltip(propertyDescriptor.Description);
+					ImGui.SetTooltip(propertyDescriptor.Description.Value);
 			}
 
 			switch (property.Value)

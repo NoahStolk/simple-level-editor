@@ -410,10 +410,10 @@ public static class SceneRenderer
 
 	private static EntityShape? GetEntityShape(Entity entity)
 	{
-		if (EntityConfigState.EntityConfig.Entities.Count == 0)
+		if (EntityConfigState.EntityConfig.Entities.Length == 0)
 			return null; // EntityConfig not loaded yet.
 
-		EntityShape? entityShape = EntityConfigState.EntityConfig.Entities.Find(e => e.Name == entity.Name)?.Shape;
+		EntityShape? entityShape = EntityConfigState.EntityConfig.Entities.FirstOrDefault(e => e.Name == entity.Name)?.Shape;
 		if (entityShape == null)
 			throw new InvalidOperationException($"Entity '{entity.Name}' does not have a shape defined in the EntityConfig.");
 

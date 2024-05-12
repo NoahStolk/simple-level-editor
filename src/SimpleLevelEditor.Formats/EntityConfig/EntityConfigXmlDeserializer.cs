@@ -1,5 +1,5 @@
+using Microsoft.FSharp.Collections;
 using Microsoft.FSharp.Core;
-using SimpleLevelEditor.Formats.EntityConfig.Model;
 using SimpleLevelEditor.Formats.EntityConfig.XmlModel;
 using SimpleLevelEditor.Formats.Types.EntityConfig;
 using System.Xml;
@@ -22,24 +22,18 @@ public static class EntityConfigXmlDeserializer
 		if (xmlEntityConfigData.Version != 2)
 			throw new InvalidOperationException($"Unsupported entity config version '{xmlEntityConfigData.Version}'.");
 
-		EntityConfigData entityConfig = new()
-		{
-			Version = xmlEntityConfigData.Version,
-			Entities = xmlEntityConfigData.Entities.ConvertAll(e =>
+		EntityConfigData entityConfig = new(
+			version: xmlEntityConfigData.Version,
+			entities: ListModule.OfSeq(xmlEntityConfigData.Entities.ConvertAll(e =>
 			{
-				return new EntityDescriptor
-				{
-					Name = e.Name,
-					Shape = EntityShape.FromShapeText(e.Shape),
-					Properties = e.Properties.ConvertAll(p => new EntityPropertyDescriptor
-					{
-						Name = p.Name,
-						Type = EntityPropertyTypeDescriptor.FromXmlData(p.Type, p.DefaultValue ?? FSharpOption<string>.None, p.Step ?? FSharpOption<string>.None, p.MinValue ?? FSharpOption<string>.None, p.MaxValue ?? FSharpOption<string>.None),
-						Description = p.Description,
-					}),
-				};
-			}),
-		};
+				return new EntityDescriptor(
+					name: e.Name,
+					shape: EntityShape.FromShapeText(e.Shape),
+					properties: ListModule.OfSeq(e.Properties.ConvertAll(p => new EntityPropertyDescriptor(
+						p.Name,
+						EntityPropertyTypeDescriptor.FromXmlData(p.Type, p.DefaultValue ?? FSharpOption<string>.None, p.Step ?? FSharpOption<string>.None, p.MinValue ?? FSharpOption<string>.None, p.MaxValue ?? FSharpOption<string>.None),
+						p.Description))));
+			})));
 
 		return entityConfig;
 	}

@@ -21,6 +21,9 @@
     <Compile Include="EntityConfig\PointEntityVisualization.fs" />
     <Compile Include="EntityConfig\EntityShape.fs" />
     <Compile Include="EntityConfig\EntityPropertyTypeDescriptor.fs" />
+    <Compile Include="EntityConfig\EntityPropertyDescriptor.fs" />
+    <Compile Include="EntityConfig\EntityDescriptor.fs" />
+    <Compile Include="EntityConfig\EntityConfigData.fs" />
   </ItemGroup>
 
   <ItemGroup>

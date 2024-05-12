@@ -2,7 +2,6 @@ using Detach;
 using Detach.Numerics;
 using ImGuiNET;
 using SimpleLevelEditor.Extensions;
-using SimpleLevelEditor.Formats.EntityConfig.Model;
 using SimpleLevelEditor.Formats.Types;
 using SimpleLevelEditor.Formats.Types.EntityConfig;
 using SimpleLevelEditor.Formats.Types.Level;
@@ -50,7 +49,7 @@ public static class LevelInfoWindow
 		ImGui.Text(Inline.Span($"Version: {entityConfig.Version}"));
 		if (ImGui.TreeNode("Entities"))
 		{
-			for (int i = 0; i < entityConfig.Entities.Count; i++)
+			for (int i = 0; i < entityConfig.Entities.Length; i++)
 			{
 				EntityDescriptor entity = entityConfig.Entities[i];
 				ImGui.SetNextItemOpen(true, ImGuiCond.Appearing);
@@ -129,7 +128,7 @@ public static class LevelInfoWindow
 			ImGui.TreePop();
 		}
 
-		if (entity.Properties.Count > 0)
+		if (entity.Properties.Length > 0)
 		{
 			RenderEntityProperties(i, entity);
 		}
@@ -156,7 +155,7 @@ public static class LevelInfoWindow
 				ImGui.TableSetupColumn("Max");
 				ImGui.TableHeadersRow();
 
-				for (int j = 0; j < entity.Properties.Count; j++)
+				for (int j = 0; j < entity.Properties.Length; j++)
 				{
 					EntityPropertyDescriptor property = entity.Properties[j];
 					Vector4 color = property.Type.GetDisplayColor();
