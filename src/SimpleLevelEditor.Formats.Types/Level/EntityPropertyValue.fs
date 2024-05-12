@@ -15,6 +15,18 @@ type EntityPropertyValue =
     | Rgb     of Value: Rgb
     | Rgba    of Value: Rgba
 
+    member this.DeepCopy() =
+        match this with
+        | Bool    v -> Bool v
+        | Int     v -> Int v
+        | Float   v -> Float v
+        | Vector2 v -> Vector2 v
+        | Vector3 v -> Vector3 v
+        | Vector4 v -> Vector4 v
+        | String  v -> String v
+        | Rgb     v -> Rgb v
+        | Rgba    v -> Rgba v
+
     member this.GetTypeId() =
         match this with
         | Bool    _ -> TypeIds.BoolId

@@ -41,8 +41,7 @@ public record WorldObject
 	public WorldObject DeepCopy()
 	{
 		List<string> newFlags = [];
-		for (int i = 0; i < Flags.Count; i++)
-			newFlags.Add(Flags[i]);
+		newFlags.AddRange(Flags);
 
 		return this with
 		{

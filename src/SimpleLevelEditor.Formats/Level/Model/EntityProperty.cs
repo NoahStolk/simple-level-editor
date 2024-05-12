@@ -7,10 +7,9 @@ public record EntityProperty
 
 	public EntityProperty DeepCopy()
 	{
-		return new EntityProperty
+		return this with
 		{
-			Key = Key,
-			Value = Value,
+			Value = Value.DeepCopy(),
 		};
 	}
 }
