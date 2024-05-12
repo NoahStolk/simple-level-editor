@@ -16,6 +16,13 @@ type Entity =
             Shape = this.Shape.DeepCopy()
             Properties = this.Properties |> List.map (_.DeepCopy()) }
 
+    member this.CloneAndPlaceAtPosition(entityId: int32, position: Vector3) =
+        { Id = entityId
+          Name = this.Name
+          Position = position
+          Shape = this.Shape.DeepCopy()
+          Properties = this.Properties |> List.map (_.DeepCopy()) }
+
     static member CreateDefault() =
         { Id = 0
           Name = System.String.Empty
@@ -23,7 +30,7 @@ type Entity =
           Shape = ShapeDescriptor.Point
           Properties = [] }
 
-    static member FromData(id: int32, shapeData: string, name: string, position: string, properties: Map<string, string>) : Option<Entity> =
+    static member FromData(entityId: int32, shapeData: string, name: string, position: string, properties: Map<string, string>) : Option<Entity> =
         let shape = ShapeDescriptor.FromShapeData shapeData
 
         match shape with
@@ -50,7 +57,7 @@ type Entity =
                     let properties = properties |> List.choose id
 
                     Some
-                        { Id = id
+                        { Id = entityId
                           Name = name
                           Position = position
                           Shape = shape

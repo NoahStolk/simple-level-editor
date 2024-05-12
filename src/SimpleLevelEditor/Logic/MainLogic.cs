@@ -85,11 +85,7 @@ public static class MainLogic
 
 		Entity referenceEntity = LevelEditorState.SelectedEntity ?? EntityEditorWindow.DefaultEntity;
 
-		Entity entity = referenceEntity.DeepCopy() with
-		{
-			Id = LevelState.Level.Entities.Count > 0 ? LevelState.Level.Entities.Max(o => o.Id) + 1 : 0,
-			Position = LevelEditorState.TargetPosition.Value,
-		};
+		Entity entity = referenceEntity.CloneAndPlaceAtPosition(LevelState.Level.Entities.Count > 0 ? LevelState.Level.Entities.Max(o => o.Id) + 1 : 0, LevelEditorState.TargetPosition.Value);
 		LevelState.Level.Entities.Add(entity);
 
 		LevelEditorState.SetSelectedEntity(entity);
