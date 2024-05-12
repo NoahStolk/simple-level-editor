@@ -1,6 +1,6 @@
 using Detach;
 using ImGuiNET;
-using SimpleLevelEditor.Formats.Level.Model;
+using SimpleLevelEditor.Formats.Types.Level;
 using SimpleLevelEditor.Rendering;
 using SimpleLevelEditor.State;
 
@@ -10,17 +10,7 @@ public static class WorldObjectEditorWindow
 {
 	private static bool _proportionalScaling;
 
-	private static readonly WorldObject _default = new()
-	{
-		Id = 0,
-		Mesh = string.Empty,
-		Position = default,
-		Rotation = default,
-		Scale = Vector3.One,
-		Texture = string.Empty,
-		Flags = [],
-	};
-	public static WorldObject DefaultObject { get; private set; } = _default.DeepCopy();
+	public static WorldObject DefaultObject { get; private set; } = WorldObject.CreateDefault();
 
 	public static void Render()
 	{
@@ -36,13 +26,17 @@ public static class WorldObjectEditorWindow
 
 	public static void Reset()
 	{
-		DefaultObject = _default.DeepCopy();
+		DefaultObject = WorldObject.CreateDefault();
 	}
 
 	private static void RenderWorldObjectInputs(WorldObject worldObject)
 	{
 		ImGui.Text("Position");
-		ImGui.DragFloat3("##position", ref worldObject.Position, 0.1f, float.MinValue, float.MaxValue, "%.1f");
+
+		Vector3 position = worldObject.Position;
+		if (ImGui.DragFloat3("##position", ref position, 0.1f, float.MinValue, float.MaxValue, "%.1f"))
+			worldObject.Position = position;
+
 		if (ImGui.IsItemDeactivatedAfterEdit())
 			LevelState.Track("Changed object position");
 
@@ -53,7 +47,11 @@ public static class WorldObjectEditorWindow
 		}
 
 		ImGui.Text("Rotation");
-		ImGui.DragFloat3("##rotation", ref worldObject.Rotation, 5f, -180, 180, "%.0f");
+
+		Vector3 rotation = worldObject.Rotation;
+		if (ImGui.DragFloat3("##rotation", ref rotation, 5f, -180, 180, "%.0f"))
+			worldObject.Rotation = rotation;
+
 		if (ImGui.IsItemDeactivatedAfterEdit())
 			LevelState.Track("Changed object rotation");
 
@@ -67,15 +65,19 @@ public static class WorldObjectEditorWindow
 
 		if (_proportionalScaling)
 		{
-			if (ImGui.DragFloat("##scale_proportional", ref worldObject.Scale.X, 0.05f, 0.05f, float.MaxValue, "%.2f"))
-				ScaleProportionally(ref worldObject.Scale, worldObject.Scale.X);
+			Vector3 scale = worldObject.Scale;
+			if (ImGui.DragFloat("##scale_proportional", ref scale.X, 0.05f, 0.05f, float.MaxValue, "%.2f"))
+				worldObject.Scale = new Vector3(scale.X);
 
 			if (ImGui.IsItemDeactivatedAfterEdit())
 				LevelState.Track("Changed object scale");
 		}
 		else
 		{
-			ImGui.DragFloat3("##scale", ref worldObject.Scale, 0.05f, 0.05f, float.MaxValue, "%.2f");
+			Vector3 scale = worldObject.Scale;
+			if (ImGui.DragFloat3("##scale", ref scale, 0.05f, 0.05f, float.MaxValue, "%.2f"))
+				worldObject.Scale = scale;
+
 			if (ImGui.IsItemDeactivatedAfterEdit())
 				LevelState.Track("Changed object scale");
 		}
@@ -91,12 +93,12 @@ public static class WorldObjectEditorWindow
 
 		ImGui.Separator();
 
-		for (int i = 0; i < worldObject.Flags.Count; i++)
+		for (int i = 0; i < worldObject.Flags.Length; i++)
 		{
 			string value = worldObject.Flags[i];
 
 			if (ImGui.InputText(Inline.Span($"##flag_{worldObject.Id}_{i}"), ref value, 32))
-				worldObject.Flags[i] = value;
+				worldObject.ChangeFlagAtIndex(i, value);
 
 			if (ImGui.IsItemDeactivatedAfterEdit())
 				LevelState.Track("Changed object flags");
@@ -104,14 +106,14 @@ public static class WorldObjectEditorWindow
 			ImGui.SameLine();
 			if (ImGui.Button(Inline.Span($"X##flags{i}")))
 			{
-				worldObject.Flags.RemoveAt(i);
+				worldObject.RemoveFlagAtIndex(i);
 				LevelState.Track("Removed object flag");
 			}
 		}
 
 		if (ImGui.Button("Add Flag"))
 		{
-			worldObject.Flags.Add(string.Empty);
+			worldObject.AddFlag(string.Empty);
 			LevelState.Track("Added object flag");
 		}
 
@@ -231,12 +233,5 @@ public static class WorldObjectEditorWindow
 
 		ImGui.PopID();
 		return false;
-	}
-
-	private static void ScaleProportionally(ref Vector3 scale, float value)
-	{
-		scale.X = value;
-		scale.Y = value;
-		scale.Z = value;
 	}
 }

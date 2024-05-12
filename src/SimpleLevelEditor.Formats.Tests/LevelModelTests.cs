@@ -25,16 +25,7 @@ public class LevelModelTests
 	{
 		Entity entity = new(0, "test", new Vector3(1, 2, 3), ShapeDescriptor.NewSphere(0.5f), ListModule.OfSeq([new EntityProperty("test", EntityPropertyValue.NewFloat(0.5f))]));
 
-		WorldObject worldObject = new()
-		{
-			Position = new Vector3(1, 2, 3),
-			Rotation = new Vector3(4, 5, 6),
-			Flags = ["flag"],
-			Id = 0,
-			Mesh = "Test.obj",
-			Scale = new Vector3(1, 1, 1),
-			Texture = "Test.tga",
-		};
+		WorldObject worldObject = new(0, "Test.obj", "Test.tga", Vector3.One, new Vector3(4, 5, 6), new Vector3(1, 2, 3), ListModule.OfSeq(["flag"]));
 
 		Level3dData level = new()
 		{

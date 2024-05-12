@@ -3,7 +3,6 @@ using Microsoft.FSharp.Core;
 using SimpleLevelEditor.Formats.Level.Model;
 using SimpleLevelEditor.Formats.Level.XmlModel;
 using SimpleLevelEditor.Formats.Types.Level;
-using SimpleLevelEditor.Formats.Utils;
 using System.Xml;
 using System.Xml.Serialization;
 
@@ -27,15 +26,13 @@ internal static class LevelXmlDeserializerV2
 			Meshes = xmlEntityConfigData.Meshes.ConvertAll(m => m.Path),
 			Textures = xmlEntityConfigData.Textures.ConvertAll(m => m.Path),
 			WorldObjects = xmlEntityConfigData.WorldObjects
-				.Select((wo, i) => new WorldObject
+				.Select((wo, i) =>
 				{
-					Id = i + 1,
-					Mesh = wo.Mesh,
-					Texture = wo.Texture,
-					Position = ParseUtils.TryReadVector3(wo.Position, out Vector3 position) ? position : Vector3.Zero,
-					Rotation = ParseUtils.TryReadVector3(wo.Rotation, out Vector3 rotation) ? rotation : Vector3.Zero,
-					Scale = ParseUtils.TryReadVector3(wo.Scale, out Vector3 scale) ? scale : Vector3.One,
-					Flags = wo.Flags.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).ToList(),
+					FSharpOption<WorldObject>? worldObject = WorldObject.FromData(i + 1, wo.Mesh, wo.Texture, wo.Scale, wo.Rotation, wo.Position, wo.Flags);
+					if (worldObject == null)
+						throw new InvalidOperationException("World object is not valid."); // TODO: Add more info.
+
+					return worldObject.Value;
 				})
 				.ToList(),
 			Entities = xmlEntityConfigData.Entities
@@ -43,7 +40,7 @@ internal static class LevelXmlDeserializerV2
 				{
 					FSharpOption<Entity>? entity = Entity.FromData(i + 1, e.Shape, e.Name, e.Position, MapModule.OfSeq(e.Properties.Select(p => Tuple.Create(p.Name, p.Value))));
 					if (entity == null)
-						throw new InvalidOperationException($"Entity {e.Name} is not valid.");
+						throw new InvalidOperationException("Entity is not valid."); // TODO: Add more info.
 
 					return entity.Value;
 				})

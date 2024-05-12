@@ -2,7 +2,6 @@ using Detach.Collisions;
 using Silk.NET.GLFW;
 using SimpleLevelEditor.Content.Data;
 using SimpleLevelEditor.Extensions;
-using SimpleLevelEditor.Formats.Level.Model;
 using SimpleLevelEditor.Formats.Types.EntityConfig;
 using SimpleLevelEditor.Formats.Types.Level;
 using SimpleLevelEditor.Rendering;
@@ -66,11 +65,7 @@ public static class MainLogic
 		if (referenceWorldObject.Mesh.Length == 0 || referenceWorldObject.Texture.Length == 0)
 			return;
 
-		WorldObject worldObject = referenceWorldObject.DeepCopy() with
-		{
-			Id = LevelState.Level.WorldObjects.Count > 0 ? LevelState.Level.WorldObjects.Max(o => o.Id) + 1 : 0,
-			Position = LevelEditorState.TargetPosition.Value,
-		};
+		WorldObject worldObject = referenceWorldObject.CloneAndPlaceAtPosition(LevelState.Level.WorldObjects.Count > 0 ? LevelState.Level.WorldObjects.Max(o => o.Id) + 1 : 0, LevelEditorState.TargetPosition.Value);
 		LevelState.Level.WorldObjects.Add(worldObject);
 
 		LevelEditorState.SetSelectedWorldObject(worldObject);

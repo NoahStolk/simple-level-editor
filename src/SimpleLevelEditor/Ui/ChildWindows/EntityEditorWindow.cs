@@ -2,7 +2,6 @@ using Detach;
 using ImGuiNET;
 using Microsoft.FSharp.Collections;
 using SimpleLevelEditor.Formats.EntityConfig.Model;
-using SimpleLevelEditor.Formats.Level.Model;
 using SimpleLevelEditor.Formats.Types;
 using SimpleLevelEditor.Formats.Types.Level;
 using SimpleLevelEditor.State;

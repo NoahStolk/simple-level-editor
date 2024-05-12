@@ -17,66 +17,54 @@ public class LevelSerializationTests
 	private static readonly string[] _expectedTextures = [@"..\Textures\Blank.tga", @"..\Textures\StoneBlue.tga", @"..\Textures\TilesColor.tga"];
 	private static readonly WorldObject[] _expectedWorldObjects =
 	[
-		new WorldObject
-		{
-			Id = 1,
-			Mesh = @"..\Meshes\Cube.obj",
-			Texture = @"..\Textures\Blank.tga",
-			Position = new Vector3(16, -4, 0),
-			Rotation = new Vector3(0, 0, 0),
-			Scale = new Vector3(64, 8, 64),
-			Flags = ["Transparent"],
-		},
-		new WorldObject
-		{
-			Id = 2,
-			Mesh = @"..\Meshes\Crate.obj",
-			Texture = @"..\Textures\TilesColor.tga",
-			Position = new Vector3(-4, 0.5f, 1),
-			Rotation = new Vector3(0, 0, 0),
-			Scale = new Vector3(1, 1, 1),
-			Flags = ["Dynamic"],
-		},
-		new WorldObject
-		{
-			Id = 3,
-			Mesh = @"..\Meshes\Crate.obj",
-			Texture = @"..\Textures\StoneBlue.tga",
-			Position = new Vector3(-0.5f, 0.5f, -4.5f),
-			Rotation = new Vector3(0, 0, 0),
-			Scale = new Vector3(1, 1, 1),
-			Flags = ["Transparent", "Dynamic"],
-		},
-		new WorldObject
-		{
-			Id = 4,
-			Mesh = @"..\Meshes\Crate.obj",
-			Texture = @"..\Textures\StoneBlue.tga",
-			Position = new Vector3(-4.5f, 0.5f, -3f),
-			Rotation = new Vector3(90, 0, 0),
-			Scale = new Vector3(1, 1, 1),
-			Flags = [],
-		},
-		new WorldObject
-		{
-			Id = 5,
-			Mesh = @"..\Meshes\Sphere.obj",
-			Texture = @"..\Textures\StoneBlue.tga",
-			Position = new Vector3(6, 1, 2),
-			Rotation = new Vector3(0, 90, 0),
-			Scale = new Vector3(1, 1, 1),
-			Flags = [],
-		},
-		new WorldObject
-		{
-			Id = 6,
-			Mesh = @"..\Meshes\Cube.obj",
-			Texture = @"..\Textures\Blank.tga",
-			Position = new Vector3(0, 2, -7.5f),
-			Rotation = new Vector3(0, 0, 0),
-			Scale = new Vector3(16, 4, 1),
-			Flags = [],
-		},
+		new WorldObject(
+			id: 1,
+			mesh: @"..\Meshes\Cube.obj",
+			texture: @"..\Textures\Blank.tga",
+			scale: new Vector3(64, 8, 64),
+			rotation: new Vector3(0, 0, 0),
+			position: new Vector3(16, -4, 0),
+			flags: ListModule.OfSeq(["Transparent"])),
+		new WorldObject(
+			id: 2,
+			mesh: @"..\Meshes\Crate.obj",
+			texture: @"..\Textures\TilesColor.tga",
+			scale: new Vector3(1, 1, 1),
+			rotation: new Vector3(0, 0, 0),
+			position: new Vector3(-4, 0.5f, 1),
+			flags: ListModule.OfSeq(["Dynamic"])),
+		new WorldObject(
+			id: 3,
+			mesh: @"..\Meshes\Crate.obj",
+			texture: @"..\Textures\StoneBlue.tga",
+			scale: new Vector3(1, 1, 1),
+			rotation: new Vector3(0, 0, 0),
+			position: new Vector3(-0.5f, 0.5f, -4.5f),
+			flags: ListModule.OfSeq(["Transparent", "Dynamic"])),
+		new WorldObject(
+			id: 4,
+			mesh: @"..\Meshes\Crate.obj",
+			texture: @"..\Textures\StoneBlue.tga",
+			scale: new Vector3(1, 1, 1),
+			rotation: new Vector3(90, 0, 0),
+			position: new Vector3(-4.5f, 0.5f, -3f),
+			flags: ListModule.Empty<string>()),
+		new WorldObject(
+			id: 5,
+			mesh: @"..\Meshes\Sphere.obj",
+			texture: @"..\Textures\StoneBlue.tga",
+			scale: new Vector3(1, 1, 1),
+			rotation: new Vector3(0, 90, 0),
+			position: new Vector3(6, 1, 2),
+			flags: ListModule.Empty<string>()),
+		new WorldObject(
+			id: 6,
+			mesh: @"..\Meshes\Cube.obj",
+			texture: @"..\Textures\Blank.tga",
+			scale: new Vector3(16, 4, 1),
+			rotation: new Vector3(0, 0, 0),
+			position: new Vector3(0, 2, -7.5f),
+			flags: ListModule.Empty<string>()),
 	];
 	private static readonly Entity[] _expectedEntities =
 	[
@@ -116,10 +104,13 @@ public class LevelSerializationTests
 			Assert.AreEqual(_expectedWorldObjects[i].Id, level.WorldObjects[i].Id);
 			Assert.AreEqual(_expectedWorldObjects[i].Mesh, level.WorldObjects[i].Mesh);
 			Assert.AreEqual(_expectedWorldObjects[i].Texture, level.WorldObjects[i].Texture);
-			Assert.AreEqual(_expectedWorldObjects[i].Position, level.WorldObjects[i].Position);
-			Assert.AreEqual(_expectedWorldObjects[i].Rotation, level.WorldObjects[i].Rotation);
 			Assert.AreEqual(_expectedWorldObjects[i].Scale, level.WorldObjects[i].Scale);
-			CollectionAssert.AreEqual(_expectedWorldObjects[i].Flags, level.WorldObjects[i].Flags);
+			Assert.AreEqual(_expectedWorldObjects[i].Rotation, level.WorldObjects[i].Rotation);
+			Assert.AreEqual(_expectedWorldObjects[i].Position, level.WorldObjects[i].Position);
+
+			Assert.AreEqual(_expectedWorldObjects[i].Flags.Length, level.WorldObjects[i].Flags.Length);
+			for (int j = 0; j < _expectedWorldObjects[i].Flags.Length; j++)
+				Assert.AreEqual(_expectedWorldObjects[i].Flags[j], level.WorldObjects[i].Flags[j]);
 		}
 
 		Assert.AreEqual(_expectedEntities.Length, level.Entities.Count);

@@ -14,7 +14,9 @@ public static class LevelEditorSelectionMenu
 	{
 		if (LevelEditorState.SelectedWorldObject != null)
 		{
-			RenderSelectionMenu(framebufferSize, drawList, cursorScreenPos, nearPlane, normalizedMousePosition, gridSnap, ref LevelEditorState.SelectedWorldObject.Position, LevelEditorState.SelectedWorldObject.Rotation, "world object");
+			Vector3 position = LevelEditorState.SelectedWorldObject.Position;
+			RenderSelectionMenu(framebufferSize, drawList, cursorScreenPos, nearPlane, normalizedMousePosition, gridSnap, ref position, LevelEditorState.SelectedWorldObject.Rotation, "world object");
+			LevelEditorState.SelectedWorldObject.Position = position;
 		}
 		else if (LevelEditorState.SelectedEntity != null)
 		{

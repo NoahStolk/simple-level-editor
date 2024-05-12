@@ -1,4 +1,3 @@
-using SimpleLevelEditor.Formats.Level.Model;
 using SimpleLevelEditor.Formats.Types.Level;
 using SimpleLevelEditor.Rendering;
 
