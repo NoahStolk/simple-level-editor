@@ -9,6 +9,10 @@
     <Version>0.1.0</Version>
   </PropertyGroup>
 
+  <ItemGroup Label="External dependencies">
+    <PackageReference Include="FSharp.SystemTextJson" Version="1.3.13" />
+  </ItemGroup>
+  
   <ItemGroup Label="Static code analysis">
     <PackageReference Include="Microsoft.CodeAnalysis.BannedApiAnalyzers" Version="3.3.4">
       <PrivateAssets>all</PrivateAssets>

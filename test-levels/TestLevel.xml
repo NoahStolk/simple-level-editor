@@ -1,156 +1,861 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Level Version="2" EntityConfig="EntityConfig.xml">
-	<Meshes>
-		<Mesh Path="mesh\ActivatorButton.obj" />
-		<Mesh Path="mesh\Base.obj" />
-		<Mesh Path="mesh\Bullet.obj" />
-		<Mesh Path="mesh\Cone.obj" />
-		<Mesh Path="mesh\Cube.obj" />
-		<Mesh Path="mesh\Cylinder.obj" />
-		<Mesh Path="mesh\DebugArrow.obj" />
-		<Mesh Path="mesh\ExitBase.obj" />
-		<Mesh Path="mesh\ExitSpiral.obj" />
-		<Mesh Path="mesh\Hook.obj" />
-		<Mesh Path="mesh\PillarBase.obj" />
-		<Mesh Path="mesh\Plane.obj" />
-		<Mesh Path="mesh\Ramp.obj" />
-		<Mesh Path="mesh\Relic.obj" />
-		<Mesh Path="mesh\Sphere.obj" />
-		<Mesh Path="mesh\Top.obj" />
-		<Mesh Path="mesh\Weapon.obj" />
-	</Meshes>
-	<Textures>
-		<Texture Path="tex\AudioSourceIcon.tga" />
-		<Texture Path="tex\Blue.tga" />
-		<Texture Path="tex\Bricks.tga" />
-		<Texture Path="tex\BricksGreen.tga" />
-		<Texture Path="tex\BricksMoss0.tga" />
-		<Texture Path="tex\BricksMoss1.tga" />
-		<Texture Path="tex\BricksMoss2.tga" />
-		<Texture Path="tex\BricksVertical.tga" />
-		<Texture Path="tex\Combine0.tga" />
-		<Texture Path="tex\Dirt.tga" />
-		<Texture Path="tex\Grass1.tga" />
-		<Texture Path="tex\Grass2.tga" />
-		<Texture Path="tex\Gravel.tga" />
-		<Texture Path="tex\LightIcon.tga" />
-		<Texture Path="tex\TileBlueWhite.tga" />
-		<Texture Path="tex\TileOrangeWhite.tga" />
-		<Texture Path="tex\TilesGray.tga" />
-	</Textures>
-	<WorldObjects>
-		<WorldObject Mesh="mesh\PillarBase.obj" Texture="tex\Bricks.tga" Position="-0 0 0" Rotation="0 0 0" Scale="1 1 1" Flags="" />
-		<WorldObject Mesh="mesh\Cylinder.obj" Texture="tex\Bricks.tga" Position="0 1.75 0" Rotation="0 0 0" Scale="1 3 1" Flags="Flag1,Flag2" />
-		<WorldObject Mesh="mesh\Plane.obj" Texture="tex\Grass1.tga" Position="-2 0 -0" Rotation="-90 0 0" Scale="2 2 2" Flags="" />
-		<WorldObject Mesh="mesh\Plane.obj" Texture="tex\Grass1.tga" Position="-0 0 2" Rotation="-90 0 0" Scale="2 2 2" Flags="" />
-		<WorldObject Mesh="mesh\Plane.obj" Texture="tex\Grass1.tga" Position="-2 0 2" Rotation="-90 0 0" Scale="2 2 2" Flags="" />
-		<WorldObject Mesh="mesh\Plane.obj" Texture="tex\Grass1.tga" Position="2 0 0" Rotation="-90 0 0" Scale="2 2 2" Flags="" />
-		<WorldObject Mesh="mesh\Plane.obj" Texture="tex\Grass1.tga" Position="2 0 2" Rotation="-90 0 0" Scale="2 2 2" Flags="" />
-		<WorldObject Mesh="mesh\Plane.obj" Texture="tex\Grass1.tga" Position="2 0 -2" Rotation="-90 0 0" Scale="2 2 2" Flags="" />
-		<WorldObject Mesh="mesh\Plane.obj" Texture="tex\Grass1.tga" Position="-0 0 -2" Rotation="-90 0 0" Scale="2 2 2" Flags="" />
-		<WorldObject Mesh="mesh\Plane.obj" Texture="tex\Grass1.tga" Position="-2 0 -2" Rotation="-90 0 0" Scale="2 2 2" Flags="" />
-		<WorldObject Mesh="mesh\Plane.obj" Texture="tex\Grass1.tga" Position="-2 0 -4" Rotation="-90 0 0" Scale="2 2 2" Flags="" />
-		<WorldObject Mesh="mesh\Plane.obj" Texture="tex\Grass1.tga" Position="-0 0 -4" Rotation="-90 0 0" Scale="2 2 2" Flags="" />
-		<WorldObject Mesh="mesh\Plane.obj" Texture="tex\Grass1.tga" Position="2 0 -4" Rotation="-90 0 0" Scale="2 2 2" Flags="" />
-		<WorldObject Mesh="mesh\Plane.obj" Texture="tex\Grass1.tga" Position="4 0 -4" Rotation="-90 0 0" Scale="2 2 2" Flags="" />
-		<WorldObject Mesh="mesh\Plane.obj" Texture="tex\Grass1.tga" Position="4 0 -2" Rotation="-90 0 0" Scale="2 2 2" Flags="" />
-		<WorldObject Mesh="mesh\Plane.obj" Texture="tex\Grass1.tga" Position="4 0 0" Rotation="-90 0 0" Scale="2 2 2" Flags="" />
-		<WorldObject Mesh="mesh\Plane.obj" Texture="tex\Grass1.tga" Position="4 0 2" Rotation="-90 0 0" Scale="2 2 2" Flags="" />
-		<WorldObject Mesh="mesh\Plane.obj" Texture="tex\Grass1.tga" Position="4 0 4" Rotation="-90 0 0" Scale="2 2 2" Flags="" />
-		<WorldObject Mesh="mesh\Plane.obj" Texture="tex\Grass1.tga" Position="2 0 4" Rotation="-90 0 0" Scale="2 2 2" Flags="" />
-		<WorldObject Mesh="mesh\Plane.obj" Texture="tex\Grass1.tga" Position="-0 0 4" Rotation="-90 0 0" Scale="2 2 2" Flags="" />
-		<WorldObject Mesh="mesh\Plane.obj" Texture="tex\Grass1.tga" Position="-2 0 4" Rotation="-90 0 0" Scale="2 2 2" Flags="" />
-		<WorldObject Mesh="mesh\Plane.obj" Texture="tex\Grass1.tga" Position="-4 0 -4" Rotation="-90 0 0" Scale="2 2 2" Flags="" />
-		<WorldObject Mesh="mesh\Plane.obj" Texture="tex\Grass1.tga" Position="-4 0 -2" Rotation="-90 0 0" Scale="2 2 2" Flags="" />
-		<WorldObject Mesh="mesh\Plane.obj" Texture="tex\Grass1.tga" Position="-4 0 0" Rotation="-90 0 0" Scale="2 2 2" Flags="" />
-		<WorldObject Mesh="mesh\Plane.obj" Texture="tex\Grass1.tga" Position="-4 0 2" Rotation="-90 0 0" Scale="2 2 2" Flags="" />
-		<WorldObject Mesh="mesh\Plane.obj" Texture="tex\Grass1.tga" Position="-4 0 4" Rotation="-90 0 0" Scale="2 2 2" Flags="" />
-		<WorldObject Mesh="mesh\PillarBase.obj" Texture="tex\Bricks.tga" Position="0 3.5 -0" Rotation="0 0 180" Scale="1 1 1" Flags="TestFlag" />
-		<WorldObject Mesh="mesh\Ramp.obj" Texture="tex\Grass1.tga" Position="9 2 -0" Rotation="0 -90 0" Scale="10 4 8" Flags="" />
-		<WorldObject Mesh="mesh\Cone.obj" Texture="tex\Dirt.tga" Position="-4 0 -0" Rotation="0 0 0" Scale="1 1 1" Flags="" />
-		<WorldObject Mesh="mesh\Cone.obj" Texture="tex\Dirt.tga" Position="-4 0 -4" Rotation="0 0 0" Scale="1 1 1" Flags="" />
-		<WorldObject Mesh="mesh\Plane.obj" Texture="tex\Grass1.tga" Position="0 -4.7683716E-07 6" Rotation="-90 0 0" Scale="2 2 2" Flags="" />
-		<WorldObject Mesh="mesh\Plane.obj" Texture="tex\Grass1.tga" Position="0 0 8" Rotation="-90 0 0" Scale="2 2 2" Flags="" />
-		<WorldObject Mesh="mesh\Plane.obj" Texture="tex\Grass1.tga" Position="2 0 8" Rotation="-90 0 0" Scale="2 2 2" Flags="" />
-		<WorldObject Mesh="mesh\Plane.obj" Texture="tex\Grass1.tga" Position="4 0 8" Rotation="-90 0 0" Scale="2 2 2" Flags="" />
-		<WorldObject Mesh="mesh\Plane.obj" Texture="tex\Grass1.tga" Position="4 0 10" Rotation="-90 0 0" Scale="2 2 2" Flags="" />
-		<WorldObject Mesh="mesh\Plane.obj" Texture="tex\Grass1.tga" Position="4 0 12" Rotation="-90 0 0" Scale="2 2 2" Flags="" />
-		<WorldObject Mesh="mesh\Plane.obj" Texture="tex\Grass1.tga" Position="4 0 14" Rotation="-90 0 0" Scale="2 2 2" Flags="" />
-		<WorldObject Mesh="mesh\Plane.obj" Texture="tex\Grass1.tga" Position="2 0 14" Rotation="-90 0 0" Scale="2 2 2" Flags="" />
-		<WorldObject Mesh="mesh\Plane.obj" Texture="tex\Grass1.tga" Position="2 0 16" Rotation="-90 0 0" Scale="2 2 2" Flags="" />
-		<WorldObject Mesh="mesh\Plane.obj" Texture="tex\Dirt.tga" Position="0 0 12" Rotation="-90 0 0" Scale="2 2 2" Flags="" />
-		<WorldObject Mesh="mesh\Plane.obj" Texture="tex\Dirt.tga" Position="0 0 14" Rotation="-90 0 0" Scale="2 2 2" Flags="" />
-		<WorldObject Mesh="mesh\Plane.obj" Texture="tex\Dirt.tga" Position="0 4.7683716E-07 16" Rotation="-90 0 0" Scale="2 2 2" Flags="" />
-		<WorldObject Mesh="mesh\Plane.obj" Texture="tex\Dirt.tga" Position="2 0 12" Rotation="-90 0 0" Scale="2 2 2" Flags="" />
-		<WorldObject Mesh="mesh\Plane.obj" Texture="tex\Dirt.tga" Position="2 0 10" Rotation="-90 0 0" Scale="2 2 2" Flags="" />
-		<WorldObject Mesh="mesh\Plane.obj" Texture="tex\Dirt.tga" Position="0 0 10" Rotation="-90 0 0" Scale="2 2 2" Flags="" />
-		<WorldObject Mesh="mesh\Plane.obj" Texture="tex\Dirt.tga" Position="-2 0 10" Rotation="-90 0 0" Scale="2 2 2" Flags="" />
-		<WorldObject Mesh="mesh\Plane.obj" Texture="tex\Dirt.tga" Position="-2 0 8" Rotation="-90 0 0" Scale="2 2 2" Flags="" />
-		<WorldObject Mesh="mesh\Plane.obj" Texture="tex\Dirt.tga" Position="-2 0 6" Rotation="-90 0 0" Scale="2 2 2" Flags="" />
-		<WorldObject Mesh="mesh\Plane.obj" Texture="tex\Dirt.tga" Position="-4 0 6" Rotation="-90 0 0" Scale="2 2 2" Flags="" />
-		<WorldObject Mesh="mesh\Plane.obj" Texture="tex\Dirt.tga" Position="-4 0 8" Rotation="-90 0 0" Scale="2 2 2" Flags="" />
-		<WorldObject Mesh="mesh\Plane.obj" Texture="tex\Dirt.tga" Position="-4 0 10" Rotation="-90 0 0" Scale="2 2 2" Flags="" />
-		<WorldObject Mesh="mesh\Plane.obj" Texture="tex\Dirt.tga" Position="-4 0 12" Rotation="-90 0 0" Scale="2 2 2" Flags="" />
-		<WorldObject Mesh="mesh\Plane.obj" Texture="tex\Dirt.tga" Position="-2 0 12" Rotation="-90 0 0" Scale="2 2 2" Flags="" />
-		<WorldObject Mesh="mesh\Plane.obj" Texture="tex\Dirt.tga" Position="-2 4.7683716E-07 14" Rotation="-90 0 0" Scale="2 2 2" Flags="" />
-		<WorldObject Mesh="mesh\Plane.obj" Texture="tex\Dirt.tga" Position="-4 0 14" Rotation="-90 0 0" Scale="2 2 2" Flags="" />
-		<WorldObject Mesh="mesh\Plane.obj" Texture="tex\Dirt.tga" Position="-4 0 16" Rotation="-90 0 0" Scale="2 2 2" Flags="" />
-		<WorldObject Mesh="mesh\Plane.obj" Texture="tex\Dirt.tga" Position="-2 0 16" Rotation="-90 0 0" Scale="2 2 2" Flags="" />
-		<WorldObject Mesh="mesh\Plane.obj" Texture="tex\Dirt.tga" Position="-2 0 18" Rotation="-90 0 0" Scale="2 2 2" Flags="" />
-		<WorldObject Mesh="mesh\Plane.obj" Texture="tex\Dirt.tga" Position="0 0 18" Rotation="-90 0 0" Scale="2 2 2" Flags="" />
-		<WorldObject Mesh="mesh\Plane.obj" Texture="tex\Dirt.tga" Position="2 0 18" Rotation="-90 0 0" Scale="2 2 2" Flags="" />
-		<WorldObject Mesh="mesh\Plane.obj" Texture="tex\Dirt.tga" Position="4 -4.7683716E-07 18" Rotation="-90 0 0" Scale="2 2 2" Flags="" />
-		<WorldObject Mesh="mesh\Plane.obj" Texture="tex\Dirt.tga" Position="4 -4.7683716E-07 16" Rotation="-90 0 0" Scale="2 2 2" Flags="" />
-		<WorldObject Mesh="mesh\Plane.obj" Texture="tex\Dirt.tga" Position="4 0 6" Rotation="-90 0 0" Scale="2 2 2" Flags="" />
-		<WorldObject Mesh="mesh\Plane.obj" Texture="tex\Dirt.tga" Position="2 0 6" Rotation="-90 0 0" Scale="2 2 2" Flags="" />
-		<WorldObject Mesh="mesh\Plane.obj" Texture="tex\Dirt.tga" Position="6 4.7683716E-07 6" Rotation="-90 0 0" Scale="2 2 2" Flags="" />
-		<WorldObject Mesh="mesh\Plane.obj" Texture="tex\Dirt.tga" Position="6 0 8" Rotation="-90 0 0" Scale="2 2 2" Flags="" />
-		<WorldObject Mesh="mesh\Plane.obj" Texture="tex\Dirt.tga" Position="6 0 10" Rotation="-90 0 0" Scale="2 2 2" Flags="" />
-		<WorldObject Mesh="mesh\ExitSpiral.obj" Texture="tex\Gravel.tga" Position="-2 0 -14" Rotation="180 -180 -180" Scale="1 1 1" Flags="" />
-	</WorldObjects>
-	<Entities>
-		<Entity Name="Point_SimpleSphere" Position="11 0 -13" Shape="point">
-			<Properties />
-		</Entity>
-		<Entity Name="Point_BillboardSprite" Position="9 0 -13" Shape="point">
-			<Properties />
-		</Entity>
-		<Entity Name="Point_Mesh" Position="7 0 -13" Shape="point">
-			<Properties />
-		</Entity>
-		<Entity Name="Sphere" Position="11 0 -20" Shape="sphere 2">
-			<Properties />
-		</Entity>
-		<Entity Name="Aabb" Position="5 0 -20" Shape="aabb 1 1 1">
-			<Properties />
-		</Entity>
-		<Entity Name="Light" Position="11 0 -26" Shape="point">
-			<Properties>
-				<Property Name="Color" Value="rgb 255 255 255" />
-				<Property Name="Radius" Value="float 5" />
-				<Property Name="Shadow" Value="bool false" />
-			</Properties>
-		</Entity>
-		<Entity Name="AudioSource" Position="5 0 -26" Shape="point">
-			<Properties>
-				<Property Name="Audio" Value="str " />
-				<Property Name="Gain" Value="float 1" />
-				<Property Name="Pitch" Value="float 1" />
-				<Property Name="Radius" Value="float 10" />
-			</Properties>
-		</Entity>
-		<Entity Name="DynamicObject" Position="3 0 -13" Shape="point">
-			<Properties>
-				<Property Name="Mesh" Value="str " />
-				<Property Name="Texture" Value="str " />
-				<Property Name="Scale" Value="float3 1 1 1" />
-				<Property Name="Mass" Value="float 1" />
-			</Properties>
-		</Entity>
-		<Entity Name="Item" Position="0 0 -26" Shape="point">
-			<Properties>
-				<Property Name="Type" Value="str " />
-			</Properties>
-		</Entity>
-	</Entities>
-</Level>
+{
+  "EntityConfigPath": "EntityConfig.xml",
+  "Meshes": [
+    "mesh\\ActivatorButton.obj",
+    "mesh\\Base.obj",
+    "mesh\\Bullet.obj",
+    "mesh\\Cone.obj",
+    "mesh\\Cube.obj",
+    "mesh\\Cylinder.obj",
+    "mesh\\DebugArrow.obj",
+    "mesh\\ExitBase.obj",
+    "mesh\\ExitSpiral.obj",
+    "mesh\\Hook.obj",
+    "mesh\\PillarBase.obj",
+    "mesh\\Plane.obj",
+    "mesh\\Ramp.obj",
+    "mesh\\Relic.obj",
+    "mesh\\Sphere.obj",
+    "mesh\\Top.obj",
+    "mesh\\Weapon.obj"
+  ],
+  "Textures": [
+    "tex\\AudioSourceIcon.tga",
+    "tex\\Blue.tga",
+    "tex\\Bricks.tga",
+    "tex\\BricksGreen.tga",
+    "tex\\BricksMoss0.tga",
+    "tex\\BricksMoss1.tga",
+    "tex\\BricksMoss2.tga",
+    "tex\\BricksVertical.tga",
+    "tex\\Combine0.tga",
+    "tex\\Dirt.tga",
+    "tex\\Grass1.tga",
+    "tex\\Grass2.tga",
+    "tex\\Gravel.tga",
+    "tex\\LightIcon.tga",
+    "tex\\TileBlueWhite.tga",
+    "tex\\TileOrangeWhite.tga",
+    "tex\\TilesGray.tga"
+  ],
+  "WorldObjects": [
+    {
+      "Id": 1,
+      "Mesh": "mesh\\PillarBase.obj",
+      "Texture": "tex\\Bricks.tga",
+      "Scale": "1,1,1",
+      "Rotation": "0,0,0",
+      "Position": "-0,0,0",
+      "Flags": []
+    },
+    {
+      "Id": 2,
+      "Mesh": "mesh\\Cylinder.obj",
+      "Texture": "tex\\Bricks.tga",
+      "Scale": "1,3,1",
+      "Rotation": "0,0,0",
+      "Position": "0,1.75,0",
+      "Flags": [
+        "Flag1",
+        "Flag2"
+      ]
+    },
+    {
+      "Id": 3,
+      "Mesh": "mesh\\Plane.obj",
+      "Texture": "tex\\Grass1.tga",
+      "Scale": "2,2,2",
+      "Rotation": "-90,0,0",
+      "Position": "-2,0,-0",
+      "Flags": []
+    },
+    {
+      "Id": 4,
+      "Mesh": "mesh\\Plane.obj",
+      "Texture": "tex\\Grass1.tga",
+      "Scale": "2,2,2",
+      "Rotation": "-90,0,0",
+      "Position": "-0,0,2",
+      "Flags": []
+    },
+    {
+      "Id": 5,
+      "Mesh": "mesh\\Plane.obj",
+      "Texture": "tex\\Grass1.tga",
+      "Scale": "2,2,2",
+      "Rotation": "-90,0,0",
+      "Position": "-2,0,2",
+      "Flags": []
+    },
+    {
+      "Id": 6,
+      "Mesh": "mesh\\Plane.obj",
+      "Texture": "tex\\Grass1.tga",
+      "Scale": "2,2,2",
+      "Rotation": "-90,0,0",
+      "Position": "2,0,0",
+      "Flags": []
+    },
+    {
+      "Id": 7,
+      "Mesh": "mesh\\Plane.obj",
+      "Texture": "tex\\Grass1.tga",
+      "Scale": "2,2,2",
+      "Rotation": "-90,0,0",
+      "Position": "2,0,2",
+      "Flags": []
+    },
+    {
+      "Id": 8,
+      "Mesh": "mesh\\Plane.obj",
+      "Texture": "tex\\Grass1.tga",
+      "Scale": "2,2,2",
+      "Rotation": "-90,0,0",
+      "Position": "2,0,-2",
+      "Flags": []
+    },
+    {
+      "Id": 9,
+      "Mesh": "mesh\\Plane.obj",
+      "Texture": "tex\\Grass1.tga",
+      "Scale": "2,2,2",
+      "Rotation": "-90,0,0",
+      "Position": "-0,0,-2",
+      "Flags": []
+    },
+    {
+      "Id": 10,
+      "Mesh": "mesh\\Plane.obj",
+      "Texture": "tex\\Grass1.tga",
+      "Scale": "2,2,2",
+      "Rotation": "-90,0,0",
+      "Position": "-2,0,-2",
+      "Flags": []
+    },
+    {
+      "Id": 11,
+      "Mesh": "mesh\\Plane.obj",
+      "Texture": "tex\\Grass1.tga",
+      "Scale": "2,2,2",
+      "Rotation": "-90,0,0",
+      "Position": "-2,0,-4",
+      "Flags": []
+    },
+    {
+      "Id": 12,
+      "Mesh": "mesh\\Plane.obj",
+      "Texture": "tex\\Grass1.tga",
+      "Scale": "2,2,2",
+      "Rotation": "-90,0,0",
+      "Position": "-0,0,-4",
+      "Flags": []
+    },
+    {
+      "Id": 13,
+      "Mesh": "mesh\\Plane.obj",
+      "Texture": "tex\\Grass1.tga",
+      "Scale": "2,2,2",
+      "Rotation": "-90,0,0",
+      "Position": "2,0,-4",
+      "Flags": []
+    },
+    {
+      "Id": 14,
+      "Mesh": "mesh\\Plane.obj",
+      "Texture": "tex\\Grass1.tga",
+      "Scale": "2,2,2",
+      "Rotation": "-90,0,0",
+      "Position": "4,0,-4",
+      "Flags": []
+    },
+    {
+      "Id": 15,
+      "Mesh": "mesh\\Plane.obj",
+      "Texture": "tex\\Grass1.tga",
+      "Scale": "2,2,2",
+      "Rotation": "-90,0,0",
+      "Position": "4,0,-2",
+      "Flags": []
+    },
+    {
+      "Id": 16,
+      "Mesh": "mesh\\Plane.obj",
+      "Texture": "tex\\Grass1.tga",
+      "Scale": "2,2,2",
+      "Rotation": "-90,0,0",
+      "Position": "4,0,0",
+      "Flags": []
+    },
+    {
+      "Id": 17,
+      "Mesh": "mesh\\Plane.obj",
+      "Texture": "tex\\Grass1.tga",
+      "Scale": "2,2,2",
+      "Rotation": "-90,0,0",
+      "Position": "4,0,2",
+      "Flags": []
+    },
+    {
+      "Id": 18,
+      "Mesh": "mesh\\Plane.obj",
+      "Texture": "tex\\Grass1.tga",
+      "Scale": "2,2,2",
+      "Rotation": "-90,0,0",
+      "Position": "4,0,4",
+      "Flags": []
+    },
+    {
+      "Id": 19,
+      "Mesh": "mesh\\Plane.obj",
+      "Texture": "tex\\Grass1.tga",
+      "Scale": "2,2,2",
+      "Rotation": "-90,0,0",
+      "Position": "2,0,4",
+      "Flags": []
+    },
+    {
+      "Id": 20,
+      "Mesh": "mesh\\Plane.obj",
+      "Texture": "tex\\Grass1.tga",
+      "Scale": "2,2,2",
+      "Rotation": "-90,0,0",
+      "Position": "-0,0,4",
+      "Flags": []
+    },
+    {
+      "Id": 21,
+      "Mesh": "mesh\\Plane.obj",
+      "Texture": "tex\\Grass1.tga",
+      "Scale": "2,2,2",
+      "Rotation": "-90,0,0",
+      "Position": "-2,0,4",
+      "Flags": []
+    },
+    {
+      "Id": 22,
+      "Mesh": "mesh\\Plane.obj",
+      "Texture": "tex\\Grass1.tga",
+      "Scale": "2,2,2",
+      "Rotation": "-90,0,0",
+      "Position": "-4,0,-4",
+      "Flags": []
+    },
+    {
+      "Id": 23,
+      "Mesh": "mesh\\Plane.obj",
+      "Texture": "tex\\Grass1.tga",
+      "Scale": "2,2,2",
+      "Rotation": "-90,0,0",
+      "Position": "-4,0,-2",
+      "Flags": []
+    },
+    {
+      "Id": 24,
+      "Mesh": "mesh\\Plane.obj",
+      "Texture": "tex\\Grass1.tga",
+      "Scale": "2,2,2",
+      "Rotation": "-90,0,0",
+      "Position": "-4,0,0",
+      "Flags": []
+    },
+    {
+      "Id": 25,
+      "Mesh": "mesh\\Plane.obj",
+      "Texture": "tex\\Grass1.tga",
+      "Scale": "2,2,2",
+      "Rotation": "-90,0,0",
+      "Position": "-4,0,2",
+      "Flags": []
+    },
+    {
+      "Id": 26,
+      "Mesh": "mesh\\Plane.obj",
+      "Texture": "tex\\Grass1.tga",
+      "Scale": "2,2,2",
+      "Rotation": "-90,0,0",
+      "Position": "-4,0,4",
+      "Flags": []
+    },
+    {
+      "Id": 27,
+      "Mesh": "mesh\\PillarBase.obj",
+      "Texture": "tex\\Bricks.tga",
+      "Scale": "1,1,1",
+      "Rotation": "0,0,180",
+      "Position": "0,3.5,-0",
+      "Flags": [
+        "TestFlag"
+      ]
+    },
+    {
+      "Id": 28,
+      "Mesh": "mesh\\Ramp.obj",
+      "Texture": "tex\\Grass1.tga",
+      "Scale": "10,4,8",
+      "Rotation": "0,-90,0",
+      "Position": "9,2,-0",
+      "Flags": []
+    },
+    {
+      "Id": 29,
+      "Mesh": "mesh\\Cone.obj",
+      "Texture": "tex\\Dirt.tga",
+      "Scale": "1,1,1",
+      "Rotation": "0,0,0",
+      "Position": "-4,0,-0",
+      "Flags": []
+    },
+    {
+      "Id": 30,
+      "Mesh": "mesh\\Cone.obj",
+      "Texture": "tex\\Dirt.tga",
+      "Scale": "1,1,1",
+      "Rotation": "0,0,0",
+      "Position": "-4,0,-4",
+      "Flags": []
+    },
+    {
+      "Id": 31,
+      "Mesh": "mesh\\Plane.obj",
+      "Texture": "tex\\Grass1.tga",
+      "Scale": "2,2,2",
+      "Rotation": "-90,0,0",
+      "Position": "0,-4.7683716E-07,6",
+      "Flags": []
+    },
+    {
+      "Id": 32,
+      "Mesh": "mesh\\Plane.obj",
+      "Texture": "tex\\Grass1.tga",
+      "Scale": "2,2,2",
+      "Rotation": "-90,0,0",
+      "Position": "0,0,8",
+      "Flags": []
+    },
+    {
+      "Id": 33,
+      "Mesh": "mesh\\Plane.obj",
+      "Texture": "tex\\Grass1.tga",
+      "Scale": "2,2,2",
+      "Rotation": "-90,0,0",
+      "Position": "2,0,8",
+      "Flags": []
+    },
+    {
+      "Id": 34,
+      "Mesh": "mesh\\Plane.obj",
+      "Texture": "tex\\Grass1.tga",
+      "Scale": "2,2,2",
+      "Rotation": "-90,0,0",
+      "Position": "4,0,8",
+      "Flags": []
+    },
+    {
+      "Id": 35,
+      "Mesh": "mesh\\Plane.obj",
+      "Texture": "tex\\Grass1.tga",
+      "Scale": "2,2,2",
+      "Rotation": "-90,0,0",
+      "Position": "4,0,10",
+      "Flags": []
+    },
+    {
+      "Id": 36,
+      "Mesh": "mesh\\Plane.obj",
+      "Texture": "tex\\Grass1.tga",
+      "Scale": "2,2,2",
+      "Rotation": "-90,0,0",
+      "Position": "4,0,12",
+      "Flags": []
+    },
+    {
+      "Id": 37,
+      "Mesh": "mesh\\Plane.obj",
+      "Texture": "tex\\Grass1.tga",
+      "Scale": "2,2,2",
+      "Rotation": "-90,0,0",
+      "Position": "4,0,14",
+      "Flags": []
+    },
+    {
+      "Id": 38,
+      "Mesh": "mesh\\Plane.obj",
+      "Texture": "tex\\Grass1.tga",
+      "Scale": "2,2,2",
+      "Rotation": "-90,0,0",
+      "Position": "2,0,14",
+      "Flags": []
+    },
+    {
+      "Id": 39,
+      "Mesh": "mesh\\Plane.obj",
+      "Texture": "tex\\Grass1.tga",
+      "Scale": "2,2,2",
+      "Rotation": "-90,0,0",
+      "Position": "2,0,16",
+      "Flags": []
+    },
+    {
+      "Id": 40,
+      "Mesh": "mesh\\Plane.obj",
+      "Texture": "tex\\Dirt.tga",
+      "Scale": "2,2,2",
+      "Rotation": "-90,0,0",
+      "Position": "0,0,12",
+      "Flags": []
+    },
+    {
+      "Id": 41,
+      "Mesh": "mesh\\Plane.obj",
+      "Texture": "tex\\Dirt.tga",
+      "Scale": "2,2,2",
+      "Rotation": "-90,0,0",
+      "Position": "0,0,14",
+      "Flags": []
+    },
+    {
+      "Id": 42,
+      "Mesh": "mesh\\Plane.obj",
+      "Texture": "tex\\Dirt.tga",
+      "Scale": "2,2,2",
+      "Rotation": "-90,0,0",
+      "Position": "0,4.7683716E-07,16",
+      "Flags": []
+    },
+    {
+      "Id": 43,
+      "Mesh": "mesh\\Plane.obj",
+      "Texture": "tex\\Dirt.tga",
+      "Scale": "2,2,2",
+      "Rotation": "-90,0,0",
+      "Position": "2,0,12",
+      "Flags": []
+    },
+    {
+      "Id": 44,
+      "Mesh": "mesh\\Plane.obj",
+      "Texture": "tex\\Dirt.tga",
+      "Scale": "2,2,2",
+      "Rotation": "-90,0,0",
+      "Position": "2,0,10",
+      "Flags": []
+    },
+    {
+      "Id": 45,
+      "Mesh": "mesh\\Plane.obj",
+      "Texture": "tex\\Dirt.tga",
+      "Scale": "2,2,2",
+      "Rotation": "-90,0,0",
+      "Position": "0,0,10",
+      "Flags": []
+    },
+    {
+      "Id": 46,
+      "Mesh": "mesh\\Plane.obj",
+      "Texture": "tex\\Dirt.tga",
+      "Scale": "2,2,2",
+      "Rotation": "-90,0,0",
+      "Position": "-2,0,10",
+      "Flags": []
+    },
+    {
+      "Id": 47,
+      "Mesh": "mesh\\Plane.obj",
+      "Texture": "tex\\Dirt.tga",
+      "Scale": "2,2,2",
+      "Rotation": "-90,0,0",
+      "Position": "-2,0,8",
+      "Flags": []
+    },
+    {
+      "Id": 48,
+      "Mesh": "mesh\\Plane.obj",
+      "Texture": "tex\\Dirt.tga",
+      "Scale": "2,2,2",
+      "Rotation": "-90,0,0",
+      "Position": "-2,0,6",
+      "Flags": []
+    },
+    {
+      "Id": 49,
+      "Mesh": "mesh\\Plane.obj",
+      "Texture": "tex\\Dirt.tga",
+      "Scale": "2,2,2",
+      "Rotation": "-90,0,0",
+      "Position": "-4,0,6",
+      "Flags": []
+    },
+    {
+      "Id": 50,
+      "Mesh": "mesh\\Plane.obj",
+      "Texture": "tex\\Dirt.tga",
+      "Scale": "2,2,2",
+      "Rotation": "-90,0,0",
+      "Position": "-4,0,8",
+      "Flags": []
+    },
+    {
+      "Id": 51,
+      "Mesh": "mesh\\Plane.obj",
+      "Texture": "tex\\Dirt.tga",
+      "Scale": "2,2,2",
+      "Rotation": "-90,0,0",
+      "Position": "-4,0,10",
+      "Flags": []
+    },
+    {
+      "Id": 52,
+      "Mesh": "mesh\\Plane.obj",
+      "Texture": "tex\\Dirt.tga",
+      "Scale": "2,2,2",
+      "Rotation": "-90,0,0",
+      "Position": "-4,0,12",
+      "Flags": []
+    },
+    {
+      "Id": 53,
+      "Mesh": "mesh\\Plane.obj",
+      "Texture": "tex\\Dirt.tga",
+      "Scale": "2,2,2",
+      "Rotation": "-90,0,0",
+      "Position": "-2,0,12",
+      "Flags": []
+    },
+    {
+      "Id": 54,
+      "Mesh": "mesh\\Plane.obj",
+      "Texture": "tex\\Dirt.tga",
+      "Scale": "2,2,2",
+      "Rotation": "-90,0,0",
+      "Position": "-2,4.7683716E-07,14",
+      "Flags": []
+    },
+    {
+      "Id": 55,
+      "Mesh": "mesh\\Plane.obj",
+      "Texture": "tex\\Dirt.tga",
+      "Scale": "2,2,2",
+      "Rotation": "-90,0,0",
+      "Position": "-4,0,14",
+      "Flags": []
+    },
+    {
+      "Id": 56,
+      "Mesh": "mesh\\Plane.obj",
+      "Texture": "tex\\Dirt.tga",
+      "Scale": "2,2,2",
+      "Rotation": "-90,0,0",
+      "Position": "-4,0,16",
+      "Flags": []
+    },
+    {
+      "Id": 57,
+      "Mesh": "mesh\\Plane.obj",
+      "Texture": "tex\\Dirt.tga",
+      "Scale": "2,2,2",
+      "Rotation": "-90,0,0",
+      "Position": "-2,0,16",
+      "Flags": []
+    },
+    {
+      "Id": 58,
+      "Mesh": "mesh\\Plane.obj",
+      "Texture": "tex\\Dirt.tga",
+      "Scale": "2,2,2",
+      "Rotation": "-90,0,0",
+      "Position": "-2,0,18",
+      "Flags": []
+    },
+    {
+      "Id": 59,
+      "Mesh": "mesh\\Plane.obj",
+      "Texture": "tex\\Dirt.tga",
+      "Scale": "2,2,2",
+      "Rotation": "-90,0,0",
+      "Position": "0,0,18",
+      "Flags": []
+    },
+    {
+      "Id": 60,
+      "Mesh": "mesh\\Plane.obj",
+      "Texture": "tex\\Dirt.tga",
+      "Scale": "2,2,2",
+      "Rotation": "-90,0,0",
+      "Position": "2,0,18",
+      "Flags": []
+    },
+    {
+      "Id": 61,
+      "Mesh": "mesh\\Plane.obj",
+      "Texture": "tex\\Dirt.tga",
+      "Scale": "2,2,2",
+      "Rotation": "-90,0,0",
+      "Position": "4,-4.7683716E-07,18",
+      "Flags": []
+    },
+    {
+      "Id": 62,
+      "Mesh": "mesh\\Plane.obj",
+      "Texture": "tex\\Dirt.tga",
+      "Scale": "2,2,2",
+      "Rotation": "-90,0,0",
+      "Position": "4,-4.7683716E-07,16",
+      "Flags": []
+    },
+    {
+      "Id": 63,
+      "Mesh": "mesh\\Plane.obj",
+      "Texture": "tex\\Dirt.tga",
+      "Scale": "2,2,2",
+      "Rotation": "-90,0,0",
+      "Position": "4,0,6",
+      "Flags": []
+    },
+    {
+      "Id": 64,
+      "Mesh": "mesh\\Plane.obj",
+      "Texture": "tex\\Dirt.tga",
+      "Scale": "2,2,2",
+      "Rotation": "-90,0,0",
+      "Position": "2,0,6",
+      "Flags": []
+    },
+    {
+      "Id": 65,
+      "Mesh": "mesh\\Plane.obj",
+      "Texture": "tex\\Dirt.tga",
+      "Scale": "2,2,2",
+      "Rotation": "-90,0,0",
+      "Position": "6,4.7683716E-07,6",
+      "Flags": []
+    },
+    {
+      "Id": 66,
+      "Mesh": "mesh\\Plane.obj",
+      "Texture": "tex\\Dirt.tga",
+      "Scale": "2,2,2",
+      "Rotation": "-90,0,0",
+      "Position": "6,0,8",
+      "Flags": []
+    },
+    {
+      "Id": 67,
+      "Mesh": "mesh\\Plane.obj",
+      "Texture": "tex\\Dirt.tga",
+      "Scale": "2,2,2",
+      "Rotation": "-90,0,0",
+      "Position": "6,0,10",
+      "Flags": []
+    },
+    {
+      "Id": 68,
+      "Mesh": "mesh\\ExitSpiral.obj",
+      "Texture": "tex\\Gravel.tga",
+      "Scale": "1,1,1",
+      "Rotation": "180,-180,-180",
+      "Position": "-2,0,-14",
+      "Flags": []
+    }
+  ],
+  "Entities": [
+    {
+      "Id": 1,
+      "Name": "Point_SimpleSphere",
+      "Position": "11,0,-13",
+      "Shape": {
+        "Case": "Point"
+      },
+      "Properties": []
+    },
+    {
+      "Id": 2,
+      "Name": "Point_BillboardSprite",
+      "Position": "9,0,-13",
+      "Shape": {
+        "Case": "Point"
+      },
+      "Properties": []
+    },
+    {
+      "Id": 3,
+      "Name": "Point_Mesh",
+      "Position": "7,0,-13",
+      "Shape": {
+        "Case": "Point"
+      },
+      "Properties": []
+    },
+    {
+      "Id": 4,
+      "Name": "Sphere",
+      "Position": "11,0,-20",
+      "Shape": {
+        "Case": "Sphere",
+        "Fields": [
+          2
+        ]
+      },
+      "Properties": []
+    },
+    {
+      "Id": 5,
+      "Name": "Aabb",
+      "Position": "5,0,-20",
+      "Shape": {
+        "Case": "Aabb",
+        "Fields": [
+          "1,1,1"
+        ]
+      },
+      "Properties": []
+    },
+    {
+      "Id": 6,
+      "Name": "Light",
+      "Position": "11,0,-26",
+      "Shape": {
+        "Case": "Point"
+      },
+      "Properties": [
+        {
+          "Key": "Color",
+          "Value": {
+            "Case": "Rgb",
+            "Fields": [
+              {}
+            ]
+          }
+        },
+        {
+          "Key": "Radius",
+          "Value": {
+            "Case": "Float",
+            "Fields": [
+              5
+            ]
+          }
+        },
+        {
+          "Key": "Shadow",
+          "Value": {
+            "Case": "Bool",
+            "Fields": [
+              false
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "Id": 7,
+      "Name": "AudioSource",
+      "Position": "5,0,-26",
+      "Shape": {
+        "Case": "Point"
+      },
+      "Properties": [
+        {
+          "Key": "Audio",
+          "Value": {
+            "Case": "String",
+            "Fields": [
+              ""
+            ]
+          }
+        },
+        {
+          "Key": "Gain",
+          "Value": {
+            "Case": "Float",
+            "Fields": [
+              1
+            ]
+          }
+        },
+        {
+          "Key": "Pitch",
+          "Value": {
+            "Case": "Float",
+            "Fields": [
+              1
+            ]
+          }
+        },
+        {
+          "Key": "Radius",
+          "Value": {
+            "Case": "Float",
+            "Fields": [
+              10
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "Id": 8,
+      "Name": "DynamicObject",
+      "Position": "3,0,-13",
+      "Shape": {
+        "Case": "Point"
+      },
+      "Properties": [
+        {
+          "Key": "Mass",
+          "Value": {
+            "Case": "Float",
+            "Fields": [
+              1
+            ]
+          }
+        },
+        {
+          "Key": "Mesh",
+          "Value": {
+            "Case": "String",
+            "Fields": [
+              ""
+            ]
+          }
+        },
+        {
+          "Key": "Scale",
+          "Value": {
+            "Case": "Vector3",
+            "Fields": [
+              "1,1,1"
+            ]
+          }
+        },
+        {
+          "Key": "Texture",
+          "Value": {
+            "Case": "String",
+            "Fields": [
+              ""
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "Id": 9,
+      "Name": "Item",
+      "Position": "0,0,-26",
+      "Shape": {
+        "Case": "Point"
+      },
+      "Properties": [
+        {
+          "Key": "Type",
+          "Value": {
+            "Case": "String",
+            "Fields": [
+              ""
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
