@@ -1,8 +1,8 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SimpleLevelEditor.Formats.EntityConfig;
 using SimpleLevelEditor.Formats.Types;
 using SimpleLevelEditor.Formats.Types.EntityConfig;
 using System.Numerics;
+using System.Text.Json;
 
 namespace SimpleLevelEditor.Formats.Tests;
 
@@ -23,7 +23,8 @@ public class EntityConfigDeserializationTests
 	public void DeserializeEntityConfig()
 	{
 		using FileStream fs = File.OpenRead(Path.Combine("Resources", "EntityConfig.xml"));
-		EntityConfigData data = EntityConfigXmlDeserializer.ReadEntityConfig(fs);
+		EntityConfigData? data = JsonSerializer.Deserialize<EntityConfigData>(fs, SimpleLevelEditorJsonSerializer.DefaultSerializerOptions);
+		Assert.IsNotNull(data);
 
 		Assert.AreEqual(2, data.Version);
 		Assert.AreEqual(5, data.Entities.Length);
