@@ -1,5 +1,6 @@
 using Detach;
 using ImGuiNET;
+using Microsoft.FSharp.Collections;
 using SimpleLevelEditor.Formats.EntityConfig.Model;
 using SimpleLevelEditor.Formats.Level.Model;
 using SimpleLevelEditor.Formats.Types;
@@ -13,15 +14,7 @@ namespace SimpleLevelEditor.Ui.ChildWindows;
 
 public static class EntityEditorWindow
 {
-	private static readonly Entity _default = new()
-	{
-		Id = 0,
-		Name = string.Empty,
-		Properties = [],
-		Position = default,
-		Shape = ShapeDescriptor.Point,
-	};
-	public static Entity DefaultEntity { get; private set; } = _default.DeepCopy();
+	public static Entity DefaultEntity { get; private set; } = Entity.CreateDefault();
 
 	public static void Render()
 	{
@@ -37,7 +30,7 @@ public static class EntityEditorWindow
 
 	public static void Reset()
 	{
-		DefaultEntity = _default.DeepCopy();
+		DefaultEntity = Entity.CreateDefault();
 	}
 
 	private static void RenderEntityInputs(Entity entity)
@@ -58,7 +51,7 @@ public static class EntityEditorWindow
 				{
 					entity.Name = descriptor.Name;
 					entity.Shape = descriptor.Shape.GetDefaultDescriptor();
-					entity.Properties = descriptor.Properties.ConvertAll(p => new EntityProperty(p.Name, p.Type.DefaultValue));
+					entity.Properties = ListModule.OfSeq(descriptor.Properties.ConvertAll(p => new EntityProperty(p.Name, p.Type.DefaultValue)));
 					LevelState.Track("Changed entity type");
 				}
 			}
@@ -71,7 +64,10 @@ public static class EntityEditorWindow
 	{
 		ImGui.Text("Position");
 
-		ImGui.DragFloat3("##position", ref entity.Position, 0.1f, float.MinValue, float.MaxValue, "%.1f");
+		Vector3 position = entity.Position;
+		if (ImGui.DragFloat3("##position", ref position, 0.1f, float.MinValue, float.MaxValue, "%.1f"))
+			entity.Position = position;
+
 		if (ImGui.IsItemDeactivatedAfterEdit())
 			LevelState.Track("Changed entity position");
 
@@ -108,11 +104,11 @@ public static class EntityEditorWindow
 		for (int i = 0; i < entityDescriptor.Properties.Count; i++)
 		{
 			EntityPropertyDescriptor propertyDescriptor = entityDescriptor.Properties[i];
-			EntityProperty? property = entity.Properties.Find(p => p.Key == propertyDescriptor.Name);
+			EntityProperty? property = entity.Properties.FirstOrDefault(p => p.Key == propertyDescriptor.Name);
 			if (property == null)
 			{
 				property = new EntityProperty(propertyDescriptor.Name, propertyDescriptor.Type.DefaultValue);
-				entity.Properties.Add(property);
+				entity.Properties.Append(property);
 			}
 
 			float step = propertyDescriptor.Type.Step;

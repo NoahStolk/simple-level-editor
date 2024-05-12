@@ -1,3 +1,4 @@
+using Microsoft.FSharp.Collections;
 using Microsoft.FSharp.Core;
 using SimpleLevelEditor.Formats.Level.Model;
 using SimpleLevelEditor.Formats.Level.XmlModel;
@@ -40,25 +41,11 @@ internal static class LevelXmlDeserializerV2
 			Entities = xmlEntityConfigData.Entities
 				.Select((e, i) =>
 				{
-					FSharpOption<ShapeDescriptor>? shape = ShapeDescriptor.FromShapeData(e.Shape);
-					if (shape == null)
-						throw new InvalidOperationException($"Shape {e.Shape} is not valid.");
+					FSharpOption<Entity>? entity = Entity.FromData(i + 1, e.Shape, e.Name, e.Position, MapModule.OfSeq(e.Properties.Select(p => Tuple.Create(p.Name, p.Value))));
+					if (entity == null)
+						throw new InvalidOperationException($"Entity {e.Name} is not valid.");
 
-					return new Entity
-					{
-						Id = i + 1,
-						Shape = shape.Value,
-						Name = e.Name,
-						Position = ParseUtils.TryReadVector3(e.Position, out Vector3 position) ? position : Vector3.Zero,
-						Properties = e.Properties.ConvertAll(p =>
-						{
-							FSharpOption<EntityPropertyValue>? value = EntityPropertyValue.FromTypeData(p.Value);
-							if (value == null)
-								throw new InvalidOperationException($"Property {p.Value} value is not valid.");
-
-							return new EntityProperty(p.Name, value.Value);
-						}),
-					};
+					return entity.Value;
 				})
 				.ToList(),
 		};

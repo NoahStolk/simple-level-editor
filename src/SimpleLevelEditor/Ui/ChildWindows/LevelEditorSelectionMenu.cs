@@ -13,9 +13,15 @@ public static class LevelEditorSelectionMenu
 	public static void RenderSelectionMenu(Vector2 framebufferSize, ImDrawListPtr drawList, Vector2 cursorScreenPos, Plane nearPlane, Vector2 normalizedMousePosition, float gridSnap)
 	{
 		if (LevelEditorState.SelectedWorldObject != null)
+		{
 			RenderSelectionMenu(framebufferSize, drawList, cursorScreenPos, nearPlane, normalizedMousePosition, gridSnap, ref LevelEditorState.SelectedWorldObject.Position, LevelEditorState.SelectedWorldObject.Rotation, "world object");
+		}
 		else if (LevelEditorState.SelectedEntity != null)
-			RenderSelectionMenu(framebufferSize, drawList, cursorScreenPos, nearPlane, normalizedMousePosition, gridSnap, ref LevelEditorState.SelectedEntity.Position, Vector3.Zero, "entity");
+		{
+			Vector3 position = LevelEditorState.SelectedEntity.Position;
+			RenderSelectionMenu(framebufferSize, drawList, cursorScreenPos, nearPlane, normalizedMousePosition, gridSnap, ref position, Vector3.Zero, "entity");
+			LevelEditorState.SelectedEntity.Position = position;
+		}
 	}
 
 	private static void RenderSelectionMenu(Vector2 framebufferSize, ImDrawListPtr drawList, Vector2 cursorScreenPos, Plane nearPlane, Vector2 normalizedMousePosition, float gridSnap, ref Vector3 objectPosition, Vector3 objectRotation, ReadOnlySpan<char> name)

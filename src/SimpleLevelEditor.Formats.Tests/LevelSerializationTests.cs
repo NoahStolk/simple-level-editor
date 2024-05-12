@@ -1,4 +1,5 @@
 using FluentAssertions;
+using Microsoft.FSharp.Collections;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SimpleLevelEditor.Formats.Level;
 using SimpleLevelEditor.Formats.Level.Model;
@@ -79,58 +80,11 @@ public class LevelSerializationTests
 	];
 	private static readonly Entity[] _expectedEntities =
 	[
-		new Entity
-		{
-			Id = 1,
-			Name = "PlayerSpawn",
-			Position = new Vector3(0, 1, 0),
-			Shape = ShapeDescriptor.Point,
-			Properties = [],
-		},
-		new Entity
-		{
-			Id = 2,
-			Name = "Light",
-			Position = new Vector3(20, 3, 2),
-			Shape = ShapeDescriptor.Point,
-			Properties =
-			[
-				new EntityProperty("Color", EntityPropertyValue.NewRgb(new Rgb(255, 255, 255))),
-				new EntityProperty("Radius", EntityPropertyValue.NewFloat(20f)),
-			],
-		},
-		new Entity
-		{
-			Id = 3,
-			Name = "Light",
-			Position = new Vector3(27, 1, 12),
-			Shape = ShapeDescriptor.Point,
-			Properties =
-			[
-				new EntityProperty("Color", EntityPropertyValue.NewRgb(new Rgb(255, 47, 0))),
-				new EntityProperty("Radius", EntityPropertyValue.NewFloat(6f)),
-			],
-		},
-		new Entity
-		{
-			Id = 4,
-			Name = "Light",
-			Position = new Vector3(33, 1, 2),
-			Shape = ShapeDescriptor.Point,
-			Properties =
-			[
-				new EntityProperty("Color", EntityPropertyValue.NewRgb(new Rgb(0, 40, 255))),
-				new EntityProperty("Radius", EntityPropertyValue.NewFloat(20f)),
-			],
-		},
-		new Entity
-		{
-			Id = 5,
-			Name = "Field",
-			Position = new Vector3(1, 1, 1),
-			Shape = ShapeDescriptor.NewSphere(10),
-			Properties = [],
-		},
+		new Entity(1, "PlayerSpawn", new Vector3(0, 1, 0), ShapeDescriptor.Point, ListModule.Empty<EntityProperty>()),
+		new Entity(2, "Light", new Vector3(20, 3, 2), ShapeDescriptor.Point, ListModule.OfSeq([new EntityProperty("Color", EntityPropertyValue.NewRgb(new Rgb(255, 255, 255))), new EntityProperty("Radius", EntityPropertyValue.NewFloat(20f))])),
+		new Entity(3, "Light", new Vector3(27, 1, 12), ShapeDescriptor.Point, ListModule.OfSeq([new EntityProperty("Color", EntityPropertyValue.NewRgb(new Rgb(255, 47, 0))), new EntityProperty("Radius", EntityPropertyValue.NewFloat(6f))])),
+		new Entity(4, "Light", new Vector3(33, 1, 2), ShapeDescriptor.Point, ListModule.OfSeq([new EntityProperty("Color", EntityPropertyValue.NewRgb(new Rgb(0, 40, 255))), new EntityProperty("Radius", EntityPropertyValue.NewFloat(20f))])),
+		new Entity(5, "Field", new Vector3(1, 1, 1), ShapeDescriptor.NewSphere(10), ListModule.Empty<EntityProperty>()),
 	];
 
 	[TestMethod]
@@ -175,8 +129,8 @@ public class LevelSerializationTests
 			Assert.AreEqual(_expectedEntities[i].Name, level.Entities[i].Name);
 			Assert.AreEqual(_expectedEntities[i].Position, level.Entities[i].Position);
 			Assert.AreEqual(_expectedEntities[i].Shape, level.Entities[i].Shape);
-			Assert.AreEqual(_expectedEntities[i].Properties.Count, level.Entities[i].Properties.Count);
-			for (int j = 0; j < _expectedEntities[i].Properties.Count; j++)
+			Assert.AreEqual(_expectedEntities[i].Properties.Length, level.Entities[i].Properties.Length);
+			for (int j = 0; j < _expectedEntities[i].Properties.Length; j++)
 			{
 				Assert.AreEqual(_expectedEntities[i].Properties[j].Key, level.Entities[i].Properties[j].Key);
 				Assert.AreEqual(_expectedEntities[i].Properties[j].Value, level.Entities[i].Properties[j].Value);

@@ -1,3 +1,4 @@
+using Microsoft.FSharp.Collections;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SimpleLevelEditor.Formats.Level.Model;
 using SimpleLevelEditor.Formats.Types.Level;
@@ -22,14 +23,7 @@ public class LevelModelTests
 	[TestMethod]
 	public void DeepCopy()
 	{
-		Entity entity = new()
-		{
-			Id = 0,
-			Name = "test",
-			Position = new Vector3(1, 2, 3),
-			Shape = ShapeDescriptor.NewSphere(0.5f),
-			Properties = [new EntityProperty("test", EntityPropertyValue.NewFloat(0.5f))],
-		};
+		Entity entity = new(0, "test", new Vector3(1, 2, 3), ShapeDescriptor.NewSphere(0.5f), ListModule.OfSeq([new EntityProperty("test", EntityPropertyValue.NewFloat(0.5f))]));
 
 		WorldObject worldObject = new()
 		{
