@@ -18,8 +18,7 @@ public record Entity
 		Types.Level.ShapeDescriptor newShape = Shape.DeepCopy();
 
 		List<EntityProperty> newEntityProperties = [];
-		for (int i = 0; i < Properties.Count; i++)
-			newEntityProperties.Add(Properties[i].DeepCopy());
+		newEntityProperties.AddRange(Properties.Select(t => t.DeepCopy()));
 
 		return this with
 		{
