@@ -1,3 +1,5 @@
+using SimpleLevelEditor.Formats.Types.Level;
+
 namespace SimpleLevelEditor.Formats.Level.Model;
 
 public record Level3dData
