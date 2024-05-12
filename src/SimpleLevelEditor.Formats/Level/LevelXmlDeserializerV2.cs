@@ -1,6 +1,5 @@
 using Microsoft.FSharp.Collections;
 using Microsoft.FSharp.Core;
-using SimpleLevelEditor.Formats.Level.Model;
 using SimpleLevelEditor.Formats.Level.XmlModel;
 using SimpleLevelEditor.Formats.Types.Level;
 using System.Xml;
@@ -20,12 +19,11 @@ internal static class LevelXmlDeserializerV2
 		if (_serializer.Deserialize(reader) is not XmlLevel xmlEntityConfigData)
 			throw new InvalidOperationException("XML is not valid.");
 
-		Level3dData level3dData = new()
-		{
-			EntityConfigPath = xmlEntityConfigData.EntityConfig,
-			Meshes = xmlEntityConfigData.Meshes.ConvertAll(m => m.Path),
-			Textures = xmlEntityConfigData.Textures.ConvertAll(m => m.Path),
-			WorldObjects = xmlEntityConfigData.WorldObjects
+		Level3dData level3dData = new(
+			entityConfigPath: xmlEntityConfigData.EntityConfig,
+			meshes: ListModule.OfSeq(xmlEntityConfigData.Meshes.ConvertAll(m => m.Path)),
+			textures: ListModule.OfSeq(xmlEntityConfigData.Textures.ConvertAll(m => m.Path)),
+			worldObjects: ListModule.OfSeq(xmlEntityConfigData.WorldObjects
 				.Select((wo, i) =>
 				{
 					FSharpOption<WorldObject>? worldObject = WorldObject.FromData(i + 1, wo.Mesh, wo.Texture, wo.Scale, wo.Rotation, wo.Position, wo.Flags);
@@ -34,8 +32,8 @@ internal static class LevelXmlDeserializerV2
 
 					return worldObject.Value;
 				})
-				.ToList(),
-			Entities = xmlEntityConfigData.Entities
+				.ToList()),
+			entities: ListModule.OfSeq(xmlEntityConfigData.Entities
 				.Select((e, i) =>
 				{
 					FSharpOption<Entity>? entity = Entity.FromData(i + 1, e.Shape, e.Name, e.Position, MapModule.OfSeq(e.Properties.Select(p => Tuple.Create(p.Name, p.Value))));
@@ -44,8 +42,7 @@ internal static class LevelXmlDeserializerV2
 
 					return entity.Value;
 				})
-				.ToList(),
-		};
+				.ToList()));
 
 		return level3dData;
 	}

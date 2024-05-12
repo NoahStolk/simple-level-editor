@@ -81,7 +81,7 @@ public static class LevelEditorState
 
 	public static void UpdateSelectedWorldObject()
 	{
-		WorldObject? selectedWorldObject = LevelState.Level.WorldObjects.Find(o => o.Id == _selectedWorldObjectId);
+		WorldObject? selectedWorldObject = LevelState.Level.WorldObjects.FirstOrDefault(o => o.Id == _selectedWorldObjectId);
 		if (selectedWorldObject != null)
 		{
 			SetSelectedWorldObject(selectedWorldObject);
@@ -106,7 +106,7 @@ public static class LevelEditorState
 
 	public static void UpdateSelectedEntity()
 	{
-		Entity? selectedEntity = LevelState.Level.Entities.Find(o => o.Id == _selectedEntityId);
+		Entity? selectedEntity = LevelState.Level.Entities.FirstOrDefault(o => o.Id == _selectedEntityId);
 		if (selectedEntity != null)
 		{
 			SetSelectedEntity(selectedEntity);

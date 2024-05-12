@@ -3,9 +3,9 @@ using Detach.Numerics;
 using ImGuiNET;
 using SimpleLevelEditor.Extensions;
 using SimpleLevelEditor.Formats.EntityConfig.Model;
-using SimpleLevelEditor.Formats.Level.Model;
 using SimpleLevelEditor.Formats.Types;
 using SimpleLevelEditor.Formats.Types.EntityConfig;
+using SimpleLevelEditor.Formats.Types.Level;
 using SimpleLevelEditor.State;
 using SimpleLevelEditor.Utils;
 using System.Diagnostics;
@@ -33,12 +33,12 @@ public static class LevelInfoWindow
 
 	private static void RenderLevel(Level3dData level)
 	{
-		ImGui.Text(Inline.Span($"Meshes: {level.Meshes.Count}"));
-		ImGui.Text(Inline.Span($"Textures: {level.Textures.Count}"));
-		ImGui.Text(Inline.Span($"WorldObjects: {level.WorldObjects.Count}"));
-		ImGui.Text(Inline.Span($"Entities: {level.Entities.Count}"));
+		ImGui.Text(Inline.Span($"Meshes: {level.Meshes.Length}"));
+		ImGui.Text(Inline.Span($"Textures: {level.Textures.Length}"));
+		ImGui.Text(Inline.Span($"WorldObjects: {level.WorldObjects.Length}"));
+		ImGui.Text(Inline.Span($"Entities: {level.Entities.Length}"));
 		ImGui.SeparatorText("Entity config");
-		ImGui.TextWrapped(level.EntityConfigPath ?? "<No entity config loaded>");
+		ImGui.TextWrapped(level.EntityConfigPath == null ? "<No entity config loaded>" : level.EntityConfigPath.Value);
 		if (level.EntityConfigPath != null)
 		{
 			RenderEntityConfig(EntityConfigState.EntityConfig);

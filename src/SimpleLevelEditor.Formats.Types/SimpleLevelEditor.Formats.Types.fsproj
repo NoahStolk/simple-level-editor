@@ -17,6 +17,7 @@
     <Compile Include="Level\EntityProperty.fs" />
     <Compile Include="Level\Entity.fs" />
     <Compile Include="Level\WorldObject.fs" />
+    <Compile Include="Level\Level3dData.fs" />
     <Compile Include="EntityConfig\PointEntityVisualization.fs" />
     <Compile Include="EntityConfig\EntityShape.fs" />
     <Compile Include="EntityConfig\EntityPropertyTypeDescriptor.fs" />

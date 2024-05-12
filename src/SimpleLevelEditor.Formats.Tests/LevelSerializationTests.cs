@@ -2,7 +2,6 @@ using FluentAssertions;
 using Microsoft.FSharp.Collections;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SimpleLevelEditor.Formats.Level;
-using SimpleLevelEditor.Formats.Level.Model;
 using SimpleLevelEditor.Formats.Types;
 using SimpleLevelEditor.Formats.Types.Level;
 using System.Numerics;
@@ -95,10 +94,16 @@ public class LevelSerializationTests
 	private static void AssertLevelValues(Level3dData level)
 	{
 		Assert.AreEqual("..\\EntityConfig.xml", level.EntityConfigPath);
-		CollectionAssert.AreEqual(_expectedMeshes, level.Meshes);
-		CollectionAssert.AreEqual(_expectedTextures, level.Textures);
 
-		Assert.AreEqual(_expectedWorldObjects.Length, level.WorldObjects.Count);
+		Assert.AreEqual(_expectedMeshes.Length, level.Meshes.Length);
+		for (int i = 0; i < _expectedMeshes.Length; i++)
+			Assert.AreEqual(_expectedMeshes[i], level.Meshes[i]);
+
+		Assert.AreEqual(_expectedTextures.Length, level.Textures.Length);
+		for (int i = 0; i < _expectedTextures.Length; i++)
+			Assert.AreEqual(_expectedTextures[i], level.Textures[i]);
+
+		Assert.AreEqual(_expectedWorldObjects.Length, level.WorldObjects.Length);
 		for (int i = 0; i < _expectedWorldObjects.Length; i++)
 		{
 			Assert.AreEqual(_expectedWorldObjects[i].Id, level.WorldObjects[i].Id);
@@ -113,7 +118,7 @@ public class LevelSerializationTests
 				Assert.AreEqual(_expectedWorldObjects[i].Flags[j], level.WorldObjects[i].Flags[j]);
 		}
 
-		Assert.AreEqual(_expectedEntities.Length, level.Entities.Count);
+		Assert.AreEqual(_expectedEntities.Length, level.Entities.Length);
 		for (int i = 0; i < _expectedEntities.Length; i++)
 		{
 			Assert.AreEqual(_expectedEntities[i].Id, level.Entities[i].Id);

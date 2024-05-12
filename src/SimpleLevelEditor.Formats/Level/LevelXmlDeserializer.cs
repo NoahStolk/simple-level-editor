@@ -1,4 +1,4 @@
-using SimpleLevelEditor.Formats.Level.Model;
+using SimpleLevelEditor.Formats.Types.Level;
 using System.Globalization;
 using System.Xml;
 

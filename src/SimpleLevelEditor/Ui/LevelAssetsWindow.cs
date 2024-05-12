@@ -1,5 +1,6 @@
 using Detach;
 using ImGuiNET;
+using Microsoft.FSharp.Collections;
 using SimpleLevelEditor.State;
 using System.Diagnostics;
 
@@ -18,13 +19,13 @@ public static class LevelAssetsWindow
 				{
 					string? parentDirectory = Path.GetDirectoryName(LevelState.LevelFilePath);
 					Debug.Assert(parentDirectory != null, "Parent directory should not be null.");
-					string absolutePath = Path.Combine(parentDirectory, LevelState.Level.EntityConfigPath);
+					string absolutePath = Path.Combine(parentDirectory, LevelState.Level.EntityConfigPath.Value);
 					EntityConfigState.LoadEntityConfig(absolutePath);
 				}
 			}
 
 			ImGui.SeparatorText("Entity Config");
-			ImGui.Text(LevelState.Level.EntityConfigPath ?? "<No entity config loaded>");
+			ImGui.Text(LevelState.Level.EntityConfigPath == null ? "<No entity config loaded>" : LevelState.Level.EntityConfigPath.Value);
 
 			ImGui.BeginDisabled(LevelState.LevelFilePath == null);
 			if (ImGui.Button("Load entity config"))
@@ -54,7 +55,7 @@ public static class LevelAssetsWindow
 		ImGui.End();
 	}
 
-	private static void RenderAssetPaths(float windowHeight, ReadOnlySpan<char> name, string dialogFilterList, List<string> list, Action<List<string>> setList)
+	private static void RenderAssetPaths(float windowHeight, ReadOnlySpan<char> name, string dialogFilterList, FSharpList<string> list, Action<FSharpList<string>> setList)
 	{
 		ImGui.SeparatorText(name);
 
@@ -94,7 +95,10 @@ public static class LevelAssetsWindow
 
 			if (toRemove != null)
 			{
-				list.Remove(toRemove);
+				// TODO: Refactor.
+				List<string> mutatedList = list.ToList();
+				mutatedList.Remove(toRemove);
+				setList(ListModule.OfSeq(mutatedList));
 				LevelState.ReloadAssets(LevelState.LevelFilePath);
 
 				LevelState.Track("Removed assets");
@@ -105,7 +109,7 @@ public static class LevelAssetsWindow
 		ImGui.EndDisabled();
 	}
 
-	private static void AddAssetsCallback(List<string> list, Action<List<string>> setList, IReadOnlyList<string>? paths)
+	private static void AddAssetsCallback(FSharpList<string> list, Action<FSharpList<string>> setList, IReadOnlyList<string>? paths)
 	{
 		if (paths == null)
 			return;
@@ -115,8 +119,11 @@ public static class LevelAssetsWindow
 
 		string[] relativePaths = paths.Select(path => Path.GetRelativePath(parentDirectory, path)).ToArray();
 
-		list.AddRange(relativePaths);
-		setList(list.Order().Distinct().ToList());
+		// TODO: Refactor.
+		List<string> mutatedList = list.ToList();
+		mutatedList.AddRange(relativePaths);
+		mutatedList = mutatedList.Order().Distinct().ToList();
+		setList(ListModule.OfSeq(mutatedList));
 		AssetLoadScheduleState.Schedule(LevelState.LevelFilePath);
 
 		LevelState.Track("Added assets");

@@ -65,8 +65,8 @@ public static class MainLogic
 		if (referenceWorldObject.Mesh.Length == 0 || referenceWorldObject.Texture.Length == 0)
 			return;
 
-		WorldObject worldObject = referenceWorldObject.CloneAndPlaceAtPosition(LevelState.Level.WorldObjects.Count > 0 ? LevelState.Level.WorldObjects.Max(o => o.Id) + 1 : 0, LevelEditorState.TargetPosition.Value);
-		LevelState.Level.WorldObjects.Add(worldObject);
+		WorldObject worldObject = referenceWorldObject.CloneAndPlaceAtPosition(LevelState.Level.WorldObjects.Length > 0 ? LevelState.Level.WorldObjects.Max(o => o.Id) + 1 : 0, LevelEditorState.TargetPosition.Value);
+		LevelState.Level.AddWorldObject(worldObject);
 
 		LevelEditorState.SetSelectedWorldObject(worldObject);
 		LevelEditorState.SetHighlightedWorldObject(worldObject);
@@ -80,8 +80,8 @@ public static class MainLogic
 
 		Entity referenceEntity = LevelEditorState.SelectedEntity ?? EntityEditorWindow.DefaultEntity;
 
-		Entity entity = referenceEntity.CloneAndPlaceAtPosition(LevelState.Level.Entities.Count > 0 ? LevelState.Level.Entities.Max(o => o.Id) + 1 : 0, LevelEditorState.TargetPosition.Value);
-		LevelState.Level.Entities.Add(entity);
+		Entity entity = referenceEntity.CloneAndPlaceAtPosition(LevelState.Level.Entities.Length > 0 ? LevelState.Level.Entities.Max(o => o.Id) + 1 : 0, LevelEditorState.TargetPosition.Value);
+		LevelState.Level.AddEntity(entity);
 
 		LevelEditorState.SetSelectedEntity(entity);
 		LevelEditorState.SetHighlightedEntity(entity);
@@ -92,13 +92,13 @@ public static class MainLogic
 	{
 		if (LevelEditorState.SelectedWorldObject != null)
 		{
-			LevelState.Level.WorldObjects.Remove(LevelEditorState.SelectedWorldObject);
+			LevelState.Level.RemoveWorldObject(LevelEditorState.SelectedWorldObject);
 			LevelEditorState.SetSelectedWorldObject(null);
 			LevelState.Track("Deleted world object");
 		}
 		else if (LevelEditorState.SelectedEntity != null)
 		{
-			LevelState.Level.Entities.Remove(LevelEditorState.SelectedEntity);
+			LevelState.Level.RemoveEntity(LevelEditorState.SelectedEntity);
 			LevelEditorState.SetSelectedEntity(null);
 			LevelState.Track("Deleted entity");
 		}
@@ -142,7 +142,7 @@ public static class MainLogic
 
 	private static void RaycastWorldObjects(Vector3 rayStartPosition, Vector3 rayDirection, ref Vector3? closestIntersection)
 	{
-		for (int i = 0; i < LevelState.Level.WorldObjects.Count; i++)
+		for (int i = 0; i < LevelState.Level.WorldObjects.Length; i++)
 		{
 			WorldObject worldObject = LevelState.Level.WorldObjects[i];
 			MeshEntry? mesh = MeshContainer.GetMesh(worldObject.Mesh);
@@ -166,7 +166,7 @@ public static class MainLogic
 
 	private static void RaycastEntities(Vector3 rayStartPosition, Vector3 rayDirection, float? closestDistance)
 	{
-		for (int i = 0; i < LevelState.Level.Entities.Count; i++)
+		for (int i = 0; i < LevelState.Level.Entities.Length; i++)
 		{
 			Entity entity = LevelState.Level.Entities[i];
 			if (!LevelEditorState.ShouldRenderEntity(entity))

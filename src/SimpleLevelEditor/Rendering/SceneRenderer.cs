@@ -224,7 +224,7 @@ public static class SceneRenderer
 	{
 		Gl.LineWidth(2);
 
-		for (int i = 0; i < LevelState.Level.WorldObjects.Count; i++)
+		for (int i = 0; i < LevelState.Level.WorldObjects.Length; i++)
 		{
 			WorldObject worldObject = LevelState.Level.WorldObjects[i];
 			RenderEdges(lineShader, worldObject, GetWorldObjectColor(worldObject));
@@ -275,7 +275,7 @@ public static class SceneRenderer
 	private static unsafe void RenderWorldObjects(ShaderCacheEntry meshShader)
 	{
 		int modelUniform = meshShader.GetUniformLocation("model");
-		for (int i = 0; i < LevelState.Level.WorldObjects.Count; i++)
+		for (int i = 0; i < LevelState.Level.WorldObjects.Length; i++)
 		{
 			WorldObject worldObject = LevelState.Level.WorldObjects[i];
 
@@ -301,7 +301,7 @@ public static class SceneRenderer
 	{
 		int modelUniform = lineShader.GetUniformLocation("model");
 		int colorUniform = lineShader.GetUniformLocation("color");
-		for (int i = 0; i < LevelState.Level.Entities.Count; i++)
+		for (int i = 0; i < LevelState.Level.Entities.Length; i++)
 		{
 			Entity entity = LevelState.Level.Entities[i];
 			if (!LevelEditorState.ShouldRenderEntity(entity))
@@ -353,7 +353,7 @@ public static class SceneRenderer
 	private static unsafe void RenderEntitiesWithMeshShader(ShaderCacheEntry meshShader)
 	{
 		int modelUniform = meshShader.GetUniformLocation("model");
-		for (int i = 0; i < LevelState.Level.Entities.Count; i++)
+		for (int i = 0; i < LevelState.Level.Entities.Length; i++)
 		{
 			Entity entity = LevelState.Level.Entities[i];
 			if (!LevelEditorState.ShouldRenderEntity(entity))
@@ -384,7 +384,7 @@ public static class SceneRenderer
 	private static unsafe void RenderEntitiesWithSpriteShader(ShaderCacheEntry spriteShader)
 	{
 		int modelUniform = spriteShader.GetUniformLocation("model");
-		for (int i = 0; i < LevelState.Level.Entities.Count; i++)
+		for (int i = 0; i < LevelState.Level.Entities.Length; i++)
 		{
 			Entity entity = LevelState.Level.Entities[i];
 			if (!LevelEditorState.ShouldRenderEntity(entity))

@@ -1,5 +1,5 @@
 using SimpleLevelEditor.Formats.Level;
-using SimpleLevelEditor.Formats.Level.Model;
+using SimpleLevelEditor.Formats.Types.Level;
 using SimpleLevelEditor.Rendering;
 using SimpleLevelEditor.Ui.ChildWindows;
 using System.Security.Cryptography;
@@ -79,7 +79,7 @@ public static class LevelState
 		string? levelDirectory = Path.GetDirectoryName(path);
 		if (levelDirectory != null && Level.EntityConfigPath != null)
 		{
-			string entityConfigPath = Path.Combine(levelDirectory, Level.EntityConfigPath);
+			string entityConfigPath = Path.Combine(levelDirectory, Level.EntityConfigPath.Value);
 			if (File.Exists(entityConfigPath))
 				EntityConfigState.LoadEntityConfig(entityConfigPath);
 		}

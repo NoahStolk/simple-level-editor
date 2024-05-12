@@ -126,7 +126,7 @@ public static class WorldObjectEditorWindow
 			float childWidth = ImGui.GetContentRegionAvail().X;
 			float tileSize = childWidth / rowLength;
 			Vector2 origin = ImGui.GetCursorScreenPos();
-			for (int i = 0; i < LevelState.Level.Meshes.Count; i++)
+			for (int i = 0; i < LevelState.Level.Meshes.Length; i++)
 			{
 				string meshName = LevelState.Level.Meshes[i];
 
@@ -153,7 +153,7 @@ public static class WorldObjectEditorWindow
 				}
 			}
 
-			AddScrollMarker(LevelState.Level.Meshes.Count, rowLength, tileSize);
+			AddScrollMarker(LevelState.Level.Meshes.Length, rowLength, tileSize);
 		}
 
 		ImGui.EndChild(); // End Mesh
@@ -165,7 +165,7 @@ public static class WorldObjectEditorWindow
 			float childWidth = ImGui.GetContentRegionAvail().X;
 			float tileSize = childWidth / rowLength;
 			Vector2 origin = ImGui.GetCursorScreenPos();
-			for (int i = 0; i < LevelState.Level.Textures.Count; i++)
+			for (int i = 0; i < LevelState.Level.Textures.Length; i++)
 			{
 				string textureName = LevelState.Level.Textures[i];
 
@@ -187,7 +187,7 @@ public static class WorldObjectEditorWindow
 				}
 			}
 
-			AddScrollMarker(LevelState.Level.Textures.Count, rowLength, tileSize);
+			AddScrollMarker(LevelState.Level.Textures.Length, rowLength, tileSize);
 		}
 
 		ImGui.EndChild(); // End Texture

@@ -1,6 +1,6 @@
 using Microsoft.FSharp.Collections;
+using Microsoft.FSharp.Core;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SimpleLevelEditor.Formats.Level.Model;
 using SimpleLevelEditor.Formats.Types.Level;
 using System.Numerics;
 
@@ -14,10 +14,10 @@ public class LevelModelTests
 	{
 		Level3dData defaultLevel = Level3dData.CreateDefault();
 		Assert.IsNull(defaultLevel.EntityConfigPath);
-		Assert.AreEqual(0, defaultLevel.Meshes.Count);
-		Assert.AreEqual(0, defaultLevel.Textures.Count);
-		Assert.AreEqual(0, defaultLevel.WorldObjects.Count);
-		Assert.AreEqual(0, defaultLevel.Entities.Count);
+		Assert.AreEqual(0, defaultLevel.Meshes.Length);
+		Assert.AreEqual(0, defaultLevel.Textures.Length);
+		Assert.AreEqual(0, defaultLevel.WorldObjects.Length);
+		Assert.AreEqual(0, defaultLevel.Entities.Length);
 	}
 
 	[TestMethod]
@@ -27,22 +27,20 @@ public class LevelModelTests
 
 		WorldObject worldObject = new(0, "Test.obj", "Test.tga", Vector3.One, new Vector3(4, 5, 6), new Vector3(1, 2, 3), ListModule.OfSeq(["flag"]));
 
-		Level3dData level = new()
-		{
-			Entities = [entity],
-			Meshes = ["Test.obj"],
-			Textures = ["Test.tga"],
-			WorldObjects = [worldObject],
-			EntityConfigPath = null,
-		};
+		Level3dData level = new(
+			FSharpOption<string>.None,
+			ListModule.OfSeq(["Test.obj"]),
+			ListModule.OfSeq(["Test.tga"]),
+			ListModule.OfSeq([worldObject]),
+			ListModule.OfSeq([entity]));
 
 		Level3dData copy = level.DeepCopy();
 
 		// Test counts.
-		Assert.AreEqual(level.Entities.Count, copy.Entities.Count);
-		Assert.AreEqual(level.Meshes.Count, copy.Meshes.Count);
-		Assert.AreEqual(level.Textures.Count, copy.Textures.Count);
-		Assert.AreEqual(level.WorldObjects.Count, copy.WorldObjects.Count);
+		Assert.AreEqual(level.Entities.Length, copy.Entities.Length);
+		Assert.AreEqual(level.Meshes.Length, copy.Meshes.Length);
+		Assert.AreEqual(level.Textures.Length, copy.Textures.Length);
+		Assert.AreEqual(level.WorldObjects.Length, copy.WorldObjects.Length);
 		Assert.AreEqual(level.EntityConfigPath, copy.EntityConfigPath);
 
 		// Test entity and world object references.
