@@ -1,3 +1,5 @@
+using SimpleLevelEditor.Formats.Types.Level;
+
 namespace SimpleLevelEditor.Formats.Level.Model;
 
 public record Entity
@@ -10,15 +12,15 @@ public record Entity
 
 	public required string Name;
 	public required Vector3 Position;
-	public required Types.Level.ShapeDescriptor Shape;
+	public required ShapeDescriptor Shape;
 	public required List<EntityProperty> Properties;
 
 	public Entity DeepCopy()
 	{
-		Types.Level.ShapeDescriptor newShape = Shape.DeepCopy();
+		ShapeDescriptor newShape = Shape.DeepCopy();
 
 		List<EntityProperty> newEntityProperties = [];
-		newEntityProperties.AddRange(Properties.Select(t => t.DeepCopy()));
+		newEntityProperties.AddRange(Properties.Select(p => p.DeepCopy()));
 
 		return this with
 		{

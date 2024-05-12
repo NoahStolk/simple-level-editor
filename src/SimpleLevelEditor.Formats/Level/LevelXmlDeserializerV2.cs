@@ -56,11 +56,7 @@ internal static class LevelXmlDeserializerV2
 							if (value == null)
 								throw new InvalidOperationException($"Property {p.Value} value is not valid.");
 
-							return new EntityProperty
-							{
-								Key = p.Name,
-								Value = value.Value,
-							};
+							return new EntityProperty(p.Name, value.Value);
 						}),
 					};
 				})

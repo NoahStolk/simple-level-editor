@@ -95,16 +95,8 @@ public class LevelSerializationTests
 			Shape = ShapeDescriptor.Point,
 			Properties =
 			[
-				new EntityProperty
-				{
-					Key = "Color",
-					Value = EntityPropertyValue.NewRgb(new Rgb(255, 255, 255)),
-				},
-				new EntityProperty
-				{
-					Key = "Radius",
-					Value = EntityPropertyValue.NewFloat(20f),
-				},
+				new EntityProperty("Color", EntityPropertyValue.NewRgb(new Rgb(255, 255, 255))),
+				new EntityProperty("Radius", EntityPropertyValue.NewFloat(20f)),
 			],
 		},
 		new Entity
@@ -115,16 +107,8 @@ public class LevelSerializationTests
 			Shape = ShapeDescriptor.Point,
 			Properties =
 			[
-				new EntityProperty
-				{
-					Key = "Color",
-					Value = EntityPropertyValue.NewRgb(new Rgb(255, 47, 0)),
-				},
-				new EntityProperty
-				{
-					Key = "Radius",
-					Value = EntityPropertyValue.NewFloat(6f),
-				},
+				new EntityProperty("Color", EntityPropertyValue.NewRgb(new Rgb(255, 47, 0))),
+				new EntityProperty("Radius", EntityPropertyValue.NewFloat(6f)),
 			],
 		},
 		new Entity
@@ -135,16 +119,8 @@ public class LevelSerializationTests
 			Shape = ShapeDescriptor.Point,
 			Properties =
 			[
-				new EntityProperty
-				{
-					Key = "Color",
-					Value = EntityPropertyValue.NewRgb(new Rgb(0, 40, 255)),
-				},
-				new EntityProperty
-				{
-					Key = "Radius",
-					Value = EntityPropertyValue.NewFloat(20f),
-				},
+				new EntityProperty("Color", EntityPropertyValue.NewRgb(new Rgb(0, 40, 255))),
+				new EntityProperty("Radius", EntityPropertyValue.NewFloat(20f)),
 			],
 		},
 		new Entity

@@ -58,11 +58,7 @@ public static class EntityEditorWindow
 				{
 					entity.Name = descriptor.Name;
 					entity.Shape = descriptor.Shape.GetDefaultDescriptor();
-					entity.Properties = descriptor.Properties.ConvertAll(p => new EntityProperty
-					{
-						Key = p.Name,
-						Value = p.Type.DefaultValue,
-					});
+					entity.Properties = descriptor.Properties.ConvertAll(p => new EntityProperty(p.Name, p.Type.DefaultValue));
 					LevelState.Track("Changed entity type");
 				}
 			}
@@ -115,11 +111,7 @@ public static class EntityEditorWindow
 			EntityProperty? property = entity.Properties.Find(p => p.Key == propertyDescriptor.Name);
 			if (property == null)
 			{
-				property = new EntityProperty
-				{
-					Key = propertyDescriptor.Name,
-					Value = propertyDescriptor.Type.DefaultValue,
-				};
+				property = new EntityProperty(propertyDescriptor.Name, propertyDescriptor.Type.DefaultValue);
 				entity.Properties.Add(property);
 			}
 

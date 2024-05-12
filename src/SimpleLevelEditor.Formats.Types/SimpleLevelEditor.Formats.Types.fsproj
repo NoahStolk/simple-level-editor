@@ -14,6 +14,7 @@
     <Compile Include="PointEntityVisualizationIds.fs" />
     <Compile Include="Level\ShapeDescriptor.fs" />
     <Compile Include="Level\EntityPropertyValue.fs" />
+    <Compile Include="Level\EntityProperty.fs" />
     <Compile Include="EntityConfig\PointEntityVisualization.fs" />
     <Compile Include="EntityConfig\EntityShape.fs" />
     <Compile Include="EntityConfig\EntityPropertyTypeDescriptor.fs" />

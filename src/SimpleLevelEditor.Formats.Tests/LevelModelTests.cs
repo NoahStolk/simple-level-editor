@@ -28,7 +28,7 @@ public class LevelModelTests
 			Name = "test",
 			Position = new Vector3(1, 2, 3),
 			Shape = ShapeDescriptor.NewSphere(0.5f),
-			Properties = [new EntityProperty { Key = "test", Value = EntityPropertyValue.NewFloat(0.5f) }],
+			Properties = [new EntityProperty("test", EntityPropertyValue.NewFloat(0.5f))],
 		};
 
 		WorldObject worldObject = new()
