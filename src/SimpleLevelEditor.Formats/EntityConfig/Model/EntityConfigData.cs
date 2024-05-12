@@ -8,7 +8,7 @@ public record EntityConfigData
 
 	public static EntityConfigData CreateDefault()
 	{
-		return new()
+		return new EntityConfigData
 		{
 			Version = 1,
 			Entities = [],

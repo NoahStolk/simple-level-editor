@@ -35,7 +35,7 @@ public static class Camera3d
 		FocusPointTarget = focusPoint;
 	}
 
-	public static void SetFocusPointHard(Vector3 focusPoint)
+	private static void SetFocusPointHard(Vector3 focusPoint)
 	{
 		FocusPointTarget = focusPoint;
 		_focusPoint = focusPoint;
@@ -55,17 +55,17 @@ public static class Camera3d
 			{
 				const float speed = 15;
 				if (Input.GlfwInput.IsKeyDown(Keys.W))
-					SetFocusPointHard(FocusPointTarget + Vector3.Transform(new(0, 0, speed), Rotation) * App.Instance.FrameTime);
+					SetFocusPointHard(FocusPointTarget + Vector3.Transform(new Vector3(0, 0, speed), Rotation) * App.Instance.FrameTime);
 				if (Input.GlfwInput.IsKeyDown(Keys.S))
-					SetFocusPointHard(FocusPointTarget + Vector3.Transform(new(0, 0, -speed), Rotation) * App.Instance.FrameTime);
+					SetFocusPointHard(FocusPointTarget + Vector3.Transform(new Vector3(0, 0, -speed), Rotation) * App.Instance.FrameTime);
 				if (Input.GlfwInput.IsKeyDown(Keys.A))
-					SetFocusPointHard(FocusPointTarget + Vector3.Transform(new(speed, 0, 0), Rotation) * App.Instance.FrameTime);
+					SetFocusPointHard(FocusPointTarget + Vector3.Transform(new Vector3(speed, 0, 0), Rotation) * App.Instance.FrameTime);
 				if (Input.GlfwInput.IsKeyDown(Keys.D))
-					SetFocusPointHard(FocusPointTarget + Vector3.Transform(new(-speed, 0, 0), Rotation) * App.Instance.FrameTime);
+					SetFocusPointHard(FocusPointTarget + Vector3.Transform(new Vector3(-speed, 0, 0), Rotation) * App.Instance.FrameTime);
 				if (Input.GlfwInput.IsKeyDown(Keys.Space))
-					SetFocusPointHard(FocusPointTarget + Vector3.Transform(new(0, speed, 0), Rotation) * App.Instance.FrameTime);
+					SetFocusPointHard(FocusPointTarget + Vector3.Transform(new Vector3(0, speed, 0), Rotation) * App.Instance.FrameTime);
 				if (Input.GlfwInput.IsKeyDown(Keys.ShiftLeft))
-					SetFocusPointHard(FocusPointTarget + Vector3.Transform(new(0, -speed, 0), Rotation) * App.Instance.FrameTime);
+					SetFocusPointHard(FocusPointTarget + Vector3.Transform(new Vector3(0, -speed, 0), Rotation) * App.Instance.FrameTime);
 			}
 		}
 		else
@@ -74,7 +74,7 @@ public static class Camera3d
 		}
 
 		_focusPoint = Vector3.Lerp(_focusPoint, FocusPointTarget, dt * 10);
-		Position = _focusPoint + Vector3.Transform(new(0, 0, -_zoom), Rotation);
+		Position = _focusPoint + Vector3.Transform(new Vector3(0, 0, -_zoom), Rotation);
 
 		ViewMatrix = Matrix4x4.CreateLookAt(Position, Position + LookDirection, UpDirection);
 
@@ -114,7 +114,7 @@ public static class Camera3d
 		else if (Mode == CameraMode.Pan)
 		{
 			float multiplier = 0.0005f * _zoom;
-			SetFocusPointHard(FocusPointTarget - Vector3.Transform(new(-delta.X * multiplier, -delta.Y * multiplier, 0), Rotation));
+			SetFocusPointHard(FocusPointTarget - Vector3.Transform(new Vector3(-delta.X * multiplier, -delta.Y * multiplier, 0), Rotation));
 
 			Graphics.Glfw.SetCursorPos(Graphics.Window, _originalCursor.X, _originalCursor.Y);
 		}
@@ -172,6 +172,6 @@ public static class Camera3d
 	{
 		float x = framebufferSize.X * 0.5f + position.X * framebufferSize.X * 0.5f / position.Z;
 		float y = framebufferSize.Y * 0.5f + position.Y * framebufferSize.Y * 0.5f / position.Z;
-		return new(x, framebufferSize.Y - y);
+		return new Vector2(x, framebufferSize.Y - y);
 	}
 }

@@ -119,7 +119,7 @@ public static class WorldObjectEditorWindow
 
 		ImGui.SeparatorText("Mesh");
 
-		if (ImGui.BeginChild("Mesh", new(0, 280), ImGuiChildFlags.Border))
+		if (ImGui.BeginChild("Mesh", new Vector2(0, 280), ImGuiChildFlags.Border))
 		{
 			float childWidth = ImGui.GetContentRegionAvail().X;
 			float tileSize = childWidth / rowLength;
@@ -158,7 +158,7 @@ public static class WorldObjectEditorWindow
 
 		ImGui.SeparatorText("Texture");
 
-		if (ImGui.BeginChild("Texture", new(0, 280), ImGuiChildFlags.Border))
+		if (ImGui.BeginChild("Texture", new Vector2(0, 280), ImGuiChildFlags.Border))
 		{
 			float childWidth = ImGui.GetContentRegionAvail().X;
 			float tileSize = childWidth / rowLength;
@@ -219,7 +219,7 @@ public static class WorldObjectEditorWindow
 	private static void AddScrollMarker(int tileCount, int rowLength, float tileSize)
 	{
 		int rows = (int)MathF.Ceiling(tileCount / (float)rowLength);
-		ImGui.InvisibleButton("scroll_marker", new(0, rows * tileSize));
+		ImGui.InvisibleButton("scroll_marker", new Vector2(0, rows * tileSize));
 	}
 
 	private static bool RenderResetButton(ReadOnlySpan<char> label)

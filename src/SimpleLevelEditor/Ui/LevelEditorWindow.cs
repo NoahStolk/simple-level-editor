@@ -37,7 +37,7 @@ public static class LevelEditorWindow
 			Vector2 cursorPosition = ImGui.GetCursorPos();
 
 			ImGui.PushStyleColor(ImGuiCol.ChildBg, new Vector4(0, 0, 0, 0.2f));
-			if (ImGui.BeginChild("Level Editor Menu", new(280, 192), ImGuiChildFlags.Border))
+			if (ImGui.BeginChild("Level Editor Menu", new Vector2(280, 192), ImGuiChildFlags.Border))
 			{
 				const int itemWidth = 160;
 				if (ImGui.BeginTabBar("LevelEditorMenus"))

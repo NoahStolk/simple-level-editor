@@ -10,7 +10,7 @@ public record Level3dData
 
 	public static Level3dData CreateDefault()
 	{
-		return new()
+		return new Level3dData
 		{
 			EntityConfigPath = null,
 			Meshes = [],
@@ -23,22 +23,18 @@ public record Level3dData
 	public Level3dData DeepCopy()
 	{
 		List<string> newMeshes = [];
-		for (int i = 0; i < Meshes.Count; i++)
-			newMeshes.Add(Meshes[i]);
+		newMeshes.AddRange(Meshes);
 
 		List<string> newTextures = [];
-		for (int i = 0; i < Textures.Count; i++)
-			newTextures.Add(Textures[i]);
+		newTextures.AddRange(Textures);
 
 		List<WorldObject> newWorldObjects = [];
-		for (int i = 0; i < WorldObjects.Count; i++)
-			newWorldObjects.Add(WorldObjects[i].DeepCopy());
+		newWorldObjects.AddRange(WorldObjects.Select(t => t.DeepCopy()));
 
 		List<Entity> newEntities = [];
-		for (int i = 0; i < Entities.Count; i++)
-			newEntities.Add(Entities[i].DeepCopy());
+		newEntities.AddRange(Entities.Select(t => t.DeepCopy()));
 
-		return new()
+		return new Level3dData
 		{
 			EntityConfigPath = EntityConfigPath,
 			Meshes = newMeshes,

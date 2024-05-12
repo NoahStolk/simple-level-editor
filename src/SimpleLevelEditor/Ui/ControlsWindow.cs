@@ -17,7 +17,7 @@ public static class ControlsWindow
 
 	public static void Render(ref bool showWindow)
 	{
-		ImGui.SetNextWindowSize(new(512, 384));
+		ImGui.SetNextWindowSize(new Vector2(512, 384));
 		if (ImGui.Begin("Controls & Shortcuts", ref showWindow, ImGuiWindowFlags.NoResize))
 		{
 			if (ImGui.BeginTable("Table", 2))

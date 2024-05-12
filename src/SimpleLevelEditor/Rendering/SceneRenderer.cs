@@ -1,4 +1,3 @@
-using Detach.Numerics;
 using Detach.Utils;
 using Silk.NET.OpenGL;
 using SimpleLevelEditor.Content;

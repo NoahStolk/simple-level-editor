@@ -115,7 +115,7 @@ public static class MainLogic
 
 	private static void CalculateTargetPosition(Vector2 normalizedMousePosition, Plane nearPlane, float gridSnap)
 	{
-		Vector3 targetPosition = Camera3d.GetMouseWorldPosition(normalizedMousePosition, new(Vector3.UnitY, -LevelEditorState.TargetHeight));
+		Vector3 targetPosition = Camera3d.GetMouseWorldPosition(normalizedMousePosition, new Plane(Vector3.UnitY, -LevelEditorState.TargetHeight));
 		LevelEditorState.TargetPosition = Vector3.Dot(targetPosition, nearPlane.Normal) + nearPlane.D >= 0 ? null : new Vector3
 		{
 			X = gridSnap > 0 ? MathF.Round(targetPosition.X / gridSnap) * gridSnap : targetPosition.X,

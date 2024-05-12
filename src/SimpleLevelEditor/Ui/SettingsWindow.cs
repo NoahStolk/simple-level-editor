@@ -6,8 +6,8 @@ public static class SettingsWindow
 {
 	public static void Render(ref bool showSettingsWindow)
 	{
-		ImGui.SetNextWindowSize(new(300, 100), ImGuiCond.FirstUseEver);
-		ImGui.SetNextWindowPos(new(50, 50), ImGuiCond.FirstUseEver);
+		ImGui.SetNextWindowSize(new Vector2(300, 100), ImGuiCond.FirstUseEver);
+		ImGui.SetNextWindowPos(new Vector2(50, 50), ImGuiCond.FirstUseEver);
 
 		if (ImGui.Begin("Settings", ref showSettingsWindow))
 		{

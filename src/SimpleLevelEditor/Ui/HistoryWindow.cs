@@ -13,7 +13,7 @@ public static class HistoryWindow
 			{
 				bool isCurrent = i == LevelState.CurrentHistoryIndex;
 				HistoryEntry entry = LevelState.History[i];
-				ImGui.TextColored(isCurrent ? new(0, 1, 0, 1) : Vector4.One, entry.EditDescription);
+				ImGui.TextColored(isCurrent ? new Vector4(0, 1, 0, 1) : Vector4.One, entry.EditDescription);
 			}
 		}
 

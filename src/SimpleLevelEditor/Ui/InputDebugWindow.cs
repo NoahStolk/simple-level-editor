@@ -45,7 +45,7 @@ public static class InputDebugWindow
 			}
 
 			ImGui.SeparatorText("Debug text input");
-			ImGui.InputTextMultiline("##DebugTextInput", ref _debugTextInput, 1024, new(0, 128));
+			ImGui.InputTextMultiline("##DebugTextInput", ref _debugTextInput, 1024, new Vector2(0, 128));
 		}
 
 		ImGui.End();

@@ -77,7 +77,7 @@ public static class LevelAssetsWindow
 		}
 
 		ImGui.BeginDisabled(LevelState.LevelFilePath == null);
-		if (ImGui.BeginChild(Inline.Span($"{name}List"), new(0, windowHeight), ImGuiChildFlags.Border))
+		if (ImGui.BeginChild(Inline.Span($"{name}List"), new Vector2(0, windowHeight), ImGuiChildFlags.Border))
 		{
 			string? toRemove = null;
 			foreach (string item in list)

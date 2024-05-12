@@ -17,6 +17,6 @@ public static class InternalContent
 
 	public static void AddShader(string name, string vertexCode, string fragmentCode)
 	{
-		_shaders.Add(name, new(ShaderLoader.Load(vertexCode, fragmentCode)));
+		_shaders.Add(name, new ShaderCacheEntry(ShaderLoader.Load(vertexCode, fragmentCode)));
 	}
 }

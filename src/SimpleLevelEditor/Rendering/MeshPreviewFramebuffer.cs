@@ -110,7 +110,7 @@ public class MeshPreviewFramebuffer
 		Gl.UseProgram(lineShader.Id);
 
 		Quaternion cameraRotation = Quaternion.CreateFromYawPitchRoll(_timer, 0.5f, 0);
-		Vector3 cameraPosition = _origin + Vector3.Transform(new(0, 0, -_zoom), cameraRotation);
+		Vector3 cameraPosition = _origin + Vector3.Transform(new Vector3(0, 0, -_zoom), cameraRotation);
 		Vector3 upDirection = Vector3.Transform(Vector3.UnitY, cameraRotation);
 		Vector3 lookDirection = Vector3.Transform(Vector3.UnitZ, cameraRotation);
 		Matrix4x4 viewMatrix = Matrix4x4.CreateLookAt(cameraPosition, cameraPosition + lookDirection, upDirection);

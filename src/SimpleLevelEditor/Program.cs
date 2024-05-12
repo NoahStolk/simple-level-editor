@@ -41,8 +41,8 @@ unsafe
 UserSettings.LoadImGuiIni();
 
 ImGuiStylePtr style = ImGui.GetStyle();
-style.WindowPadding = new(4, 4);
-style.ItemSpacing = new(4, 4);
+style.WindowPadding = new Vector2(4, 4);
+style.ItemSpacing = new Vector2(4, 4);
 
 Graphics.OnChangeWindowSize = (w, h) =>
 {
@@ -57,5 +57,5 @@ unsafe
 	Graphics.OnChangeWindowSize.Invoke(width, height);
 }
 
-App.Instance = new(imGuiController);
+App.Instance = new App(imGuiController);
 App.Instance.Run();

@@ -47,7 +47,7 @@ public static class LevelEditorSelectionMenu
 			}
 			else
 			{
-				Vector3 targetPosition = Camera3d.GetMouseWorldPosition(normalizedMousePosition, new(Vector3.UnitY, -objectPosition.Y));
+				Vector3 targetPosition = Camera3d.GetMouseWorldPosition(normalizedMousePosition, new Plane(Vector3.UnitY, -objectPosition.Y));
 				if (Vector3.Dot(targetPosition, nearPlane.Normal) + nearPlane.D < 0)
 				{
 					objectPosition.X = gridSnap > 0 ? MathF.Round(targetPosition.X / gridSnap) * gridSnap : targetPosition.X;

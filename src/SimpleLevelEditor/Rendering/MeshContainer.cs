@@ -80,9 +80,9 @@ public static class MeshContainer
 				if (float.IsNaN(normal.X) || float.IsNaN(normal.Y) || float.IsNaN(normal.Z))
 					continue;
 
-				AddEdge(edges, new(a, b), normal);
-				AddEdge(edges, new(b, c), normal);
-				AddEdge(edges, new(c, a), normal);
+				AddEdge(edges, new Edge(a, b), normal);
+				AddEdge(edges, new Edge(b, c), normal);
+				AddEdge(edges, new Edge(c, a), normal);
 			}
 
 			// Find edges that are only used by one triangle.
@@ -99,7 +99,7 @@ public static class MeshContainer
 
 			MeshEntry entry = new(mainMesh, vao, lineIndices.ToArray(), VaoUtils.CreateLineVao(modelData.Positions.ToArray()), boundingMin, boundingMax);
 			_meshes.Add(meshPath, entry);
-			_meshPreviewFramebuffers.Add(meshPath, new(entry));
+			_meshPreviewFramebuffers.Add(meshPath, new MeshPreviewFramebuffer(entry));
 		}
 
 		void AddEdge(IDictionary<Edge, List<Vector3>> edges, Edge d, Vector3 normal)
@@ -127,11 +127,11 @@ public static class MeshContainer
 
 			texture = texture with { Y = 1 - texture.Y };
 
-			outVertices[i] = new(position, texture, normal);
+			outVertices[i] = new Vertex(position, texture, normal);
 			outFaces[i] = (uint)i;
 		}
 
-		return new(outVertices, outFaces);
+		return new Mesh(outVertices, outFaces);
 	}
 
 	private static unsafe uint CreateFromMesh(Mesh mesh)
