@@ -5,7 +5,6 @@ using SimpleLevelEditor.Formats.Types;
 using SimpleLevelEditor.Formats.Types.Level;
 using System.Numerics;
 using System.Text;
-using System.Text.Json;
 
 namespace SimpleLevelEditor.Formats.Tests;
 
@@ -82,12 +81,12 @@ public class LevelSerializationTests
 		string levelV2Xml = SanitizeString(File.ReadAllText(levelV2Path));
 
 		using FileStream fsV2 = File.OpenRead(levelV2Path);
-		Level3dData? levelV2 = JsonSerializer.Deserialize<Level3dData>(fsV2, SimpleLevelEditorJsonSerializer.DefaultSerializerOptions);
+		Level3dData? levelV2 = SimpleLevelEditorJsonSerializer.DeserializeLevel(fsV2);
 		Assert.IsNotNull(levelV2);
 		AssertLevelValues(levelV2);
 
 		using MemoryStream msV2 = new();
-		JsonSerializer.Serialize(msV2, levelV2, SimpleLevelEditorJsonSerializer.DefaultSerializerOptions);
+		SimpleLevelEditorJsonSerializer.SerializeLevel(msV2, levelV2);
 		string serializedLevel = SanitizeString(Encoding.UTF8.GetString(msV2.ToArray()));
 		serializedLevel.Should().BeEquivalentTo(levelV2Xml);
 	}

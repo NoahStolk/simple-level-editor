@@ -3,7 +3,6 @@ using SimpleLevelEditor.Formats.Types.Level;
 using SimpleLevelEditor.Rendering;
 using SimpleLevelEditor.Ui.ChildWindows;
 using System.Security.Cryptography;
-using System.Text.Json;
 
 namespace SimpleLevelEditor.State;
 
@@ -48,7 +47,7 @@ public static class LevelState
 	private static byte[] GetBytes(Level3dData obj)
 	{
 		using MemoryStream ms = new();
-		JsonSerializer.Serialize(ms, obj, SimpleLevelEditorJsonSerializer.DefaultSerializerOptions);
+		SimpleLevelEditorJsonSerializer.SerializeLevel(ms, obj);
 		return ms.ToArray();
 	}
 
@@ -73,7 +72,7 @@ public static class LevelState
 
 		using (FileStream fs = new(path, FileMode.Open))
 		{
-			Level3dData? level = JsonSerializer.Deserialize<Level3dData>(fs, SimpleLevelEditorJsonSerializer.DefaultSerializerOptions);
+			Level3dData? level = SimpleLevelEditorJsonSerializer.DeserializeLevel(fs);
 			if (level == null)
 			{
 				DebugState.AddWarning("Failed to load level.");
@@ -180,7 +179,7 @@ public static class LevelState
 	{
 		using MemoryStream ms = new();
 
-		JsonSerializer.Serialize(ms, Level, SimpleLevelEditorJsonSerializer.DefaultSerializerOptions);
+		SimpleLevelEditorJsonSerializer.SerializeLevel(ms, Level);
 		File.WriteAllBytes(path, ms.ToArray());
 		SetLevel(path, Level);
 	}

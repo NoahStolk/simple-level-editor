@@ -1,6 +1,5 @@
 using SimpleLevelEditor.Formats;
 using SimpleLevelEditor.Formats.Types.EntityConfig;
-using System.Text.Json;
 
 namespace SimpleLevelEditor.State;
 
@@ -11,11 +10,18 @@ public static class EntityConfigState
 	public static void LoadEntityConfig(string path)
 	{
 		using FileStream fs = new(path, FileMode.Open);
-		EntityConfig = JsonSerializer.Deserialize<EntityConfigData>(fs, SimpleLevelEditorJsonSerializer.DefaultSerializerOptions) ?? throw new InvalidOperationException("EntityConfig JSON is not valid.");
+		EntityConfigData? entityConfig = SimpleLevelEditorJsonSerializer.DeserializeEntityConfig(fs);
+		if (entityConfig == null)
+		{
+			DebugState.AddWarning("Failed to load entity config.");
+			return;
+		}
+
+		EntityConfig = entityConfig;
 
 		LevelEditorState.RenderFilter.Clear();
 		LevelEditorState.RenderFilter.Add("WorldObjects", true);
-		foreach (EntityDescriptor entity in EntityConfig.Entities)
+		foreach (EntityDescriptor entity in entityConfig.Entities)
 			LevelEditorState.RenderFilter.Add($"Entities:{entity.Name}", true);
 	}
 }
