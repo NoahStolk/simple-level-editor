@@ -43,18 +43,42 @@
       "Id": 1,
       "Mesh": "mesh\\PillarBase.obj",
       "Texture": "tex\\Bricks.tga",
-      "Scale": "1,1,1",
-      "Rotation": "0,0,0",
-      "Position": "-0,0,0",
+      "Scale": {
+        "X": 1,
+        "Y": 1,
+        "Z": 1
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "Position": {
+        "X": -0,
+        "Y": 0,
+        "Z": 0
+      },
       "Flags": []
     },
     {
       "Id": 2,
       "Mesh": "mesh\\Cylinder.obj",
       "Texture": "tex\\Bricks.tga",
-      "Scale": "1,3,1",
-      "Rotation": "0,0,0",
-      "Position": "0,1.75,0",
+      "Scale": {
+        "X": 1,
+        "Y": 3,
+        "Z": 1
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "Position": {
+        "X": 0,
+        "Y": 1.75,
+        "Z": 0
+      },
       "Flags": [
         "Flag1",
         "Flag2"
@@ -64,225 +88,525 @@
       "Id": 3,
       "Mesh": "mesh\\Plane.obj",
       "Texture": "tex\\Grass1.tga",
-      "Scale": "2,2,2",
-      "Rotation": "-90,0,0",
-      "Position": "-2,0,-0",
+      "Scale": {
+        "X": 2,
+        "Y": 2,
+        "Z": 2
+      },
+      "Rotation": {
+        "X": -90,
+        "Y": 0,
+        "Z": 0
+      },
+      "Position": {
+        "X": -2,
+        "Y": 0,
+        "Z": -0
+      },
       "Flags": []
     },
     {
       "Id": 4,
       "Mesh": "mesh\\Plane.obj",
       "Texture": "tex\\Grass1.tga",
-      "Scale": "2,2,2",
-      "Rotation": "-90,0,0",
-      "Position": "-0,0,2",
+      "Scale": {
+        "X": 2,
+        "Y": 2,
+        "Z": 2
+      },
+      "Rotation": {
+        "X": -90,
+        "Y": 0,
+        "Z": 0
+      },
+      "Position": {
+        "X": -0,
+        "Y": 0,
+        "Z": 2
+      },
       "Flags": []
     },
     {
       "Id": 5,
       "Mesh": "mesh\\Plane.obj",
       "Texture": "tex\\Grass1.tga",
-      "Scale": "2,2,2",
-      "Rotation": "-90,0,0",
-      "Position": "-2,0,2",
+      "Scale": {
+        "X": 2,
+        "Y": 2,
+        "Z": 2
+      },
+      "Rotation": {
+        "X": -90,
+        "Y": 0,
+        "Z": 0
+      },
+      "Position": {
+        "X": -2,
+        "Y": 0,
+        "Z": 2
+      },
       "Flags": []
     },
     {
       "Id": 6,
       "Mesh": "mesh\\Plane.obj",
       "Texture": "tex\\Grass1.tga",
-      "Scale": "2,2,2",
-      "Rotation": "-90,0,0",
-      "Position": "2,0,0",
+      "Scale": {
+        "X": 2,
+        "Y": 2,
+        "Z": 2
+      },
+      "Rotation": {
+        "X": -90,
+        "Y": 0,
+        "Z": 0
+      },
+      "Position": {
+        "X": 2,
+        "Y": 0,
+        "Z": 0
+      },
       "Flags": []
     },
     {
       "Id": 7,
       "Mesh": "mesh\\Plane.obj",
       "Texture": "tex\\Grass1.tga",
-      "Scale": "2,2,2",
-      "Rotation": "-90,0,0",
-      "Position": "2,0,2",
+      "Scale": {
+        "X": 2,
+        "Y": 2,
+        "Z": 2
+      },
+      "Rotation": {
+        "X": -90,
+        "Y": 0,
+        "Z": 0
+      },
+      "Position": {
+        "X": 2,
+        "Y": 0,
+        "Z": 2
+      },
       "Flags": []
     },
     {
       "Id": 8,
       "Mesh": "mesh\\Plane.obj",
       "Texture": "tex\\Grass1.tga",
-      "Scale": "2,2,2",
-      "Rotation": "-90,0,0",
-      "Position": "2,0,-2",
+      "Scale": {
+        "X": 2,
+        "Y": 2,
+        "Z": 2
+      },
+      "Rotation": {
+        "X": -90,
+        "Y": 0,
+        "Z": 0
+      },
+      "Position": {
+        "X": 2,
+        "Y": 0,
+        "Z": -2
+      },
       "Flags": []
     },
     {
       "Id": 9,
       "Mesh": "mesh\\Plane.obj",
       "Texture": "tex\\Grass1.tga",
-      "Scale": "2,2,2",
-      "Rotation": "-90,0,0",
-      "Position": "-0,0,-2",
+      "Scale": {
+        "X": 2,
+        "Y": 2,
+        "Z": 2
+      },
+      "Rotation": {
+        "X": -90,
+        "Y": 0,
+        "Z": 0
+      },
+      "Position": {
+        "X": -0,
+        "Y": 0,
+        "Z": -2
+      },
       "Flags": []
     },
     {
       "Id": 10,
       "Mesh": "mesh\\Plane.obj",
       "Texture": "tex\\Grass1.tga",
-      "Scale": "2,2,2",
-      "Rotation": "-90,0,0",
-      "Position": "-2,0,-2",
+      "Scale": {
+        "X": 2,
+        "Y": 2,
+        "Z": 2
+      },
+      "Rotation": {
+        "X": -90,
+        "Y": 0,
+        "Z": 0
+      },
+      "Position": {
+        "X": -2,
+        "Y": 0,
+        "Z": -2
+      },
       "Flags": []
     },
     {
       "Id": 11,
       "Mesh": "mesh\\Plane.obj",
       "Texture": "tex\\Grass1.tga",
-      "Scale": "2,2,2",
-      "Rotation": "-90,0,0",
-      "Position": "-2,0,-4",
+      "Scale": {
+        "X": 2,
+        "Y": 2,
+        "Z": 2
+      },
+      "Rotation": {
+        "X": -90,
+        "Y": 0,
+        "Z": 0
+      },
+      "Position": {
+        "X": -2,
+        "Y": 0,
+        "Z": -4
+      },
       "Flags": []
     },
     {
       "Id": 12,
       "Mesh": "mesh\\Plane.obj",
       "Texture": "tex\\Grass1.tga",
-      "Scale": "2,2,2",
-      "Rotation": "-90,0,0",
-      "Position": "-0,0,-4",
+      "Scale": {
+        "X": 2,
+        "Y": 2,
+        "Z": 2
+      },
+      "Rotation": {
+        "X": -90,
+        "Y": 0,
+        "Z": 0
+      },
+      "Position": {
+        "X": -0,
+        "Y": 0,
+        "Z": -4
+      },
       "Flags": []
     },
     {
       "Id": 13,
       "Mesh": "mesh\\Plane.obj",
       "Texture": "tex\\Grass1.tga",
-      "Scale": "2,2,2",
-      "Rotation": "-90,0,0",
-      "Position": "2,0,-4",
+      "Scale": {
+        "X": 2,
+        "Y": 2,
+        "Z": 2
+      },
+      "Rotation": {
+        "X": -90,
+        "Y": 0,
+        "Z": 0
+      },
+      "Position": {
+        "X": 2,
+        "Y": 0,
+        "Z": -4
+      },
       "Flags": []
     },
     {
       "Id": 14,
       "Mesh": "mesh\\Plane.obj",
       "Texture": "tex\\Grass1.tga",
-      "Scale": "2,2,2",
-      "Rotation": "-90,0,0",
-      "Position": "4,0,-4",
+      "Scale": {
+        "X": 2,
+        "Y": 2,
+        "Z": 2
+      },
+      "Rotation": {
+        "X": -90,
+        "Y": 0,
+        "Z": 0
+      },
+      "Position": {
+        "X": 4,
+        "Y": 0,
+        "Z": -4
+      },
       "Flags": []
     },
     {
       "Id": 15,
       "Mesh": "mesh\\Plane.obj",
       "Texture": "tex\\Grass1.tga",
-      "Scale": "2,2,2",
-      "Rotation": "-90,0,0",
-      "Position": "4,0,-2",
+      "Scale": {
+        "X": 2,
+        "Y": 2,
+        "Z": 2
+      },
+      "Rotation": {
+        "X": -90,
+        "Y": 0,
+        "Z": 0
+      },
+      "Position": {
+        "X": 4,
+        "Y": 0,
+        "Z": -2
+      },
       "Flags": []
     },
     {
       "Id": 16,
       "Mesh": "mesh\\Plane.obj",
       "Texture": "tex\\Grass1.tga",
-      "Scale": "2,2,2",
-      "Rotation": "-90,0,0",
-      "Position": "4,0,0",
+      "Scale": {
+        "X": 2,
+        "Y": 2,
+        "Z": 2
+      },
+      "Rotation": {
+        "X": -90,
+        "Y": 0,
+        "Z": 0
+      },
+      "Position": {
+        "X": 4,
+        "Y": 0,
+        "Z": 0
+      },
       "Flags": []
     },
     {
       "Id": 17,
       "Mesh": "mesh\\Plane.obj",
       "Texture": "tex\\Grass1.tga",
-      "Scale": "2,2,2",
-      "Rotation": "-90,0,0",
-      "Position": "4,0,2",
+      "Scale": {
+        "X": 2,
+        "Y": 2,
+        "Z": 2
+      },
+      "Rotation": {
+        "X": -90,
+        "Y": 0,
+        "Z": 0
+      },
+      "Position": {
+        "X": 4,
+        "Y": 0,
+        "Z": 2
+      },
       "Flags": []
     },
     {
       "Id": 18,
       "Mesh": "mesh\\Plane.obj",
       "Texture": "tex\\Grass1.tga",
-      "Scale": "2,2,2",
-      "Rotation": "-90,0,0",
-      "Position": "4,0,4",
+      "Scale": {
+        "X": 2,
+        "Y": 2,
+        "Z": 2
+      },
+      "Rotation": {
+        "X": -90,
+        "Y": 0,
+        "Z": 0
+      },
+      "Position": {
+        "X": 4,
+        "Y": 0,
+        "Z": 4
+      },
       "Flags": []
     },
     {
       "Id": 19,
       "Mesh": "mesh\\Plane.obj",
       "Texture": "tex\\Grass1.tga",
-      "Scale": "2,2,2",
-      "Rotation": "-90,0,0",
-      "Position": "2,0,4",
+      "Scale": {
+        "X": 2,
+        "Y": 2,
+        "Z": 2
+      },
+      "Rotation": {
+        "X": -90,
+        "Y": 0,
+        "Z": 0
+      },
+      "Position": {
+        "X": 2,
+        "Y": 0,
+        "Z": 4
+      },
       "Flags": []
     },
     {
       "Id": 20,
       "Mesh": "mesh\\Plane.obj",
       "Texture": "tex\\Grass1.tga",
-      "Scale": "2,2,2",
-      "Rotation": "-90,0,0",
-      "Position": "-0,0,4",
+      "Scale": {
+        "X": 2,
+        "Y": 2,
+        "Z": 2
+      },
+      "Rotation": {
+        "X": -90,
+        "Y": 0,
+        "Z": 0
+      },
+      "Position": {
+        "X": -0,
+        "Y": 0,
+        "Z": 4
+      },
       "Flags": []
     },
     {
       "Id": 21,
       "Mesh": "mesh\\Plane.obj",
       "Texture": "tex\\Grass1.tga",
-      "Scale": "2,2,2",
-      "Rotation": "-90,0,0",
-      "Position": "-2,0,4",
+      "Scale": {
+        "X": 2,
+        "Y": 2,
+        "Z": 2
+      },
+      "Rotation": {
+        "X": -90,
+        "Y": 0,
+        "Z": 0
+      },
+      "Position": {
+        "X": -2,
+        "Y": 0,
+        "Z": 4
+      },
       "Flags": []
     },
     {
       "Id": 22,
       "Mesh": "mesh\\Plane.obj",
       "Texture": "tex\\Grass1.tga",
-      "Scale": "2,2,2",
-      "Rotation": "-90,0,0",
-      "Position": "-4,0,-4",
+      "Scale": {
+        "X": 2,
+        "Y": 2,
+        "Z": 2
+      },
+      "Rotation": {
+        "X": -90,
+        "Y": 0,
+        "Z": 0
+      },
+      "Position": {
+        "X": -4,
+        "Y": 0,
+        "Z": -4
+      },
       "Flags": []
     },
     {
       "Id": 23,
       "Mesh": "mesh\\Plane.obj",
       "Texture": "tex\\Grass1.tga",
-      "Scale": "2,2,2",
-      "Rotation": "-90,0,0",
-      "Position": "-4,0,-2",
+      "Scale": {
+        "X": 2,
+        "Y": 2,
+        "Z": 2
+      },
+      "Rotation": {
+        "X": -90,
+        "Y": 0,
+        "Z": 0
+      },
+      "Position": {
+        "X": -4,
+        "Y": 0,
+        "Z": -2
+      },
       "Flags": []
     },
     {
       "Id": 24,
       "Mesh": "mesh\\Plane.obj",
       "Texture": "tex\\Grass1.tga",
-      "Scale": "2,2,2",
-      "Rotation": "-90,0,0",
-      "Position": "-4,0,0",
+      "Scale": {
+        "X": 2,
+        "Y": 2,
+        "Z": 2
+      },
+      "Rotation": {
+        "X": -90,
+        "Y": 0,
+        "Z": 0
+      },
+      "Position": {
+        "X": -4,
+        "Y": 0,
+        "Z": 0
+      },
       "Flags": []
     },
     {
       "Id": 25,
       "Mesh": "mesh\\Plane.obj",
       "Texture": "tex\\Grass1.tga",
-      "Scale": "2,2,2",
-      "Rotation": "-90,0,0",
-      "Position": "-4,0,2",
+      "Scale": {
+        "X": 2,
+        "Y": 2,
+        "Z": 2
+      },
+      "Rotation": {
+        "X": -90,
+        "Y": 0,
+        "Z": 0
+      },
+      "Position": {
+        "X": -4,
+        "Y": 0,
+        "Z": 2
+      },
       "Flags": []
     },
     {
       "Id": 26,
       "Mesh": "mesh\\Plane.obj",
       "Texture": "tex\\Grass1.tga",
-      "Scale": "2,2,2",
-      "Rotation": "-90,0,0",
-      "Position": "-4,0,4",
+      "Scale": {
+        "X": 2,
+        "Y": 2,
+        "Z": 2
+      },
+      "Rotation": {
+        "X": -90,
+        "Y": 0,
+        "Z": 0
+      },
+      "Position": {
+        "X": -4,
+        "Y": 0,
+        "Z": 4
+      },
       "Flags": []
     },
     {
       "Id": 27,
       "Mesh": "mesh\\PillarBase.obj",
       "Texture": "tex\\Bricks.tga",
-      "Scale": "1,1,1",
-      "Rotation": "0,0,180",
-      "Position": "0,3.5,-0",
+      "Scale": {
+        "X": 1,
+        "Y": 1,
+        "Z": 1
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": 0,
+        "Z": 180
+      },
+      "Position": {
+        "X": 0,
+        "Y": 3.5,
+        "Z": -0
+      },
       "Flags": [
         "TestFlag"
       ]
@@ -291,369 +615,861 @@
       "Id": 28,
       "Mesh": "mesh\\Ramp.obj",
       "Texture": "tex\\Grass1.tga",
-      "Scale": "10,4,8",
-      "Rotation": "0,-90,0",
-      "Position": "9,2,-0",
+      "Scale": {
+        "X": 10,
+        "Y": 4,
+        "Z": 8
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "Position": {
+        "X": 9,
+        "Y": 2,
+        "Z": -0
+      },
       "Flags": []
     },
     {
       "Id": 29,
       "Mesh": "mesh\\Cone.obj",
       "Texture": "tex\\Dirt.tga",
-      "Scale": "1,1,1",
-      "Rotation": "0,0,0",
-      "Position": "-4,0,-0",
+      "Scale": {
+        "X": 1,
+        "Y": 1,
+        "Z": 1
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "Position": {
+        "X": -4,
+        "Y": 0,
+        "Z": -0
+      },
       "Flags": []
     },
     {
       "Id": 30,
       "Mesh": "mesh\\Cone.obj",
       "Texture": "tex\\Dirt.tga",
-      "Scale": "1,1,1",
-      "Rotation": "0,0,0",
-      "Position": "-4,0,-4",
+      "Scale": {
+        "X": 1,
+        "Y": 1,
+        "Z": 1
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "Position": {
+        "X": -4,
+        "Y": 0,
+        "Z": -4
+      },
       "Flags": []
     },
     {
       "Id": 31,
       "Mesh": "mesh\\Plane.obj",
       "Texture": "tex\\Grass1.tga",
-      "Scale": "2,2,2",
-      "Rotation": "-90,0,0",
-      "Position": "0,-4.7683716E-07,6",
+      "Scale": {
+        "X": 2,
+        "Y": 2,
+        "Z": 2
+      },
+      "Rotation": {
+        "X": -90,
+        "Y": 0,
+        "Z": 0
+      },
+      "Position": {
+        "X": 0,
+        "Y": -4.7683716E-07,
+        "Z": 6
+      },
       "Flags": []
     },
     {
       "Id": 32,
       "Mesh": "mesh\\Plane.obj",
       "Texture": "tex\\Grass1.tga",
-      "Scale": "2,2,2",
-      "Rotation": "-90,0,0",
-      "Position": "0,0,8",
+      "Scale": {
+        "X": 2,
+        "Y": 2,
+        "Z": 2
+      },
+      "Rotation": {
+        "X": -90,
+        "Y": 0,
+        "Z": 0
+      },
+      "Position": {
+        "X": 0,
+        "Y": 0,
+        "Z": 8
+      },
       "Flags": []
     },
     {
       "Id": 33,
       "Mesh": "mesh\\Plane.obj",
       "Texture": "tex\\Grass1.tga",
-      "Scale": "2,2,2",
-      "Rotation": "-90,0,0",
-      "Position": "2,0,8",
+      "Scale": {
+        "X": 2,
+        "Y": 2,
+        "Z": 2
+      },
+      "Rotation": {
+        "X": -90,
+        "Y": 0,
+        "Z": 0
+      },
+      "Position": {
+        "X": 2,
+        "Y": 0,
+        "Z": 8
+      },
       "Flags": []
     },
     {
       "Id": 34,
       "Mesh": "mesh\\Plane.obj",
       "Texture": "tex\\Grass1.tga",
-      "Scale": "2,2,2",
-      "Rotation": "-90,0,0",
-      "Position": "4,0,8",
+      "Scale": {
+        "X": 2,
+        "Y": 2,
+        "Z": 2
+      },
+      "Rotation": {
+        "X": -90,
+        "Y": 0,
+        "Z": 0
+      },
+      "Position": {
+        "X": 4,
+        "Y": 0,
+        "Z": 8
+      },
       "Flags": []
     },
     {
       "Id": 35,
       "Mesh": "mesh\\Plane.obj",
       "Texture": "tex\\Grass1.tga",
-      "Scale": "2,2,2",
-      "Rotation": "-90,0,0",
-      "Position": "4,0,10",
+      "Scale": {
+        "X": 2,
+        "Y": 2,
+        "Z": 2
+      },
+      "Rotation": {
+        "X": -90,
+        "Y": 0,
+        "Z": 0
+      },
+      "Position": {
+        "X": 4,
+        "Y": 0,
+        "Z": 10
+      },
       "Flags": []
     },
     {
       "Id": 36,
       "Mesh": "mesh\\Plane.obj",
       "Texture": "tex\\Grass1.tga",
-      "Scale": "2,2,2",
-      "Rotation": "-90,0,0",
-      "Position": "4,0,12",
+      "Scale": {
+        "X": 2,
+        "Y": 2,
+        "Z": 2
+      },
+      "Rotation": {
+        "X": -90,
+        "Y": 0,
+        "Z": 0
+      },
+      "Position": {
+        "X": 4,
+        "Y": 0,
+        "Z": 12
+      },
       "Flags": []
     },
     {
       "Id": 37,
       "Mesh": "mesh\\Plane.obj",
       "Texture": "tex\\Grass1.tga",
-      "Scale": "2,2,2",
-      "Rotation": "-90,0,0",
-      "Position": "4,0,14",
+      "Scale": {
+        "X": 2,
+        "Y": 2,
+        "Z": 2
+      },
+      "Rotation": {
+        "X": -90,
+        "Y": 0,
+        "Z": 0
+      },
+      "Position": {
+        "X": 4,
+        "Y": 0,
+        "Z": 14
+      },
       "Flags": []
     },
     {
       "Id": 38,
       "Mesh": "mesh\\Plane.obj",
       "Texture": "tex\\Grass1.tga",
-      "Scale": "2,2,2",
-      "Rotation": "-90,0,0",
-      "Position": "2,0,14",
+      "Scale": {
+        "X": 2,
+        "Y": 2,
+        "Z": 2
+      },
+      "Rotation": {
+        "X": -90,
+        "Y": 0,
+        "Z": 0
+      },
+      "Position": {
+        "X": 2,
+        "Y": 0,
+        "Z": 14
+      },
       "Flags": []
     },
     {
       "Id": 39,
       "Mesh": "mesh\\Plane.obj",
       "Texture": "tex\\Grass1.tga",
-      "Scale": "2,2,2",
-      "Rotation": "-90,0,0",
-      "Position": "2,0,16",
+      "Scale": {
+        "X": 2,
+        "Y": 2,
+        "Z": 2
+      },
+      "Rotation": {
+        "X": -90,
+        "Y": 0,
+        "Z": 0
+      },
+      "Position": {
+        "X": 2,
+        "Y": 0,
+        "Z": 16
+      },
       "Flags": []
     },
     {
       "Id": 40,
       "Mesh": "mesh\\Plane.obj",
       "Texture": "tex\\Dirt.tga",
-      "Scale": "2,2,2",
-      "Rotation": "-90,0,0",
-      "Position": "0,0,12",
+      "Scale": {
+        "X": 2,
+        "Y": 2,
+        "Z": 2
+      },
+      "Rotation": {
+        "X": -90,
+        "Y": 0,
+        "Z": 0
+      },
+      "Position": {
+        "X": 0,
+        "Y": 0,
+        "Z": 12
+      },
       "Flags": []
     },
     {
       "Id": 41,
       "Mesh": "mesh\\Plane.obj",
       "Texture": "tex\\Dirt.tga",
-      "Scale": "2,2,2",
-      "Rotation": "-90,0,0",
-      "Position": "0,0,14",
+      "Scale": {
+        "X": 2,
+        "Y": 2,
+        "Z": 2
+      },
+      "Rotation": {
+        "X": -90,
+        "Y": 0,
+        "Z": 0
+      },
+      "Position": {
+        "X": 0,
+        "Y": 0,
+        "Z": 14
+      },
       "Flags": []
     },
     {
       "Id": 42,
       "Mesh": "mesh\\Plane.obj",
       "Texture": "tex\\Dirt.tga",
-      "Scale": "2,2,2",
-      "Rotation": "-90,0,0",
-      "Position": "0,4.7683716E-07,16",
+      "Scale": {
+        "X": 2,
+        "Y": 2,
+        "Z": 2
+      },
+      "Rotation": {
+        "X": -90,
+        "Y": 0,
+        "Z": 0
+      },
+      "Position": {
+        "X": 0,
+        "Y": 4.7683716E-07,
+        "Z": 16
+      },
       "Flags": []
     },
     {
       "Id": 43,
       "Mesh": "mesh\\Plane.obj",
       "Texture": "tex\\Dirt.tga",
-      "Scale": "2,2,2",
-      "Rotation": "-90,0,0",
-      "Position": "2,0,12",
+      "Scale": {
+        "X": 2,
+        "Y": 2,
+        "Z": 2
+      },
+      "Rotation": {
+        "X": -90,
+        "Y": 0,
+        "Z": 0
+      },
+      "Position": {
+        "X": 2,
+        "Y": 0,
+        "Z": 12
+      },
       "Flags": []
     },
     {
       "Id": 44,
       "Mesh": "mesh\\Plane.obj",
       "Texture": "tex\\Dirt.tga",
-      "Scale": "2,2,2",
-      "Rotation": "-90,0,0",
-      "Position": "2,0,10",
+      "Scale": {
+        "X": 2,
+        "Y": 2,
+        "Z": 2
+      },
+      "Rotation": {
+        "X": -90,
+        "Y": 0,
+        "Z": 0
+      },
+      "Position": {
+        "X": 2,
+        "Y": 0,
+        "Z": 10
+      },
       "Flags": []
     },
     {
       "Id": 45,
       "Mesh": "mesh\\Plane.obj",
       "Texture": "tex\\Dirt.tga",
-      "Scale": "2,2,2",
-      "Rotation": "-90,0,0",
-      "Position": "0,0,10",
+      "Scale": {
+        "X": 2,
+        "Y": 2,
+        "Z": 2
+      },
+      "Rotation": {
+        "X": -90,
+        "Y": 0,
+        "Z": 0
+      },
+      "Position": {
+        "X": 0,
+        "Y": 0,
+        "Z": 10
+      },
       "Flags": []
     },
     {
       "Id": 46,
       "Mesh": "mesh\\Plane.obj",
       "Texture": "tex\\Dirt.tga",
-      "Scale": "2,2,2",
-      "Rotation": "-90,0,0",
-      "Position": "-2,0,10",
+      "Scale": {
+        "X": 2,
+        "Y": 2,
+        "Z": 2
+      },
+      "Rotation": {
+        "X": -90,
+        "Y": 0,
+        "Z": 0
+      },
+      "Position": {
+        "X": -2,
+        "Y": 0,
+        "Z": 10
+      },
       "Flags": []
     },
     {
       "Id": 47,
       "Mesh": "mesh\\Plane.obj",
       "Texture": "tex\\Dirt.tga",
-      "Scale": "2,2,2",
-      "Rotation": "-90,0,0",
-      "Position": "-2,0,8",
+      "Scale": {
+        "X": 2,
+        "Y": 2,
+        "Z": 2
+      },
+      "Rotation": {
+        "X": -90,
+        "Y": 0,
+        "Z": 0
+      },
+      "Position": {
+        "X": -2,
+        "Y": 0,
+        "Z": 8
+      },
       "Flags": []
     },
     {
       "Id": 48,
       "Mesh": "mesh\\Plane.obj",
       "Texture": "tex\\Dirt.tga",
-      "Scale": "2,2,2",
-      "Rotation": "-90,0,0",
-      "Position": "-2,0,6",
+      "Scale": {
+        "X": 2,
+        "Y": 2,
+        "Z": 2
+      },
+      "Rotation": {
+        "X": -90,
+        "Y": 0,
+        "Z": 0
+      },
+      "Position": {
+        "X": -2,
+        "Y": 0,
+        "Z": 6
+      },
       "Flags": []
     },
     {
       "Id": 49,
       "Mesh": "mesh\\Plane.obj",
       "Texture": "tex\\Dirt.tga",
-      "Scale": "2,2,2",
-      "Rotation": "-90,0,0",
-      "Position": "-4,0,6",
+      "Scale": {
+        "X": 2,
+        "Y": 2,
+        "Z": 2
+      },
+      "Rotation": {
+        "X": -90,
+        "Y": 0,
+        "Z": 0
+      },
+      "Position": {
+        "X": -4,
+        "Y": 0,
+        "Z": 6
+      },
       "Flags": []
     },
     {
       "Id": 50,
       "Mesh": "mesh\\Plane.obj",
       "Texture": "tex\\Dirt.tga",
-      "Scale": "2,2,2",
-      "Rotation": "-90,0,0",
-      "Position": "-4,0,8",
+      "Scale": {
+        "X": 2,
+        "Y": 2,
+        "Z": 2
+      },
+      "Rotation": {
+        "X": -90,
+        "Y": 0,
+        "Z": 0
+      },
+      "Position": {
+        "X": -4,
+        "Y": 0,
+        "Z": 8
+      },
       "Flags": []
     },
     {
       "Id": 51,
       "Mesh": "mesh\\Plane.obj",
       "Texture": "tex\\Dirt.tga",
-      "Scale": "2,2,2",
-      "Rotation": "-90,0,0",
-      "Position": "-4,0,10",
+      "Scale": {
+        "X": 2,
+        "Y": 2,
+        "Z": 2
+      },
+      "Rotation": {
+        "X": -90,
+        "Y": 0,
+        "Z": 0
+      },
+      "Position": {
+        "X": -4,
+        "Y": 0,
+        "Z": 10
+      },
       "Flags": []
     },
     {
       "Id": 52,
       "Mesh": "mesh\\Plane.obj",
       "Texture": "tex\\Dirt.tga",
-      "Scale": "2,2,2",
-      "Rotation": "-90,0,0",
-      "Position": "-4,0,12",
+      "Scale": {
+        "X": 2,
+        "Y": 2,
+        "Z": 2
+      },
+      "Rotation": {
+        "X": -90,
+        "Y": 0,
+        "Z": 0
+      },
+      "Position": {
+        "X": -4,
+        "Y": 0,
+        "Z": 12
+      },
       "Flags": []
     },
     {
       "Id": 53,
       "Mesh": "mesh\\Plane.obj",
       "Texture": "tex\\Dirt.tga",
-      "Scale": "2,2,2",
-      "Rotation": "-90,0,0",
-      "Position": "-2,0,12",
+      "Scale": {
+        "X": 2,
+        "Y": 2,
+        "Z": 2
+      },
+      "Rotation": {
+        "X": -90,
+        "Y": 0,
+        "Z": 0
+      },
+      "Position": {
+        "X": -2,
+        "Y": 0,
+        "Z": 12
+      },
       "Flags": []
     },
     {
       "Id": 54,
       "Mesh": "mesh\\Plane.obj",
       "Texture": "tex\\Dirt.tga",
-      "Scale": "2,2,2",
-      "Rotation": "-90,0,0",
-      "Position": "-2,4.7683716E-07,14",
+      "Scale": {
+        "X": 2,
+        "Y": 2,
+        "Z": 2
+      },
+      "Rotation": {
+        "X": -90,
+        "Y": 0,
+        "Z": 0
+      },
+      "Position": {
+        "X": -2,
+        "Y": 4.7683716E-07,
+        "Z": 14
+      },
       "Flags": []
     },
     {
       "Id": 55,
       "Mesh": "mesh\\Plane.obj",
       "Texture": "tex\\Dirt.tga",
-      "Scale": "2,2,2",
-      "Rotation": "-90,0,0",
-      "Position": "-4,0,14",
+      "Scale": {
+        "X": 2,
+        "Y": 2,
+        "Z": 2
+      },
+      "Rotation": {
+        "X": -90,
+        "Y": 0,
+        "Z": 0
+      },
+      "Position": {
+        "X": -4,
+        "Y": 0,
+        "Z": 14
+      },
       "Flags": []
     },
     {
       "Id": 56,
       "Mesh": "mesh\\Plane.obj",
       "Texture": "tex\\Dirt.tga",
-      "Scale": "2,2,2",
-      "Rotation": "-90,0,0",
-      "Position": "-4,0,16",
+      "Scale": {
+        "X": 2,
+        "Y": 2,
+        "Z": 2
+      },
+      "Rotation": {
+        "X": -90,
+        "Y": 0,
+        "Z": 0
+      },
+      "Position": {
+        "X": -4,
+        "Y": 0,
+        "Z": 16
+      },
       "Flags": []
     },
     {
       "Id": 57,
       "Mesh": "mesh\\Plane.obj",
       "Texture": "tex\\Dirt.tga",
-      "Scale": "2,2,2",
-      "Rotation": "-90,0,0",
-      "Position": "-2,0,16",
+      "Scale": {
+        "X": 2,
+        "Y": 2,
+        "Z": 2
+      },
+      "Rotation": {
+        "X": -90,
+        "Y": 0,
+        "Z": 0
+      },
+      "Position": {
+        "X": -2,
+        "Y": 0,
+        "Z": 16
+      },
       "Flags": []
     },
     {
       "Id": 58,
       "Mesh": "mesh\\Plane.obj",
       "Texture": "tex\\Dirt.tga",
-      "Scale": "2,2,2",
-      "Rotation": "-90,0,0",
-      "Position": "-2,0,18",
+      "Scale": {
+        "X": 2,
+        "Y": 2,
+        "Z": 2
+      },
+      "Rotation": {
+        "X": -90,
+        "Y": 0,
+        "Z": 0
+      },
+      "Position": {
+        "X": -2,
+        "Y": 0,
+        "Z": 18
+      },
       "Flags": []
     },
     {
       "Id": 59,
       "Mesh": "mesh\\Plane.obj",
       "Texture": "tex\\Dirt.tga",
-      "Scale": "2,2,2",
-      "Rotation": "-90,0,0",
-      "Position": "0,0,18",
+      "Scale": {
+        "X": 2,
+        "Y": 2,
+        "Z": 2
+      },
+      "Rotation": {
+        "X": -90,
+        "Y": 0,
+        "Z": 0
+      },
+      "Position": {
+        "X": 0,
+        "Y": 0,
+        "Z": 18
+      },
       "Flags": []
     },
     {
       "Id": 60,
       "Mesh": "mesh\\Plane.obj",
       "Texture": "tex\\Dirt.tga",
-      "Scale": "2,2,2",
-      "Rotation": "-90,0,0",
-      "Position": "2,0,18",
+      "Scale": {
+        "X": 2,
+        "Y": 2,
+        "Z": 2
+      },
+      "Rotation": {
+        "X": -90,
+        "Y": 0,
+        "Z": 0
+      },
+      "Position": {
+        "X": 2,
+        "Y": 0,
+        "Z": 18
+      },
       "Flags": []
     },
     {
       "Id": 61,
       "Mesh": "mesh\\Plane.obj",
       "Texture": "tex\\Dirt.tga",
-      "Scale": "2,2,2",
-      "Rotation": "-90,0,0",
-      "Position": "4,-4.7683716E-07,18",
+      "Scale": {
+        "X": 2,
+        "Y": 2,
+        "Z": 2
+      },
+      "Rotation": {
+        "X": -90,
+        "Y": 0,
+        "Z": 0
+      },
+      "Position": {
+        "X": 4,
+        "Y": -4.7683716E-07,
+        "Z": 18
+      },
       "Flags": []
     },
     {
       "Id": 62,
       "Mesh": "mesh\\Plane.obj",
       "Texture": "tex\\Dirt.tga",
-      "Scale": "2,2,2",
-      "Rotation": "-90,0,0",
-      "Position": "4,-4.7683716E-07,16",
+      "Scale": {
+        "X": 2,
+        "Y": 2,
+        "Z": 2
+      },
+      "Rotation": {
+        "X": -90,
+        "Y": 0,
+        "Z": 0
+      },
+      "Position": {
+        "X": 4,
+        "Y": -4.7683716E-07,
+        "Z": 16
+      },
       "Flags": []
     },
     {
       "Id": 63,
       "Mesh": "mesh\\Plane.obj",
       "Texture": "tex\\Dirt.tga",
-      "Scale": "2,2,2",
-      "Rotation": "-90,0,0",
-      "Position": "4,0,6",
+      "Scale": {
+        "X": 2,
+        "Y": 2,
+        "Z": 2
+      },
+      "Rotation": {
+        "X": -90,
+        "Y": 0,
+        "Z": 0
+      },
+      "Position": {
+        "X": 4,
+        "Y": 0,
+        "Z": 6
+      },
       "Flags": []
     },
     {
       "Id": 64,
       "Mesh": "mesh\\Plane.obj",
       "Texture": "tex\\Dirt.tga",
-      "Scale": "2,2,2",
-      "Rotation": "-90,0,0",
-      "Position": "2,0,6",
+      "Scale": {
+        "X": 2,
+        "Y": 2,
+        "Z": 2
+      },
+      "Rotation": {
+        "X": -90,
+        "Y": 0,
+        "Z": 0
+      },
+      "Position": {
+        "X": 2,
+        "Y": 0,
+        "Z": 6
+      },
       "Flags": []
     },
     {
       "Id": 65,
       "Mesh": "mesh\\Plane.obj",
       "Texture": "tex\\Dirt.tga",
-      "Scale": "2,2,2",
-      "Rotation": "-90,0,0",
-      "Position": "6,4.7683716E-07,6",
+      "Scale": {
+        "X": 2,
+        "Y": 2,
+        "Z": 2
+      },
+      "Rotation": {
+        "X": -90,
+        "Y": 0,
+        "Z": 0
+      },
+      "Position": {
+        "X": 6,
+        "Y": 4.7683716E-07,
+        "Z": 6
+      },
       "Flags": []
     },
     {
       "Id": 66,
       "Mesh": "mesh\\Plane.obj",
       "Texture": "tex\\Dirt.tga",
-      "Scale": "2,2,2",
-      "Rotation": "-90,0,0",
-      "Position": "6,0,8",
+      "Scale": {
+        "X": 2,
+        "Y": 2,
+        "Z": 2
+      },
+      "Rotation": {
+        "X": -90,
+        "Y": 0,
+        "Z": 0
+      },
+      "Position": {
+        "X": 6,
+        "Y": 0,
+        "Z": 8
+      },
       "Flags": []
     },
     {
       "Id": 67,
       "Mesh": "mesh\\Plane.obj",
       "Texture": "tex\\Dirt.tga",
-      "Scale": "2,2,2",
-      "Rotation": "-90,0,0",
-      "Position": "6,0,10",
+      "Scale": {
+        "X": 2,
+        "Y": 2,
+        "Z": 2
+      },
+      "Rotation": {
+        "X": -90,
+        "Y": 0,
+        "Z": 0
+      },
+      "Position": {
+        "X": 6,
+        "Y": 0,
+        "Z": 10
+      },
       "Flags": []
     },
     {
       "Id": 68,
       "Mesh": "mesh\\ExitSpiral.obj",
       "Texture": "tex\\Gravel.tga",
-      "Scale": "1,1,1",
-      "Rotation": "180,-180,-180",
-      "Position": "-2,0,-14",
+      "Scale": {
+        "X": 1,
+        "Y": 1,
+        "Z": 1
+      },
+      "Rotation": {
+        "X": 180,
+        "Y": -180,
+        "Z": -180
+      },
+      "Position": {
+        "X": -2,
+        "Y": 0,
+        "Z": -14
+      },
       "Flags": []
     }
   ],
@@ -661,7 +1477,11 @@
     {
       "Id": 1,
       "Name": "Point_SimpleSphere",
-      "Position": "11,0,-13",
+      "Position": {
+        "X": 11,
+        "Y": 0,
+        "Z": -13
+      },
       "Shape": {
         "Case": "Point"
       },
@@ -670,7 +1490,11 @@
     {
       "Id": 2,
       "Name": "Point_BillboardSprite",
-      "Position": "9,0,-13",
+      "Position": {
+        "X": 9,
+        "Y": 0,
+        "Z": -13
+      },
       "Shape": {
         "Case": "Point"
       },
@@ -679,7 +1503,11 @@
     {
       "Id": 3,
       "Name": "Point_Mesh",
-      "Position": "7,0,-13",
+      "Position": {
+        "X": 7,
+        "Y": 0,
+        "Z": -13
+      },
       "Shape": {
         "Case": "Point"
       },
@@ -688,7 +1516,11 @@
     {
       "Id": 4,
       "Name": "Sphere",
-      "Position": "11,0,-20",
+      "Position": {
+        "X": 11,
+        "Y": 0,
+        "Z": -20
+      },
       "Shape": {
         "Case": "Sphere",
         "Fields": [
@@ -700,11 +1532,19 @@
     {
       "Id": 5,
       "Name": "Aabb",
-      "Position": "5,0,-20",
+      "Position": {
+        "X": 5,
+        "Y": 0,
+        "Z": -20
+      },
       "Shape": {
         "Case": "Aabb",
         "Fields": [
-          "1,1,1"
+          {
+            "X": 1,
+            "Y": 1,
+            "Z": 1
+          }
         ]
       },
       "Properties": []
@@ -712,7 +1552,11 @@
     {
       "Id": 6,
       "Name": "Light",
-      "Position": "11,0,-26",
+      "Position": {
+        "X": 11,
+        "Y": 0,
+        "Z": -26
+      },
       "Shape": {
         "Case": "Point"
       },
@@ -722,7 +1566,11 @@
           "Value": {
             "Case": "Rgb",
             "Fields": [
-              {}
+              {
+                "R": 255,
+                "G": 255,
+                "B": 255
+              }
             ]
           }
         },
@@ -749,7 +1597,11 @@
     {
       "Id": 7,
       "Name": "AudioSource",
-      "Position": "5,0,-26",
+      "Position": {
+        "X": 5,
+        "Y": 0,
+        "Z": -26
+      },
       "Shape": {
         "Case": "Point"
       },
@@ -795,7 +1647,11 @@
     {
       "Id": 8,
       "Name": "DynamicObject",
-      "Position": "3,0,-13",
+      "Position": {
+        "X": 3,
+        "Y": 0,
+        "Z": -13
+      },
       "Shape": {
         "Case": "Point"
       },
@@ -823,7 +1679,11 @@
           "Value": {
             "Case": "Vector3",
             "Fields": [
-              "1,1,1"
+              {
+                "X": 1,
+                "Y": 1,
+                "Z": 1
+              }
             ]
           }
         },
@@ -841,7 +1701,11 @@
     {
       "Id": 9,
       "Name": "Item",
-      "Position": "0,0,-26",
+      "Position": {
+        "X": 0,
+        "Y": 0,
+        "Z": -26
+      },
       "Shape": {
         "Case": "Point"
       },
