@@ -27,6 +27,7 @@ type EntityPropertyTypeDescriptor =
         | RgbProperty     value            -> EntityPropertyValue.Rgb     value
         | RgbaProperty    value            -> EntityPropertyValue.Rgba    value
 
+    // TODO: Return Option<float32> instead of float32
     member this.Step : float32 =
         match this with
         | IntProperty     (_, step, _, _) -> if step.IsSome then float32 step.Value else 0f
@@ -36,6 +37,7 @@ type EntityPropertyTypeDescriptor =
         | Vector4Property (_, step, _, _) -> if step.IsSome then step.Value else 0f
         | _ -> 0f
 
+    // TODO: Return Option<float32> instead of float32
     member this.MinValue : float32 =
         match this with
         | IntProperty     (_, _, min, _) -> if min.IsSome then float32 min.Value else 0f
@@ -45,6 +47,7 @@ type EntityPropertyTypeDescriptor =
         | Vector4Property (_, _, min, _) -> if min.IsSome then min.Value else 0f
         | _ -> 0f
 
+    // TODO: Return Option<float32> instead of float32
     member this.MaxValue : float32 =
         match this with
         | IntProperty     (_, _, _, max) -> if max.IsSome then float32 max.Value else 0f
