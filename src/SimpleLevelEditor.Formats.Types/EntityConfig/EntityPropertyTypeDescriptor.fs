@@ -1,6 +1,5 @@
 namespace SimpleLevelEditor.Formats.Types.EntityConfig
 
-open System
 open System.Numerics
 open SimpleLevelEditor.Formats.Types
 open SimpleLevelEditor.Formats.Types.Level
@@ -78,16 +77,3 @@ type EntityPropertyTypeDescriptor =
         | StringProperty  _ -> new Vector4(1.00f, 0.50f, 0.00f, 1.00f)
         | RgbProperty     _ -> new Vector4(1.00f, 0.75f, 0.00f, 1.00f)
         | RgbaProperty    _ -> new Vector4(1.00f, 1.00f, 0.00f, 1.00f)
-
-    static member FromXmlData(propertyType: string, defaultValue: Option<string>, step: Option<string>, minValue: Option<string>, maxValue: Option<string>) : EntityPropertyTypeDescriptor =
-        match propertyType with
-        | TypeIds.BoolId    -> BoolProperty    (Boolean.FromDataString defaultValue |> Option.defaultValue false)
-        | TypeIds.IntId     -> IntProperty     (Int32.FromDataString   defaultValue |> Option.defaultValue 0,            Int32.FromDataString  step, Int32.FromDataString  minValue, Int32.FromDataString  maxValue)
-        | TypeIds.FloatId   -> FloatProperty   (Single.FromDataString  defaultValue |> Option.defaultValue 0f,           Single.FromDataString step, Single.FromDataString minValue, Single.FromDataString maxValue)
-        | TypeIds.Vector2Id -> Vector2Property (Vector2.FromDataString defaultValue |> Option.defaultValue Vector2.Zero, Single.FromDataString step, Single.FromDataString minValue, Single.FromDataString maxValue)
-        | TypeIds.Vector3Id -> Vector3Property (Vector3.FromDataString defaultValue |> Option.defaultValue Vector3.Zero, Single.FromDataString step, Single.FromDataString minValue, Single.FromDataString maxValue)
-        | TypeIds.Vector4Id -> Vector4Property (Vector4.FromDataString defaultValue |> Option.defaultValue Vector4.Zero, Single.FromDataString step, Single.FromDataString minValue, Single.FromDataString maxValue)
-        | TypeIds.StringId  -> StringProperty  (defaultValue                        |> Option.defaultValue String.Empty)
-        | TypeIds.RgbId     -> RgbProperty     (Rgb.FromDataString     defaultValue |> Option.defaultValue Rgb.Default)
-        | TypeIds.RgbaId    -> RgbaProperty    (Rgba.FromDataString    defaultValue |> Option.defaultValue Rgba.Default)
-        | _ -> failwithf $"Unknown property type: %s{propertyType}"
