@@ -16,6 +16,6 @@ type EntityShape =
 
     member this.GetTypeId() =
         match this with
-        | Point _  -> ShapeIds.PointId
-        | Sphere _ -> ShapeIds.SphereId
-        | Aabb _   -> ShapeIds.AabbId
+        | Point _  -> nameof Point
+        | Sphere _ -> nameof Sphere
+        | Aabb _   -> nameof Aabb

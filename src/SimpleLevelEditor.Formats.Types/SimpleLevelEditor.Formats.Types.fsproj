@@ -9,9 +9,6 @@
     <Compile Include="Rgb.fs" />
     <Compile Include="Rgba.fs" />
     <Compile Include="DataFormatExtensions.fs" />
-    <Compile Include="ShapeIds.fs" />
-    <Compile Include="TypeIds.fs" />
-    <Compile Include="PointEntityVisualizationIds.fs" />
     <Compile Include="Level\ShapeDescriptor.fs" />
     <Compile Include="Level\EntityPropertyValue.fs" />
     <Compile Include="Level\EntityProperty.fs" />
