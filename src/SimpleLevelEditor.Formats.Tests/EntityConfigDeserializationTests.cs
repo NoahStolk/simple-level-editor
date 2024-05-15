@@ -42,24 +42,24 @@ public class EntityConfigDeserializationTests
 		Assert.AreEqual("Color", property.Name);
 		Assert.AreEqual("Point light color", property.Description);
 		EntityPropertyTypeDescriptor.RgbProperty rgbPropertyType = AssertPropertyType<EntityPropertyTypeDescriptor.RgbProperty>(property.Type);
-		Assert.AreEqual(255, rgbPropertyType.DefaultValue.R);
-		Assert.AreEqual(255, rgbPropertyType.DefaultValue.G);
-		Assert.AreEqual(255, rgbPropertyType.DefaultValue.B);
+		Assert.AreEqual(255, rgbPropertyType.Default.R);
+		Assert.AreEqual(255, rgbPropertyType.Default.G);
+		Assert.AreEqual(255, rgbPropertyType.Default.B);
 
 		property = entity.Properties[1];
 		Assert.AreEqual("Radius", property.Name);
 		Assert.AreEqual("Point light radius", property.Description);
 		EntityPropertyTypeDescriptor.FloatProperty floatPropertyType = AssertPropertyType<EntityPropertyTypeDescriptor.FloatProperty>(property.Type);
-		Assert.AreEqual(5, floatPropertyType.DefaultValue);
+		Assert.AreEqual(5, floatPropertyType.Default);
 		Assert.AreEqual(1, floatPropertyType.Step);
-		Assert.AreEqual(1, floatPropertyType.MinValue);
-		Assert.AreEqual(1000, floatPropertyType.MaxValue);
+		Assert.AreEqual(1, floatPropertyType.Min);
+		Assert.AreEqual(1000, floatPropertyType.Max);
 
 		property = entity.Properties[2];
 		Assert.AreEqual("Shadow", property.Name);
 		Assert.AreEqual("Whether the light casts shadows", property.Description);
 		EntityPropertyTypeDescriptor.BoolProperty boolPropertyType = AssertPropertyType<EntityPropertyTypeDescriptor.BoolProperty>(property.Type);
-		Assert.IsFalse(boolPropertyType.DefaultValue);
+		Assert.IsFalse(boolPropertyType.Default);
 
 		entity = data.Entities[2];
 		Assert.AreEqual("DynamicObject", entity.Name);
@@ -70,31 +70,31 @@ public class EntityConfigDeserializationTests
 		Assert.AreEqual("Mesh", property.Name);
 		Assert.AreEqual("File name (without extension) of the mesh to be used", property.Description);
 		EntityPropertyTypeDescriptor.StringProperty stringPropertyType = AssertPropertyType<EntityPropertyTypeDescriptor.StringProperty>(property.Type);
-		Assert.AreEqual(string.Empty, stringPropertyType.DefaultValue);
+		Assert.AreEqual(string.Empty, stringPropertyType.Default);
 
 		property = entity.Properties[1];
 		Assert.AreEqual("Texture", property.Name);
 		Assert.AreEqual("File name (without extension) of the texture to be used", property.Description);
 		stringPropertyType = AssertPropertyType<EntityPropertyTypeDescriptor.StringProperty>(property.Type);
-		Assert.AreEqual(string.Empty, stringPropertyType.DefaultValue);
+		Assert.AreEqual(string.Empty, stringPropertyType.Default);
 
 		property = entity.Properties[2];
 		Assert.AreEqual("Scale", property.Name);
 		Assert.AreEqual("The scale of the mesh used", property.Description);
 		EntityPropertyTypeDescriptor.Vector3Property vector3PropertyType = AssertPropertyType<EntityPropertyTypeDescriptor.Vector3Property>(property.Type);
-		Assert.AreEqual(Vector3.One, vector3PropertyType.DefaultValue);
+		Assert.AreEqual(Vector3.One, vector3PropertyType.Default);
 		Assert.AreEqual(0.1f, vector3PropertyType.Step);
-		Assert.AreEqual(0.01f, vector3PropertyType.MinValue);
-		Assert.AreEqual(1000, vector3PropertyType.MaxValue);
+		Assert.AreEqual(0.01f, vector3PropertyType.Min);
+		Assert.AreEqual(1000, vector3PropertyType.Max);
 
 		property = entity.Properties[3];
 		Assert.AreEqual("Mass", property.Name);
 		Assert.AreEqual("The mass of the dynamic physics object", property.Description);
 		floatPropertyType = AssertPropertyType<EntityPropertyTypeDescriptor.FloatProperty>(property.Type);
-		Assert.AreEqual(1, floatPropertyType.DefaultValue);
+		Assert.AreEqual(1, floatPropertyType.Default);
 		Assert.AreEqual(0.1f, floatPropertyType.Step);
-		Assert.AreEqual(0.01f, floatPropertyType.MinValue);
-		Assert.AreEqual(1000, floatPropertyType.MaxValue);
+		Assert.AreEqual(0.01f, floatPropertyType.Min);
+		Assert.AreEqual(1000, floatPropertyType.Max);
 
 		entity = data.Entities[3];
 		Assert.AreEqual("Sphere", entity.Name);

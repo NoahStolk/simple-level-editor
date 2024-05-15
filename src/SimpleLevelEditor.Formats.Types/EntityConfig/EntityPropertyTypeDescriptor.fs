@@ -5,15 +5,15 @@ open SimpleLevelEditor.Formats.Types
 open SimpleLevelEditor.Formats.Types.Level
 
 type EntityPropertyTypeDescriptor =
-    | BoolProperty    of DefaultValue: bool
-    | IntProperty     of DefaultValue: int     * Step: Option<int>     * MinValue: Option<int>     * MaxValue: Option<int>
-    | FloatProperty   of DefaultValue: float32 * Step: Option<float32> * MinValue: Option<float32> * MaxValue: Option<float32>
-    | Vector2Property of DefaultValue: Vector2 * Step: Option<float32> * MinValue: Option<float32> * MaxValue: Option<float32>
-    | Vector3Property of DefaultValue: Vector3 * Step: Option<float32> * MinValue: Option<float32> * MaxValue: Option<float32>
-    | Vector4Property of DefaultValue: Vector4 * Step: Option<float32> * MinValue: Option<float32> * MaxValue: Option<float32>
-    | StringProperty  of DefaultValue: string
-    | RgbProperty     of DefaultValue: Rgb
-    | RgbaProperty    of DefaultValue: Rgba
+    | BoolProperty    of Default: bool
+    | IntProperty     of Default: int     * Step: Option<int>     * Min: Option<int>     * Max: Option<int>
+    | FloatProperty   of Default: float32 * Step: Option<float32> * Min: Option<float32> * Max: Option<float32>
+    | Vector2Property of Default: Vector2 * Step: Option<float32> * Min: Option<float32> * Max: Option<float32>
+    | Vector3Property of Default: Vector3 * Step: Option<float32> * Min: Option<float32> * Max: Option<float32>
+    | Vector4Property of Default: Vector4 * Step: Option<float32> * Min: Option<float32> * Max: Option<float32>
+    | StringProperty  of Default: string
+    | RgbProperty     of Default: Rgb
+    | RgbaProperty    of Default: Rgba
 
     member this.DefaultValue =
         match this with
