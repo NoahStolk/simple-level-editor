@@ -10,6 +10,6 @@ type PointEntityVisualization =
 
     member this.GetTypeId() : string =
         match this with
-        | SimpleSphere _    -> PointEntityVisualizationIds.SimpleSphereId
-        | BillboardSprite _ -> PointEntityVisualizationIds.BillboardSpriteId
-        | Mesh _            -> PointEntityVisualizationIds.MeshId
+        | SimpleSphere _    -> nameof SimpleSphere
+        | BillboardSprite _ -> nameof BillboardSprite
+        | Mesh _            -> nameof Mesh

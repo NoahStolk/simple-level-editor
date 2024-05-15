@@ -1,0 +1,175 @@
+{
+  "Version": 2,
+  "Entities": [
+    {
+      "Name": "PlayerSpawn",
+      "Shape": {
+        "Case": "Point",
+        "Fields": [
+          {
+            "Case": "BillboardSprite",
+            "Fields": [
+              "PlayerIcon",
+              32
+            ]
+          }
+        ]
+      },
+      "Properties": []
+    },
+    {
+      "Name": "Light",
+      "Shape": {
+        "Case": "Point",
+        "Fields": [
+          {
+            "Case": "SimpleSphere",
+            "Fields": [
+              {
+                "R": 255,
+                "G": 127,
+                "B": 255
+              },
+              0.25
+            ]
+          }
+        ]
+      },
+      "Properties": [
+        {
+          "Name": "Color",
+          "Type": {
+            "Case": "RgbProperty",
+            "Fields": [
+              {
+                "R": 255,
+                "G": 255,
+                "B": 255
+              }
+            ]
+          },
+          "Description": "Point light color"
+        },
+        {
+          "Name": "Radius",
+          "Type": {
+            "Case": "FloatProperty",
+            "Fields": [
+              5,
+              1,
+              1,
+              1000
+            ]
+          },
+          "Description": "Point light radius"
+        },
+        {
+          "Name": "Shadow",
+          "Type": {
+            "Case": "BoolProperty",
+            "Fields": [
+              false
+            ]
+          },
+          "Description": "Whether the light casts shadows"
+        }
+      ]
+    },
+    {
+      "Name": "DynamicObject",
+      "Shape": {
+        "Case": "Point",
+        "Fields": [
+          {
+            "Case": "Mesh",
+            "Fields": [
+              "Sphere",
+              "Checkerboard",
+              0.5
+            ]
+          }
+        ]
+      },
+      "Properties": [
+        {
+          "Name": "Mesh",
+          "Type": {
+            "Case": "StringProperty",
+            "Fields": [
+              ""
+            ]
+          },
+          "Description": "File name (without extension) of the mesh to be used"
+        },
+        {
+          "Name": "Texture",
+          "Type": {
+            "Case": "StringProperty",
+            "Fields": [
+              ""
+            ]
+          },
+          "Description": "File name (without extension) of the texture to be used"
+        },
+        {
+          "Name": "Scale",
+          "Type": {
+            "Case": "Vector3Property",
+            "Fields": [
+              {
+                "X": 1,
+                "Y": 1,
+                "Z": 1
+              },
+              0.1,
+              0.01,
+              1000
+            ]
+          },
+          "Description": "The scale of the mesh used"
+        },
+        {
+          "Name": "Mass",
+          "Type": {
+            "Case": "FloatProperty",
+            "Fields": [
+              1,
+              0.1,
+              0.01,
+              1000
+            ]
+          },
+          "Description": "The mass of the dynamic physics object"
+        }
+      ]
+    },
+    {
+      "Name": "Sphere",
+      "Shape": {
+        "Case": "Sphere",
+        "Fields": [
+          {
+            "R": 240,
+            "G": 120,
+            "B": 60
+          }
+        ]
+      },
+      "Properties": []
+    },
+    {
+      "Name": "Aabb",
+      "Shape": {
+        "Case": "Aabb",
+        "Fields": [
+          {
+            "R": 60,
+            "G": 120,
+            "B": 240
+          }
+        ]
+      },
+      "Properties": []
+    }
+  ]
+}

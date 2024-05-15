@@ -1,7 +1,6 @@
 namespace SimpleLevelEditor.Formats.Types.Level
 
 open System
-open SimpleLevelEditor.Formats.Types
 open System.Numerics
 
 type WorldObject =
@@ -48,30 +47,3 @@ type WorldObject =
           Rotation = Vector3.Zero
           Position = Vector3.Zero
           Flags = [] }
-
-    static member FromData(worldObjectId: int32, mesh: string, texture: string, scale: string option, rotation: string option, position: string option, flags: string) : Option<WorldObject> =
-        let scale = Vector3.FromDataString(scale)
-
-        match scale with
-        | None -> None
-        | Some scale ->
-            let rotation = Vector3.FromDataString(rotation)
-
-            match rotation with
-            | None -> None
-            | Some rotation ->
-                let position = Vector3.FromDataString(position)
-
-                match position with
-                | None -> None
-                | Some position ->
-                    let flags = flags.Split(',', StringSplitOptions.RemoveEmptyEntries ||| StringSplitOptions.TrimEntries) |> List.ofArray
-
-                    Some
-                        { Id = worldObjectId
-                          Mesh = mesh
-                          Texture = texture
-                          Scale = scale
-                          Rotation = rotation
-                          Position = position
-                          Flags = flags }

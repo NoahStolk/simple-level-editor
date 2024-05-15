@@ -1,6 +1,5 @@
 namespace SimpleLevelEditor.Formats.Types.EntityConfig
 
-open System
 open SimpleLevelEditor.Formats.Types
 open SimpleLevelEditor.Formats.Types.Level
 
@@ -17,53 +16,6 @@ type EntityShape =
 
     member this.GetTypeId() =
         match this with
-        | Point _  -> ShapeIds.PointId
-        | Sphere _ -> ShapeIds.SphereId
-        | Aabb _   -> ShapeIds.AabbId
-
-    static member FromShapeText(shapeText: string) =
-        let indexOfFirstDelimiter = shapeText.IndexOf(';', StringComparison.Ordinal)
-        if indexOfFirstDelimiter = -1 then failwithf $"Invalid shape data: %s{shapeText}"
-
-        let shapeId = shapeText[..(indexOfFirstDelimiter - 1)]
-        let shapeData = shapeText[(indexOfFirstDelimiter + 1)..]
-
-        match shapeId with
-        | ShapeIds.PointId  -> EntityShape.ParsePointData shapeData
-        | ShapeIds.SphereId -> Sphere(Rgb.FromDataString(Some shapeData) |> Option.defaultValue Rgb.Default)
-        | ShapeIds.AabbId   -> Aabb(Rgb.FromDataString(Some shapeData) |> Option.defaultValue Rgb.Default)
-        | _                 -> failwithf $"Unknown entity shape type: %s{shapeId}"
-
-    static member private ParsePointData(data: string) : EntityShape =
-        let indexOfFirstDelimiter = data.IndexOf(';')
-        if indexOfFirstDelimiter = -1 then failwithf $"Invalid point data: %s{data}"
-        let visualizationId = data[..(indexOfFirstDelimiter - 1)]
-        let visualizationData = data[(indexOfFirstDelimiter + 1)..]
-
-        match visualizationId with
-        | PointEntityVisualizationIds.SimpleSphereId -> EntityShape.Point(EntityShape.ParsePointSimpleSphereData(visualizationData))
-        | PointEntityVisualizationIds.BillboardSpriteId -> EntityShape.Point(EntityShape.ParsePointBillboardSpriteData(visualizationData))
-        | PointEntityVisualizationIds.MeshId -> EntityShape.Point(EntityShape.ParsePointMeshData(visualizationData))
-        | _ -> failwithf $"Unknown point visualization type: %s{visualizationId}"
-
-    static member private ParsePointSimpleSphereData(data: string) : PointEntityVisualization =
-        let parts = data.Split(';')
-        if parts.Length <> 2 then failwithf $"Invalid point simple sphere data: %s{data}" // TODO: Return Option<PointEntityVisualization> instead.
-        let rgb = Rgb.FromDataString(Some parts[0]) |> Option.defaultValue Rgb.Default
-        let radius = Single.FromDataString(Some parts[1]) |> Option.defaultValue 1f
-        PointEntityVisualization.SimpleSphere(rgb, radius)
-
-    static member private ParsePointBillboardSpriteData(data: string) : PointEntityVisualization =
-        let parts = data.Split(';')
-        if parts.Length <> 2 then failwithf $"Invalid point billboard sprite data: %s{data}"
-        let textureId = parts[0]
-        let size = Single.FromDataString(Some parts[1]) |> Option.defaultValue 1f
-        PointEntityVisualization.BillboardSprite(textureId, size)
-
-    static member private ParsePointMeshData(data: string) : PointEntityVisualization =
-        let parts = data.Split(';')
-        if parts.Length <> 3 then failwithf $"Invalid point mesh data: %s{data}"
-        let meshName = parts[0]
-        let textureName = parts[1]
-        let size = Single.FromDataString(Some parts[2]) |> Option.defaultValue 1f
-        PointEntityVisualization.Mesh(meshName, textureName, size)
+        | Point _  -> nameof Point
+        | Sphere _ -> nameof Sphere
+        | Aabb _   -> nameof Aabb

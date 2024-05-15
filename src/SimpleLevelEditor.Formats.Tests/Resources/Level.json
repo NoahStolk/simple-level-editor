@@ -1,0 +1,287 @@
+{
+  "EntityConfigPath": "..\\EntityConfig.json",
+  "Meshes": [
+    "..\\Meshes\\Crate.obj",
+    "..\\Meshes\\Cube.obj",
+    "..\\Meshes\\Sphere.obj"
+  ],
+  "Textures": [
+    "..\\Textures\\Blank.tga",
+    "..\\Textures\\StoneBlue.tga",
+    "..\\Textures\\TilesColor.tga"
+  ],
+  "WorldObjects": [
+    {
+      "Id": 1,
+      "Mesh": "..\\Meshes\\Cube.obj",
+      "Texture": "..\\Textures\\Blank.tga",
+      "Scale": {
+        "X": 64,
+        "Y": 8,
+        "Z": 64
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "Position": {
+        "X": 16,
+        "Y": -4,
+        "Z": 0
+      },
+      "Flags": [
+        "Transparent"
+      ]
+    },
+    {
+      "Id": 2,
+      "Mesh": "..\\Meshes\\Crate.obj",
+      "Texture": "..\\Textures\\TilesColor.tga",
+      "Scale": {
+        "X": 1,
+        "Y": 1,
+        "Z": 1
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "Position": {
+        "X": -4,
+        "Y": 0.5,
+        "Z": 1
+      },
+      "Flags": [
+        "Dynamic"
+      ]
+    },
+    {
+      "Id": 3,
+      "Mesh": "..\\Meshes\\Crate.obj",
+      "Texture": "..\\Textures\\StoneBlue.tga",
+      "Scale": {
+        "X": 1,
+        "Y": 1,
+        "Z": 1
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "Position": {
+        "X": -0.5,
+        "Y": 0.5,
+        "Z": -4.5
+      },
+      "Flags": [
+        "Transparent",
+        "Dynamic"
+      ]
+    },
+    {
+      "Id": 4,
+      "Mesh": "..\\Meshes\\Crate.obj",
+      "Texture": "..\\Textures\\StoneBlue.tga",
+      "Scale": {
+        "X": 1,
+        "Y": 1,
+        "Z": 1
+      },
+      "Rotation": {
+        "X": 90,
+        "Y": 0,
+        "Z": 0
+      },
+      "Position": {
+        "X": -4.5,
+        "Y": 0.5,
+        "Z": -3
+      },
+      "Flags": []
+    },
+    {
+      "Id": 5,
+      "Mesh": "..\\Meshes\\Sphere.obj",
+      "Texture": "..\\Textures\\StoneBlue.tga",
+      "Scale": {
+        "X": 1,
+        "Y": 1,
+        "Z": 1
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": 90,
+        "Z": 0
+      },
+      "Position": {
+        "X": 6,
+        "Y": 1,
+        "Z": 2
+      },
+      "Flags": []
+    },
+    {
+      "Id": 6,
+      "Mesh": "..\\Meshes\\Cube.obj",
+      "Texture": "..\\Textures\\Blank.tga",
+      "Scale": {
+        "X": 16,
+        "Y": 4,
+        "Z": 1
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "Position": {
+        "X": -0,
+        "Y": 2,
+        "Z": -7.5
+      },
+      "Flags": []
+    }
+  ],
+  "Entities": [
+    {
+      "Id": 1,
+      "Name": "PlayerSpawn",
+      "Position": {
+        "X": 0,
+        "Y": 1,
+        "Z": 0
+      },
+      "Shape": {
+        "Case": "Point"
+      },
+      "Properties": []
+    },
+    {
+      "Id": 2,
+      "Name": "Light",
+      "Position": {
+        "X": 20,
+        "Y": 3,
+        "Z": 2
+      },
+      "Shape": {
+        "Case": "Point"
+      },
+      "Properties": [
+        {
+          "Key": "Color",
+          "Value": {
+            "Case": "Rgb",
+            "Fields": [
+              {
+                "R": 255,
+                "G": 255,
+                "B": 255
+              }
+            ]
+          }
+        },
+        {
+          "Key": "Radius",
+          "Value": {
+            "Case": "Float",
+            "Fields": [
+              20
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "Id": 3,
+      "Name": "Light",
+      "Position": {
+        "X": 27,
+        "Y": 1,
+        "Z": 12
+      },
+      "Shape": {
+        "Case": "Point"
+      },
+      "Properties": [
+        {
+          "Key": "Color",
+          "Value": {
+            "Case": "Rgb",
+            "Fields": [
+              {
+                "R": 255,
+                "G": 47,
+                "B": 0
+              }
+            ]
+          }
+        },
+        {
+          "Key": "Radius",
+          "Value": {
+            "Case": "Float",
+            "Fields": [
+              6
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "Id": 4,
+      "Name": "Light",
+      "Position": {
+        "X": 33,
+        "Y": 1,
+        "Z": 2
+      },
+      "Shape": {
+        "Case": "Point"
+      },
+      "Properties": [
+        {
+          "Key": "Color",
+          "Value": {
+            "Case": "Rgb",
+            "Fields": [
+              {
+                "R": 0,
+                "G": 40,
+                "B": 255
+              }
+            ]
+          }
+        },
+        {
+          "Key": "Radius",
+          "Value": {
+            "Case": "Float",
+            "Fields": [
+              20
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "Id": 5,
+      "Name": "Field",
+      "Position": {
+        "X": 1,
+        "Y": 1,
+        "Z": 1
+      },
+      "Shape": {
+        "Case": "Sphere",
+        "Fields": [
+          10
+        ]
+      },
+      "Properties": []
+    }
+  ]
+}

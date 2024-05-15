@@ -1,4 +1,4 @@
-using SimpleLevelEditor.Formats.Level;
+using SimpleLevelEditor.Formats;
 using SimpleLevelEditor.Formats.Types.Level;
 using SimpleLevelEditor.Rendering;
 using SimpleLevelEditor.Ui.ChildWindows;
@@ -9,7 +9,7 @@ namespace SimpleLevelEditor.State;
 public static class LevelState
 {
 	private const int _maxHistoryEntries = 100;
-	private const string _fileExtension = "xml";
+	private const string _fileExtension = "json";
 
 	private static byte[] _memoryMd5Hash;
 	private static byte[] _fileMd5Hash;
@@ -47,7 +47,7 @@ public static class LevelState
 	private static byte[] GetBytes(Level3dData obj)
 	{
 		using MemoryStream ms = new();
-		LevelXmlSerializer.WriteLevel(ms, obj);
+		SimpleLevelEditorJsonSerializer.SerializeLevel(ms, obj);
 		return ms.ToArray();
 	}
 
@@ -72,7 +72,13 @@ public static class LevelState
 
 		using (FileStream fs = new(path, FileMode.Open))
 		{
-			Level3dData level = LevelXmlDeserializer.ReadLevel(fs);
+			Level3dData? level = SimpleLevelEditorJsonSerializer.DeserializeLevel(fs);
+			if (level == null)
+			{
+				DebugState.AddWarning("Failed to load level.");
+				return;
+			}
+
 			SetLevel(path, level);
 		}
 
@@ -172,7 +178,8 @@ public static class LevelState
 	private static void Save(string path)
 	{
 		using MemoryStream ms = new();
-		LevelXmlSerializer.WriteLevel(ms, Level);
+
+		SimpleLevelEditorJsonSerializer.SerializeLevel(ms, Level);
 		File.WriteAllBytes(path, ms.ToArray());
 		SetLevel(path, Level);
 	}
