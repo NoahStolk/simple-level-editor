@@ -30,7 +30,7 @@ public static class LevelAssetsWindow
 			ImGui.BeginDisabled(LevelState.LevelFilePath == null);
 			if (ImGui.Button("Load entity config"))
 			{
-				DialogWrapper.FileOpen(LoadEntityConfigCallback, "xml");
+				DialogWrapper.FileOpen(LoadEntityConfigCallback, "json");
 
 				static void LoadEntityConfigCallback(string? path)
 				{

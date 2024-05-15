@@ -9,7 +9,7 @@ namespace SimpleLevelEditor.State;
 public static class LevelState
 {
 	private const int _maxHistoryEntries = 100;
-	private const string _fileExtension = "xml";
+	private const string _fileExtension = "json";
 
 	private static byte[] _memoryMd5Hash;
 	private static byte[] _fileMd5Hash;
