@@ -26,18 +26,6 @@ type EntityPropertyValue =
         | Rgb     v -> Rgb v
         | Rgba    v -> Rgba v
 
-    member this.GetTypeId() =
-        match this with
-        | Bool    _ -> TypeIds.BoolId
-        | Int     _ -> TypeIds.IntId
-        | Float   _ -> TypeIds.FloatId
-        | Vector2 _ -> TypeIds.Vector2Id
-        | Vector3 _ -> TypeIds.Vector3Id
-        | Vector4 _ -> TypeIds.Vector4Id
-        | String  _ -> TypeIds.StringId
-        | Rgb     _ -> TypeIds.RgbId
-        | Rgba    _ -> TypeIds.RgbaId
-
     member this.WriteValue() =
         match this with
         | Bool    v -> v.ToDataString

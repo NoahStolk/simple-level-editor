@@ -14,12 +14,6 @@ type ShapeDescriptor =
         | Sphere r -> Sphere r
         | Aabb s   -> Aabb s
 
-    member this.GetShapeId() =
-        match this with
-        | Point    -> ShapeIds.PointId
-        | Sphere _ -> ShapeIds.SphereId
-        | Aabb _   -> ShapeIds.AabbId
-
     member this.WriteValue() =
         match this with
         | Point    -> ""
