@@ -76,11 +76,11 @@ public class LevelSerializationTests
 	[TestMethod]
 	public void SerializeAndDeserializeLevel()
 	{
-		string levelV2Path = Path.Combine("Resources", "LevelV2.xml");
+		string levelPath = Path.Combine("Resources", "Level.json");
 
-		string levelV2Xml = SanitizeString(File.ReadAllText(levelV2Path));
+		string levelJson = SanitizeString(File.ReadAllText(levelPath));
 
-		using FileStream fsV2 = File.OpenRead(levelV2Path);
+		using FileStream fsV2 = File.OpenRead(levelPath);
 		Level3dData? levelV2 = SimpleLevelEditorJsonSerializer.DeserializeLevel(fsV2);
 		Assert.IsNotNull(levelV2);
 		AssertLevelValues(levelV2);
@@ -88,12 +88,12 @@ public class LevelSerializationTests
 		using MemoryStream msV2 = new();
 		SimpleLevelEditorJsonSerializer.SerializeLevel(msV2, levelV2);
 		string serializedLevel = SanitizeString(Encoding.UTF8.GetString(msV2.ToArray()));
-		serializedLevel.Should().BeEquivalentTo(levelV2Xml);
+		serializedLevel.Should().BeEquivalentTo(levelJson);
 	}
 
 	private static void AssertLevelValues(Level3dData level)
 	{
-		Assert.AreEqual("..\\EntityConfig.xml", level.EntityConfigPath);
+		Assert.AreEqual("..\\EntityConfig.json", level.EntityConfigPath);
 
 		Assert.AreEqual(_expectedMeshes.Length, level.Meshes.Length);
 		for (int i = 0; i < _expectedMeshes.Length; i++)

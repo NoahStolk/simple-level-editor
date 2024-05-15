@@ -21,7 +21,7 @@ public class EntityConfigDeserializationTests
 	[TestMethod]
 	public void DeserializeEntityConfig()
 	{
-		using FileStream fs = File.OpenRead(Path.Combine("Resources", "EntityConfig.xml"));
+		using FileStream fs = File.OpenRead(Path.Combine("Resources", "EntityConfig.json"));
 		EntityConfigData? data = SimpleLevelEditorJsonSerializer.DeserializeEntityConfig(fs);
 		Assert.IsNotNull(data);
 
