@@ -54,8 +54,4 @@ public static class SimpleLevelEditorJsonSerializer
 	{
 		JsonSerializer.Serialize(stream, level, _defaultSerializerOptions);
 	}
-
-	// TODO: Add this static class to the F# library as a module.
-
-	// TODO: Rename the F# library to SimpleLevelEditor.Formats, delete this C# project, and replace the current NuGet package with the F# library.
 }
