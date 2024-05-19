@@ -80,7 +80,21 @@ public sealed class LineRenderer
 
 		Gl.BindVertexArray(_lineVao);
 		RenderOrigin();
-		RenderGrid(LevelEditorState.TargetHeight);
+		RenderGrid(Camera3d.Position with { Y = LevelEditorState.TargetHeight }, new Vector4(1, 1, 1, 0.25f), LevelEditorState.GridCellCount, LevelEditorState.GridCellSize);
+		if (LevelEditorState.MoveTargetPosition.HasValue)
+		{
+			Vector3? selectedPosition = LevelEditorState.SelectedWorldObject?.Position ?? LevelEditorState.SelectedEntity?.Position;
+			if (selectedPosition != null)
+			{
+				float difference = MathF.Abs(LevelEditorState.MoveTargetPosition.Value.Y - selectedPosition.Value.Y);
+				if (difference > float.Epsilon)
+				{
+					RenderGrid(selectedPosition.Value, new Vector4(1, 1, 0, 0.5f), 1, 2);
+					RenderGrid(LevelEditorState.MoveTargetPosition.Value, new Vector4(1, 1, 0, 0.5f), 1, 2);
+				}
+			}
+		}
+
 		RenderWorldObjectEdges();
 		RenderEntities();
 
@@ -122,7 +136,6 @@ public sealed class LineRenderer
 		RenderLine(scaleMatrix * translationMatrix, new Vector4(0.5f, 0, 1, 0.5f));
 	}
 
-	// TODO: Also render the distance on each axis.
 	private void RenderMoveComparison()
 	{
 		if (!LevelEditorState.MoveTargetPosition.HasValue)
@@ -137,47 +150,47 @@ public sealed class LineRenderer
 		Gl.LineWidth(6);
 		Vector4 color = new(1, 1, 0, 1);
 
-		float distanceX = MathF.Abs(selectedObjectPosition.Value.X - moveTarget.X) / 2;
-		float distanceY = MathF.Abs(selectedObjectPosition.Value.Y - moveTarget.Y) / 2;
-		float distanceZ = MathF.Abs(selectedObjectPosition.Value.Z - moveTarget.Z) / 2;
+		float halfDistanceX = MathF.Abs(selectedObjectPosition.Value.X - moveTarget.X) / 2;
+		float halfDistanceY = MathF.Abs(selectedObjectPosition.Value.Y - moveTarget.Y) / 2;
+		float halfDistanceZ = MathF.Abs(selectedObjectPosition.Value.Z - moveTarget.Z) / 2;
 
 		Vector3 averageOnX = selectedObjectPosition.Value with { X = (selectedObjectPosition.Value.X + moveTarget.X) / 2 };
 		Vector3 averageOnY = selectedObjectPosition.Value with { Y = (selectedObjectPosition.Value.Y + moveTarget.Y) / 2 };
 		Vector3 averageOnZ = selectedObjectPosition.Value with { Z = (selectedObjectPosition.Value.Z + moveTarget.Z) / 2 };
 
-		RenderLine(Matrix4x4.CreateScale(1, 1, distanceX) * Matrix4x4.CreateFromAxisAngle(Vector3.UnitY, MathF.PI / 2) * Matrix4x4.CreateTranslation(averageOnX), color);
-		RenderLine(Matrix4x4.CreateScale(1, 1, distanceX) * Matrix4x4.CreateFromAxisAngle(Vector3.UnitY, MathF.PI / 2) * Matrix4x4.CreateTranslation(averageOnX with { Z = moveTarget.Z }), color);
+		RenderLine(Matrix4x4.CreateScale(1, 1, halfDistanceX) * Matrix4x4.CreateFromAxisAngle(Vector3.UnitY, MathF.PI / 2) * Matrix4x4.CreateTranslation(averageOnX), color);
+		RenderLine(Matrix4x4.CreateScale(1, 1, halfDistanceX) * Matrix4x4.CreateFromAxisAngle(Vector3.UnitY, MathF.PI / 2) * Matrix4x4.CreateTranslation(averageOnX with { Z = moveTarget.Z }), color);
 
-		RenderLine(Matrix4x4.CreateScale(1, 1, distanceY) * Matrix4x4.CreateFromAxisAngle(Vector3.UnitX, MathF.PI / 2) * Matrix4x4.CreateTranslation(averageOnY), color);
+		RenderLine(Matrix4x4.CreateScale(1, 1, halfDistanceY) * Matrix4x4.CreateFromAxisAngle(Vector3.UnitX, MathF.PI / 2) * Matrix4x4.CreateTranslation(averageOnY), color);
 
-		RenderLine(Matrix4x4.CreateScale(1, 1, distanceZ) * Matrix4x4.CreateFromAxisAngle(Vector3.UnitY, MathF.PI) * Matrix4x4.CreateTranslation(averageOnZ), color);
-		RenderLine(Matrix4x4.CreateScale(1, 1, distanceZ) * Matrix4x4.CreateFromAxisAngle(Vector3.UnitY, MathF.PI) * Matrix4x4.CreateTranslation(averageOnZ with { X = moveTarget.X }), color);
+		RenderLine(Matrix4x4.CreateScale(1, 1, halfDistanceZ) * Matrix4x4.CreateFromAxisAngle(Vector3.UnitY, MathF.PI) * Matrix4x4.CreateTranslation(averageOnZ), color);
+		RenderLine(Matrix4x4.CreateScale(1, 1, halfDistanceZ) * Matrix4x4.CreateFromAxisAngle(Vector3.UnitY, MathF.PI) * Matrix4x4.CreateTranslation(averageOnZ with { X = moveTarget.X }), color);
 	}
 
-	private void RenderGrid(float height)
+	private void RenderGrid(Vector3 origin, Vector4 color, int cellCount, int cellSize)
 	{
-		Gl.Uniform4(_colorUniform, new Vector4(1, 1, 1, 0.25f));
+		Gl.Uniform4(_colorUniform, color);
 		Gl.LineWidth(1);
 
-		int min = -LevelEditorState.GridCellCount;
-		int max = LevelEditorState.GridCellCount;
-		Matrix4x4 scaleMatrix = Matrix4x4.CreateScale(new Vector3(1, 1, (max - min) * LevelEditorState.GridCellSize));
-		Vector3 offset = new(MathF.Round(Camera3d.Position.X), 0, MathF.Round(Camera3d.Position.Z));
-		offset.X = MathF.Round(offset.X / LevelEditorState.GridCellSize) * LevelEditorState.GridCellSize;
-		offset.Z = MathF.Round(offset.Z / LevelEditorState.GridCellSize) * LevelEditorState.GridCellSize;
+		int min = -cellCount;
+		int max = cellCount;
+		Matrix4x4 scaleMatrix = Matrix4x4.CreateScale(new Vector3(1, 1, (max - min) * cellSize));
+		Vector3 offset = new(MathF.Round(origin.X), 0, MathF.Round(origin.Z));
+		offset.X = MathF.Round(offset.X / cellSize) * cellSize;
+		offset.Z = MathF.Round(offset.Z / cellSize) * cellSize;
 
 		for (int i = min; i <= max; i++)
 		{
 			// Prevent rendering grid lines on top of origin lines (Z-fighting).
-			if (!height.IsZero() || !(i * LevelEditorState.GridCellSize + offset.X).IsZero())
+			if (!origin.Y.IsZero() || !(i * cellSize + offset.X).IsZero())
 			{
-				Gl.UniformMatrix4x4(_modelUniform, scaleMatrix * Matrix4x4.CreateTranslation(new Vector3(i * LevelEditorState.GridCellSize, height, min * LevelEditorState.GridCellSize) + offset));
+				Gl.UniformMatrix4x4(_modelUniform, scaleMatrix * Matrix4x4.CreateTranslation(new Vector3(i * cellSize, origin.Y, min * cellSize) + offset));
 				Gl.DrawArrays(PrimitiveType.Lines, 0, 2);
 			}
 
-			if (!height.IsZero() || !(i * LevelEditorState.GridCellSize + offset.Z).IsZero())
+			if (!origin.Y.IsZero() || !(i * cellSize + offset.Z).IsZero())
 			{
-				Gl.UniformMatrix4x4(_modelUniform, scaleMatrix * Matrix4x4.CreateFromAxisAngle(Vector3.UnitY, MathF.PI / 2) * Matrix4x4.CreateTranslation(new Vector3(min * LevelEditorState.GridCellSize, height, i * LevelEditorState.GridCellSize) + offset));
+				Gl.UniformMatrix4x4(_modelUniform, scaleMatrix * Matrix4x4.CreateFromAxisAngle(Vector3.UnitY, MathF.PI / 2) * Matrix4x4.CreateTranslation(new Vector3(min * cellSize, origin.Y, i * cellSize) + offset));
 				Gl.DrawArrays(PrimitiveType.Lines, 0, 2);
 			}
 		}
