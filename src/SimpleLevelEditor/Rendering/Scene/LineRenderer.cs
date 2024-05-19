@@ -80,7 +80,7 @@ public sealed class LineRenderer
 
 		Gl.BindVertexArray(_lineVao);
 		RenderOrigin();
-		RenderGrid(Camera3d.Position with { Y = LevelEditorState.TargetHeight }, new Vector4(1, 1, 1, 0.25f), LevelEditorState.GridCellCount, LevelEditorState.GridCellSize);
+		RenderGrid(Camera3d.FocusPointTarget with { Y = LevelEditorState.TargetHeight }, new Vector4(1, 1, 1, 0.25f), LevelEditorState.GridCellCount, LevelEditorState.GridCellSize);
 		if (LevelEditorState.MoveTargetPosition.HasValue)
 		{
 			Vector3? selectedPosition = LevelEditorState.SelectedWorldObject?.Position ?? LevelEditorState.SelectedEntity?.Position;
@@ -88,7 +88,7 @@ public sealed class LineRenderer
 			{
 				bool movedHorizontally = MathF.Abs(LevelEditorState.MoveTargetPosition.Value.X - selectedPosition.Value.X) > float.Epsilon || MathF.Abs(LevelEditorState.MoveTargetPosition.Value.Z - selectedPosition.Value.Z) > float.Epsilon;
 				if (movedHorizontally && MathF.Abs(LevelEditorState.TargetHeight - selectedPosition.Value.Y) > float.Epsilon)
-					RenderGrid(Camera3d.Position with { Y = selectedPosition.Value.Y }, new Vector4(1, 1, 0, 0.25f), LevelEditorState.GridCellCount, LevelEditorState.GridCellSize);
+					RenderGrid(Camera3d.FocusPointTarget with { Y = selectedPosition.Value.Y }, new Vector4(1, 1, 0, 0.25f), LevelEditorState.GridCellCount, LevelEditorState.GridCellSize);
 			}
 		}
 
