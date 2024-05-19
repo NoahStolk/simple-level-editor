@@ -71,7 +71,7 @@ public static class LineRenderer
 		Gl.BindVertexArray(_lineVao);
 		RenderOrigin(lineShader);
 		RenderGrid(lineShader);
-		RenderEdges(lineShader);
+		RenderWorldObjectEdges(lineShader);
 		RenderEntitiesWithLineShader(lineShader);
 
 		Gl.BindVertexArray(_centeredLineVao);
@@ -179,32 +179,28 @@ public static class LineRenderer
 		}
 	}
 
-	private static void RenderEdges(ShaderCacheEntry lineShader)
+	private static void RenderWorldObjectEdges(ShaderCacheEntry lineShader)
 	{
 		Gl.LineWidth(2);
 
 		for (int i = 0; i < LevelState.Level.WorldObjects.Length; i++)
 		{
 			WorldObject worldObject = LevelState.Level.WorldObjects[i];
-			RenderEdges(lineShader, worldObject, GetWorldObjectColor(worldObject));
+			Vector4 color = GetWorldObjectColor(worldObject);
+			if (color.W < float.Epsilon)
+				continue;
+
+			MeshEntry? mesh = MeshContainer.GetMesh(worldObject.Mesh);
+			if (mesh == null)
+				continue;
+
+			Matrix4x4 rotationMatrix = MathUtils.CreateRotationMatrixFromEulerAngles(MathUtils.ToRadians(worldObject.Rotation));
+			Matrix4x4 modelMatrix = Matrix4x4.CreateScale(worldObject.Scale) * rotationMatrix * Matrix4x4.CreateTranslation(worldObject.Position);
+			RenderEdges(lineShader, mesh.LineVao, mesh.LineIndices, modelMatrix, color);
 		}
 	}
 
-	private static void RenderEdges(ShaderCacheEntry lineShader, WorldObject worldObject, Vector4 color)
-	{
-		if (color.W < float.Epsilon)
-			return;
-
-		MeshEntry? mesh = MeshContainer.GetMesh(worldObject.Mesh);
-		if (mesh == null)
-			return;
-
-		Matrix4x4 rotationMatrix = MathUtils.CreateRotationMatrixFromEulerAngles(MathUtils.ToRadians(worldObject.Rotation));
-		Matrix4x4 modelMatrix = Matrix4x4.CreateScale(worldObject.Scale) * rotationMatrix * Matrix4x4.CreateTranslation(worldObject.Position);
-		RenderEdges(lineShader, mesh.LineVao, mesh.LineIndices, modelMatrix, color);
-	}
-
-	private static void RenderEdges(ShaderCacheEntry lineShader, string meshName, Vector3 position, Vector4 color)
+	private static void RenderMeshEdges(ShaderCacheEntry lineShader, string meshName, Vector3 position, Vector4 color)
 	{
 		if (color.W < float.Epsilon)
 			return;
@@ -214,7 +210,7 @@ public static class LineRenderer
 			RenderEdges(lineShader, mesh.LineVao, mesh.LineIndices, Matrix4x4.CreateTranslation(position), color);
 	}
 
-	private static unsafe void RenderEdges(ShaderCacheEntry lineShader, uint lineVao, uint[] meshLineIndices, Matrix4x4 modelMatrix, Vector4 color)
+	private static unsafe void RenderEdges(ShaderCacheEntry lineShader, uint lineVao, uint[] lineIndices, Matrix4x4 modelMatrix, Vector4 color)
 	{
 		if (color.W < float.Epsilon)
 			return;
@@ -222,13 +218,12 @@ public static class LineRenderer
 		int lineModelUniform = lineShader.GetUniformLocation("model");
 		int lineColorUniform = lineShader.GetUniformLocation("color");
 
+		Gl.UniformMatrix4x4(lineModelUniform, modelMatrix);
 		Gl.Uniform4(lineColorUniform, color);
 
-		Gl.UniformMatrix4x4(lineModelUniform, modelMatrix);
-
 		Gl.BindVertexArray(lineVao);
-		fixed (uint* index = &meshLineIndices[0])
-			Gl.DrawElements(PrimitiveType.Lines, (uint)meshLineIndices.Length, DrawElementsType.UnsignedInt, index);
+		fixed (uint* index = &lineIndices[0])
+			Gl.DrawElements(PrimitiveType.Lines, (uint)lineIndices.Length, DrawElementsType.UnsignedInt, index);
 	}
 
 	private static void RenderEntitiesWithLineShader(ShaderCacheEntry lineShader)
@@ -253,7 +248,7 @@ public static class LineRenderer
 				}
 				else if (point.Visualization is PointEntityVisualization.Mesh mesh)
 				{
-					RenderEdges(lineShader, mesh.MeshName, entity.Position, GetEntityColor(entity, new Rgb(191, 63, 63), Vector4.Zero));
+					RenderMeshEdges(lineShader, mesh.MeshName, entity.Position, GetEntityColor(entity, new Rgb(191, 63, 63), Vector4.Zero));
 				}
 				else if (point.Visualization is PointEntityVisualization.BillboardSprite billboardSprite)
 				{
