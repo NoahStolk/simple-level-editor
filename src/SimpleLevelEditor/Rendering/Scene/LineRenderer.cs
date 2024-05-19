@@ -158,8 +158,6 @@ public sealed class LineRenderer
 		{
 			WorldObject worldObject = LevelState.Level.WorldObjects[i];
 			Vector4 color = GetWorldObjectLineColor(worldObject);
-			if (color.W < float.Epsilon)
-				continue;
 
 			MeshEntry? mesh = MeshContainer.GetMesh(worldObject.Mesh);
 			if (mesh == null)
@@ -169,16 +167,16 @@ public sealed class LineRenderer
 			Matrix4x4 modelMatrix = Matrix4x4.CreateScale(worldObject.Scale) * rotationMatrix * Matrix4x4.CreateTranslation(worldObject.Position);
 			RenderEdges(mesh.LineVao, mesh.LineIndices, modelMatrix, color);
 		}
+
+		if (LevelEditorState.MoveTargetPosition.HasValue && LevelEditorState.SelectedWorldObject != null)
+			RenderMeshEdges(LevelEditorState.SelectedWorldObject.Mesh, LevelEditorState.SelectedWorldObject.GetModelMatrix(LevelEditorState.MoveTargetPosition.Value), GetWorldObjectLineColor(LevelEditorState.SelectedWorldObject));
 	}
 
-	private void RenderMeshEdges(string meshName, Vector3 position, Vector4 color)
+	private void RenderMeshEdges(string meshName, Matrix4x4 modelMatrix, Vector4 color)
 	{
-		if (color.W < float.Epsilon)
-			return;
-
 		MeshEntry? mesh = MeshContainer.GetMesh(meshName);
 		if (mesh != null)
-			RenderEdges(mesh.LineVao, mesh.LineIndices, Matrix4x4.CreateTranslation(position), color);
+			RenderEdges(mesh.LineVao, mesh.LineIndices, modelMatrix, color);
 	}
 
 	private unsafe void RenderEdges(uint lineVao, uint[] lineIndices, Matrix4x4 modelMatrix, Vector4 color)
@@ -223,7 +221,7 @@ public sealed class LineRenderer
 			}
 			else if (point.Visualization is PointEntityVisualization.Mesh mesh)
 			{
-				RenderMeshEdges(mesh.MeshName, entityPosition, GetEntityLineColor(entity, new Rgb(191, 63, 63), Vector4.Zero));
+				RenderMeshEdges(mesh.MeshName, Matrix4x4.CreateTranslation(entityPosition), GetEntityLineColor(entity, new Rgb(191, 63, 63), Vector4.Zero));
 			}
 			else if (point.Visualization is PointEntityVisualization.BillboardSprite billboardSprite)
 			{
