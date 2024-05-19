@@ -14,7 +14,7 @@ public static class Camera3d
 	private static float _yaw = MathF.PI * 0.25f;
 	private static float _pitch = -0.5f;
 
-	private static float _zoom = 5;
+	public static float Zoom = 5;
 
 	private static Vector3 _focusPoint;
 
@@ -49,7 +49,7 @@ public static class Camera3d
 
 			float scroll = Input.GlfwInput.MouseWheelY;
 			if (!scroll.IsZero() && !Input.GlfwInput.IsKeyDown(Keys.ControlLeft) && !Input.GlfwInput.IsKeyDown(Keys.ControlRight))
-				_zoom = Math.Max(_zoom - scroll, 1);
+				Zoom = Math.Max(Zoom - scroll, 1);
 
 			if (!Input.GlfwInput.IsKeyDown(Keys.ControlLeft) && !Input.GlfwInput.IsKeyDown(Keys.ControlRight))
 			{
@@ -74,7 +74,7 @@ public static class Camera3d
 		}
 
 		_focusPoint = Vector3.Lerp(_focusPoint, FocusPointTarget, dt * 10);
-		Position = _focusPoint + Vector3.Transform(new Vector3(0, 0, -_zoom), Rotation);
+		Position = _focusPoint + Vector3.Transform(new Vector3(0, 0, -Zoom), Rotation);
 
 		ViewMatrix = Matrix4x4.CreateLookAt(Position, Position + LookDirection, UpDirection);
 
@@ -113,7 +113,7 @@ public static class Camera3d
 		}
 		else if (Mode == CameraMode.Pan)
 		{
-			float multiplier = 0.0005f * _zoom;
+			float multiplier = 0.0005f * Zoom;
 			SetFocusPointHard(FocusPointTarget - Vector3.Transform(new Vector3(-delta.X * multiplier, -delta.Y * multiplier, 0), Rotation));
 
 			Graphics.Glfw.SetCursorPos(Graphics.Window, _originalCursor.X, _originalCursor.Y);

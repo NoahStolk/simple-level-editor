@@ -100,7 +100,7 @@ public static class LevelEditorWindow
 
 	private static void RenderLevelEditorMenus()
 	{
-		ImGui.PushStyleColor(ImGuiCol.ChildBg, new Vector4(0, 0, 0, 0.2f));
+		ImGui.PushStyleColor(ImGuiCol.ChildBg, new Vector4(0, 0, 0, 0.4f));
 		if (ImGui.BeginChild("Level Editor Menu", new Vector2(280, 192), ImGuiChildFlags.Border))
 		{
 			const int itemWidth = 160;
@@ -112,6 +112,7 @@ public static class LevelEditorWindow
 				{
 					ImGui.SliderInt("Snap", ref _snapIndex, 0, _snapPoints.Length - 1, Inline.Span(Snap));
 					ImGui.InputFloat("Target height", ref LevelEditorState.TargetHeight, 0.25f, 1, "%.2f");
+					ImGui.SliderFloat("Camera zoom", ref Camera3d.Zoom, 1, 100, "%.2f");
 
 					ImGui.EndTabItem();
 				}
