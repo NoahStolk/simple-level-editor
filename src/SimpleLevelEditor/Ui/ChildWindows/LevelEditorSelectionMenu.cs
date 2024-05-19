@@ -1,4 +1,3 @@
-using Detach.Utils;
 using ImGuiNET;
 using Silk.NET.GLFW;
 using SimpleLevelEditor.Rendering;
@@ -12,27 +11,39 @@ public static class LevelEditorSelectionMenu
 
 	public static void RenderSelectionMenu(Vector2 framebufferSize, ImDrawListPtr drawList, Vector2 cursorScreenPos, Plane nearPlane, Vector2 normalizedMousePosition, float gridSnap)
 	{
-		if (LevelEditorState.SelectedWorldObject != null)
-		{
-			Vector3 position = LevelEditorState.SelectedWorldObject.Position;
-			RenderSelectionMenu(framebufferSize, drawList, cursorScreenPos, nearPlane, normalizedMousePosition, gridSnap, ref position, LevelEditorState.SelectedWorldObject.Rotation, "world object");
-			LevelEditorState.SelectedWorldObject.Position = position;
-		}
-		else if (LevelEditorState.SelectedEntity != null)
-		{
-			Vector3 position = LevelEditorState.SelectedEntity.Position;
-			RenderSelectionMenu(framebufferSize, drawList, cursorScreenPos, nearPlane, normalizedMousePosition, gridSnap, ref position, Vector3.Zero, "entity");
-			LevelEditorState.SelectedEntity.Position = position;
-		}
-	}
-
-	private static void RenderSelectionMenu(Vector2 framebufferSize, ImDrawListPtr drawList, Vector2 cursorScreenPos, Plane nearPlane, Vector2 normalizedMousePosition, float gridSnap, ref Vector3 objectPosition, Vector3 objectRotation, ReadOnlySpan<char> name)
-	{
-		Vector2? posOrigin = GetPosition2d(framebufferSize, cursorScreenPos, nearPlane, objectPosition);
-		if (!posOrigin.HasValue)
+		Vector3? objectPosition = LevelEditorState.SelectedWorldObject?.Position ?? LevelEditorState.SelectedEntity?.Position;
+		if (!objectPosition.HasValue)
 			return;
 
-		bool wasMoveButtonActive = RenderMoveButton("Move", drawList, posOrigin.Value, ref _isMoveButtonActive);
+		Vector2? buttonPosition = GetPosition2d(framebufferSize, cursorScreenPos, nearPlane, objectPosition.Value);
+		if (!buttonPosition.HasValue)
+			return;
+
+		MoveActionResult result = RenderSelectionMenu(drawList, buttonPosition.Value, nearPlane, normalizedMousePosition, gridSnap, objectPosition.Value);
+
+		if (result.Apply && LevelEditorState.MoveTargetPosition.HasValue)
+		{
+			if (LevelEditorState.SelectedWorldObject != null)
+			{
+				LevelEditorState.SelectedWorldObject.Position = LevelEditorState.MoveTargetPosition.Value;
+				LevelState.Track("Moved world object");
+			}
+			else if (LevelEditorState.SelectedEntity != null)
+			{
+				LevelEditorState.SelectedEntity.Position = LevelEditorState.MoveTargetPosition.Value;
+				LevelState.Track("Moved entity");
+			}
+		}
+
+		if (result.IsMoving)
+			LevelEditorState.MoveTargetPosition = result.NewPosition;
+		else
+			LevelEditorState.MoveTargetPosition = null;
+	}
+
+	private static MoveActionResult RenderSelectionMenu(ImDrawListPtr drawList, Vector2 buttonPosition, Plane nearPlane, Vector2 normalizedMousePosition, float gridSnap, Vector3 objectPosition)
+	{
+		bool wasMoveButtonActive = RenderMoveButton("Move", drawList, buttonPosition, ref _isMoveButtonActive);
 		if (_isMoveButtonActive)
 		{
 			bool ctrl = Input.GlfwInput.IsKeyDown(Keys.ControlLeft) || Input.GlfwInput.IsKeyDown(Keys.ControlRight);
@@ -64,22 +75,7 @@ public static class LevelEditorSelectionMenu
 			}
 		}
 
-		if (wasMoveButtonActive)
-			LevelState.Track($"Moved {name}");
-
-		Matrix4x4 rotationMatrix = MathUtils.CreateRotationMatrixFromEulerAngles(MathUtils.ToRadians(objectRotation));
-		Vector2? posX = GetPosition2d(framebufferSize, cursorScreenPos, nearPlane, objectPosition + Vector3.Transform(Vector3.UnitX, rotationMatrix));
-		Vector2? posY = GetPosition2d(framebufferSize, cursorScreenPos, nearPlane, objectPosition + Vector3.Transform(Vector3.UnitY, rotationMatrix));
-		Vector2? posZ = GetPosition2d(framebufferSize, cursorScreenPos, nearPlane, objectPosition + Vector3.Transform(Vector3.UnitZ, rotationMatrix));
-
-		if (posX.HasValue)
-			drawList.AddLine(posOrigin.Value, posX.Value, 0xff0000ff);
-
-		if (posY.HasValue)
-			drawList.AddLine(posOrigin.Value, posY.Value, 0xff00ff00);
-
-		if (posZ.HasValue)
-			drawList.AddLine(posOrigin.Value, posZ.Value, 0xffff0000);
+		return new MoveActionResult(_isMoveButtonActive, wasMoveButtonActive, objectPosition);
 	}
 
 	private static bool RenderMoveButton(string text, ImDrawListPtr drawList, Vector2 posOrigin, ref bool isActive)
@@ -110,4 +106,6 @@ public static class LevelEditorSelectionMenu
 
 		return null;
 	}
+
+	private record struct MoveActionResult(bool IsMoving, bool Apply, Vector3 NewPosition);
 }

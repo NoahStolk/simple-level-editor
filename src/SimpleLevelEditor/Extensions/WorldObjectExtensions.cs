@@ -9,4 +9,9 @@ public static class WorldObjectExtensions
 	{
 		return Matrix4x4.CreateScale(worldObject.Scale) * MathUtils.CreateRotationMatrixFromEulerAngles(MathUtils.ToRadians(worldObject.Rotation)) * Matrix4x4.CreateTranslation(worldObject.Position);
 	}
+
+	public static Matrix4x4 GetModelMatrix(this WorldObject worldObject, Vector3 position)
+	{
+		return Matrix4x4.CreateScale(worldObject.Scale) * MathUtils.CreateRotationMatrixFromEulerAngles(MathUtils.ToRadians(worldObject.Rotation)) * Matrix4x4.CreateTranslation(position);
+	}
 }

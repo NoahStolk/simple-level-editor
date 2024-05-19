@@ -80,9 +80,9 @@ public sealed class LineRenderer
 
 		Gl.BindVertexArray(_lineVao);
 		RenderOrigin();
-		RenderGrid();
+		RenderGrid(LevelEditorState.TargetHeight);
 		RenderWorldObjectEdges();
-		RenderEntitiesWithLineShader();
+		RenderEntities();
 
 		Gl.BindVertexArray(_centeredLineVao);
 		RenderFocusAxes();
@@ -121,15 +121,14 @@ public sealed class LineRenderer
 		RenderLine(scaleMatrix * translationMatrix, new Vector4(0.5f, 0, 1, 0.5f));
 	}
 
-	private void RenderGrid()
+	private void RenderGrid(float height)
 	{
 		Gl.Uniform4(_colorUniform, new Vector4(1, 1, 1, 0.25f));
 		Gl.LineWidth(1);
 
 		int min = -LevelEditorState.GridCellCount;
 		int max = LevelEditorState.GridCellCount;
-		Vector3 scale = new(1, 1, (max - min) * LevelEditorState.GridCellSize);
-		Matrix4x4 scaleMat = Matrix4x4.CreateScale(scale);
+		Matrix4x4 scaleMatrix = Matrix4x4.CreateScale(new Vector3(1, 1, (max - min) * LevelEditorState.GridCellSize));
 		Vector3 offset = new(MathF.Round(Camera3d.Position.X), 0, MathF.Round(Camera3d.Position.Z));
 		offset.X = MathF.Round(offset.X / LevelEditorState.GridCellSize) * LevelEditorState.GridCellSize;
 		offset.Z = MathF.Round(offset.Z / LevelEditorState.GridCellSize) * LevelEditorState.GridCellSize;
@@ -137,15 +136,15 @@ public sealed class LineRenderer
 		for (int i = min; i <= max; i++)
 		{
 			// Prevent rendering grid lines on top of origin lines (Z-fighting).
-			if (!LevelEditorState.TargetHeight.IsZero() || !(i * LevelEditorState.GridCellSize + offset.X).IsZero())
+			if (!height.IsZero() || !(i * LevelEditorState.GridCellSize + offset.X).IsZero())
 			{
-				Gl.UniformMatrix4x4(_modelUniform, scaleMat * Matrix4x4.CreateTranslation(new Vector3(i * LevelEditorState.GridCellSize, LevelEditorState.TargetHeight, min * LevelEditorState.GridCellSize) + offset));
+				Gl.UniformMatrix4x4(_modelUniform, scaleMatrix * Matrix4x4.CreateTranslation(new Vector3(i * LevelEditorState.GridCellSize, height, min * LevelEditorState.GridCellSize) + offset));
 				Gl.DrawArrays(PrimitiveType.Lines, 0, 2);
 			}
 
-			if (!LevelEditorState.TargetHeight.IsZero() || !(i * LevelEditorState.GridCellSize + offset.Z).IsZero())
+			if (!height.IsZero() || !(i * LevelEditorState.GridCellSize + offset.Z).IsZero())
 			{
-				Gl.UniformMatrix4x4(_modelUniform, scaleMat * Matrix4x4.CreateFromAxisAngle(Vector3.UnitY, MathF.PI / 2) * Matrix4x4.CreateTranslation(new Vector3(min * LevelEditorState.GridCellSize, LevelEditorState.TargetHeight, i * LevelEditorState.GridCellSize) + offset));
+				Gl.UniformMatrix4x4(_modelUniform, scaleMatrix * Matrix4x4.CreateFromAxisAngle(Vector3.UnitY, MathF.PI / 2) * Matrix4x4.CreateTranslation(new Vector3(min * LevelEditorState.GridCellSize, height, i * LevelEditorState.GridCellSize) + offset));
 				Gl.DrawArrays(PrimitiveType.Lines, 0, 2);
 			}
 		}
@@ -195,7 +194,7 @@ public sealed class LineRenderer
 			Gl.DrawElements(PrimitiveType.Lines, (uint)lineIndices.Length, DrawElementsType.UnsignedInt, index);
 	}
 
-	private void RenderEntitiesWithLineShader()
+	private void RenderEntities()
 	{
 		for (int i = 0; i < LevelState.Level.Entities.Length; i++)
 		{
@@ -203,46 +202,54 @@ public sealed class LineRenderer
 			if (!LevelEditorState.ShouldRenderEntity(entity))
 				continue;
 
-			EntityShape? entityShape = EntityConfigState.GetEntityShape(entity);
-			if (entityShape is EntityShape.Point point)
-			{
-				if (point.Visualization is PointEntityVisualization.SimpleSphere simpleSphere)
-				{
-					Gl.UniformMatrix4x4(_modelUniform, Matrix4x4.CreateScale(simpleSphere.Radius) * Matrix4x4.CreateTranslation(entity.Position));
-					Gl.Uniform4(_colorUniform, GetEntityLineColor(entity, simpleSphere.Color, simpleSphere.Color.ToVector4()));
-					Gl.BindVertexArray(_pointVao);
-					Gl.DrawArrays(PrimitiveType.Lines, 0, (uint)_pointVertices.Length);
-				}
-				else if (point.Visualization is PointEntityVisualization.Mesh mesh)
-				{
-					RenderMeshEdges(mesh.MeshName, entity.Position, GetEntityLineColor(entity, new Rgb(191, 63, 63), Vector4.Zero));
-				}
-				else if (point.Visualization is PointEntityVisualization.BillboardSprite billboardSprite)
-				{
-					Matrix4x4 modelMatrix = Matrix4x4.CreateScale(billboardSprite.Size) * EntityMatrixUtils.GetBillboardMatrix(entity);
-					RenderEdges(_planeLineVao, _planeLineIndices, modelMatrix, GetEntityLineColor(entity, new Rgb(63, 63, 191), Vector4.Zero));
-				}
-			}
-			else if (entityShape is EntityShape.Sphere sphere)
-			{
-				if (entity.Shape is not ShapeDescriptor.Sphere sphereDescriptor)
-					throw new InvalidOperationException($"Entity '{entity.Name}' is of shape type '{entity.Shape}' which does not match shape type '{entityShape}' from the EntityConfig.");
+			RenderEntity(entity, entity.Position);
+		}
 
-				Gl.UniformMatrix4x4(_modelUniform, Matrix4x4.CreateScale(sphereDescriptor.Radius) * Matrix4x4.CreateTranslation(entity.Position));
-				Gl.Uniform4(_colorUniform, GetEntityLineColor(entity, sphere.Color, sphere.Color.ToVector4()));
-				Gl.BindVertexArray(_sphereVao);
-				Gl.DrawArrays(PrimitiveType.Lines, 0, (uint)_sphereVertices.Length);
-			}
-			else if (entityShape is EntityShape.Aabb aabb)
-			{
-				if (entity.Shape is not ShapeDescriptor.Aabb aabbDescriptor)
-					throw new InvalidOperationException($"Entity '{entity.Name}' is of shape type '{entity.Shape}' which does not match shape type '{entityShape}' from the EntityConfig.");
+		if (LevelEditorState.MoveTargetPosition.HasValue && LevelEditorState.SelectedEntity != null)
+			RenderEntity(LevelEditorState.SelectedEntity, LevelEditorState.MoveTargetPosition.Value);
+	}
 
-				Gl.UniformMatrix4x4(_modelUniform, Matrix4x4.CreateScale(aabbDescriptor.Size) * Matrix4x4.CreateTranslation(entity.Position));
-				Gl.Uniform4(_colorUniform, GetEntityLineColor(entity, aabb.Color, aabb.Color.ToVector4()));
-				Gl.BindVertexArray(_cubeVao);
-				Gl.DrawArrays(PrimitiveType.Lines, 0, 24);
+	private void RenderEntity(Entity entity, Vector3 entityPosition)
+	{
+		EntityShape? entityShape = EntityConfigState.GetEntityShape(entity);
+		if (entityShape is EntityShape.Point point)
+		{
+			if (point.Visualization is PointEntityVisualization.SimpleSphere simpleSphere)
+			{
+				Gl.UniformMatrix4x4(_modelUniform, Matrix4x4.CreateScale(simpleSphere.Radius) * Matrix4x4.CreateTranslation(entityPosition));
+				Gl.Uniform4(_colorUniform, GetEntityLineColor(entity, simpleSphere.Color, simpleSphere.Color.ToVector4()));
+				Gl.BindVertexArray(_pointVao);
+				Gl.DrawArrays(PrimitiveType.Lines, 0, (uint)_pointVertices.Length);
 			}
+			else if (point.Visualization is PointEntityVisualization.Mesh mesh)
+			{
+				RenderMeshEdges(mesh.MeshName, entityPosition, GetEntityLineColor(entity, new Rgb(191, 63, 63), Vector4.Zero));
+			}
+			else if (point.Visualization is PointEntityVisualization.BillboardSprite billboardSprite)
+			{
+				Matrix4x4 modelMatrix = Matrix4x4.CreateScale(billboardSprite.Size) * EntityMatrixUtils.GetBillboardMatrix(entity, entity.Position);
+				RenderEdges(_planeLineVao, _planeLineIndices, modelMatrix, GetEntityLineColor(entity, new Rgb(63, 63, 191), Vector4.Zero));
+			}
+		}
+		else if (entityShape is EntityShape.Sphere sphere)
+		{
+			if (entity.Shape is not ShapeDescriptor.Sphere sphereDescriptor)
+				throw new InvalidOperationException($"Entity '{entity.Name}' is of shape type '{entity.Shape}' which does not match shape type '{entityShape}' from the EntityConfig.");
+
+			Gl.UniformMatrix4x4(_modelUniform, Matrix4x4.CreateScale(sphereDescriptor.Radius) * Matrix4x4.CreateTranslation(entityPosition));
+			Gl.Uniform4(_colorUniform, GetEntityLineColor(entity, sphere.Color, sphere.Color.ToVector4()));
+			Gl.BindVertexArray(_sphereVao);
+			Gl.DrawArrays(PrimitiveType.Lines, 0, (uint)_sphereVertices.Length);
+		}
+		else if (entityShape is EntityShape.Aabb aabb)
+		{
+			if (entity.Shape is not ShapeDescriptor.Aabb aabbDescriptor)
+				throw new InvalidOperationException($"Entity '{entity.Name}' is of shape type '{entity.Shape}' which does not match shape type '{entityShape}' from the EntityConfig.");
+
+			Gl.UniformMatrix4x4(_modelUniform, Matrix4x4.CreateScale(aabbDescriptor.Size) * Matrix4x4.CreateTranslation(entityPosition));
+			Gl.Uniform4(_colorUniform, GetEntityLineColor(entity, aabb.Color, aabb.Color.ToVector4()));
+			Gl.BindVertexArray(_cubeVao);
+			Gl.DrawArrays(PrimitiveType.Lines, 0, 24);
 		}
 	}
 

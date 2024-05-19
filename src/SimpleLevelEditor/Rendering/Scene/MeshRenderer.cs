@@ -8,50 +8,32 @@ using static SimpleLevelEditor.Graphics;
 
 namespace SimpleLevelEditor.Rendering.Scene;
 
-public static class MeshRenderer
+public sealed class MeshRenderer
 {
-	public static void Render()
+	private readonly ShaderCacheEntry _meshShader;
+	private readonly int _modelUniform;
+
+	public MeshRenderer()
 	{
-		ShaderCacheEntry meshShader = InternalContent.Shaders["Mesh"];
-		Gl.UseProgram(meshShader.Id);
+		_meshShader = InternalContent.Shaders["Mesh"];
+		_modelUniform = _meshShader.GetUniformLocation("model");
+	}
 
-		Gl.UniformMatrix4x4(meshShader.GetUniformLocation("view"), Camera3d.ViewMatrix);
-		Gl.UniformMatrix4x4(meshShader.GetUniformLocation("projection"), Camera3d.Projection);
+	public void Render()
+	{
+		Gl.UseProgram(_meshShader.Id);
 
-		RenderEntitiesWithMeshShader(meshShader);
+		Gl.UniformMatrix4x4(_meshShader.GetUniformLocation("view"), Camera3d.ViewMatrix);
+		Gl.UniformMatrix4x4(_meshShader.GetUniformLocation("projection"), Camera3d.Projection);
+
+		RenderMeshEntities();
 
 		if (LevelEditorState.ShouldRenderWorldObjects())
-			RenderWorldObjects(meshShader);
+			RenderWorldObjects();
 	}
 
-	private static unsafe void RenderWorldObjects(ShaderCacheEntry meshShader)
+	private void RenderMeshEntities()
 	{
-		int modelUniform = meshShader.GetUniformLocation("model");
-		for (int i = 0; i < LevelState.Level.WorldObjects.Length; i++)
-		{
-			WorldObject worldObject = LevelState.Level.WorldObjects[i];
-
-			MeshEntry? mesh = MeshContainer.GetMesh(worldObject.Mesh);
-			if (mesh == null)
-				continue;
-
-			uint? textureId = TextureContainer.GetTexture(worldObject.Texture);
-			if (textureId == null)
-				continue;
-
-			Gl.UniformMatrix4x4(modelUniform, worldObject.GetModelMatrix());
-
-			Gl.BindTexture(TextureTarget.Texture2D, textureId.Value);
-
-			Gl.BindVertexArray(mesh.MeshVao);
-			fixed (uint* index = &mesh.Mesh.Indices[0])
-				Gl.DrawElements(PrimitiveType.Triangles, (uint)mesh.Mesh.Indices.Length, DrawElementsType.UnsignedInt, index);
-		}
-	}
-
-	private static unsafe void RenderEntitiesWithMeshShader(ShaderCacheEntry meshShader)
-	{
-		int modelUniform = meshShader.GetUniformLocation("model");
 		for (int i = 0; i < LevelState.Level.Entities.Length; i++)
 		{
 			Entity entity = LevelState.Level.Entities[i];
@@ -60,23 +42,49 @@ public static class MeshRenderer
 
 			EntityShape? entityShape = EntityConfigState.GetEntityShape(entity);
 			if (entityShape is EntityShape.Point { Visualization: PointEntityVisualization.Mesh meshVisualization })
-			{
-				MeshEntry? mesh = MeshContainer.GetMesh(meshVisualization.MeshName);
-				if (mesh == null)
-					continue;
-
-				uint? textureId = TextureContainer.GetTexture(meshVisualization.TextureName);
-				if (textureId == null)
-					continue;
-
-				Gl.UniformMatrix4x4(modelUniform, Matrix4x4.CreateTranslation(entity.Position));
-
-				Gl.BindTexture(TextureTarget.Texture2D, textureId.Value);
-
-				Gl.BindVertexArray(mesh.MeshVao);
-				fixed (uint* index = &mesh.Mesh.Indices[0])
-					Gl.DrawElements(PrimitiveType.Triangles, (uint)mesh.Mesh.Indices.Length, DrawElementsType.UnsignedInt, index);
-			}
+				RenderMesh(meshVisualization.MeshName, meshVisualization.TextureName, Matrix4x4.CreateTranslation(entity.Position));
 		}
+
+		if (LevelEditorState.MoveTargetPosition.HasValue && LevelEditorState.SelectedEntity != null)
+		{
+			Entity selectedEntity = LevelEditorState.SelectedEntity;
+			EntityShape? entityShape = EntityConfigState.GetEntityShape(selectedEntity);
+			if (entityShape is EntityShape.Point { Visualization: PointEntityVisualization.Mesh meshVisualization })
+				RenderMesh(meshVisualization.MeshName, meshVisualization.TextureName, Matrix4x4.CreateTranslation(LevelEditorState.MoveTargetPosition.Value));
+		}
+	}
+
+	private void RenderWorldObjects()
+	{
+		for (int i = 0; i < LevelState.Level.WorldObjects.Length; i++)
+		{
+			WorldObject worldObject = LevelState.Level.WorldObjects[i];
+			RenderMesh(worldObject.Mesh, worldObject.Texture, worldObject.GetModelMatrix());
+		}
+
+		if (LevelEditorState.MoveTargetPosition.HasValue && LevelEditorState.SelectedWorldObject != null)
+		{
+			WorldObject selectedWorldObject = LevelEditorState.SelectedWorldObject;
+			RenderMesh(selectedWorldObject.Mesh, selectedWorldObject.Texture, selectedWorldObject.GetModelMatrix(LevelEditorState.MoveTargetPosition.Value));
+		}
+	}
+
+	private unsafe void RenderMesh(string meshName, string textureName, Matrix4x4 modelMatrix)
+	{
+		MeshEntry? mesh = MeshContainer.GetMesh(meshName);
+		if (mesh == null)
+			return;
+
+		uint? textureId = TextureContainer.GetTexture(textureName);
+		if (textureId == null)
+			return;
+
+		Gl.UniformMatrix4x4(_modelUniform, modelMatrix);
+
+		Gl.BindTexture(TextureTarget.Texture2D, textureId.Value);
+
+		Gl.BindVertexArray(mesh.MeshVao);
+		fixed (uint* index = &mesh.Mesh.Indices[0])
+			Gl.DrawElements(PrimitiveType.Triangles, (uint)mesh.Mesh.Indices.Length, DrawElementsType.UnsignedInt, index);
 	}
 }

@@ -26,6 +26,8 @@ public static class LevelEditorState
 	public static WorldObject? SelectedWorldObject { get; private set; }
 	public static Entity? SelectedEntity { get; private set; }
 
+	public static Vector3? MoveTargetPosition { get; set; }
+
 	public static Dictionary<string, bool> RenderFilter { get; } = [];
 
 	public static bool ShouldRenderWorldObjects()
