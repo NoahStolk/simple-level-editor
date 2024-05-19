@@ -1,6 +1,5 @@
 using Detach.Collisions;
 using Silk.NET.GLFW;
-using SimpleLevelEditor.Content.Data;
 using SimpleLevelEditor.Extensions;
 using SimpleLevelEditor.Formats.Types.EntityConfig;
 using SimpleLevelEditor.Formats.Types.Level;
@@ -9,7 +8,6 @@ using SimpleLevelEditor.State;
 using SimpleLevelEditor.Ui.ChildWindows;
 using SimpleLevelEditor.Utils;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 
 namespace SimpleLevelEditor.Logic;
 
@@ -31,10 +29,22 @@ public static class MainLogic
 
 		if (isFocused && Input.GlfwInput.IsMouseButtonPressed(MouseButton.Left))
 		{
+			// ReSharper disable PossibleUnintendedReferenceComparison
 			if (LevelEditorState.HighlightedObject != null)
+			{
 				LevelEditorState.SetSelectedWorldObject(LevelEditorState.SelectedWorldObject == LevelEditorState.HighlightedObject ? null : LevelEditorState.HighlightedObject);
+			}
 			else if (LevelEditorState.HighlightedEntity != null)
+			{
 				LevelEditorState.SetSelectedEntity(LevelEditorState.SelectedEntity == LevelEditorState.HighlightedEntity ? null : LevelEditorState.HighlightedEntity);
+			}
+			else
+			{
+				LevelEditorState.ClearSelectedEntity();
+				LevelEditorState.ClearSelectedWorldObject();
+			}
+
+			// ReSharper restore PossibleUnintendedReferenceComparison
 		}
 	}
 

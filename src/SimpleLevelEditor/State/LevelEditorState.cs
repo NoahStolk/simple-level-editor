@@ -46,13 +46,13 @@ public static class LevelEditorState
 		HighlightedEntity = null;
 	}
 
-	public static void SetHighlightedWorldObject(WorldObject? worldObject)
+	public static void SetHighlightedWorldObject(WorldObject worldObject)
 	{
 		HighlightedObject = worldObject;
 		HighlightedEntity = null;
 	}
 
-	public static void SetHighlightedEntity(Entity? entity)
+	public static void SetHighlightedEntity(Entity entity)
 	{
 		HighlightedEntity = entity;
 		HighlightedObject = null;
