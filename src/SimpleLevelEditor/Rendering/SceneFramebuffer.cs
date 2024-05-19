@@ -1,4 +1,5 @@
 using Silk.NET.OpenGL;
+using SimpleLevelEditor.Rendering.Scene;
 using SimpleLevelEditor.State;
 using static SimpleLevelEditor.Graphics;
 

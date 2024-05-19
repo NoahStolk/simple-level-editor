@@ -9,12 +9,13 @@ using SimpleLevelEditor.State;
 using SimpleLevelEditor.Utils;
 using static SimpleLevelEditor.Graphics;
 
-namespace SimpleLevelEditor.Rendering;
+namespace SimpleLevelEditor.Rendering.Scene;
 
-public static class SceneRenderer
+public static class LineRenderer
 {
 	private static readonly uint _lineVao = VaoUtils.CreateLineVao([Vector3.Zero, Vector3.UnitZ]);
 	private static readonly uint _centeredLineVao = VaoUtils.CreateLineVao([-Vector3.UnitZ, Vector3.UnitZ]);
+
 	private static readonly uint _cubeVao = VaoUtils.CreateLineVao([
 		new Vector3(-0.5f, -0.5f, -0.5f),
 		new Vector3(-0.5f, -0.5f, 0.5f),
@@ -44,19 +45,11 @@ public static class SceneRenderer
 		new Vector3(0.5f, 0.5f, 0.5f),
 	]);
 
-	private static readonly Vector3[] _sphereVertices = GetSphereVertexPositions(8, 16, 1);
+	private static readonly Vector3[] _sphereVertices = VertexUtils.GetSphereVertexPositions(8, 16, 1);
 	private static readonly uint _sphereVao = VaoUtils.CreateLineVao(_sphereVertices);
 
-	private static readonly Vector3[] _pointVertices = GetSphereVertexPositions(3, 6, 1);
+	private static readonly Vector3[] _pointVertices = VertexUtils.GetSphereVertexPositions(3, 6, 1);
 	private static readonly uint _pointVao = VaoUtils.CreateLineVao(_pointVertices);
-
-	private static readonly uint _planeVao = VaoUtils.CreatePlaneVao([
-		-0.5f, -0.5f, 0, 0, 0,
-		-0.5f, 0.5f, 0, 0, 1,
-		0.5f, -0.5f, 0, 1, 0,
-		0.5f, 0.5f, 0, 1, 1,
-	]);
-	private static readonly uint[] _planeIndices = [0, 1, 2, 2, 1, 3];
 
 	private static readonly uint _planeLineVao = VaoUtils.CreateLineVao([
 		new Vector3(-0.5f, -0.5f, 0),
@@ -67,53 +60,8 @@ public static class SceneRenderer
 	]);
 	private static readonly uint[] _planeLineIndices = [0, 1, 1, 2, 2, 3, 3, 0];
 
-	private static Vector3[] GetSphereVertexPositions(uint horizontalLines, uint verticalLines, float radius)
+	public static void Render()
 	{
-		List<Vector3> vertices = [];
-		for (uint i = 0; i <= horizontalLines; i++)
-		{
-			float horizontalAngle = MathF.PI * i / horizontalLines;
-
-			for (uint j = 0; j <= verticalLines; j++)
-			{
-				float verticalAngle = 2 * MathF.PI * j / verticalLines;
-
-				float x = MathF.Sin(horizontalAngle) * MathF.Cos(verticalAngle);
-				float y = MathF.Cos(horizontalAngle);
-				float z = MathF.Sin(horizontalAngle) * MathF.Sin(verticalAngle);
-
-				if (j != 0 && j != verticalLines)
-					vertices.Add(new Vector3(x, y, z) * radius);
-
-				vertices.Add(new Vector3(x, y, z) * radius);
-			}
-		}
-
-		for (uint i = 0; i <= verticalLines; i++)
-		{
-			float verticalAngle = 2 * MathF.PI * i / verticalLines;
-
-			for (uint j = 0; j <= horizontalLines; j++)
-			{
-				float horizontalAngle = MathF.PI * j / horizontalLines;
-
-				float x = MathF.Sin(horizontalAngle) * MathF.Cos(verticalAngle);
-				float y = MathF.Cos(horizontalAngle);
-				float z = MathF.Sin(horizontalAngle) * MathF.Sin(verticalAngle);
-
-				if (j != 0 && j != horizontalLines)
-					vertices.Add(new Vector3(x, y, z) * radius);
-
-				vertices.Add(new Vector3(x, y, z) * radius);
-			}
-		}
-
-		return vertices.ToArray();
-	}
-
-	public static void RenderScene()
-	{
-		// Line rendering
 		ShaderCacheEntry lineShader = InternalContent.Shaders["Line"];
 		Gl.UseProgram(lineShader.Id);
 
@@ -128,27 +76,6 @@ public static class SceneRenderer
 
 		Gl.BindVertexArray(_centeredLineVao);
 		RenderFocusAxes(lineShader);
-
-		// Mesh rendering
-		ShaderCacheEntry meshShader = InternalContent.Shaders["Mesh"];
-		Gl.UseProgram(meshShader.Id);
-
-		Gl.UniformMatrix4x4(meshShader.GetUniformLocation("view"), Camera3d.ViewMatrix);
-		Gl.UniformMatrix4x4(meshShader.GetUniformLocation("projection"), Camera3d.Projection);
-
-		RenderEntitiesWithMeshShader(meshShader);
-
-		if (LevelEditorState.ShouldRenderWorldObjects())
-			RenderWorldObjects(meshShader);
-
-		// Sprite rendering
-		ShaderCacheEntry spriteShader = InternalContent.Shaders["Sprite"];
-		Gl.UseProgram(spriteShader.Id);
-
-		Gl.UniformMatrix4x4(spriteShader.GetUniformLocation("view"), Camera3d.ViewMatrix);
-		Gl.UniformMatrix4x4(spriteShader.GetUniformLocation("projection"), Camera3d.Projection);
-
-		RenderEntitiesWithSpriteShader(spriteShader);
 	}
 
 	private static void RenderOrigin(ShaderCacheEntry lineShader)
@@ -304,31 +231,6 @@ public static class SceneRenderer
 			Gl.DrawElements(PrimitiveType.Lines, (uint)meshLineIndices.Length, DrawElementsType.UnsignedInt, index);
 	}
 
-	private static unsafe void RenderWorldObjects(ShaderCacheEntry meshShader)
-	{
-		int modelUniform = meshShader.GetUniformLocation("model");
-		for (int i = 0; i < LevelState.Level.WorldObjects.Length; i++)
-		{
-			WorldObject worldObject = LevelState.Level.WorldObjects[i];
-
-			MeshEntry? mesh = MeshContainer.GetMesh(worldObject.Mesh);
-			if (mesh == null)
-				continue;
-
-			uint? textureId = TextureContainer.GetTexture(worldObject.Texture);
-			if (textureId == null)
-				continue;
-
-			Gl.UniformMatrix4x4(modelUniform, worldObject.GetModelMatrix());
-
-			Gl.BindTexture(TextureTarget.Texture2D, textureId.Value);
-
-			Gl.BindVertexArray(mesh.MeshVao);
-			fixed (uint* index = &mesh.Mesh.Indices[0])
-				Gl.DrawElements(PrimitiveType.Triangles, (uint)mesh.Mesh.Indices.Length, DrawElementsType.UnsignedInt, index);
-		}
-	}
-
 	private static void RenderEntitiesWithLineShader(ShaderCacheEntry lineShader)
 	{
 		int modelUniform = lineShader.GetUniformLocation("model");
@@ -339,7 +241,7 @@ public static class SceneRenderer
 			if (!LevelEditorState.ShouldRenderEntity(entity))
 				continue;
 
-			EntityShape? entityShape = GetEntityShape(entity);
+			EntityShape? entityShape = EntityConfigState.GetEntityShape(entity);
 			if (entityShape is EntityShape.Point point)
 			{
 				if (point.Visualization is PointEntityVisualization.SimpleSphere simpleSphere)
@@ -380,76 +282,6 @@ public static class SceneRenderer
 				Gl.DrawArrays(PrimitiveType.Lines, 0, 24);
 			}
 		}
-	}
-
-	private static unsafe void RenderEntitiesWithMeshShader(ShaderCacheEntry meshShader)
-	{
-		int modelUniform = meshShader.GetUniformLocation("model");
-		for (int i = 0; i < LevelState.Level.Entities.Length; i++)
-		{
-			Entity entity = LevelState.Level.Entities[i];
-			if (!LevelEditorState.ShouldRenderEntity(entity))
-				continue;
-
-			EntityShape? entityShape = GetEntityShape(entity);
-			if (entityShape is EntityShape.Point { Visualization: PointEntityVisualization.Mesh meshVisualization })
-			{
-				MeshEntry? mesh = MeshContainer.GetMesh(meshVisualization.MeshName);
-				if (mesh == null)
-					continue;
-
-				uint? textureId = TextureContainer.GetTexture(meshVisualization.TextureName);
-				if (textureId == null)
-					continue;
-
-				Gl.UniformMatrix4x4(modelUniform, Matrix4x4.CreateTranslation(entity.Position));
-
-				Gl.BindTexture(TextureTarget.Texture2D, textureId.Value);
-
-				Gl.BindVertexArray(mesh.MeshVao);
-				fixed (uint* index = &mesh.Mesh.Indices[0])
-					Gl.DrawElements(PrimitiveType.Triangles, (uint)mesh.Mesh.Indices.Length, DrawElementsType.UnsignedInt, index);
-			}
-		}
-	}
-
-	private static unsafe void RenderEntitiesWithSpriteShader(ShaderCacheEntry spriteShader)
-	{
-		int modelUniform = spriteShader.GetUniformLocation("model");
-		for (int i = 0; i < LevelState.Level.Entities.Length; i++)
-		{
-			Entity entity = LevelState.Level.Entities[i];
-			if (!LevelEditorState.ShouldRenderEntity(entity))
-				continue;
-
-			EntityShape? entityShape = GetEntityShape(entity);
-			if (entityShape is EntityShape.Point { Visualization: PointEntityVisualization.BillboardSprite billboardSprite })
-			{
-				uint? textureId = TextureContainer.GetTexture(billboardSprite.TextureName);
-				if (textureId == null)
-					continue;
-
-				Gl.UniformMatrix4x4(modelUniform, Matrix4x4.CreateScale(new Vector3(billboardSprite.Size, billboardSprite.Size, 1)) * EntityMatrixUtils.GetBillboardMatrix(entity));
-
-				Gl.BindTexture(TextureTarget.Texture2D, textureId.Value);
-
-				Gl.BindVertexArray(_planeVao);
-				fixed (uint* indexPtr = &_planeIndices[0])
-					Gl.DrawElements(PrimitiveType.Triangles, (uint)_planeIndices.Length, DrawElementsType.UnsignedInt, indexPtr);
-			}
-		}
-	}
-
-	private static EntityShape? GetEntityShape(Entity entity)
-	{
-		if (EntityConfigState.EntityConfig.Entities.Length == 0)
-			return null; // EntityConfig not loaded yet.
-
-		EntityShape? entityShape = EntityConfigState.EntityConfig.Entities.FirstOrDefault(e => e.Name == entity.Name)?.Shape;
-		if (entityShape == null)
-			throw new InvalidOperationException($"Entity '{entity.Name}' does not have a shape defined in the EntityConfig.");
-
-		return entityShape;
 	}
 
 	private static Vector4 GetEntityColor(Entity entity, Rgb rgb, Vector4 defaultColor)
