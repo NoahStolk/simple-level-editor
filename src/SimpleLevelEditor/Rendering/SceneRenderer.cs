@@ -14,6 +14,7 @@ namespace SimpleLevelEditor.Rendering;
 public static class SceneRenderer
 {
 	private static readonly uint _lineVao = VaoUtils.CreateLineVao([Vector3.Zero, Vector3.UnitZ]);
+	private static readonly uint _centeredLineVao = VaoUtils.CreateLineVao([-Vector3.UnitZ, Vector3.UnitZ]);
 	private static readonly uint _cubeVao = VaoUtils.CreateLineVao([
 		new Vector3(-0.5f, -0.5f, -0.5f),
 		new Vector3(-0.5f, -0.5f, 0.5f),
@@ -112,17 +113,23 @@ public static class SceneRenderer
 
 	public static void RenderScene()
 	{
+		// Line rendering
 		ShaderCacheEntry lineShader = InternalContent.Shaders["Line"];
 		Gl.UseProgram(lineShader.Id);
 
 		Gl.UniformMatrix4x4(lineShader.GetUniformLocation("view"), Camera3d.ViewMatrix);
 		Gl.UniformMatrix4x4(lineShader.GetUniformLocation("projection"), Camera3d.Projection);
 
+		Gl.BindVertexArray(_lineVao);
 		RenderOrigin(lineShader);
 		RenderGrid(lineShader);
 		RenderEdges(lineShader);
 		RenderEntitiesWithLineShader(lineShader);
 
+		Gl.BindVertexArray(_centeredLineVao);
+		RenderFocusAxes(lineShader);
+
+		// Mesh rendering
 		ShaderCacheEntry meshShader = InternalContent.Shaders["Mesh"];
 		Gl.UseProgram(meshShader.Id);
 
@@ -134,6 +141,7 @@ public static class SceneRenderer
 		if (LevelEditorState.ShouldRenderWorldObjects())
 			RenderWorldObjects(meshShader);
 
+		// Sprite rendering
 		ShaderCacheEntry spriteShader = InternalContent.Shaders["Sprite"];
 		Gl.UseProgram(spriteShader.Id);
 
@@ -147,8 +155,6 @@ public static class SceneRenderer
 	{
 		int lineModelUniform = lineShader.GetUniformLocation("model");
 		int lineColorUniform = lineShader.GetUniformLocation("color");
-
-		Gl.BindVertexArray(_lineVao);
 
 		Matrix4x4 scaleMatrix = Matrix4x4.CreateScale(1, 1, 256);
 
@@ -184,6 +190,32 @@ public static class SceneRenderer
 		// Z axis (negative)
 		Gl.UniformMatrix4x4(lineModelUniform, scaleMatrix * Matrix4x4.CreateFromAxisAngle(Vector3.UnitY, MathF.PI));
 		Gl.Uniform4(lineColorUniform, new Vector4(0, 0, 1, 0.5f));
+		Gl.DrawArrays(PrimitiveType.Lines, 0, 2);
+	}
+
+	private static void RenderFocusAxes(ShaderCacheEntry lineShader)
+	{
+		int lineModelUniform = lineShader.GetUniformLocation("model");
+		int lineColorUniform = lineShader.GetUniformLocation("color");
+
+		Matrix4x4 scaleMatrix = Matrix4x4.CreateScale(1, 1, 128);
+		Matrix4x4 translationMatrix = Matrix4x4.CreateTranslation(Camera3d.FocusPointTarget);
+
+		Gl.LineWidth(1);
+
+		// X axis
+		Gl.UniformMatrix4x4(lineModelUniform, scaleMatrix * Matrix4x4.CreateFromAxisAngle(Vector3.UnitY, MathF.PI / 2) * translationMatrix);
+		Gl.Uniform4(lineColorUniform, new Vector4(1, 0.5f, 0, 0.5f));
+		Gl.DrawArrays(PrimitiveType.Lines, 0, 2);
+
+		// Y axis
+		Gl.UniformMatrix4x4(lineModelUniform, scaleMatrix * Matrix4x4.CreateFromAxisAngle(Vector3.UnitX, MathF.PI * 1.5f) * translationMatrix);
+		Gl.Uniform4(lineColorUniform, new Vector4(0, 1, 0.5f, 0.5f));
+		Gl.DrawArrays(PrimitiveType.Lines, 0, 2);
+
+		// Z axis
+		Gl.UniformMatrix4x4(lineModelUniform, scaleMatrix * translationMatrix);
+		Gl.Uniform4(lineColorUniform, new Vector4(0.5f, 0, 1, 0.5f));
 		Gl.DrawArrays(PrimitiveType.Lines, 0, 2);
 	}
 
@@ -426,6 +458,8 @@ public static class SceneRenderer
 		timeAddition *= 0.5f;
 
 		Vector4 color = rgb.ToVector4();
+
+		// ReSharper disable PossibleUnintendedReferenceComparison
 		if (entity == LevelEditorState.SelectedEntity && entity == LevelEditorState.HighlightedEntity && Camera3d.Mode == CameraMode.None)
 			return color + new Vector4(0.5f + timeAddition, 1, 0.5f + timeAddition, 1);
 		if (entity == LevelEditorState.SelectedEntity)
@@ -433,6 +467,7 @@ public static class SceneRenderer
 		if (entity == LevelEditorState.HighlightedEntity && Camera3d.Mode == CameraMode.None)
 			return color + new Vector4(1, 0.5f + timeAddition, 1, 1);
 
+		// ReSharper restore PossibleUnintendedReferenceComparison
 		return defaultColor;
 	}
 
@@ -441,6 +476,7 @@ public static class SceneRenderer
 		float timeAddition = MathF.Sin((float)Glfw.GetTime() * 10) * 0.5f + 0.5f;
 		timeAddition *= 0.5f;
 
+		// ReSharper disable PossibleUnintendedReferenceComparison
 		if (worldObject == LevelEditorState.SelectedWorldObject && worldObject == LevelEditorState.HighlightedObject && Camera3d.Mode == CameraMode.None)
 			return new Vector4(0.5f + timeAddition, 1, 0.5f + timeAddition, 1);
 		if (worldObject == LevelEditorState.SelectedWorldObject)
@@ -448,6 +484,7 @@ public static class SceneRenderer
 		if (worldObject == LevelEditorState.HighlightedObject && Camera3d.Mode == CameraMode.None)
 			return new Vector4(1, 0.5f + timeAddition, 1, 1);
 
+		// ReSharper restore PossibleUnintendedReferenceComparison
 		return Vector4.Zero;
 	}
 }
