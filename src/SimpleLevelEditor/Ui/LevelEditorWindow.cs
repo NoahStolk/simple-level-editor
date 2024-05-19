@@ -80,19 +80,13 @@ public static class LevelEditorWindow
 		Vector3 averageOnZ = selectedObjectPosition.Value with { Z = (selectedObjectPosition.Value.Z + moveTarget.Z) / 2 };
 
 		if (halfDistanceX > 0)
-		{
-			AddText($"{halfDistanceX:F2}", averageOnX);
 			AddText($"{halfDistanceX:F2}", averageOnX with { Z = moveTarget.Z });
-		}
 
 		if (halfDistanceY > 0)
 			AddText($"{halfDistanceY:F2}", averageOnY);
 
 		if (halfDistanceZ > 0)
-		{
 			AddText($"{halfDistanceZ:F2}", averageOnZ);
-			AddText($"{halfDistanceZ:F2}", averageOnZ with { X = moveTarget.X });
-		}
 
 		void AddText(ReadOnlySpan<char> text, Vector3 position)
 		{

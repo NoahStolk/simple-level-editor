@@ -86,12 +86,9 @@ public sealed class LineRenderer
 			Vector3? selectedPosition = LevelEditorState.SelectedWorldObject?.Position ?? LevelEditorState.SelectedEntity?.Position;
 			if (selectedPosition != null)
 			{
-				float difference = MathF.Abs(LevelEditorState.MoveTargetPosition.Value.Y - selectedPosition.Value.Y);
-				if (difference > float.Epsilon)
-				{
-					RenderGrid(selectedPosition.Value, new Vector4(1, 1, 0, 0.5f), 1, 2);
-					RenderGrid(LevelEditorState.MoveTargetPosition.Value, new Vector4(1, 1, 0, 0.5f), 1, 2);
-				}
+				bool movedHorizontally = MathF.Abs(LevelEditorState.MoveTargetPosition.Value.X - selectedPosition.Value.X) > float.Epsilon || MathF.Abs(LevelEditorState.MoveTargetPosition.Value.Z - selectedPosition.Value.Z) > float.Epsilon;
+				if (movedHorizontally && MathF.Abs(LevelEditorState.TargetHeight - selectedPosition.Value.Y) > float.Epsilon)
+					RenderGrid(Camera3d.Position with { Y = selectedPosition.Value.Y }, new Vector4(1, 1, 0, 0.25f), LevelEditorState.GridCellCount, LevelEditorState.GridCellSize);
 			}
 		}
 
@@ -158,13 +155,9 @@ public sealed class LineRenderer
 		Vector3 averageOnY = selectedObjectPosition.Value with { Y = (selectedObjectPosition.Value.Y + moveTarget.Y) / 2 };
 		Vector3 averageOnZ = selectedObjectPosition.Value with { Z = (selectedObjectPosition.Value.Z + moveTarget.Z) / 2 };
 
-		RenderLine(Matrix4x4.CreateScale(1, 1, halfDistanceX) * Matrix4x4.CreateFromAxisAngle(Vector3.UnitY, MathF.PI / 2) * Matrix4x4.CreateTranslation(averageOnX), color);
 		RenderLine(Matrix4x4.CreateScale(1, 1, halfDistanceX) * Matrix4x4.CreateFromAxisAngle(Vector3.UnitY, MathF.PI / 2) * Matrix4x4.CreateTranslation(averageOnX with { Z = moveTarget.Z }), color);
-
 		RenderLine(Matrix4x4.CreateScale(1, 1, halfDistanceY) * Matrix4x4.CreateFromAxisAngle(Vector3.UnitX, MathF.PI / 2) * Matrix4x4.CreateTranslation(averageOnY), color);
-
 		RenderLine(Matrix4x4.CreateScale(1, 1, halfDistanceZ) * Matrix4x4.CreateFromAxisAngle(Vector3.UnitY, MathF.PI) * Matrix4x4.CreateTranslation(averageOnZ), color);
-		RenderLine(Matrix4x4.CreateScale(1, 1, halfDistanceZ) * Matrix4x4.CreateFromAxisAngle(Vector3.UnitY, MathF.PI) * Matrix4x4.CreateTranslation(averageOnZ with { X = moveTarget.X }), color);
 	}
 
 	private void RenderGrid(Vector3 origin, Vector4 color, int cellCount, int cellSize)
