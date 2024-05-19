@@ -227,7 +227,7 @@ public sealed class LineRenderer
 			}
 			else if (point.Visualization is PointEntityVisualization.BillboardSprite billboardSprite)
 			{
-				Matrix4x4 modelMatrix = Matrix4x4.CreateScale(billboardSprite.Size) * EntityMatrixUtils.GetBillboardMatrix(entity, entity.Position);
+				Matrix4x4 modelMatrix = Matrix4x4.CreateScale(billboardSprite.Size) * EntityMatrixUtils.GetBillboardMatrix(entityPosition);
 				RenderEdges(_planeLineVao, _planeLineIndices, modelMatrix, GetEntityLineColor(entity, new Rgb(63, 63, 191), Vector4.Zero));
 			}
 		}

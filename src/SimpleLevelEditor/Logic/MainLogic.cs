@@ -203,7 +203,7 @@ public static class MainLogic
 				return point.Visualization switch
 				{
 					PointEntityVisualization.SimpleSphere simpleSphere => IntersectsSphere(entity.Position, simpleSphere.Radius),
-					PointEntityVisualization.BillboardSprite billboardSprite => RaycastPlane(Matrix4x4.CreateScale(billboardSprite.Size * 0.5f) * EntityMatrixUtils.GetBillboardMatrix(entity), rayStartPosition, rayDirection),
+					PointEntityVisualization.BillboardSprite billboardSprite => RaycastPlane(Matrix4x4.CreateScale(billboardSprite.Size * 0.5f) * EntityMatrixUtils.GetBillboardMatrix(entity.Position), rayStartPosition, rayDirection),
 					PointEntityVisualization.Mesh mesh => RaycastEntityMesh(Matrix4x4.CreateScale(mesh.Size * 2) * Matrix4x4.CreateTranslation(entity.Position), MeshContainer.GetMesh(mesh.MeshName)?.Mesh, rayStartPosition, rayDirection),
 					_ => throw new InvalidOperationException($"Unknown point entity visualization: {point.Visualization}"),
 				};

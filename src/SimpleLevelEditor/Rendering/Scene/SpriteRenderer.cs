@@ -63,7 +63,7 @@ public sealed class SpriteRenderer
 		if (textureId == null)
 			return;
 
-		Gl.UniformMatrix4x4(_modelUniform, Matrix4x4.CreateScale(new Vector3(billboardSprite.Size, billboardSprite.Size, 1)) * EntityMatrixUtils.GetBillboardMatrix(entity, entityPosition));
+		Gl.UniformMatrix4x4(_modelUniform, Matrix4x4.CreateScale(new Vector3(billboardSprite.Size, billboardSprite.Size, 1)) * EntityMatrixUtils.GetBillboardMatrix(entityPosition));
 
 		Gl.BindTexture(TextureTarget.Texture2D, textureId.Value);
 
