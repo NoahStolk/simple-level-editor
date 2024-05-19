@@ -11,7 +11,7 @@ using static SimpleLevelEditor.Graphics;
 
 namespace SimpleLevelEditor.Rendering.Scene;
 
-public static class LineRenderer
+public sealed class LineRenderer
 {
 	private static readonly uint _lineVao = VaoUtils.CreateLineVao([Vector3.Zero, Vector3.UnitZ]);
 	private static readonly uint _centeredLineVao = VaoUtils.CreateLineVao([-Vector3.UnitZ, Vector3.UnitZ]);
@@ -60,98 +60,70 @@ public static class LineRenderer
 	]);
 	private static readonly uint[] _planeLineIndices = [0, 1, 1, 2, 2, 3, 3, 0];
 
-	public static void Render()
+	private readonly ShaderCacheEntry _lineShader;
+	private readonly int _modelUniform;
+	private readonly int _colorUniform;
+
+	public LineRenderer()
 	{
-		ShaderCacheEntry lineShader = InternalContent.Shaders["Line"];
-		Gl.UseProgram(lineShader.Id);
-
-		Gl.UniformMatrix4x4(lineShader.GetUniformLocation("view"), Camera3d.ViewMatrix);
-		Gl.UniformMatrix4x4(lineShader.GetUniformLocation("projection"), Camera3d.Projection);
-
-		Gl.BindVertexArray(_lineVao);
-		RenderOrigin(lineShader);
-		RenderGrid(lineShader);
-		RenderWorldObjectEdges(lineShader);
-		RenderEntitiesWithLineShader(lineShader);
-
-		Gl.BindVertexArray(_centeredLineVao);
-		RenderFocusAxes(lineShader);
+		_lineShader = InternalContent.Shaders["Line"];
+		_modelUniform = _lineShader.GetUniformLocation("model");
+		_colorUniform = _lineShader.GetUniformLocation("color");
 	}
 
-	private static void RenderOrigin(ShaderCacheEntry lineShader)
+	public void Render()
 	{
-		int lineModelUniform = lineShader.GetUniformLocation("model");
-		int lineColorUniform = lineShader.GetUniformLocation("color");
+		Gl.UseProgram(_lineShader.Id);
 
+		Gl.UniformMatrix4x4(_lineShader.GetUniformLocation("view"), Camera3d.ViewMatrix);
+		Gl.UniformMatrix4x4(_lineShader.GetUniformLocation("projection"), Camera3d.Projection);
+
+		Gl.BindVertexArray(_lineVao);
+		RenderOrigin();
+		RenderGrid();
+		RenderWorldObjectEdges();
+		RenderEntitiesWithLineShader();
+
+		Gl.BindVertexArray(_centeredLineVao);
+		RenderFocusAxes();
+	}
+
+	private void RenderLine(Matrix4x4 modelMatrix, Vector4 color)
+	{
+		Gl.UniformMatrix4x4(_modelUniform, modelMatrix);
+		Gl.Uniform4(_colorUniform, color);
+		Gl.DrawArrays(PrimitiveType.Lines, 0, 2);
+	}
+
+	private void RenderOrigin()
+	{
 		Matrix4x4 scaleMatrix = Matrix4x4.CreateScale(1, 1, 256);
 
 		Gl.LineWidth(4);
-
-		// X axis
-		Gl.UniformMatrix4x4(lineModelUniform, scaleMatrix * Matrix4x4.CreateFromAxisAngle(Vector3.UnitY, MathF.PI / 2));
-		Gl.Uniform4(lineColorUniform, new Vector4(1, 0, 0, 1));
-		Gl.DrawArrays(PrimitiveType.Lines, 0, 2);
-
-		// Y axis
-		Gl.UniformMatrix4x4(lineModelUniform, scaleMatrix * Matrix4x4.CreateFromAxisAngle(Vector3.UnitX, MathF.PI * 1.5f));
-		Gl.Uniform4(lineColorUniform, new Vector4(0, 1, 0, 1));
-		Gl.DrawArrays(PrimitiveType.Lines, 0, 2);
-
-		// Z axis
-		Gl.UniformMatrix4x4(lineModelUniform, scaleMatrix);
-		Gl.Uniform4(lineColorUniform, new Vector4(0, 0, 1, 1));
-		Gl.DrawArrays(PrimitiveType.Lines, 0, 2);
+		RenderLine(scaleMatrix * Matrix4x4.CreateFromAxisAngle(Vector3.UnitY, MathF.PI / 2), new Vector4(1, 0, 0, 1));
+		RenderLine(scaleMatrix * Matrix4x4.CreateFromAxisAngle(Vector3.UnitX, MathF.PI * 1.5f), new Vector4(0, 1, 0, 1));
+		RenderLine(scaleMatrix, new Vector4(0, 0, 1, 1));
 
 		Gl.LineWidth(2);
-
-		// X axis (negative)
-		Gl.UniformMatrix4x4(lineModelUniform, scaleMatrix * Matrix4x4.CreateFromAxisAngle(Vector3.UnitY, -MathF.PI / 2));
-		Gl.Uniform4(lineColorUniform, new Vector4(1, 0, 0, 0.5f));
-		Gl.DrawArrays(PrimitiveType.Lines, 0, 2);
-
-		// Y axis (negative)
-		Gl.UniformMatrix4x4(lineModelUniform, scaleMatrix * Matrix4x4.CreateFromAxisAngle(Vector3.UnitX, MathF.PI / 2));
-		Gl.Uniform4(lineColorUniform, new Vector4(0, 1, 0, 0.5f));
-		Gl.DrawArrays(PrimitiveType.Lines, 0, 2);
-
-		// Z axis (negative)
-		Gl.UniformMatrix4x4(lineModelUniform, scaleMatrix * Matrix4x4.CreateFromAxisAngle(Vector3.UnitY, MathF.PI));
-		Gl.Uniform4(lineColorUniform, new Vector4(0, 0, 1, 0.5f));
-		Gl.DrawArrays(PrimitiveType.Lines, 0, 2);
+		RenderLine(scaleMatrix * Matrix4x4.CreateFromAxisAngle(Vector3.UnitY, -MathF.PI / 2), new Vector4(1, 0, 0, 0.5f));
+		RenderLine(scaleMatrix * Matrix4x4.CreateFromAxisAngle(Vector3.UnitX, MathF.PI / 2), new Vector4(0, 1, 0, 0.5f));
+		RenderLine(scaleMatrix * Matrix4x4.CreateFromAxisAngle(Vector3.UnitY, MathF.PI), new Vector4(0, 0, 1, 0.5f));
 	}
 
-	private static void RenderFocusAxes(ShaderCacheEntry lineShader)
+	private void RenderFocusAxes()
 	{
-		int lineModelUniform = lineShader.GetUniformLocation("model");
-		int lineColorUniform = lineShader.GetUniformLocation("color");
-
 		Matrix4x4 scaleMatrix = Matrix4x4.CreateScale(1, 1, 128);
 		Matrix4x4 translationMatrix = Matrix4x4.CreateTranslation(Camera3d.FocusPointTarget);
 
 		Gl.LineWidth(1);
-
-		// X axis
-		Gl.UniformMatrix4x4(lineModelUniform, scaleMatrix * Matrix4x4.CreateFromAxisAngle(Vector3.UnitY, MathF.PI / 2) * translationMatrix);
-		Gl.Uniform4(lineColorUniform, new Vector4(1, 0.5f, 0, 0.5f));
-		Gl.DrawArrays(PrimitiveType.Lines, 0, 2);
-
-		// Y axis
-		Gl.UniformMatrix4x4(lineModelUniform, scaleMatrix * Matrix4x4.CreateFromAxisAngle(Vector3.UnitX, MathF.PI * 1.5f) * translationMatrix);
-		Gl.Uniform4(lineColorUniform, new Vector4(0, 1, 0.5f, 0.5f));
-		Gl.DrawArrays(PrimitiveType.Lines, 0, 2);
-
-		// Z axis
-		Gl.UniformMatrix4x4(lineModelUniform, scaleMatrix * translationMatrix);
-		Gl.Uniform4(lineColorUniform, new Vector4(0.5f, 0, 1, 0.5f));
-		Gl.DrawArrays(PrimitiveType.Lines, 0, 2);
+		RenderLine(scaleMatrix * Matrix4x4.CreateFromAxisAngle(Vector3.UnitY, MathF.PI / 2) * translationMatrix, new Vector4(1, 0.5f, 0, 0.5f));
+		RenderLine(scaleMatrix * Matrix4x4.CreateFromAxisAngle(Vector3.UnitX, MathF.PI * 1.5f) * translationMatrix, new Vector4(0, 1, 0.5f, 0.5f));
+		RenderLine(scaleMatrix * translationMatrix, new Vector4(0.5f, 0, 1, 0.5f));
 	}
 
-	private static void RenderGrid(ShaderCacheEntry lineShader)
+	private void RenderGrid()
 	{
-		int lineModelUniform = lineShader.GetUniformLocation("model");
-		int lineColorUniform = lineShader.GetUniformLocation("color");
-
-		Gl.Uniform4(lineColorUniform, new Vector4(1, 1, 1, 0.25f));
+		Gl.Uniform4(_colorUniform, new Vector4(1, 1, 1, 0.25f));
 		Gl.LineWidth(1);
 
 		int min = -LevelEditorState.GridCellCount;
@@ -167,26 +139,26 @@ public static class LineRenderer
 			// Prevent rendering grid lines on top of origin lines (Z-fighting).
 			if (!LevelEditorState.TargetHeight.IsZero() || !(i * LevelEditorState.GridCellSize + offset.X).IsZero())
 			{
-				Gl.UniformMatrix4x4(lineModelUniform, scaleMat * Matrix4x4.CreateTranslation(new Vector3(i * LevelEditorState.GridCellSize, LevelEditorState.TargetHeight, min * LevelEditorState.GridCellSize) + offset));
+				Gl.UniformMatrix4x4(_modelUniform, scaleMat * Matrix4x4.CreateTranslation(new Vector3(i * LevelEditorState.GridCellSize, LevelEditorState.TargetHeight, min * LevelEditorState.GridCellSize) + offset));
 				Gl.DrawArrays(PrimitiveType.Lines, 0, 2);
 			}
 
 			if (!LevelEditorState.TargetHeight.IsZero() || !(i * LevelEditorState.GridCellSize + offset.Z).IsZero())
 			{
-				Gl.UniformMatrix4x4(lineModelUniform, scaleMat * Matrix4x4.CreateFromAxisAngle(Vector3.UnitY, MathF.PI / 2) * Matrix4x4.CreateTranslation(new Vector3(min * LevelEditorState.GridCellSize, LevelEditorState.TargetHeight, i * LevelEditorState.GridCellSize) + offset));
+				Gl.UniformMatrix4x4(_modelUniform, scaleMat * Matrix4x4.CreateFromAxisAngle(Vector3.UnitY, MathF.PI / 2) * Matrix4x4.CreateTranslation(new Vector3(min * LevelEditorState.GridCellSize, LevelEditorState.TargetHeight, i * LevelEditorState.GridCellSize) + offset));
 				Gl.DrawArrays(PrimitiveType.Lines, 0, 2);
 			}
 		}
 	}
 
-	private static void RenderWorldObjectEdges(ShaderCacheEntry lineShader)
+	private void RenderWorldObjectEdges()
 	{
 		Gl.LineWidth(2);
 
 		for (int i = 0; i < LevelState.Level.WorldObjects.Length; i++)
 		{
 			WorldObject worldObject = LevelState.Level.WorldObjects[i];
-			Vector4 color = GetWorldObjectColor(worldObject);
+			Vector4 color = GetWorldObjectLineColor(worldObject);
 			if (color.W < float.Epsilon)
 				continue;
 
@@ -196,40 +168,35 @@ public static class LineRenderer
 
 			Matrix4x4 rotationMatrix = MathUtils.CreateRotationMatrixFromEulerAngles(MathUtils.ToRadians(worldObject.Rotation));
 			Matrix4x4 modelMatrix = Matrix4x4.CreateScale(worldObject.Scale) * rotationMatrix * Matrix4x4.CreateTranslation(worldObject.Position);
-			RenderEdges(lineShader, mesh.LineVao, mesh.LineIndices, modelMatrix, color);
+			RenderEdges(mesh.LineVao, mesh.LineIndices, modelMatrix, color);
 		}
 	}
 
-	private static void RenderMeshEdges(ShaderCacheEntry lineShader, string meshName, Vector3 position, Vector4 color)
+	private void RenderMeshEdges(string meshName, Vector3 position, Vector4 color)
 	{
 		if (color.W < float.Epsilon)
 			return;
 
 		MeshEntry? mesh = MeshContainer.GetMesh(meshName);
 		if (mesh != null)
-			RenderEdges(lineShader, mesh.LineVao, mesh.LineIndices, Matrix4x4.CreateTranslation(position), color);
+			RenderEdges(mesh.LineVao, mesh.LineIndices, Matrix4x4.CreateTranslation(position), color);
 	}
 
-	private static unsafe void RenderEdges(ShaderCacheEntry lineShader, uint lineVao, uint[] lineIndices, Matrix4x4 modelMatrix, Vector4 color)
+	private unsafe void RenderEdges(uint lineVao, uint[] lineIndices, Matrix4x4 modelMatrix, Vector4 color)
 	{
 		if (color.W < float.Epsilon)
 			return;
 
-		int lineModelUniform = lineShader.GetUniformLocation("model");
-		int lineColorUniform = lineShader.GetUniformLocation("color");
-
-		Gl.UniformMatrix4x4(lineModelUniform, modelMatrix);
-		Gl.Uniform4(lineColorUniform, color);
+		Gl.UniformMatrix4x4(_modelUniform, modelMatrix);
+		Gl.Uniform4(_colorUniform, color);
 
 		Gl.BindVertexArray(lineVao);
 		fixed (uint* index = &lineIndices[0])
 			Gl.DrawElements(PrimitiveType.Lines, (uint)lineIndices.Length, DrawElementsType.UnsignedInt, index);
 	}
 
-	private static void RenderEntitiesWithLineShader(ShaderCacheEntry lineShader)
+	private void RenderEntitiesWithLineShader()
 	{
-		int modelUniform = lineShader.GetUniformLocation("model");
-		int colorUniform = lineShader.GetUniformLocation("color");
 		for (int i = 0; i < LevelState.Level.Entities.Length; i++)
 		{
 			Entity entity = LevelState.Level.Entities[i];
@@ -241,19 +208,19 @@ public static class LineRenderer
 			{
 				if (point.Visualization is PointEntityVisualization.SimpleSphere simpleSphere)
 				{
-					Gl.UniformMatrix4x4(modelUniform, Matrix4x4.CreateScale(simpleSphere.Radius) * Matrix4x4.CreateTranslation(entity.Position));
-					Gl.Uniform4(colorUniform, GetEntityColor(entity, simpleSphere.Color, simpleSphere.Color.ToVector4()));
+					Gl.UniformMatrix4x4(_modelUniform, Matrix4x4.CreateScale(simpleSphere.Radius) * Matrix4x4.CreateTranslation(entity.Position));
+					Gl.Uniform4(_colorUniform, GetEntityLineColor(entity, simpleSphere.Color, simpleSphere.Color.ToVector4()));
 					Gl.BindVertexArray(_pointVao);
 					Gl.DrawArrays(PrimitiveType.Lines, 0, (uint)_pointVertices.Length);
 				}
 				else if (point.Visualization is PointEntityVisualization.Mesh mesh)
 				{
-					RenderMeshEdges(lineShader, mesh.MeshName, entity.Position, GetEntityColor(entity, new Rgb(191, 63, 63), Vector4.Zero));
+					RenderMeshEdges(mesh.MeshName, entity.Position, GetEntityLineColor(entity, new Rgb(191, 63, 63), Vector4.Zero));
 				}
 				else if (point.Visualization is PointEntityVisualization.BillboardSprite billboardSprite)
 				{
 					Matrix4x4 modelMatrix = Matrix4x4.CreateScale(billboardSprite.Size) * EntityMatrixUtils.GetBillboardMatrix(entity);
-					RenderEdges(lineShader, _planeLineVao, _planeLineIndices, modelMatrix, GetEntityColor(entity, new Rgb(63, 63, 191), Vector4.Zero));
+					RenderEdges(_planeLineVao, _planeLineIndices, modelMatrix, GetEntityLineColor(entity, new Rgb(63, 63, 191), Vector4.Zero));
 				}
 			}
 			else if (entityShape is EntityShape.Sphere sphere)
@@ -261,8 +228,8 @@ public static class LineRenderer
 				if (entity.Shape is not ShapeDescriptor.Sphere sphereDescriptor)
 					throw new InvalidOperationException($"Entity '{entity.Name}' is of shape type '{entity.Shape}' which does not match shape type '{entityShape}' from the EntityConfig.");
 
-				Gl.UniformMatrix4x4(modelUniform, Matrix4x4.CreateScale(sphereDescriptor.Radius) * Matrix4x4.CreateTranslation(entity.Position));
-				Gl.Uniform4(colorUniform, GetEntityColor(entity, sphere.Color, sphere.Color.ToVector4()));
+				Gl.UniformMatrix4x4(_modelUniform, Matrix4x4.CreateScale(sphereDescriptor.Radius) * Matrix4x4.CreateTranslation(entity.Position));
+				Gl.Uniform4(_colorUniform, GetEntityLineColor(entity, sphere.Color, sphere.Color.ToVector4()));
 				Gl.BindVertexArray(_sphereVao);
 				Gl.DrawArrays(PrimitiveType.Lines, 0, (uint)_sphereVertices.Length);
 			}
@@ -271,15 +238,15 @@ public static class LineRenderer
 				if (entity.Shape is not ShapeDescriptor.Aabb aabbDescriptor)
 					throw new InvalidOperationException($"Entity '{entity.Name}' is of shape type '{entity.Shape}' which does not match shape type '{entityShape}' from the EntityConfig.");
 
-				Gl.UniformMatrix4x4(modelUniform, Matrix4x4.CreateScale(aabbDescriptor.Size) * Matrix4x4.CreateTranslation(entity.Position));
-				Gl.Uniform4(colorUniform, GetEntityColor(entity, aabb.Color, aabb.Color.ToVector4()));
+				Gl.UniformMatrix4x4(_modelUniform, Matrix4x4.CreateScale(aabbDescriptor.Size) * Matrix4x4.CreateTranslation(entity.Position));
+				Gl.Uniform4(_colorUniform, GetEntityLineColor(entity, aabb.Color, aabb.Color.ToVector4()));
 				Gl.BindVertexArray(_cubeVao);
 				Gl.DrawArrays(PrimitiveType.Lines, 0, 24);
 			}
 		}
 	}
 
-	private static Vector4 GetEntityColor(Entity entity, Rgb rgb, Vector4 defaultColor)
+	private static Vector4 GetEntityLineColor(Entity entity, Rgb rgb, Vector4 defaultColor)
 	{
 		float timeAddition = MathF.Sin((float)Glfw.GetTime() * 10) * 0.5f + 0.5f;
 		timeAddition *= 0.5f;
@@ -298,7 +265,7 @@ public static class LineRenderer
 		return defaultColor;
 	}
 
-	private static Vector4 GetWorldObjectColor(WorldObject worldObject)
+	private static Vector4 GetWorldObjectLineColor(WorldObject worldObject)
 	{
 		float timeAddition = MathF.Sin((float)Glfw.GetTime() * 10) * 0.5f + 0.5f;
 		timeAddition *= 0.5f;
