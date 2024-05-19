@@ -1,7 +1,7 @@
 namespace SimpleLevelEditor.Formats.Types.Level
 
-open System.Numerics
 open SimpleLevelEditor.Formats.Types
+open System.Numerics
 
 type ShapeDescriptor =
     | Point
@@ -14,8 +14,8 @@ type ShapeDescriptor =
         | Sphere r -> Sphere r
         | Aabb s   -> Aabb s
 
-    member this.WriteValue() =
+    member this.ToDisplayString() =
         match this with
         | Point    -> ""
-        | Sphere r -> r.ToDataString
-        | Aabb s   -> s.ToDataString
+        | Sphere r -> r.ToDisplayString
+        | Aabb s   -> s.ToDisplayString

@@ -2,7 +2,6 @@ using Detach;
 using Detach.Numerics;
 using ImGuiNET;
 using SimpleLevelEditor.Extensions;
-using SimpleLevelEditor.Formats.Types;
 using SimpleLevelEditor.Formats.Types.EntityConfig;
 using SimpleLevelEditor.Formats.Types.Level;
 using SimpleLevelEditor.State;
@@ -87,7 +86,7 @@ public static class LevelInfoWindow
 						{
 							case PointEntityVisualization.SimpleSphere simpleSphere:
 								NextColumnTextColored(Color.Yellow, "Color");
-								NextColumnText(ToColorString(simpleSphere.Color));
+								NextColumnText(simpleSphere.Color.ToDisplayString());
 								NextColumnTextColored(Color.Orange, "Radius");
 								NextColumnText(simpleSphere.Radius.ToString(CultureInfo.InvariantCulture));
 								break;
@@ -112,11 +111,11 @@ public static class LevelInfoWindow
 						break;
 					case EntityShape.Sphere sphere:
 						NextColumnTextColored(Color.Yellow, "Color");
-						NextColumnText(ToColorString(sphere.Color));
+						NextColumnText(sphere.Color.ToDisplayString());
 						break;
 					case EntityShape.Aabb aabb:
 						NextColumnTextColored(Color.Yellow, "Color");
-						NextColumnText(ToColorString(aabb.Color));
+						NextColumnText(aabb.Color.ToDisplayString());
 						break;
 					default:
 						throw new UnreachableException($"Unknown entity shape type: {entity.Shape.GetTypeId()}");
@@ -132,12 +131,6 @@ public static class LevelInfoWindow
 		{
 			RenderEntityProperties(i, entity);
 		}
-	}
-
-	private static string ToColorString(Rgb rgb)
-	{
-		// TODO: Use F# ToDataString instead.
-		return $"{rgb.R} {rgb.G} {rgb.B}";
 	}
 
 	private static void RenderEntityProperties(int i, EntityDescriptor entity)
@@ -160,19 +153,15 @@ public static class LevelInfoWindow
 					EntityPropertyDescriptor property = entity.Properties[j];
 					Vector4 color = property.Type.GetDisplayColor();
 					string typeId = property.Type.GetTypeId();
-					string defaultValue = property.Type.DefaultValue.WriteValue();
-					string step = property.Type.Step.ToString(CultureInfo.InvariantCulture);
-					string minValue = property.Type.MinValue.ToString(CultureInfo.InvariantCulture);
-					string maxValue = property.Type.MaxValue.ToString(CultureInfo.InvariantCulture);
-
+					string defaultValue = property.Type.DefaultValue.ToDisplayString();
 					ImGui.TableNextRow();
 
 					NextColumnTextColored(color, typeId);
 					NextColumnText(property.Name);
 					NextColumnTextOptional(defaultValue);
-					NextColumnTextOptional(step, property.Type.Step.IsZero());
-					NextColumnTextOptional(minValue, property.Type.MinValue.IsZero());
-					NextColumnTextOptional(maxValue, property.Type.MaxValue.IsZero());
+					NextColumnTextOptional(Inline.Span(property.Type.Step), property.Type.Step.IsZero());
+					NextColumnTextOptional(Inline.Span(property.Type.MinValue), property.Type.MinValue.IsZero());
+					NextColumnTextOptional(Inline.Span(property.Type.MaxValue), property.Type.MaxValue.IsZero());
 				}
 
 				ImGui.EndTable();

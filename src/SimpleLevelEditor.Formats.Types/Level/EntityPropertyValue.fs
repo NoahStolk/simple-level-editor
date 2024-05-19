@@ -26,14 +26,14 @@ type EntityPropertyValue =
         | Rgb     v -> Rgb v
         | Rgba    v -> Rgba v
 
-    member this.WriteValue() =
+    member this.ToDisplayString() =
         match this with
-        | Bool    v -> v.ToDataString
-        | Int     v -> v.ToDataString
-        | Float   v -> v.ToDataString
-        | Vector2 v -> v.ToDataString
-        | Vector3 v -> v.ToDataString
-        | Vector4 v -> v.ToDataString
+        | Bool    v -> v.ToDisplayString
+        | Int     v -> v.ToDisplayString
+        | Float   v -> v.ToDisplayString
+        | Vector2 v -> v.ToDisplayString
+        | Vector3 v -> v.ToDisplayString
+        | Vector4 v -> v.ToDisplayString
         | String  v -> v
-        | Rgb     v -> v.ToDataString
-        | Rgba    v -> v.ToDataString
+        | Rgb     v -> v.ToDisplayString()
+        | Rgba    v -> v.ToDisplayString()

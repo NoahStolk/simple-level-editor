@@ -12,7 +12,11 @@ type Rgba =
 
         new(r, g, b, a) = { R = r; G = g; B = b; A = a }
 
-        member this.ToVector4() = Vector4(float32 this.R / 255.0f, float32 this.G / 255.0f, float32 this.B / 255.0f, float32 this.A / 255.0f)
+        member this.ToVector4() =
+            Vector4(float32 this.R / 255.0f, float32 this.G / 255.0f, float32 this.B / 255.0f, float32 this.A / 255.0f)
+
+        member this.ToDisplayString() =
+            $"%s{this.R.ToDisplayString} %s{this.G.ToDisplayString} %s{this.B.ToDisplayString} %s{this.A.ToDisplayString}"
 
         static member Default = Rgba(0uy, 0uy, 0uy, 0uy)
     end

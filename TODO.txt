@@ -11,7 +11,6 @@ MEDIUM PRIORITY
 	- Invert pan Y
 
 BACKLOG
-- Render mesh and texture previews
 - Multiple selection
 	- Hold shift to select multiple meshes?
 - Add texture UV sliders?
