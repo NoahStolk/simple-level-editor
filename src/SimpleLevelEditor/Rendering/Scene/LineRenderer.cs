@@ -86,6 +86,7 @@ public sealed class LineRenderer
 
 		Gl.BindVertexArray(_centeredLineVao);
 		RenderFocusAxes();
+		RenderMoveComparison();
 	}
 
 	private void RenderLine(Matrix4x4 modelMatrix, Vector4 color)
@@ -119,6 +120,38 @@ public sealed class LineRenderer
 		RenderLine(scaleMatrix * Matrix4x4.CreateFromAxisAngle(Vector3.UnitY, MathF.PI / 2) * translationMatrix, new Vector4(1, 0.5f, 0, 0.5f));
 		RenderLine(scaleMatrix * Matrix4x4.CreateFromAxisAngle(Vector3.UnitX, MathF.PI * 1.5f) * translationMatrix, new Vector4(0, 1, 0.5f, 0.5f));
 		RenderLine(scaleMatrix * translationMatrix, new Vector4(0.5f, 0, 1, 0.5f));
+	}
+
+	// TODO: Also render the distance on each axis.
+	private void RenderMoveComparison()
+	{
+		if (!LevelEditorState.MoveTargetPosition.HasValue)
+			return;
+
+		Vector3? selectedObjectPosition = LevelEditorState.SelectedWorldObject?.Position ?? LevelEditorState.SelectedEntity?.Position;
+		if (selectedObjectPosition == null)
+			return;
+
+		Vector3 moveTarget = LevelEditorState.MoveTargetPosition.Value;
+
+		Gl.LineWidth(6);
+		Vector4 color = new(1, 1, 0, 1);
+
+		float distanceX = MathF.Abs(selectedObjectPosition.Value.X - moveTarget.X) / 2;
+		float distanceY = MathF.Abs(selectedObjectPosition.Value.Y - moveTarget.Y) / 2;
+		float distanceZ = MathF.Abs(selectedObjectPosition.Value.Z - moveTarget.Z) / 2;
+
+		Vector3 averageOnX = selectedObjectPosition.Value with { X = (selectedObjectPosition.Value.X + moveTarget.X) / 2 };
+		Vector3 averageOnY = selectedObjectPosition.Value with { Y = (selectedObjectPosition.Value.Y + moveTarget.Y) / 2 };
+		Vector3 averageOnZ = selectedObjectPosition.Value with { Z = (selectedObjectPosition.Value.Z + moveTarget.Z) / 2 };
+
+		RenderLine(Matrix4x4.CreateScale(1, 1, distanceX) * Matrix4x4.CreateFromAxisAngle(Vector3.UnitY, MathF.PI / 2) * Matrix4x4.CreateTranslation(averageOnX), color);
+		RenderLine(Matrix4x4.CreateScale(1, 1, distanceX) * Matrix4x4.CreateFromAxisAngle(Vector3.UnitY, MathF.PI / 2) * Matrix4x4.CreateTranslation(averageOnX with { Z = moveTarget.Z }), color);
+
+		RenderLine(Matrix4x4.CreateScale(1, 1, distanceY) * Matrix4x4.CreateFromAxisAngle(Vector3.UnitX, MathF.PI / 2) * Matrix4x4.CreateTranslation(averageOnY), color);
+
+		RenderLine(Matrix4x4.CreateScale(1, 1, distanceZ) * Matrix4x4.CreateFromAxisAngle(Vector3.UnitY, MathF.PI) * Matrix4x4.CreateTranslation(averageOnZ), color);
+		RenderLine(Matrix4x4.CreateScale(1, 1, distanceZ) * Matrix4x4.CreateFromAxisAngle(Vector3.UnitY, MathF.PI) * Matrix4x4.CreateTranslation(averageOnZ with { X = moveTarget.X }), color);
 	}
 
 	private void RenderGrid(float height)
