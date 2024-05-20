@@ -1,5 +1,11 @@
 {
-  "Version": 2,
+  "Meshes": [
+	  "Sphere"
+  ],
+  "Textures": [
+	  "Checkerboard",
+	  "PlayerIcon"
+  ],
   "Entities": [
     {
       "Name": "PlayerSpawn",
