@@ -37,24 +37,21 @@ public static class TextureContainer
 		uint defaultTextureId = CreateFromTexture(1, 1, [0xFF, 0xFF, 0xFF, 0xFF]);
 		_levelTextures.Add(string.Empty, defaultTextureId);
 
+		string? levelDirectory = Path.GetDirectoryName(levelFilePath);
+		if (levelDirectory == null)
+			return;
+
+		LoadTextures(_levelTextures, levelDirectory, LevelState.Level.Textures.ToList());
+
 		// TODO: Test if all the textures are loaded correctly if the entity config is in a completely different directory.
-		if (levelFilePath != null)
+		if (LevelState.Level.EntityConfigPath != null)
 		{
-			string? levelDirectory = Path.GetDirectoryName(levelFilePath);
-			if (levelDirectory == null)
+			string absoluteEntityConfigPath = Path.Combine(levelDirectory, LevelState.Level.EntityConfigPath.Value);
+			string? entityConfigDirectory = Path.GetDirectoryName(absoluteEntityConfigPath);
+			if (entityConfigDirectory == null)
 				return;
 
-			LoadTextures(_levelTextures, levelDirectory, LevelState.Level.Textures.ToList());
-
-			if (LevelState.Level.EntityConfigPath != null)
-			{
-				string absoluteEntityConfigPath = Path.Combine(levelDirectory, LevelState.Level.EntityConfigPath.Value);
-				string? entityConfigDirectory = Path.GetDirectoryName(absoluteEntityConfigPath);
-				if (entityConfigDirectory == null)
-					return;
-
-				LoadTextures(_entityConfigTextures, entityConfigDirectory, EntityConfigState.EntityConfig.Textures.ToList());
-			}
+			LoadTextures(_entityConfigTextures, entityConfigDirectory, EntityConfigState.EntityConfig.Textures.ToList());
 		}
 
 		void LoadTextures(Dictionary<string, uint> textureDictionary, string directoryPath, List<string> texturePaths)
