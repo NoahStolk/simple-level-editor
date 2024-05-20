@@ -173,7 +173,7 @@ public static class WorldObjectEditorWindow
 				ImDrawListPtr drawList = ImGui.GetWindowDrawList();
 				Vector2 cursorPos = origin + localPosition;
 
-				uint? textureId = TextureContainer.GetTexture(textureName);
+				uint? textureId = TextureContainer.GetLevelTexture(textureName);
 				if (textureId.HasValue)
 				{
 					const float padding = 12;

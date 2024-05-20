@@ -75,7 +75,7 @@ public sealed class MeshRenderer
 		if (mesh == null)
 			return;
 
-		uint? textureId = TextureContainer.GetTexture(textureName);
+		uint? textureId = TextureContainer.GetLevelTexture(textureName);
 		if (textureId == null)
 			return;
 
