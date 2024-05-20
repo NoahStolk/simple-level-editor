@@ -1,5 +1,13 @@
 {
-  "Version": 2,
+  "Meshes": [
+    "mesh\\DebugArrow.obj"
+  ],
+  "Textures": [
+    "tex\\Blue.tga",
+    "tex\\Bricks.tga",
+    "tex\\LightIcon.tga",
+    "tex\\AudioSourceIcon.tga"
+  ],
   "Entities": [
     {
       "Name": "Point_SimpleSphere",

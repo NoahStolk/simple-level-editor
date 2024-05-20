@@ -7,7 +7,6 @@
     "mesh\\Cone.obj",
     "mesh\\Cube.obj",
     "mesh\\Cylinder.obj",
-    "mesh\\DebugArrow.obj",
     "mesh\\ExitBase.obj",
     "mesh\\ExitSpiral.obj",
     "mesh\\Hook.obj",
@@ -20,7 +19,6 @@
     "mesh\\Weapon.obj"
   ],
   "Textures": [
-    "tex\\AudioSourceIcon.tga",
     "tex\\Blue.tga",
     "tex\\Bricks.tga",
     "tex\\BricksGreen.tga",
@@ -33,7 +31,6 @@
     "tex\\Grass1.tga",
     "tex\\Grass2.tga",
     "tex\\Gravel.tga",
-    "tex\\LightIcon.tga",
     "tex\\TileBlueWhite.tga",
     "tex\\TileOrangeWhite.tga",
     "tex\\TilesGray.tga"

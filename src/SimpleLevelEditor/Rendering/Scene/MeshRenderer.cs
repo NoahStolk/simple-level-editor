@@ -42,7 +42,11 @@ public sealed class MeshRenderer
 
 			EntityShape? entityShape = EntityConfigState.GetEntityShape(entity);
 			if (entityShape is EntityShape.Point { Visualization: PointEntityVisualization.Mesh meshVisualization })
-				RenderMesh(meshVisualization.MeshName, meshVisualization.TextureName, Matrix4x4.CreateTranslation(entity.Position));
+			{
+				MeshEntry? meshEntry = MeshContainer.GetEntityConfigMesh(meshVisualization.MeshName);
+				if (meshEntry != null)
+					RenderMesh(meshEntry, meshVisualization.TextureName, Matrix4x4.CreateTranslation(entity.Position));
+			}
 		}
 
 		if (LevelEditorState.MoveTargetPosition.HasValue && LevelEditorState.SelectedEntity != null)
@@ -50,7 +54,11 @@ public sealed class MeshRenderer
 			Entity selectedEntity = LevelEditorState.SelectedEntity;
 			EntityShape? entityShape = EntityConfigState.GetEntityShape(selectedEntity);
 			if (entityShape is EntityShape.Point { Visualization: PointEntityVisualization.Mesh meshVisualization })
-				RenderMesh(meshVisualization.MeshName, meshVisualization.TextureName, Matrix4x4.CreateTranslation(LevelEditorState.MoveTargetPosition.Value));
+			{
+				MeshEntry? meshEntry = MeshContainer.GetEntityConfigMesh(meshVisualization.MeshName);
+				if (meshEntry != null)
+					RenderMesh(meshEntry, meshVisualization.TextureName, Matrix4x4.CreateTranslation(LevelEditorState.MoveTargetPosition.Value));
+			}
 		}
 	}
 
@@ -59,23 +67,23 @@ public sealed class MeshRenderer
 		for (int i = 0; i < LevelState.Level.WorldObjects.Length; i++)
 		{
 			WorldObject worldObject = LevelState.Level.WorldObjects[i];
-			RenderMesh(worldObject.Mesh, worldObject.Texture, worldObject.GetModelMatrix());
+			MeshEntry? mesh = MeshContainer.GetLevelMesh(worldObject.Mesh);
+			if (mesh != null)
+				RenderMesh(mesh, worldObject.Texture, worldObject.GetModelMatrix());
 		}
 
 		if (LevelEditorState.MoveTargetPosition.HasValue && LevelEditorState.SelectedWorldObject != null)
 		{
 			WorldObject selectedWorldObject = LevelEditorState.SelectedWorldObject;
-			RenderMesh(selectedWorldObject.Mesh, selectedWorldObject.Texture, selectedWorldObject.GetModelMatrix(LevelEditorState.MoveTargetPosition.Value));
+			MeshEntry? mesh = MeshContainer.GetLevelMesh(selectedWorldObject.Mesh);
+			if (mesh != null)
+				RenderMesh(mesh, selectedWorldObject.Texture, selectedWorldObject.GetModelMatrix(LevelEditorState.MoveTargetPosition.Value));
 		}
 	}
 
-	private unsafe void RenderMesh(string meshName, string textureName, Matrix4x4 modelMatrix)
+	private unsafe void RenderMesh(MeshEntry mesh, string textureName, Matrix4x4 modelMatrix)
 	{
-		MeshEntry? mesh = MeshContainer.GetMesh(meshName);
-		if (mesh == null)
-			return;
-
-		uint? textureId = TextureContainer.GetTexture(textureName);
+		uint? textureId = TextureContainer.GetLevelTexture(textureName);
 		if (textureId == null)
 			return;
 

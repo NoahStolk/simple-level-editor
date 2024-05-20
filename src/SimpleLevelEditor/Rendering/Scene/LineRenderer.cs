@@ -198,7 +198,7 @@ public sealed class LineRenderer
 			WorldObject worldObject = LevelState.Level.WorldObjects[i];
 			Vector4 color = GetWorldObjectLineColor(worldObject);
 
-			MeshEntry? mesh = MeshContainer.GetMesh(worldObject.Mesh);
+			MeshEntry? mesh = MeshContainer.GetLevelMesh(worldObject.Mesh);
 			if (mesh == null)
 				continue;
 
@@ -208,14 +208,16 @@ public sealed class LineRenderer
 		}
 
 		if (LevelEditorState.MoveTargetPosition.HasValue && LevelEditorState.SelectedWorldObject != null)
-			RenderMeshEdges(LevelEditorState.SelectedWorldObject.Mesh, LevelEditorState.SelectedWorldObject.GetModelMatrix(LevelEditorState.MoveTargetPosition.Value), GetWorldObjectLineColor(LevelEditorState.SelectedWorldObject));
+		{
+			MeshEntry? mesh = MeshContainer.GetLevelMesh(LevelEditorState.SelectedWorldObject.Mesh);
+			if (mesh != null)
+				RenderMeshEdges(mesh, LevelEditorState.SelectedWorldObject.GetModelMatrix(LevelEditorState.MoveTargetPosition.Value), GetWorldObjectLineColor(LevelEditorState.SelectedWorldObject));
+		}
 	}
 
-	private void RenderMeshEdges(string meshName, Matrix4x4 modelMatrix, Vector4 color)
+	private void RenderMeshEdges(MeshEntry mesh, Matrix4x4 modelMatrix, Vector4 color)
 	{
-		MeshEntry? mesh = MeshContainer.GetMesh(meshName);
-		if (mesh != null)
-			RenderEdges(mesh.LineVao, mesh.LineIndices, modelMatrix, color);
+		RenderEdges(mesh.LineVao, mesh.LineIndices, modelMatrix, color);
 	}
 
 	private unsafe void RenderEdges(uint lineVao, uint[] lineIndices, Matrix4x4 modelMatrix, Vector4 color)
@@ -260,7 +262,9 @@ public sealed class LineRenderer
 			}
 			else if (point.Visualization is PointEntityVisualization.Mesh mesh)
 			{
-				RenderMeshEdges(mesh.MeshName, Matrix4x4.CreateTranslation(entityPosition), GetEntityLineColor(entity, new Rgb(191, 63, 63), Vector4.Zero));
+				MeshEntry? meshEntry = MeshContainer.GetEntityConfigMesh(mesh.MeshName);
+				if (meshEntry != null)
+					RenderMeshEdges(meshEntry, Matrix4x4.CreateTranslation(entityPosition), GetEntityLineColor(entity, new Rgb(191, 63, 63), Vector4.Zero));
 			}
 			else if (point.Visualization is PointEntityVisualization.BillboardSprite billboardSprite)
 			{

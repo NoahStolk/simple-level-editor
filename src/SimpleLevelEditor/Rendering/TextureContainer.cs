@@ -7,38 +7,66 @@ namespace SimpleLevelEditor.Rendering;
 
 public static class TextureContainer
 {
-	private static readonly Dictionary<string, uint> _textures = new();
+	private static readonly Dictionary<string, uint> _levelTextures = new();
+	private static readonly Dictionary<string, uint> _entityConfigTextures = new();
 
-	public static uint? GetTexture(string path)
+	public static uint? GetLevelTexture(string path)
 	{
-		if (_textures.TryGetValue(path, out uint textureId))
+		if (_levelTextures.TryGetValue(path, out uint textureId))
 			return textureId;
 
-		DebugState.AddWarning($"Cannot find texture '{path}'");
+		DebugState.AddWarning($"Cannot find level texture '{path}'");
+		return null;
+	}
+
+	public static uint? GetEntityConfigTexture(string path)
+	{
+		if (_entityConfigTextures.TryGetValue(path, out uint textureId))
+			return textureId;
+
+		DebugState.AddWarning($"Cannot find entity config texture '{path}'");
 		return null;
 	}
 
 	public static void Rebuild(string? levelFilePath)
 	{
-		_textures.Clear();
+		_levelTextures.Clear();
+		_entityConfigTextures.Clear();
 
+		// TODO: Why is this necessary?
 		uint defaultTextureId = CreateFromTexture(1, 1, [0xFF, 0xFF, 0xFF, 0xFF]);
-		_textures.Add(string.Empty, defaultTextureId);
+		_levelTextures.Add(string.Empty, defaultTextureId);
 
 		string? levelDirectory = Path.GetDirectoryName(levelFilePath);
 		if (levelDirectory == null)
 			return;
 
-		foreach (string texturePath in LevelState.Level.Textures)
+		LoadTextures(_levelTextures, levelDirectory, LevelState.Level.Textures.ToList());
+
+		// TODO: Test if all the textures are loaded correctly if the entity config is in a completely different directory.
+		if (LevelState.Level.EntityConfigPath != null)
 		{
-			string absolutePath = Path.Combine(levelDirectory, texturePath);
+			string absoluteEntityConfigPath = Path.Combine(levelDirectory, LevelState.Level.EntityConfigPath.Value);
+			string? entityConfigDirectory = Path.GetDirectoryName(absoluteEntityConfigPath);
+			if (entityConfigDirectory == null)
+				return;
 
-			if (!File.Exists(absolutePath))
-				continue;
+			LoadTextures(_entityConfigTextures, entityConfigDirectory, EntityConfigState.EntityConfig.Textures.ToList());
+		}
 
-			TextureData textureData = TgaParser.Parse(File.ReadAllBytes(absolutePath));
-			uint textureId = CreateFromTexture(textureData.Width, textureData.Height, textureData.ColorData);
-			_textures.Add(texturePath, textureId);
+		void LoadTextures(Dictionary<string, uint> textureDictionary, string directoryPath, List<string> texturePaths)
+		{
+			foreach (string texturePath in texturePaths)
+			{
+				string absolutePath = Path.Combine(directoryPath, texturePath);
+
+				if (!File.Exists(absolutePath))
+					continue;
+
+				TextureData textureData = TgaParser.Parse(File.ReadAllBytes(absolutePath));
+				uint textureId = CreateFromTexture(textureData.Width, textureData.Height, textureData.ColorData);
+				textureDictionary.Add(texturePath, textureId);
+			}
 		}
 	}
 

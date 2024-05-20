@@ -9,15 +9,26 @@ namespace SimpleLevelEditor.Rendering;
 
 public static class MeshContainer
 {
-	private static readonly Dictionary<string, MeshEntry> _meshes = new();
+	private static readonly Dictionary<string, MeshEntry> _levelMeshes = new();
+	private static readonly Dictionary<string, MeshEntry> _entityConfigMeshes = new();
+
 	private static readonly Dictionary<string, MeshPreviewFramebuffer> _meshPreviewFramebuffers = new();
 
-	public static MeshEntry? GetMesh(string path)
+	public static MeshEntry? GetLevelMesh(string path)
 	{
-		if (_meshes.TryGetValue(path, out MeshEntry? data))
+		if (_levelMeshes.TryGetValue(path, out MeshEntry? data))
 			return data;
 
-		DebugState.AddWarning($"Cannot find mesh '{path}'");
+		DebugState.AddWarning($"Cannot find level mesh '{path}'");
+		return null;
+	}
+
+	public static MeshEntry? GetEntityConfigMesh(string path)
+	{
+		if (_entityConfigMeshes.TryGetValue(path, out MeshEntry? data))
+			return data;
+
+		DebugState.AddWarning($"Cannot find entity config mesh '{path}'");
 		return null;
 	}
 
@@ -35,13 +46,16 @@ public static class MeshContainer
 		foreach (KeyValuePair<string, MeshPreviewFramebuffer> kvp in _meshPreviewFramebuffers)
 			kvp.Value.Destroy();
 
-		_meshes.Clear();
+		_levelMeshes.Clear();
+		_entityConfigMeshes.Clear();
+
 		_meshPreviewFramebuffers.Clear();
 
 		string? levelDirectory = Path.GetDirectoryName(levelFilePath);
 		if (levelDirectory == null)
 			return;
 
+		// Load level meshes.
 		foreach (string meshPath in LevelState.Level.Meshes)
 		{
 			string absolutePath = Path.Combine(levelDirectory, meshPath);
@@ -49,69 +63,99 @@ public static class MeshContainer
 			if (!File.Exists(absolutePath))
 				continue;
 
-			ModelData modelData = ObjParser.Parse(File.ReadAllBytes(absolutePath));
-			if (modelData.Meshes.Count == 0)
-				continue;
-
-			// TODO: Support multiple meshes.
-			Mesh mainMesh = GetMesh(modelData, modelData.Meshes[0]);
-			uint vao = CreateFromMesh(mainMesh);
-
-			Vector3 boundingMin = new(float.MaxValue);
-			Vector3 boundingMax = new(float.MinValue);
-			foreach (Vector3 position in mainMesh.Vertices.Select(v => v.Position))
+			MeshEntry? entry = ReadMesh(absolutePath);
+			if (entry != null)
 			{
-				boundingMin = Vector3.Min(boundingMin, position);
-				boundingMax = Vector3.Max(boundingMax, position);
+				_levelMeshes.Add(meshPath, entry);
+				_meshPreviewFramebuffers.Add(meshPath, new MeshPreviewFramebuffer(entry));
 			}
-
-			// Find main mesh edges.
-			Dictionary<Edge, List<Vector3>> edges = new();
-			for (int i = 0; i < modelData.Meshes[0].Faces.Count; i += 3)
-			{
-				uint a = (ushort)(modelData.Meshes[0].Faces[i + 0].Position - 1);
-				uint b = (ushort)(modelData.Meshes[0].Faces[i + 1].Position - 1);
-				uint c = (ushort)(modelData.Meshes[0].Faces[i + 2].Position - 1);
-
-				Vector3 positionA = modelData.Positions[(int)a];
-				Vector3 positionB = modelData.Positions[(int)b];
-				Vector3 positionC = modelData.Positions[(int)c];
-				Vector3 normal = Vector3.Normalize(Vector3.Cross(positionB - positionA, positionC - positionA));
-				if (float.IsNaN(normal.X) || float.IsNaN(normal.Y) || float.IsNaN(normal.Z))
-					continue;
-
-				AddEdge(edges, new Edge(a, b), normal);
-				AddEdge(edges, new Edge(b, c), normal);
-				AddEdge(edges, new Edge(c, a), normal);
-			}
-
-			// Find edges that are only used by one triangle.
-			List<uint> lineIndices = [];
-			foreach (KeyValuePair<Edge, List<Vector3>> edge in edges)
-			{
-				int distinctNormals = edge.Value.Distinct(NormalComparer.Instance).Count();
-				if (edge.Value.Count > 1 && distinctNormals == 1)
-					continue;
-
-				lineIndices.Add(edge.Key.A);
-				lineIndices.Add(edge.Key.B);
-			}
-
-			MeshEntry entry = new(mainMesh, vao, lineIndices.ToArray(), VaoUtils.CreateLineVao(modelData.Positions.ToArray()), boundingMin, boundingMax);
-			_meshes.Add(meshPath, entry);
-			_meshPreviewFramebuffers.Add(meshPath, new MeshPreviewFramebuffer(entry));
 		}
 
-		void AddEdge(IDictionary<Edge, List<Vector3>> edges, Edge d, Vector3 normal)
+		// TODO: Test if all the textures are loaded correctly if the entity config is in a completely different directory.
+		if (LevelState.Level.EntityConfigPath != null)
 		{
-			if (!edges.ContainsKey(d))
-				edges.Add(d, []);
+			string absoluteEntityConfigPath = Path.Combine(levelDirectory, LevelState.Level.EntityConfigPath.Value);
+			string? entityConfigDirectory = Path.GetDirectoryName(absoluteEntityConfigPath);
+			if (entityConfigDirectory == null)
+				return;
 
-			edges[d].Add(normal);
+			foreach (string meshPath in EntityConfigState.EntityConfig.Meshes)
+			{
+				string absolutePath = Path.Combine(levelDirectory, meshPath);
+
+				if (!File.Exists(absolutePath))
+					continue;
+
+				MeshEntry? entry = ReadMesh(absolutePath);
+				if (entry != null)
+					_entityConfigMeshes.Add(meshPath, entry);
+			}
 		}
 	}
 
-	private static Mesh GetMesh(ModelData modelData, MeshData meshData)
+	private static MeshEntry? ReadMesh(string absolutePath)
+	{
+		ModelData modelData = ObjParser.Parse(File.ReadAllBytes(absolutePath));
+		if (modelData.Meshes.Count == 0)
+			return null;
+
+		// TODO: Support multiple meshes.
+		Mesh mainMesh = GetMeshData(modelData, modelData.Meshes[0]);
+		uint vao = CreateFromMesh(mainMesh);
+
+		Vector3 boundingMin = new(float.MaxValue);
+		Vector3 boundingMax = new(float.MinValue);
+		foreach (Vector3 position in mainMesh.Vertices.Select(v => v.Position))
+		{
+			boundingMin = Vector3.Min(boundingMin, position);
+			boundingMax = Vector3.Max(boundingMax, position);
+		}
+
+		// Find main mesh edges.
+		Dictionary<Edge, List<Vector3>> edges = new();
+		for (int i = 0; i < modelData.Meshes[0].Faces.Count; i += 3)
+		{
+			uint a = (ushort)(modelData.Meshes[0].Faces[i + 0].Position - 1);
+			uint b = (ushort)(modelData.Meshes[0].Faces[i + 1].Position - 1);
+			uint c = (ushort)(modelData.Meshes[0].Faces[i + 2].Position - 1);
+
+			Vector3 positionA = modelData.Positions[(int)a];
+			Vector3 positionB = modelData.Positions[(int)b];
+			Vector3 positionC = modelData.Positions[(int)c];
+			Vector3 normal = Vector3.Normalize(Vector3.Cross(positionB - positionA, positionC - positionA));
+			if (float.IsNaN(normal.X) || float.IsNaN(normal.Y) || float.IsNaN(normal.Z))
+				continue;
+
+			AddEdge(edges, new Edge(a, b), normal);
+			AddEdge(edges, new Edge(b, c), normal);
+			AddEdge(edges, new Edge(c, a), normal);
+		}
+
+		// Find edges that are only used by one triangle.
+		List<uint> lineIndices = [];
+		foreach (KeyValuePair<Edge, List<Vector3>> edge in edges)
+		{
+			int distinctNormals = edge.Value.Distinct(NormalComparer.Instance).Count();
+			if (edge.Value.Count > 1 && distinctNormals == 1)
+				continue;
+
+			lineIndices.Add(edge.Key.A);
+			lineIndices.Add(edge.Key.B);
+		}
+
+		MeshEntry entry = new(mainMesh, vao, lineIndices.ToArray(), VaoUtils.CreateLineVao(modelData.Positions.ToArray()), boundingMin, boundingMax);
+		return entry;
+	}
+
+	private static void AddEdge(IDictionary<Edge, List<Vector3>> edges, Edge edge, Vector3 normal)
+	{
+		if (!edges.ContainsKey(edge))
+			edges.Add(edge, []);
+
+		edges[edge].Add(normal);
+	}
+
+	private static Mesh GetMeshData(ModelData modelData, MeshData meshData)
 	{
 		Vertex[] outVertices = new Vertex[meshData.Faces.Count];
 		uint[] outFaces = new uint[meshData.Faces.Count];
