@@ -35,8 +35,8 @@ public static class LevelInfoWindow
 		ImGui.Text(Inline.Span($"Textures: {level.Textures.Length}"));
 		ImGui.Text(Inline.Span($"WorldObjects: {level.WorldObjects.Length}"));
 		ImGui.Text(Inline.Span($"Entities: {level.Entities.Length}"));
+		ImGui.TextWrapped(Inline.Span($"EntityConfig: {(level.EntityConfigPath == null ? "<No entity config loaded>" : level.EntityConfigPath.Value)}"));
 		ImGui.SeparatorText("Entity config");
-		ImGui.TextWrapped(level.EntityConfigPath == null ? "<No entity config loaded>" : level.EntityConfigPath.Value);
 		if (level.EntityConfigPath != null)
 		{
 			RenderEntityConfig(EntityConfigState.EntityConfig);
@@ -45,7 +45,22 @@ public static class LevelInfoWindow
 
 	private static void RenderEntityConfig(EntityConfigData entityConfig)
 	{
-		ImGui.Text(Inline.Span($"Version: {entityConfig.Version}"));
+		if (ImGui.TreeNode("Meshes"))
+		{
+			for (int i = 0; i < entityConfig.Meshes.Length; i++)
+				ImGui.Text(entityConfig.Meshes[i]);
+
+			ImGui.TreePop();
+		}
+
+		if (ImGui.TreeNode("Textures"))
+		{
+			for (int i = 0; i < entityConfig.Textures.Length; i++)
+				ImGui.Text(entityConfig.Textures[i]);
+
+			ImGui.TreePop();
+		}
+
 		if (ImGui.TreeNode("Entities"))
 		{
 			for (int i = 0; i < entityConfig.Entities.Length; i++)
