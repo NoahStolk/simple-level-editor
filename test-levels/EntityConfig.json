@@ -1,6 +1,7 @@
 {
   "Meshes": [
-    "mesh\\DebugArrow.obj"
+    "mesh\\DebugArrow.obj",
+    "mesh\\Sphere.obj"
   ],
   "Textures": [
     "tex\\Blue.tga",
