@@ -3,6 +3,7 @@ namespace SimpleLevelEditor.Formats.Types.Level
 open SimpleLevelEditor.Formats.Types
 open System.Numerics
 
+// TODO: Rename type to EntityShape.
 type ShapeDescriptor =
     | Point
     | Sphere of Radius: float32

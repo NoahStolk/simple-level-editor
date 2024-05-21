@@ -5,8 +5,8 @@ open System.Numerics
 
 type WorldObject =
     { Id: int32 // The id is only used to keep track of the object in the editor.
-      mutable Mesh: string // TODO: Rename to Model.
-      mutable Texture: string // TODO: Remove?
+      mutable Mesh: string // TODO: Rename to ModelPath.
+      mutable Texture: string // TODO: Remove.
       mutable Scale: Vector3
       mutable Rotation: Vector3
       mutable Position: Vector3

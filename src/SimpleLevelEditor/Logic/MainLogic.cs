@@ -155,21 +155,26 @@ public static class MainLogic
 		for (int i = 0; i < LevelState.Level.WorldObjects.Length; i++)
 		{
 			WorldObject worldObject = LevelState.Level.WorldObjects[i];
-			MeshEntry? mesh = ModelContainer.GetLevelModel(worldObject.Mesh);
-			if (mesh == null)
+			ModelEntry? model = ModelContainer.GetLevelModel(worldObject.Mesh);
+			if (model == null)
 				continue;
 
-			Vector3 bbScale = worldObject.Scale * (mesh.BoundingMax - mesh.BoundingMin);
-			Vector3 bbOffset = (mesh.BoundingMax + mesh.BoundingMin) / 2;
-			float maxScale = Math.Max(bbScale.X, Math.Max(bbScale.Y, bbScale.Z));
-			Vector3? sphereIntersection = Ray.IntersectsSphere(rayStartPosition, rayDirection, worldObject.Position + bbOffset, maxScale);
-			if (sphereIntersection == null)
-				continue;
-
-			Matrix4x4 modelMatrix = worldObject.GetModelMatrix();
-			if (RaycastUtils.RaycastMesh(modelMatrix, mesh.Mesh, rayStartPosition, rayDirection, ref closestIntersection))
+			for (int j = 0; j < model.MeshEntries.Count; j++)
 			{
-				LevelEditorState.SetHighlightedWorldObject(worldObject);
+				MeshEntry mesh = model.MeshEntries[j];
+				Vector3 bbScale = worldObject.Scale * (mesh.BoundingMax - mesh.BoundingMin);
+				Vector3 bbOffset = (mesh.BoundingMax + mesh.BoundingMin) / 2;
+				float maxScale = Math.Max(bbScale.X, Math.Max(bbScale.Y, bbScale.Z));
+				Vector3? sphereIntersection = Ray.IntersectsSphere(rayStartPosition, rayDirection, worldObject.Position + bbOffset, maxScale);
+				if (sphereIntersection == null)
+					continue;
+
+				Matrix4x4 modelMatrix = worldObject.GetModelMatrix();
+				if (RaycastUtils.RaycastMesh(modelMatrix, mesh, rayStartPosition, rayDirection, ref closestIntersection))
+				{
+					// TODO: For clarity, consider returning the world object instead of setting it as highlighted on every iteration.
+					LevelEditorState.SetHighlightedWorldObject(worldObject);
+				}
 			}
 		}
 	}
@@ -214,7 +219,7 @@ public static class MainLogic
 				{
 					PointEntityVisualization.SimpleSphere simpleSphere => IntersectsSphere(entity.Position, simpleSphere.Radius),
 					PointEntityVisualization.BillboardSprite billboardSprite => RaycastUtils.RaycastPlane(Matrix4x4.CreateScale(billboardSprite.Size * 0.5f) * EntityMatrixUtils.GetBillboardMatrix(entity.Position), rayStartPosition, rayDirection),
-					PointEntityVisualization.Mesh mesh => RaycastUtils.RaycastEntityMesh(Matrix4x4.CreateScale(mesh.Size * 2) * Matrix4x4.CreateTranslation(entity.Position), ModelContainer.GetEntityConfigModel(mesh.MeshName)?.Mesh, rayStartPosition, rayDirection),
+					PointEntityVisualization.Mesh mesh => RaycastUtils.RaycastEntityModel(Matrix4x4.CreateScale(mesh.Size * 2) * Matrix4x4.CreateTranslation(entity.Position), ModelContainer.GetEntityConfigModel(mesh.MeshName), rayStartPosition, rayDirection),
 					_ => throw new InvalidOperationException($"Unknown point entity visualization: {point.Visualization}"),
 				};
 			}

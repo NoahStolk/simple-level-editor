@@ -148,6 +148,8 @@ public static class ModelContainer
 				lineIndices.Add(edge.Key.B);
 			}
 
+			// TODO: Add a material parser to Detach.
+
 			meshes.Add(new MeshEntry(mesh, vao, lineIndices.ToArray(), VaoUtils.CreateLineVao(modelData.Positions.ToArray()), boundingMin, boundingMax));
 		}
 
