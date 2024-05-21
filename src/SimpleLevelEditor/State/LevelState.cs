@@ -224,7 +224,7 @@ public static class LevelState
 	{
 		try
 		{
-			MeshContainer.Rebuild(levelFilePath);
+			ModelContainer.Rebuild(levelFilePath);
 			TextureContainer.Rebuild(levelFilePath);
 			return true;
 		}

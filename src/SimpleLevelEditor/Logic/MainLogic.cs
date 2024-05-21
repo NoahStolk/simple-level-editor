@@ -155,7 +155,7 @@ public static class MainLogic
 		for (int i = 0; i < LevelState.Level.WorldObjects.Length; i++)
 		{
 			WorldObject worldObject = LevelState.Level.WorldObjects[i];
-			MeshEntry? mesh = MeshContainer.GetLevelMesh(worldObject.Mesh);
+			MeshEntry? mesh = ModelContainer.GetLevelModel(worldObject.Mesh);
 			if (mesh == null)
 				continue;
 
@@ -214,7 +214,7 @@ public static class MainLogic
 				{
 					PointEntityVisualization.SimpleSphere simpleSphere => IntersectsSphere(entity.Position, simpleSphere.Radius),
 					PointEntityVisualization.BillboardSprite billboardSprite => RaycastUtils.RaycastPlane(Matrix4x4.CreateScale(billboardSprite.Size * 0.5f) * EntityMatrixUtils.GetBillboardMatrix(entity.Position), rayStartPosition, rayDirection),
-					PointEntityVisualization.Mesh mesh => RaycastUtils.RaycastEntityMesh(Matrix4x4.CreateScale(mesh.Size * 2) * Matrix4x4.CreateTranslation(entity.Position), MeshContainer.GetEntityConfigMesh(mesh.MeshName)?.Mesh, rayStartPosition, rayDirection),
+					PointEntityVisualization.Mesh mesh => RaycastUtils.RaycastEntityMesh(Matrix4x4.CreateScale(mesh.Size * 2) * Matrix4x4.CreateTranslation(entity.Position), ModelContainer.GetEntityConfigModel(mesh.MeshName)?.Mesh, rayStartPosition, rayDirection),
 					_ => throw new InvalidOperationException($"Unknown point entity visualization: {point.Visualization}"),
 				};
 			}

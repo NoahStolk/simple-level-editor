@@ -134,7 +134,7 @@ public static class WorldObjectEditorWindow
 				ImDrawListPtr drawList = ImGui.GetWindowDrawList();
 				Vector2 cursorPos = origin + localPosition;
 
-				MeshPreviewFramebuffer? framebuffer = MeshContainer.GetMeshPreviewFramebuffer(meshName);
+				MeshPreviewFramebuffer? framebuffer = ModelContainer.GetMeshPreviewFramebuffer(meshName);
 				if (framebuffer != null)
 				{
 					const float padding = 12;

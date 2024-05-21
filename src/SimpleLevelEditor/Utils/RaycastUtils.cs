@@ -1,5 +1,4 @@
 using Detach.Collisions;
-using SimpleLevelEditor.Content.Data;
 using SimpleLevelEditor.Rendering;
 using System.Diagnostics.CodeAnalysis;
 

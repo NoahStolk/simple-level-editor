@@ -1,34 +1,33 @@
 using Detach.Parsers.Model;
 using Detach.Parsers.Model.ObjFormat;
 using Silk.NET.OpenGL;
-using SimpleLevelEditor.Content.Data;
 using SimpleLevelEditor.State;
 using SimpleLevelEditor.Utils;
 
 namespace SimpleLevelEditor.Rendering;
 
-public static class MeshContainer
+public static class ModelContainer
 {
-	private static readonly Dictionary<string, MeshEntry> _levelMeshes = new();
-	private static readonly Dictionary<string, MeshEntry> _entityConfigMeshes = new();
+	private static readonly Dictionary<string, ModelEntry> _levelModels = new();
+	private static readonly Dictionary<string, ModelEntry> _entityConfigModels = new();
 
 	private static readonly Dictionary<string, MeshPreviewFramebuffer> _meshPreviewFramebuffers = new();
 
-	public static MeshEntry? GetLevelMesh(string path)
+	public static ModelEntry? GetLevelModel(string path)
 	{
-		if (_levelMeshes.TryGetValue(path, out MeshEntry? data))
+		if (_levelModels.TryGetValue(path, out ModelEntry? data))
 			return data;
 
-		DebugState.AddWarning($"Cannot find level mesh '{path}'");
+		DebugState.AddWarning($"Cannot find level model '{path}'");
 		return null;
 	}
 
-	public static MeshEntry? GetEntityConfigMesh(string path)
+	public static ModelEntry? GetEntityConfigModel(string path)
 	{
-		if (_entityConfigMeshes.TryGetValue(path, out MeshEntry? data))
+		if (_entityConfigModels.TryGetValue(path, out ModelEntry? data))
 			return data;
 
-		DebugState.AddWarning($"Cannot find entity config mesh '{path}'");
+		DebugState.AddWarning($"Cannot find entity config model '{path}'");
 		return null;
 	}
 
@@ -46,8 +45,8 @@ public static class MeshContainer
 		foreach (KeyValuePair<string, MeshPreviewFramebuffer> kvp in _meshPreviewFramebuffers)
 			kvp.Value.Destroy();
 
-		_levelMeshes.Clear();
-		_entityConfigMeshes.Clear();
+		_levelModels.Clear();
+		_entityConfigModels.Clear();
 
 		_meshPreviewFramebuffers.Clear();
 
@@ -63,11 +62,15 @@ public static class MeshContainer
 			if (!File.Exists(absolutePath))
 				continue;
 
-			MeshEntry? entry = ReadMesh(absolutePath);
+			ModelEntry? entry = ReadModel(absolutePath);
 			if (entry != null)
 			{
-				_levelMeshes.Add(meshPath, entry);
-				_meshPreviewFramebuffers.Add(meshPath, new MeshPreviewFramebuffer(entry));
+				_levelModels.Add(meshPath, entry);
+
+				// TODO: Rewrite MeshPreviewFramebuffer to support multiple meshes as well.
+				if (entry.MeshEntries.Count == 0)
+					throw new InvalidOperationException("ReadModel should not return models with no meshes.");
+				_meshPreviewFramebuffers.Add(meshPath, new MeshPreviewFramebuffer(entry.MeshEntries[0]));
 			}
 		}
 
@@ -86,65 +89,69 @@ public static class MeshContainer
 				if (!File.Exists(absolutePath))
 					continue;
 
-				MeshEntry? entry = ReadMesh(absolutePath);
+				ModelEntry? entry = ReadModel(absolutePath);
 				if (entry != null)
-					_entityConfigMeshes.Add(meshPath, entry);
+					_entityConfigModels.Add(meshPath, entry);
 			}
 		}
 	}
 
-	private static MeshEntry? ReadMesh(string absolutePath)
+	private static ModelEntry? ReadModel(string absolutePath)
 	{
 		ModelData modelData = ObjParser.Parse(File.ReadAllBytes(absolutePath));
 		if (modelData.Meshes.Count == 0)
 			return null;
 
-		// TODO: Support multiple meshes.
-		Mesh mainMesh = GetMeshData(modelData, modelData.Meshes[0]);
-		uint vao = CreateFromMesh(mainMesh);
-
-		Vector3 boundingMin = new(float.MaxValue);
-		Vector3 boundingMax = new(float.MinValue);
-		foreach (Vector3 position in mainMesh.Vertices.Select(v => v.Position))
+		List<MeshEntry> meshes = [];
+		foreach (MeshData meshData in modelData.Meshes)
 		{
-			boundingMin = Vector3.Min(boundingMin, position);
-			boundingMax = Vector3.Max(boundingMax, position);
+			Mesh mesh = GetMeshData(modelData, meshData);
+			uint vao = CreateFromMesh(mesh);
+
+			Vector3 boundingMin = new(float.MaxValue);
+			Vector3 boundingMax = new(float.MinValue);
+			foreach (Vector3 position in mesh.Vertices.Select(v => v.Position))
+			{
+				boundingMin = Vector3.Min(boundingMin, position);
+				boundingMax = Vector3.Max(boundingMax, position);
+			}
+
+			// Find mesh edges.
+			Dictionary<Edge, List<Vector3>> edges = new();
+			for (int i = 0; i < modelData.Meshes[0].Faces.Count; i += 3)
+			{
+				uint a = (ushort)(modelData.Meshes[0].Faces[i + 0].Position - 1);
+				uint b = (ushort)(modelData.Meshes[0].Faces[i + 1].Position - 1);
+				uint c = (ushort)(modelData.Meshes[0].Faces[i + 2].Position - 1);
+
+				Vector3 positionA = modelData.Positions[(int)a];
+				Vector3 positionB = modelData.Positions[(int)b];
+				Vector3 positionC = modelData.Positions[(int)c];
+				Vector3 normal = Vector3.Normalize(Vector3.Cross(positionB - positionA, positionC - positionA));
+				if (float.IsNaN(normal.X) || float.IsNaN(normal.Y) || float.IsNaN(normal.Z))
+					continue;
+
+				AddEdge(edges, new Edge(a, b), normal);
+				AddEdge(edges, new Edge(b, c), normal);
+				AddEdge(edges, new Edge(c, a), normal);
+			}
+
+			// Find edges that are only used by one triangle.
+			List<uint> lineIndices = [];
+			foreach (KeyValuePair<Edge, List<Vector3>> edge in edges)
+			{
+				int distinctNormals = edge.Value.Distinct(NormalComparer.Instance).Count();
+				if (edge.Value.Count > 1 && distinctNormals == 1)
+					continue;
+
+				lineIndices.Add(edge.Key.A);
+				lineIndices.Add(edge.Key.B);
+			}
+
+			meshes.Add(new MeshEntry(mesh, vao, lineIndices.ToArray(), VaoUtils.CreateLineVao(modelData.Positions.ToArray()), boundingMin, boundingMax));
 		}
 
-		// Find main mesh edges.
-		Dictionary<Edge, List<Vector3>> edges = new();
-		for (int i = 0; i < modelData.Meshes[0].Faces.Count; i += 3)
-		{
-			uint a = (ushort)(modelData.Meshes[0].Faces[i + 0].Position - 1);
-			uint b = (ushort)(modelData.Meshes[0].Faces[i + 1].Position - 1);
-			uint c = (ushort)(modelData.Meshes[0].Faces[i + 2].Position - 1);
-
-			Vector3 positionA = modelData.Positions[(int)a];
-			Vector3 positionB = modelData.Positions[(int)b];
-			Vector3 positionC = modelData.Positions[(int)c];
-			Vector3 normal = Vector3.Normalize(Vector3.Cross(positionB - positionA, positionC - positionA));
-			if (float.IsNaN(normal.X) || float.IsNaN(normal.Y) || float.IsNaN(normal.Z))
-				continue;
-
-			AddEdge(edges, new Edge(a, b), normal);
-			AddEdge(edges, new Edge(b, c), normal);
-			AddEdge(edges, new Edge(c, a), normal);
-		}
-
-		// Find edges that are only used by one triangle.
-		List<uint> lineIndices = [];
-		foreach (KeyValuePair<Edge, List<Vector3>> edge in edges)
-		{
-			int distinctNormals = edge.Value.Distinct(NormalComparer.Instance).Count();
-			if (edge.Value.Count > 1 && distinctNormals == 1)
-				continue;
-
-			lineIndices.Add(edge.Key.A);
-			lineIndices.Add(edge.Key.B);
-		}
-
-		MeshEntry entry = new(mainMesh, vao, lineIndices.ToArray(), VaoUtils.CreateLineVao(modelData.Positions.ToArray()), boundingMin, boundingMax);
-		return entry;
+		return new ModelEntry(meshes);
 	}
 
 	private static void AddEdge(IDictionary<Edge, List<Vector3>> edges, Edge edge, Vector3 normal)
