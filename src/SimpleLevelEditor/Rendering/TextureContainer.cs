@@ -7,21 +7,11 @@ namespace SimpleLevelEditor.Rendering;
 
 public static class TextureContainer
 {
-	private static readonly Dictionary<string, uint> _levelTextures = new();
-	private static readonly Dictionary<string, uint> _entityConfigTextures = new();
+	private static readonly Dictionary<string, uint> _textures = new();
 
-	public static uint? GetLevelTexture(string path)
+	public static uint? GetTexture(string path)
 	{
-		if (_levelTextures.TryGetValue(path, out uint textureId))
-			return textureId;
-
-		DebugState.AddWarning($"Cannot find level texture '{path}'");
-		return null;
-	}
-
-	public static uint? GetEntityConfigTexture(string path)
-	{
-		if (_entityConfigTextures.TryGetValue(path, out uint textureId))
+		if (_textures.TryGetValue(path, out uint textureId))
 			return textureId;
 
 		DebugState.AddWarning($"Cannot find entity config texture '{path}'");
@@ -30,18 +20,15 @@ public static class TextureContainer
 
 	public static void Rebuild(string? levelFilePath)
 	{
-		_levelTextures.Clear();
-		_entityConfigTextures.Clear();
+		_textures.Clear();
 
 		// TODO: Why is this necessary?
 		uint defaultTextureId = GlObjectUtils.CreateTexture(1, 1, [0xFF, 0xFF, 0xFF, 0xFF]);
-		_levelTextures.Add(string.Empty, defaultTextureId);
+		_textures.Add(string.Empty, defaultTextureId);
 
 		string? levelDirectory = Path.GetDirectoryName(levelFilePath);
 		if (levelDirectory == null)
 			return;
-
-		LoadTextures(_levelTextures, levelDirectory, LevelState.Level.Textures.ToList());
 
 		// TODO: Test if all the textures are loaded correctly if the entity config is in a completely different directory.
 		if (LevelState.Level.EntityConfigPath != null)
@@ -51,7 +38,7 @@ public static class TextureContainer
 			if (entityConfigDirectory == null)
 				return;
 
-			LoadTextures(_entityConfigTextures, entityConfigDirectory, EntityConfigState.EntityConfig.Textures.ToList());
+			LoadTextures(_textures, entityConfigDirectory, EntityConfigState.EntityConfig.Textures.ToList());
 		}
 
 		void LoadTextures(Dictionary<string, uint> textureDictionary, string directoryPath, List<string> texturePaths)

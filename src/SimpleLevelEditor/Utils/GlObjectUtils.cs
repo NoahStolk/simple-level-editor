@@ -24,7 +24,7 @@ public static class GlObjectUtils
 		return textureId;
 	}
 
-	public static unsafe uint CreateMesh(Mesh mesh)
+	public static unsafe uint CreateMesh(Geometry geometry)
 	{
 		uint vao = Graphics.Gl.GenVertexArray();
 		uint vbo = Graphics.Gl.GenBuffer();
@@ -32,8 +32,8 @@ public static class GlObjectUtils
 		Graphics.Gl.BindVertexArray(vao);
 
 		Graphics.Gl.BindBuffer(BufferTargetARB.ArrayBuffer, vbo);
-		fixed (Vertex* v = &mesh.Vertices[0])
-			Graphics.Gl.BufferData(BufferTargetARB.ArrayBuffer, (uint)(mesh.Vertices.Length * sizeof(Vertex)), v, BufferUsageARB.StaticDraw);
+		fixed (Vertex* v = &geometry.Vertices[0])
+			Graphics.Gl.BufferData(BufferTargetARB.ArrayBuffer, (uint)(geometry.Vertices.Length * sizeof(Vertex)), v, BufferUsageARB.StaticDraw);
 
 		Graphics.Gl.EnableVertexAttribArray(0);
 		Graphics.Gl.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, (uint)sizeof(Vertex), (void*)0);

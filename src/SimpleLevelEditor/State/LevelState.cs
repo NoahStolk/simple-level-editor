@@ -224,7 +224,8 @@ public static class LevelState
 	{
 		try
 		{
-			ModelContainer.Rebuild(levelFilePath);
+			ModelContainer.LevelContainer.Rebuild(levelFilePath, Level.Models.ToList());
+			ModelContainer.EntityConfigContainer.Rebuild(Level.EntityConfigPath?.Value, EntityConfigState.EntityConfig.Models.ToList());
 			TextureContainer.Rebuild(levelFilePath);
 			return true;
 		}

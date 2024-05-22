@@ -6,100 +6,78 @@ using SimpleLevelEditor.Utils;
 
 namespace SimpleLevelEditor.Rendering;
 
-// TODO: Turn into instance class and have an instance for level data and entity config data.
-public static class ModelContainer
+/*
+model
+	materials
+		textures
+	meshes
+ */
+public sealed class ModelContainer
 {
-	private static readonly Dictionary<string, ModelEntry> _levelModels = new();
-	private static readonly Dictionary<string, ModelEntry> _entityConfigModels = new();
+	private readonly Dictionary<string, Model> _models = new();
+	private readonly Dictionary<string, MeshPreviewFramebuffer> _meshPreviewFramebuffers = new();
+	private readonly string _containerName;
 
-	private static readonly Dictionary<string, MaterialsData> _materials = new();
-
-	private static readonly Dictionary<string, MeshPreviewFramebuffer> _meshPreviewFramebuffers = new();
-
-	public static ModelEntry? GetLevelModel(string path)
+	private ModelContainer(string containerName)
 	{
-		if (_levelModels.TryGetValue(path, out ModelEntry? data))
+		_containerName = containerName;
+	}
+
+	public static ModelContainer LevelContainer { get; } = new("Level");
+	public static ModelContainer EntityConfigContainer { get; } = new("EntityConfig");
+
+	public Model? GetModel(string path)
+	{
+		if (_models.TryGetValue(path, out Model? data))
 			return data;
 
-		DebugState.AddWarning($"Cannot find level model '{path}'");
+		DebugState.AddWarning($"Cannot find level model '{path}' in container '{_containerName}'.");
 		return null;
 	}
 
-	public static ModelEntry? GetEntityConfigModel(string path)
-	{
-		if (_entityConfigModels.TryGetValue(path, out ModelEntry? data))
-			return data;
-
-		DebugState.AddWarning($"Cannot find entity config model '{path}'");
-		return null;
-	}
-
-	public static MeshPreviewFramebuffer? GetMeshPreviewFramebuffer(string path)
+	public MeshPreviewFramebuffer? GetMeshPreviewFramebuffer(string path)
 	{
 		if (_meshPreviewFramebuffers.TryGetValue(path, out MeshPreviewFramebuffer? data))
 			return data;
 
-		DebugState.AddWarning($"Cannot find mesh preview framebuffer '{path}'");
+		DebugState.AddWarning($"Cannot find mesh preview framebuffer '{path}' in container '{_containerName}'.");
 		return null;
 	}
 
-	public static void Rebuild(string? levelFilePath)
+	public void Rebuild(string? sourceFilePath, List<string> modelPaths)
 	{
 		foreach (KeyValuePair<string, MeshPreviewFramebuffer> kvp in _meshPreviewFramebuffers)
 			kvp.Value.Destroy();
 
-		_levelModels.Clear();
-		_entityConfigModels.Clear();
-
+		_models.Clear();
 		_meshPreviewFramebuffers.Clear();
 
-		string? levelDirectory = Path.GetDirectoryName(levelFilePath);
+		string? levelDirectory = Path.GetDirectoryName(sourceFilePath);
 		if (levelDirectory == null)
 			return;
 
 		// Load level meshes.
-		foreach (string meshPath in LevelState.Level.Models)
+		foreach (string meshPath in modelPaths)
 		{
 			string absolutePath = Path.Combine(levelDirectory, meshPath);
 
 			if (!File.Exists(absolutePath))
 				continue;
 
-			ModelEntry? entry = ReadModel(absolutePath);
+			Model? entry = ReadModel(absolutePath);
 			if (entry != null)
 			{
-				_levelModels.Add(meshPath, entry);
+				_models.Add(meshPath, entry);
 
 				// TODO: Rewrite MeshPreviewFramebuffer to support multiple meshes as well.
-				if (entry.MeshEntries.Count == 0)
+				if (entry.Meshes.Count == 0)
 					throw new InvalidOperationException("ReadModel should not return models with no meshes.");
-				_meshPreviewFramebuffers.Add(meshPath, new MeshPreviewFramebuffer(entry.MeshEntries[0]));
-			}
-		}
-
-		// TODO: Test if all the textures are loaded correctly if the entity config is in a completely different directory.
-		if (LevelState.Level.EntityConfigPath != null)
-		{
-			string absoluteEntityConfigPath = Path.Combine(levelDirectory, LevelState.Level.EntityConfigPath.Value);
-			string? entityConfigDirectory = Path.GetDirectoryName(absoluteEntityConfigPath);
-			if (entityConfigDirectory == null)
-				return;
-
-			foreach (string meshPath in EntityConfigState.EntityConfig.Models)
-			{
-				string absolutePath = Path.Combine(levelDirectory, meshPath);
-
-				if (!File.Exists(absolutePath))
-					continue;
-
-				ModelEntry? entry = ReadModel(absolutePath);
-				if (entry != null)
-					_entityConfigModels.Add(meshPath, entry);
+				_meshPreviewFramebuffers.Add(meshPath, new MeshPreviewFramebuffer(entry.Meshes[0]));
 			}
 		}
 	}
 
-	private static ModelEntry? ReadModel(string absolutePath)
+	private static Model? ReadModel(string absolutePath)
 	{
 		ModelData modelData = ObjParser.Parse(File.ReadAllBytes(absolutePath));
 		if (modelData.Meshes.Count == 0)
@@ -107,28 +85,29 @@ public static class ModelContainer
 
 		string? directoryName = Path.GetDirectoryName(absolutePath);
 
+		Dictionary<string, MaterialsData> allMaterials = [];
 		foreach (string materialLibrary in modelData.MaterialLibraries)
 		{
 			string absolutePathToMtlFile = directoryName == null ? materialLibrary : Path.Combine(directoryName, materialLibrary);
 			if (!File.Exists(absolutePathToMtlFile))
 				continue;
 
-			if (_materials.ContainsKey(materialLibrary))
+			if (allMaterials.ContainsKey(materialLibrary))
 				continue;
 
 			MaterialsData materialsData = MtlParser.Parse(File.ReadAllBytes(absolutePathToMtlFile));
-			_materials.Add(materialLibrary, materialsData);
+			allMaterials.Add(materialLibrary, materialsData);
 		}
 
-		List<MeshEntry> meshes = [];
+		List<Mesh> meshes = [];
 		foreach (MeshData meshData in modelData.Meshes)
 		{
-			Mesh mesh = GetMeshData(modelData, meshData);
-			uint vao = GlObjectUtils.CreateMesh(mesh);
+			Geometry geometry = GetMeshData(modelData, meshData);
+			uint vao = GlObjectUtils.CreateMesh(geometry);
 
 			Vector3 boundingMin = new(float.MaxValue);
 			Vector3 boundingMax = new(float.MinValue);
-			foreach (Vector3 position in mesh.Vertices.Select(v => v.Position))
+			foreach (Vector3 position in geometry.Vertices.Select(v => v.Position))
 			{
 				boundingMin = Vector3.Min(boundingMin, position);
 				boundingMax = Vector3.Max(boundingMax, position);
@@ -158,7 +137,7 @@ public static class ModelContainer
 			List<uint> lineIndices = [];
 			foreach (KeyValuePair<Edge, List<Vector3>> edge in edges)
 			{
-				int distinctNormals = edge.Value.Distinct(NormalComparer.Instance).Count();
+				int distinctNormals = edge.Value.Distinct(NormalVectorComparer.Instance).Count();
 				if (edge.Value.Count > 1 && distinctNormals == 1)
 					continue;
 
@@ -167,7 +146,7 @@ public static class ModelContainer
 			}
 
 			MaterialData? material = null;
-			foreach (MaterialsData materials in _materials.Values)
+			foreach (MaterialsData materials in allMaterials.Values)
 			{
 				material = materials.Materials.Find(m => m.Name == meshData.MaterialName);
 				if (material != null)
@@ -177,10 +156,10 @@ public static class ModelContainer
 			if (material == null)
 				material = new MaterialData("Default", Vector3.One, Vector3.One, Vector3.One, Vector3.One, 1, 1, 1, string.Empty);
 
-			meshes.Add(new MeshEntry(mesh, new Material(material.DiffuseMap), vao, lineIndices.ToArray(), VaoUtils.CreateLineVao(modelData.Positions.ToArray()), boundingMin, boundingMax));
+			meshes.Add(new Mesh(geometry, new Material(material.DiffuseMap), vao, lineIndices.ToArray(), VaoUtils.CreateLineVao(modelData.Positions.ToArray()), boundingMin, boundingMax));
 		}
 
-		return new ModelEntry(meshes);
+		return new Model(allMaterials, meshes);
 	}
 
 	private static void AddEdge(IDictionary<Edge, List<Vector3>> edges, Edge edge, Vector3 normal)
@@ -191,7 +170,7 @@ public static class ModelContainer
 		edges[edge].Add(normal);
 	}
 
-	private static Mesh GetMeshData(ModelData modelData, MeshData meshData)
+	private static Geometry GetMeshData(ModelData modelData, MeshData meshData)
 	{
 		Vertex[] outVertices = new Vertex[meshData.Faces.Count];
 		uint[] outFaces = new uint[meshData.Faces.Count];
@@ -211,7 +190,7 @@ public static class ModelContainer
 			outFaces[i] = (uint)i;
 		}
 
-		return new Mesh(outVertices, outFaces);
+		return new Geometry(outVertices, outFaces);
 	}
 
 	private sealed record Edge(uint A, uint B)
@@ -229,22 +208,6 @@ public static class ModelContainer
 		public override int GetHashCode()
 		{
 			return A < B ? HashCode.Combine(A, B) : HashCode.Combine(B, A);
-		}
-	}
-
-	private sealed class NormalComparer : IEqualityComparer<Vector3>
-	{
-		public static readonly NormalComparer Instance = new();
-
-		public bool Equals(Vector3 x, Vector3 y)
-		{
-			const float epsilon = 0.01f;
-			return Math.Abs(x.X - y.X) < epsilon && Math.Abs(x.Y - y.Y) < epsilon && Math.Abs(x.Z - y.Z) < epsilon;
-		}
-
-		public int GetHashCode(Vector3 obj)
-		{
-			return obj.GetHashCode();
 		}
 	}
 }

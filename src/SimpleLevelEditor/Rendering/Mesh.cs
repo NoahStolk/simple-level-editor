@@ -1,4 +1,3 @@
 namespace SimpleLevelEditor.Rendering;
 
-// TODO: Rename to Geometry.
-public record Mesh(Vertex[] Vertices, uint[] Indices);
+public record Mesh(Geometry Geometry, Material Material, uint MeshVao, uint[] LineIndices, uint LineVao, Vector3 BoundingMin, Vector3 BoundingMax);

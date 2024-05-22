@@ -198,7 +198,7 @@ public sealed class LineRenderer
 			WorldObject worldObject = LevelState.Level.WorldObjects[i];
 			Vector4 color = GetWorldObjectLineColor(worldObject);
 
-			ModelEntry? model = ModelContainer.GetLevelModel(worldObject.ModelPath);
+			Model? model = ModelContainer.LevelContainer.GetModel(worldObject.ModelPath);
 			if (model == null)
 				continue;
 
@@ -209,13 +209,13 @@ public sealed class LineRenderer
 
 		if (LevelEditorState.MoveTargetPosition.HasValue && LevelEditorState.SelectedWorldObject != null)
 		{
-			ModelEntry? model = ModelContainer.GetLevelModel(LevelEditorState.SelectedWorldObject.ModelPath);
+			Model? model = ModelContainer.LevelContainer.GetModel(LevelEditorState.SelectedWorldObject.ModelPath);
 			if (model != null)
 				RenderModelEdges(model, LevelEditorState.SelectedWorldObject.GetModelMatrix(LevelEditorState.MoveTargetPosition.Value), GetWorldObjectLineColor(LevelEditorState.SelectedWorldObject));
 		}
 	}
 
-	private void RenderModelEdges(ModelEntry modelEntry, Matrix4x4 modelMatrix, Vector4 color)
+	private void RenderModelEdges(Model model, Matrix4x4 modelMatrix, Vector4 color)
 	{
 		if (color.W < float.Epsilon)
 			return;
@@ -223,10 +223,10 @@ public sealed class LineRenderer
 		Gl.UniformMatrix4x4(_modelUniform, modelMatrix);
 		Gl.Uniform4(_colorUniform, color);
 
-		for (int i = 0; i < modelEntry.MeshEntries.Count; i++)
+		for (int i = 0; i < model.Meshes.Count; i++)
 		{
-			MeshEntry meshEntry = modelEntry.MeshEntries[i];
-			RenderEdges(meshEntry.LineVao, meshEntry.LineIndices);
+			Mesh mesh = model.Meshes[i];
+			RenderEdges(mesh.LineVao, mesh.LineIndices);
 		}
 	}
 
@@ -266,7 +266,7 @@ public sealed class LineRenderer
 			}
 			else if (point.Visualization is PointEntityVisualization.Model mesh)
 			{
-				ModelEntry? model = ModelContainer.GetEntityConfigModel(mesh.ModelPath);
+				Model? model = ModelContainer.EntityConfigContainer.GetModel(mesh.ModelPath);
 				if (model != null)
 					RenderModelEdges(model, Matrix4x4.CreateTranslation(entityPosition), GetEntityLineColor(entity, new Rgb(191, 63, 63), Vector4.Zero));
 			}

@@ -59,7 +59,7 @@ public sealed class SpriteRenderer
 		if (entityShape is not EntityShapeDescriptor.Point { Visualization: PointEntityVisualization.BillboardSprite billboardSprite })
 			return;
 
-		uint? textureId = TextureContainer.GetEntityConfigTexture(billboardSprite.TexturePath);
+		uint? textureId = TextureContainer.GetTexture(billboardSprite.TexturePath);
 		if (textureId == null)
 			return;
 

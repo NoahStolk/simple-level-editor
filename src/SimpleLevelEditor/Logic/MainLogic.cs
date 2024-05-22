@@ -155,13 +155,13 @@ public static class MainLogic
 		for (int i = 0; i < LevelState.Level.WorldObjects.Length; i++)
 		{
 			WorldObject worldObject = LevelState.Level.WorldObjects[i];
-			ModelEntry? model = ModelContainer.GetLevelModel(worldObject.ModelPath);
+			Model? model = ModelContainer.LevelContainer.GetModel(worldObject.ModelPath);
 			if (model == null)
 				continue;
 
-			for (int j = 0; j < model.MeshEntries.Count; j++)
+			for (int j = 0; j < model.Meshes.Count; j++)
 			{
-				MeshEntry mesh = model.MeshEntries[j];
+				Mesh mesh = model.Meshes[j];
 				Vector3 bbScale = worldObject.Scale * (mesh.BoundingMax - mesh.BoundingMin);
 				Vector3 bbOffset = (mesh.BoundingMax + mesh.BoundingMin) / 2;
 				float maxScale = Math.Max(bbScale.X, Math.Max(bbScale.Y, bbScale.Z));
@@ -219,7 +219,7 @@ public static class MainLogic
 				{
 					PointEntityVisualization.SimpleSphere simpleSphere => IntersectsSphere(entity.Position, simpleSphere.Radius),
 					PointEntityVisualization.BillboardSprite billboardSprite => RaycastUtils.RaycastPlane(Matrix4x4.CreateScale(billboardSprite.Size * 0.5f) * EntityMatrixUtils.GetBillboardMatrix(entity.Position), rayStartPosition, rayDirection),
-					PointEntityVisualization.Model mesh => RaycastUtils.RaycastEntityModel(Matrix4x4.CreateScale(mesh.Size * 2) * Matrix4x4.CreateTranslation(entity.Position), ModelContainer.GetEntityConfigModel(mesh.ModelPath), rayStartPosition, rayDirection),
+					PointEntityVisualization.Model mesh => RaycastUtils.RaycastEntityModel(Matrix4x4.CreateScale(mesh.Size * 2) * Matrix4x4.CreateTranslation(entity.Position), ModelContainer.EntityConfigContainer.GetModel(mesh.ModelPath), rayStartPosition, rayDirection),
 					_ => throw new InvalidOperationException($"Unknown point entity visualization: {point.Visualization}"),
 				};
 			}
