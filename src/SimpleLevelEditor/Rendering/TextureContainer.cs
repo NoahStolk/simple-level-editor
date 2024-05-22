@@ -5,6 +5,12 @@ using SimpleLevelEditor.Utils;
 
 namespace SimpleLevelEditor.Rendering;
 
+// TODO: Rewrite this class; instead of manually rebuilding by hand, just request the texture and load it from the full file path if it doesn't yet exist.
+// TODO: We would need a robust way to resolve file paths from:
+// - The entity config file.
+// - The level file.
+// - The .obj file.
+// - The .mtl file.
 public static class TextureContainer
 {
 	private static readonly Dictionary<string, uint> _textures = new();
