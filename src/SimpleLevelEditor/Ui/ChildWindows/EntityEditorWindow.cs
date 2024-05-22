@@ -49,7 +49,7 @@ public static class EntityEditorWindow
 				if (ImGui.Selectable(descriptor.Name))
 				{
 					entity.Name = descriptor.Name;
-					entity.Shape = descriptor.Shape.GetDefaultDescriptor();
+					entity.Shape = descriptor.Shape.GetDefaultEntityShape();
 					entity.Properties = ListModule.OfSeq(descriptor.Properties.Select(p => new EntityProperty(p.Name, p.Type.DefaultValue)));
 					LevelState.Track("Changed entity type");
 				}
@@ -78,11 +78,11 @@ public static class EntityEditorWindow
 
 		switch (entity.Shape)
 		{
-			case ShapeDescriptor.Sphere sphere:
+			case EntityShape.Sphere sphere:
 				RenderSphereInputs(entity.Id, ref sphere);
 				entity.Shape = sphere;
 				break;
-			case ShapeDescriptor.Aabb aabb:
+			case EntityShape.Aabb aabb:
 				RenderAabbInputs(entity.Id, ref aabb);
 				entity.Shape = aabb;
 				break;
@@ -180,30 +180,30 @@ public static class EntityEditorWindow
 		}
 	}
 
-	private static void RenderSphereInputs(int entityId, ref ShapeDescriptor.Sphere sphere)
+	private static void RenderSphereInputs(int entityId, ref EntityShape.Sphere sphere)
 	{
 		ImGui.Text("Radius");
 
 		float radius = sphere.Radius;
 		if (ImGui.DragFloat(Inline.Span($"##radius{entityId}"), ref radius, 0.1f, 0.1f, float.MaxValue, "%.1f"))
-			sphere = (ShapeDescriptor.Sphere)ShapeDescriptor.NewSphere(radius);
+			sphere = (EntityShape.Sphere)EntityShape.NewSphere(radius);
 		if (ImGui.IsItemDeactivatedAfterEdit())
 			LevelState.Track("Changed entity radius");
 	}
 
-	private static void RenderAabbInputs(int entityId, ref ShapeDescriptor.Aabb aabb)
+	private static void RenderAabbInputs(int entityId, ref EntityShape.Aabb aabb)
 	{
 		ImGui.Text("Box Size");
 
 		Vector3 size = aabb.Size;
 		if (ImGui.DragFloat3(Inline.Span($"##box_size{entityId}"), ref size, 0.1f, float.MinValue, -0.1f, "%.1f"))
-			aabb = (ShapeDescriptor.Aabb)ShapeDescriptor.NewAabb(size);
+			aabb = (EntityShape.Aabb)EntityShape.NewAabb(size);
 		if (ImGui.IsItemDeactivatedAfterEdit())
 			LevelState.Track("Changed entity box size");
 
 		if (RenderResetButton(Inline.Span($"Box_min_reset{entityId}")))
 		{
-			aabb = (ShapeDescriptor.Aabb)ShapeDescriptor.NewAabb(Vector3.One);
+			aabb = (EntityShape.Aabb)EntityShape.NewAabb(Vector3.One);
 			LevelState.Track("Changed entity box size");
 		}
 	}

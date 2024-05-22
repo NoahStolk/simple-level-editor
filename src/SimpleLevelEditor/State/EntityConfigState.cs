@@ -26,12 +26,12 @@ public static class EntityConfigState
 			LevelEditorState.RenderFilter.Add($"Entities:{entity.Name}", true);
 	}
 
-	public static EntityShape? GetEntityShape(Entity entity)
+	public static EntityShapeDescriptor? GetEntityShape(Entity entity)
 	{
 		if (EntityConfig.Entities.Length == 0)
 			return null; // EntityConfig not loaded yet.
 
-		EntityShape? entityShape = EntityConfig.Entities.FirstOrDefault(e => e.Name == entity.Name)?.Shape;
+		EntityShapeDescriptor? entityShape = EntityConfig.Entities.FirstOrDefault(e => e.Name == entity.Name)?.Shape;
 		if (entityShape == null)
 			throw new InvalidOperationException($"Entity '{entity.Name}' does not have a shape defined in the EntityConfig.");
 

@@ -66,11 +66,11 @@ public class LevelSerializationTests
 	];
 	private static readonly Entity[] _expectedEntities =
 	[
-		new Entity(1, "PlayerSpawn", new Vector3(0, 1, 0), ShapeDescriptor.Point, ListModule.Empty<EntityProperty>()),
-		new Entity(2, "Light", new Vector3(20, 3, 2), ShapeDescriptor.Point, ListModule.OfSeq([new EntityProperty("Color", EntityPropertyValue.NewRgb(new Rgb(255, 255, 255))), new EntityProperty("Radius", EntityPropertyValue.NewFloat(20f))])),
-		new Entity(3, "Light", new Vector3(27, 1, 12), ShapeDescriptor.Point, ListModule.OfSeq([new EntityProperty("Color", EntityPropertyValue.NewRgb(new Rgb(255, 47, 0))), new EntityProperty("Radius", EntityPropertyValue.NewFloat(6f))])),
-		new Entity(4, "Light", new Vector3(33, 1, 2), ShapeDescriptor.Point, ListModule.OfSeq([new EntityProperty("Color", EntityPropertyValue.NewRgb(new Rgb(0, 40, 255))), new EntityProperty("Radius", EntityPropertyValue.NewFloat(20f))])),
-		new Entity(5, "Field", new Vector3(1, 1, 1), ShapeDescriptor.NewSphere(10), ListModule.Empty<EntityProperty>()),
+		new Entity(1, "PlayerSpawn", new Vector3(0, 1, 0), EntityShape.Point, ListModule.Empty<EntityProperty>()),
+		new Entity(2, "Light", new Vector3(20, 3, 2), EntityShape.Point, ListModule.OfSeq([new EntityProperty("Color", EntityPropertyValue.NewRgb(new Rgb(255, 255, 255))), new EntityProperty("Radius", EntityPropertyValue.NewFloat(20f))])),
+		new Entity(3, "Light", new Vector3(27, 1, 12), EntityShape.Point, ListModule.OfSeq([new EntityProperty("Color", EntityPropertyValue.NewRgb(new Rgb(255, 47, 0))), new EntityProperty("Radius", EntityPropertyValue.NewFloat(6f))])),
+		new Entity(4, "Light", new Vector3(33, 1, 2), EntityShape.Point, ListModule.OfSeq([new EntityProperty("Color", EntityPropertyValue.NewRgb(new Rgb(0, 40, 255))), new EntityProperty("Radius", EntityPropertyValue.NewFloat(20f))])),
+		new Entity(5, "Field", new Vector3(1, 1, 1), EntityShape.NewSphere(10), ListModule.Empty<EntityProperty>()),
 	];
 
 	[TestMethod]

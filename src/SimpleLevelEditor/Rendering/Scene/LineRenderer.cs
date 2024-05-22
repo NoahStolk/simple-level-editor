@@ -254,8 +254,8 @@ public sealed class LineRenderer
 
 	private void RenderEntity(Entity entity, Vector3 entityPosition)
 	{
-		EntityShape? entityShape = EntityConfigState.GetEntityShape(entity);
-		if (entityShape is EntityShape.Point point)
+		EntityShapeDescriptor? entityShape = EntityConfigState.GetEntityShape(entity);
+		if (entityShape is EntityShapeDescriptor.Point point)
 		{
 			if (point.Visualization is PointEntityVisualization.SimpleSphere simpleSphere)
 			{
@@ -279,9 +279,9 @@ public sealed class LineRenderer
 				RenderEdges(_planeLineVao, _planeLineIndices);
 			}
 		}
-		else if (entityShape is EntityShape.Sphere sphere)
+		else if (entityShape is EntityShapeDescriptor.Sphere sphere)
 		{
-			if (entity.Shape is not ShapeDescriptor.Sphere sphereDescriptor)
+			if (entity.Shape is not EntityShape.Sphere sphereDescriptor)
 				throw new InvalidOperationException($"Entity '{entity.Name}' is of shape type '{entity.Shape}' which does not match shape type '{entityShape}' from the EntityConfig.");
 
 			Gl.UniformMatrix4x4(_modelUniform, Matrix4x4.CreateScale(sphereDescriptor.Radius) * Matrix4x4.CreateTranslation(entityPosition));
@@ -289,9 +289,9 @@ public sealed class LineRenderer
 			Gl.BindVertexArray(_sphereVao);
 			Gl.DrawArrays(PrimitiveType.Lines, 0, (uint)_sphereVertices.Length);
 		}
-		else if (entityShape is EntityShape.Aabb aabb)
+		else if (entityShape is EntityShapeDescriptor.Aabb aabb)
 		{
-			if (entity.Shape is not ShapeDescriptor.Aabb aabbDescriptor)
+			if (entity.Shape is not EntityShape.Aabb aabbDescriptor)
 				throw new InvalidOperationException($"Entity '{entity.Name}' is of shape type '{entity.Shape}' which does not match shape type '{entityShape}' from the EntityConfig.");
 
 			Gl.UniformMatrix4x4(_modelUniform, Matrix4x4.CreateScale(aabbDescriptor.Size) * Matrix4x4.CreateTranslation(entityPosition));

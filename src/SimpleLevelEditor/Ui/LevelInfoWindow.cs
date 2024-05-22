@@ -93,7 +93,7 @@ public static class LevelInfoWindow
 
 				switch (entity.Shape)
 				{
-					case EntityShape.Point point:
+					case EntityShapeDescriptor.Point point:
 						NextColumnTextColored(Color.Green, "Type");
 						NextColumnText(point.Visualization.GetTypeId());
 
@@ -124,11 +124,11 @@ public static class LevelInfoWindow
 						}
 
 						break;
-					case EntityShape.Sphere sphere:
+					case EntityShapeDescriptor.Sphere sphere:
 						NextColumnTextColored(Color.Yellow, "Color");
 						NextColumnText(sphere.Color.ToDisplayString());
 						break;
-					case EntityShape.Aabb aabb:
+					case EntityShapeDescriptor.Aabb aabb:
 						NextColumnTextColored(Color.Yellow, "Color");
 						NextColumnText(aabb.Color.ToDisplayString());
 						break;

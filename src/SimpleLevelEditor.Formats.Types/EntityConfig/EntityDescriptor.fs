@@ -2,6 +2,6 @@ namespace SimpleLevelEditor.Formats.Types.EntityConfig
 
 type EntityDescriptor = {
     Name: string
-    Shape: EntityShape
+    Shape: EntityShapeDescriptor
     Properties: EntityPropertyDescriptor list
 }

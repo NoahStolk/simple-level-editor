@@ -23,7 +23,7 @@ public class LevelModelTests
 	[TestMethod]
 	public void DeepCopy()
 	{
-		Entity entity = new(0, "test", new Vector3(1, 2, 3), ShapeDescriptor.NewSphere(0.5f), ListModule.OfSeq([new EntityProperty("test", EntityPropertyValue.NewFloat(0.5f))]));
+		Entity entity = new(0, "test", new Vector3(1, 2, 3), EntityShape.NewSphere(0.5f), ListModule.OfSeq([new EntityProperty("test", EntityPropertyValue.NewFloat(0.5f))]));
 
 		WorldObject worldObject = new(0, "Test.obj", "Test.tga", Vector3.One, new Vector3(4, 5, 6), new Vector3(1, 2, 3), ListModule.OfSeq(["flag"]));
 

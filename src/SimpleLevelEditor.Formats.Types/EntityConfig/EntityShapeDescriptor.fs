@@ -3,18 +3,16 @@ namespace SimpleLevelEditor.Formats.Types.EntityConfig
 open SimpleLevelEditor.Formats.Types
 open SimpleLevelEditor.Formats.Types.Level
 
-// TODO: Rename to EntityShapeDescriptor.
-type EntityShape =
+type EntityShapeDescriptor =
     | Point of Visualization: PointEntityVisualization
     | Sphere of Color: Rgb
     | Aabb of Color: Rgb
 
-    // TODO: Rename to GetDefaultEntityShape.
-    member this.GetDefaultDescriptor() =
+    member this.GetDefaultEntityShape() =
         match this with
-        | Point _  -> ShapeDescriptor.Point
-        | Sphere _ -> ShapeDescriptor.Sphere 2f
-        | Aabb _   -> ShapeDescriptor.Aabb System.Numerics.Vector3.One
+        | Point _  -> EntityShape.Point
+        | Sphere _ -> EntityShape.Sphere 2f
+        | Aabb _   -> EntityShape.Aabb System.Numerics.Vector3.One
 
     member this.GetTypeId() =
         match this with

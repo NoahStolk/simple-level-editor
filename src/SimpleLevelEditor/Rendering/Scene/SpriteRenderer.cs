@@ -55,8 +55,8 @@ public sealed class SpriteRenderer
 
 	private unsafe void RenderSpriteEntity(Entity entity, Vector3 entityPosition)
 	{
-		EntityShape? entityShape = EntityConfigState.GetEntityShape(entity);
-		if (entityShape is not EntityShape.Point { Visualization: PointEntityVisualization.BillboardSprite billboardSprite })
+		EntityShapeDescriptor? entityShape = EntityConfigState.GetEntityShape(entity);
+		if (entityShape is not EntityShapeDescriptor.Point { Visualization: PointEntityVisualization.BillboardSprite billboardSprite })
 			return;
 
 		uint? textureId = TextureContainer.GetEntityConfigTexture(billboardSprite.TextureName);
