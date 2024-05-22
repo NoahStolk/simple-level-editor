@@ -48,8 +48,7 @@ public static class LevelAssetsWindow
 
 			float height = ImGui.GetContentRegionAvail().Y / 2f - 48;
 
-			RenderAssetPaths(height, "Meshes", "obj", LevelState.Level.Meshes, l => LevelState.Level.Meshes = l);
-			RenderAssetPaths(height, "Textures", "tga", LevelState.Level.Textures, l => LevelState.Level.Textures = l);
+			RenderAssetPaths(height, "Models", "obj", LevelState.Level.Models, l => LevelState.Level.Models = l);
 		}
 
 		ImGui.End();

@@ -17,48 +17,42 @@ public class LevelSerializationTests
 	[
 		new WorldObject(
 			id: 1,
-			mesh: @"..\Meshes\Cube.obj",
-			texture: @"..\Textures\Blank.tga",
+			modelPath: @"..\Meshes\Cube.obj",
 			scale: new Vector3(64, 8, 64),
 			rotation: new Vector3(0, 0, 0),
 			position: new Vector3(16, -4, 0),
 			flags: ListModule.OfSeq(["Transparent"])),
 		new WorldObject(
 			id: 2,
-			mesh: @"..\Meshes\Crate.obj",
-			texture: @"..\Textures\TilesColor.tga",
+			modelPath: @"..\Meshes\Crate.obj",
 			scale: new Vector3(1, 1, 1),
 			rotation: new Vector3(0, 0, 0),
 			position: new Vector3(-4, 0.5f, 1),
 			flags: ListModule.OfSeq(["Dynamic"])),
 		new WorldObject(
 			id: 3,
-			mesh: @"..\Meshes\Crate.obj",
-			texture: @"..\Textures\StoneBlue.tga",
+			modelPath: @"..\Meshes\Crate.obj",
 			scale: new Vector3(1, 1, 1),
 			rotation: new Vector3(0, 0, 0),
 			position: new Vector3(-0.5f, 0.5f, -4.5f),
 			flags: ListModule.OfSeq(["Transparent", "Dynamic"])),
 		new WorldObject(
 			id: 4,
-			mesh: @"..\Meshes\Crate.obj",
-			texture: @"..\Textures\StoneBlue.tga",
+			modelPath: @"..\Meshes\Crate.obj",
 			scale: new Vector3(1, 1, 1),
 			rotation: new Vector3(90, 0, 0),
 			position: new Vector3(-4.5f, 0.5f, -3f),
 			flags: ListModule.Empty<string>()),
 		new WorldObject(
 			id: 5,
-			mesh: @"..\Meshes\Sphere.obj",
-			texture: @"..\Textures\StoneBlue.tga",
+			modelPath: @"..\Meshes\Sphere.obj",
 			scale: new Vector3(1, 1, 1),
 			rotation: new Vector3(0, 90, 0),
 			position: new Vector3(6, 1, 2),
 			flags: ListModule.Empty<string>()),
 		new WorldObject(
 			id: 6,
-			mesh: @"..\Meshes\Cube.obj",
-			texture: @"..\Textures\Blank.tga",
+			modelPath: @"..\Meshes\Cube.obj",
 			scale: new Vector3(16, 4, 1),
 			rotation: new Vector3(0, 0, 0),
 			position: new Vector3(0, 2, -7.5f),
@@ -95,20 +89,15 @@ public class LevelSerializationTests
 	{
 		Assert.AreEqual("..\\EntityConfig.json", level.EntityConfigPath);
 
-		Assert.AreEqual(_expectedMeshes.Length, level.Meshes.Length);
+		Assert.AreEqual(_expectedMeshes.Length, level.Models.Length);
 		for (int i = 0; i < _expectedMeshes.Length; i++)
-			Assert.AreEqual(_expectedMeshes[i], level.Meshes[i]);
-
-		Assert.AreEqual(_expectedTextures.Length, level.Textures.Length);
-		for (int i = 0; i < _expectedTextures.Length; i++)
-			Assert.AreEqual(_expectedTextures[i], level.Textures[i]);
+			Assert.AreEqual(_expectedMeshes[i], level.Models[i]);
 
 		Assert.AreEqual(_expectedWorldObjects.Length, level.WorldObjects.Length);
 		for (int i = 0; i < _expectedWorldObjects.Length; i++)
 		{
 			Assert.AreEqual(_expectedWorldObjects[i].Id, level.WorldObjects[i].Id);
-			Assert.AreEqual(_expectedWorldObjects[i].Mesh, level.WorldObjects[i].Mesh);
-			Assert.AreEqual(_expectedWorldObjects[i].Texture, level.WorldObjects[i].Texture);
+			Assert.AreEqual(_expectedWorldObjects[i].ModelPath, level.WorldObjects[i].ModelPath);
 			Assert.AreEqual(_expectedWorldObjects[i].Scale, level.WorldObjects[i].Scale);
 			Assert.AreEqual(_expectedWorldObjects[i].Rotation, level.WorldObjects[i].Rotation);
 			Assert.AreEqual(_expectedWorldObjects[i].Position, level.WorldObjects[i].Position);

@@ -72,8 +72,8 @@ public static class MainLogic
 			return;
 
 		WorldObject referenceWorldObject = LevelEditorState.SelectedWorldObject ?? WorldObjectEditorWindow.DefaultObject;
-		if (referenceWorldObject.Mesh.Length == 0 || referenceWorldObject.Texture.Length == 0)
-			return;
+		if (referenceWorldObject.ModelPath.Length == 0)
+			return; // TODO: Show popup.
 
 		WorldObject worldObject = referenceWorldObject.CloneAndPlaceAtPosition(LevelState.Level.WorldObjects.Length > 0 ? LevelState.Level.WorldObjects.Max(o => o.Id) + 1 : 0, LevelEditorState.TargetPosition.Value);
 		LevelState.Level.AddWorldObject(worldObject);
@@ -155,7 +155,7 @@ public static class MainLogic
 		for (int i = 0; i < LevelState.Level.WorldObjects.Length; i++)
 		{
 			WorldObject worldObject = LevelState.Level.WorldObjects[i];
-			ModelEntry? model = ModelContainer.GetLevelModel(worldObject.Mesh);
+			ModelEntry? model = ModelContainer.GetLevelModel(worldObject.ModelPath);
 			if (model == null)
 				continue;
 
@@ -219,7 +219,7 @@ public static class MainLogic
 				{
 					PointEntityVisualization.SimpleSphere simpleSphere => IntersectsSphere(entity.Position, simpleSphere.Radius),
 					PointEntityVisualization.BillboardSprite billboardSprite => RaycastUtils.RaycastPlane(Matrix4x4.CreateScale(billboardSprite.Size * 0.5f) * EntityMatrixUtils.GetBillboardMatrix(entity.Position), rayStartPosition, rayDirection),
-					PointEntityVisualization.Mesh mesh => RaycastUtils.RaycastEntityModel(Matrix4x4.CreateScale(mesh.Size * 2) * Matrix4x4.CreateTranslation(entity.Position), ModelContainer.GetEntityConfigModel(mesh.MeshName), rayStartPosition, rayDirection),
+					PointEntityVisualization.Model mesh => RaycastUtils.RaycastEntityModel(Matrix4x4.CreateScale(mesh.Size * 2) * Matrix4x4.CreateTranslation(entity.Position), ModelContainer.GetEntityConfigModel(mesh.ModelPath), rayStartPosition, rayDirection),
 					_ => throw new InvalidOperationException($"Unknown point entity visualization: {point.Visualization}"),
 				};
 			}

@@ -5,8 +5,7 @@ open System.Numerics
 
 type WorldObject =
     { Id: int32 // The id is only used to keep track of the object in the editor.
-      mutable Mesh: string // TODO: Rename to ModelPath.
-      mutable Texture: string // TODO: Remove.
+      mutable ModelPath: string
       mutable Scale: Vector3
       mutable Rotation: Vector3
       mutable Position: Vector3
@@ -18,8 +17,7 @@ type WorldObject =
 
     member this.CloneAndPlaceAtPosition(entityId: int32, position: Vector3) =
         { Id = entityId
-          Mesh = this.Mesh
-          Texture = this.Texture
+          ModelPath = this.ModelPath
           Scale = this.Scale
           Rotation = this.Rotation
           Position = position
@@ -41,8 +39,7 @@ type WorldObject =
 
     static member CreateDefault() =
         { Id = 0
-          Mesh = String.Empty
-          Texture = String.Empty
+          ModelPath = String.Empty
           Scale = Vector3.One
           Rotation = Vector3.Zero
           Position = Vector3.Zero

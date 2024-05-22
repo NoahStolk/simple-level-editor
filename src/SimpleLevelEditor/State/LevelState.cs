@@ -195,7 +195,7 @@ public static class LevelState
 
 		string? baseDirectory = Path.GetDirectoryName(levelFilePath);
 		if (baseDirectory != null)
-			RefreshAssetFileWatcher(baseDirectory, level.Meshes.Concat(level.Textures));
+			RefreshAssetFileWatcher(baseDirectory, level.Models);
 	}
 
 	private static void RefreshAssetFileWatcher(string baseDirectory, IEnumerable<string> assetPaths)

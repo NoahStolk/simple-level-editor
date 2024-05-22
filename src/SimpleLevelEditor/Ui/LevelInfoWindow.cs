@@ -31,8 +31,7 @@ public static class LevelInfoWindow
 
 	private static void RenderLevel(Level3dData level)
 	{
-		ImGui.Text(Inline.Span($"Meshes: {level.Meshes.Length}"));
-		ImGui.Text(Inline.Span($"Textures: {level.Textures.Length}"));
+		ImGui.Text(Inline.Span($"Models: {level.Models.Length}"));
 		ImGui.Text(Inline.Span($"WorldObjects: {level.WorldObjects.Length}"));
 		ImGui.Text(Inline.Span($"Entities: {level.Entities.Length}"));
 		ImGui.TextWrapped(Inline.Span($"EntityConfig: {(level.EntityConfigPath == null ? "<No entity config loaded>" : level.EntityConfigPath.Value)}"));
@@ -47,8 +46,8 @@ public static class LevelInfoWindow
 	{
 		if (ImGui.TreeNode("Meshes"))
 		{
-			for (int i = 0; i < entityConfig.Meshes.Length; i++)
-				ImGui.Text(entityConfig.Meshes[i]);
+			for (int i = 0; i < entityConfig.Models.Length; i++)
+				ImGui.Text(entityConfig.Models[i]);
 
 			ImGui.TreePop();
 		}
@@ -106,18 +105,16 @@ public static class LevelInfoWindow
 								NextColumnText(simpleSphere.Radius.ToString(CultureInfo.InvariantCulture));
 								break;
 							case PointEntityVisualization.BillboardSprite billboardSprite:
-								NextColumnTextColored(Color.Purple, "Texture");
-								NextColumnText(billboardSprite.TextureName);
+								NextColumnTextColored(Color.Purple, "Texture path");
+								NextColumnText(billboardSprite.TexturePath);
 								NextColumnTextColored(Color.Aqua, "Size");
 								NextColumnText(billboardSprite.Size.ToString(CultureInfo.InvariantCulture));
 								break;
-							case PointEntityVisualization.Mesh mesh:
-								NextColumnTextColored(Color.Red, "Mesh");
-								NextColumnText(mesh.MeshName);
-								NextColumnTextColored(Color.Purple, "Texture");
-								NextColumnText(mesh.TextureName);
+							case PointEntityVisualization.Model model:
+								NextColumnTextColored(Color.Red, "Model path");
+								NextColumnText(model.ModelPath);
 								NextColumnTextColored(Color.Aqua, "Size");
-								NextColumnText(mesh.Size.ToString(CultureInfo.InvariantCulture));
+								NextColumnText(model.Size.ToString(CultureInfo.InvariantCulture));
 								break;
 							default:
 								throw new UnreachableException($"Unknown point visualization type: {point.Visualization.GetTypeId()}");

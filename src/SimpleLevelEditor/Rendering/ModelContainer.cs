@@ -59,7 +59,7 @@ public static class ModelContainer
 			return;
 
 		// Load level meshes.
-		foreach (string meshPath in LevelState.Level.Meshes)
+		foreach (string meshPath in LevelState.Level.Models)
 		{
 			string absolutePath = Path.Combine(levelDirectory, meshPath);
 
@@ -86,7 +86,7 @@ public static class ModelContainer
 			if (entityConfigDirectory == null)
 				return;
 
-			foreach (string meshPath in EntityConfigState.EntityConfig.Meshes)
+			foreach (string meshPath in EntityConfigState.EntityConfig.Models)
 			{
 				string absolutePath = Path.Combine(levelDirectory, meshPath);
 

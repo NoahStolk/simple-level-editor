@@ -41,9 +41,9 @@ public sealed class MeshRenderer
 				continue;
 
 			EntityShapeDescriptor? entityShape = EntityConfigState.GetEntityShape(entity);
-			if (entityShape is EntityShapeDescriptor.Point { Visualization: PointEntityVisualization.Mesh meshVisualization })
+			if (entityShape is EntityShapeDescriptor.Point { Visualization: PointEntityVisualization.Model modelVisualization })
 			{
-				ModelEntry? model = ModelContainer.GetEntityConfigModel(meshVisualization.MeshName);
+				ModelEntry? model = ModelContainer.GetEntityConfigModel(modelVisualization.ModelPath);
 				if (model != null)
 					RenderModel(model, Matrix4x4.CreateTranslation(entity.Position));
 			}
@@ -53,9 +53,9 @@ public sealed class MeshRenderer
 		{
 			Entity selectedEntity = LevelEditorState.SelectedEntity;
 			EntityShapeDescriptor? entityShape = EntityConfigState.GetEntityShape(selectedEntity);
-			if (entityShape is EntityShapeDescriptor.Point { Visualization: PointEntityVisualization.Mesh meshVisualization })
+			if (entityShape is EntityShapeDescriptor.Point { Visualization: PointEntityVisualization.Model modelVisualization })
 			{
-				ModelEntry? model = ModelContainer.GetEntityConfigModel(meshVisualization.MeshName);
+				ModelEntry? model = ModelContainer.GetEntityConfigModel(modelVisualization.ModelPath);
 				if (model != null)
 					RenderModel(model, Matrix4x4.CreateTranslation(LevelEditorState.MoveTargetPosition.Value));
 			}
@@ -67,7 +67,7 @@ public sealed class MeshRenderer
 		for (int i = 0; i < LevelState.Level.WorldObjects.Length; i++)
 		{
 			WorldObject worldObject = LevelState.Level.WorldObjects[i];
-			ModelEntry? model = ModelContainer.GetLevelModel(worldObject.Mesh);
+			ModelEntry? model = ModelContainer.GetLevelModel(worldObject.ModelPath);
 			if (model != null)
 				RenderModel(model, worldObject.GetModelMatrix());
 		}
@@ -75,7 +75,7 @@ public sealed class MeshRenderer
 		if (LevelEditorState.MoveTargetPosition.HasValue && LevelEditorState.SelectedWorldObject != null)
 		{
 			WorldObject selectedWorldObject = LevelEditorState.SelectedWorldObject;
-			ModelEntry? model = ModelContainer.GetLevelModel(selectedWorldObject.Mesh);
+			ModelEntry? model = ModelContainer.GetLevelModel(selectedWorldObject.ModelPath);
 			if (model != null)
 				RenderModel(model, selectedWorldObject.GetModelMatrix(LevelEditorState.MoveTargetPosition.Value));
 		}

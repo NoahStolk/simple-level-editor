@@ -198,7 +198,7 @@ public sealed class LineRenderer
 			WorldObject worldObject = LevelState.Level.WorldObjects[i];
 			Vector4 color = GetWorldObjectLineColor(worldObject);
 
-			ModelEntry? model = ModelContainer.GetLevelModel(worldObject.Mesh);
+			ModelEntry? model = ModelContainer.GetLevelModel(worldObject.ModelPath);
 			if (model == null)
 				continue;
 
@@ -209,7 +209,7 @@ public sealed class LineRenderer
 
 		if (LevelEditorState.MoveTargetPosition.HasValue && LevelEditorState.SelectedWorldObject != null)
 		{
-			ModelEntry? model = ModelContainer.GetLevelModel(LevelEditorState.SelectedWorldObject.Mesh);
+			ModelEntry? model = ModelContainer.GetLevelModel(LevelEditorState.SelectedWorldObject.ModelPath);
 			if (model != null)
 				RenderModelEdges(model, LevelEditorState.SelectedWorldObject.GetModelMatrix(LevelEditorState.MoveTargetPosition.Value), GetWorldObjectLineColor(LevelEditorState.SelectedWorldObject));
 		}
@@ -264,9 +264,9 @@ public sealed class LineRenderer
 				Gl.BindVertexArray(_pointVao);
 				Gl.DrawArrays(PrimitiveType.Lines, 0, (uint)_pointVertices.Length);
 			}
-			else if (point.Visualization is PointEntityVisualization.Mesh mesh)
+			else if (point.Visualization is PointEntityVisualization.Model mesh)
 			{
-				ModelEntry? model = ModelContainer.GetEntityConfigModel(mesh.MeshName);
+				ModelEntry? model = ModelContainer.GetEntityConfigModel(mesh.ModelPath);
 				if (model != null)
 					RenderModelEdges(model, Matrix4x4.CreateTranslation(entityPosition), GetEntityLineColor(entity, new Rgb(191, 63, 63), Vector4.Zero));
 			}

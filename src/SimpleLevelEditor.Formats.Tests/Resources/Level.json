@@ -1,20 +1,14 @@
 {
   "EntityConfigPath": "..\\EntityConfig.json",
-  "Meshes": [
+  "Models": [
     "..\\Meshes\\Crate.obj",
     "..\\Meshes\\Cube.obj",
     "..\\Meshes\\Sphere.obj"
   ],
-  "Textures": [
-    "..\\Textures\\Blank.tga",
-    "..\\Textures\\StoneBlue.tga",
-    "..\\Textures\\TilesColor.tga"
-  ],
   "WorldObjects": [
     {
       "Id": 1,
-      "Mesh": "..\\Meshes\\Cube.obj",
-      "Texture": "..\\Textures\\Blank.tga",
+      "ModelPath": "..\\Meshes\\Cube.obj",
       "Scale": {
         "X": 64,
         "Y": 8,
@@ -36,8 +30,7 @@
     },
     {
       "Id": 2,
-      "Mesh": "..\\Meshes\\Crate.obj",
-      "Texture": "..\\Textures\\TilesColor.tga",
+      "ModelPath": "..\\Meshes\\Crate.obj",
       "Scale": {
         "X": 1,
         "Y": 1,
@@ -59,8 +52,7 @@
     },
     {
       "Id": 3,
-      "Mesh": "..\\Meshes\\Crate.obj",
-      "Texture": "..\\Textures\\StoneBlue.tga",
+      "ModelPath": "..\\Meshes\\Crate.obj",
       "Scale": {
         "X": 1,
         "Y": 1,
@@ -83,8 +75,7 @@
     },
     {
       "Id": 4,
-      "Mesh": "..\\Meshes\\Crate.obj",
-      "Texture": "..\\Textures\\StoneBlue.tga",
+      "ModelPath": "..\\Meshes\\Crate.obj",
       "Scale": {
         "X": 1,
         "Y": 1,
@@ -104,8 +95,7 @@
     },
     {
       "Id": 5,
-      "Mesh": "..\\Meshes\\Sphere.obj",
-      "Texture": "..\\Textures\\StoneBlue.tga",
+      "ModelPath": "..\\Meshes\\Sphere.obj",
       "Scale": {
         "X": 1,
         "Y": 1,
@@ -125,8 +115,7 @@
     },
     {
       "Id": 6,
-      "Mesh": "..\\Meshes\\Cube.obj",
-      "Texture": "..\\Textures\\Blank.tga",
+      "ModelPath": "..\\Meshes\\Cube.obj",
       "Scale": {
         "X": 16,
         "Y": 4,
