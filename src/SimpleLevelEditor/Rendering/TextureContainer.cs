@@ -1,7 +1,7 @@
 using Detach.Parsers.Texture;
 using Detach.Parsers.Texture.TgaFormat;
-using Silk.NET.OpenGL;
 using SimpleLevelEditor.State;
+using SimpleLevelEditor.Utils;
 
 namespace SimpleLevelEditor.Rendering;
 
@@ -34,7 +34,7 @@ public static class TextureContainer
 		_entityConfigTextures.Clear();
 
 		// TODO: Why is this necessary?
-		uint defaultTextureId = CreateFromTexture(1, 1, [0xFF, 0xFF, 0xFF, 0xFF]);
+		uint defaultTextureId = GlObjectUtils.CreateTexture(1, 1, [0xFF, 0xFF, 0xFF, 0xFF]);
 		_levelTextures.Add(string.Empty, defaultTextureId);
 
 		string? levelDirectory = Path.GetDirectoryName(levelFilePath);
@@ -64,28 +64,9 @@ public static class TextureContainer
 					continue;
 
 				TextureData textureData = TgaParser.Parse(File.ReadAllBytes(absolutePath));
-				uint textureId = CreateFromTexture(textureData.Width, textureData.Height, textureData.ColorData);
+				uint textureId = GlObjectUtils.CreateTexture(textureData.Width, textureData.Height, textureData.ColorData);
 				textureDictionary.Add(texturePath, textureId);
 			}
 		}
-	}
-
-	private static unsafe uint CreateFromTexture(uint width, uint height, byte[] pixels)
-	{
-		uint textureId = Graphics.Gl.GenTexture();
-
-		Graphics.Gl.BindTexture(TextureTarget.Texture2D, textureId);
-
-		Graphics.Gl.TexParameterI(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)GLEnum.Repeat);
-		Graphics.Gl.TexParameterI(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)GLEnum.Repeat);
-		Graphics.Gl.TexParameterI(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)GLEnum.Nearest);
-		Graphics.Gl.TexParameterI(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)GLEnum.Nearest);
-
-		fixed (byte* b = pixels)
-			Graphics.Gl.TexImage2D(TextureTarget.Texture2D, 0, InternalFormat.Rgba, width, height, 0, GLEnum.Rgba, PixelType.UnsignedByte, b);
-
-		Graphics.Gl.GenerateMipmap(TextureTarget.Texture2D);
-
-		return textureId;
 	}
 }

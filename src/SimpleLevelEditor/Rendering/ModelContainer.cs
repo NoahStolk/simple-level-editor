@@ -1,7 +1,6 @@
 using Detach.Parsers.Model;
 using Detach.Parsers.Model.MtlFormat;
 using Detach.Parsers.Model.ObjFormat;
-using Silk.NET.OpenGL;
 using SimpleLevelEditor.State;
 using SimpleLevelEditor.Utils;
 
@@ -125,7 +124,7 @@ public static class ModelContainer
 		foreach (MeshData meshData in modelData.Meshes)
 		{
 			Mesh mesh = GetMeshData(modelData, meshData);
-			uint vao = CreateFromMesh(mesh);
+			uint vao = GlObjectUtils.CreateMesh(mesh);
 
 			Vector3 boundingMin = new(float.MaxValue);
 			Vector3 boundingMax = new(float.MinValue);
@@ -213,33 +212,6 @@ public static class ModelContainer
 		}
 
 		return new Mesh(outVertices, outFaces);
-	}
-
-	private static unsafe uint CreateFromMesh(Mesh mesh)
-	{
-		uint vao = Graphics.Gl.GenVertexArray();
-		uint vbo = Graphics.Gl.GenBuffer();
-
-		Graphics.Gl.BindVertexArray(vao);
-
-		Graphics.Gl.BindBuffer(BufferTargetARB.ArrayBuffer, vbo);
-		fixed (Vertex* v = &mesh.Vertices[0])
-			Graphics.Gl.BufferData(BufferTargetARB.ArrayBuffer, (uint)(mesh.Vertices.Length * sizeof(Vertex)), v, BufferUsageARB.StaticDraw);
-
-		Graphics.Gl.EnableVertexAttribArray(0);
-		Graphics.Gl.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, (uint)sizeof(Vertex), (void*)0);
-
-		Graphics.Gl.EnableVertexAttribArray(1);
-		Graphics.Gl.VertexAttribPointer(1, 2, VertexAttribPointerType.Float, false, (uint)sizeof(Vertex), (void*)(3 * sizeof(float)));
-
-		Graphics.Gl.EnableVertexAttribArray(2);
-		Graphics.Gl.VertexAttribPointer(2, 3, VertexAttribPointerType.Float, false, (uint)sizeof(Vertex), (void*)(5 * sizeof(float)));
-
-		Graphics.Gl.BindVertexArray(0);
-		Graphics.Gl.BindBuffer(BufferTargetARB.ArrayBuffer, 0);
-		Graphics.Gl.DeleteBuffer(vbo);
-
-		return vao;
 	}
 
 	private sealed record Edge(uint A, uint B)
