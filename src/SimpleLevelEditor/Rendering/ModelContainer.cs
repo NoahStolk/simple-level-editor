@@ -1,4 +1,5 @@
 using Detach.Parsers.Model;
+using Detach.Parsers.Model.MtlFormat;
 using Detach.Parsers.Model.ObjFormat;
 using Silk.NET.OpenGL;
 using SimpleLevelEditor.State;
@@ -6,10 +7,13 @@ using SimpleLevelEditor.Utils;
 
 namespace SimpleLevelEditor.Rendering;
 
+// TODO: Turn into instance class and have an instance for level data and entity config data.
 public static class ModelContainer
 {
 	private static readonly Dictionary<string, ModelEntry> _levelModels = new();
 	private static readonly Dictionary<string, ModelEntry> _entityConfigModels = new();
+
+	private static readonly Dictionary<string, MaterialsData> _materials = new();
 
 	private static readonly Dictionary<string, MeshPreviewFramebuffer> _meshPreviewFramebuffers = new();
 
@@ -102,6 +106,21 @@ public static class ModelContainer
 		if (modelData.Meshes.Count == 0)
 			return null;
 
+		string? directoryName = Path.GetDirectoryName(absolutePath);
+
+		foreach (string materialLibrary in modelData.MaterialLibraries)
+		{
+			string absolutePathToMtlFile = directoryName == null ? materialLibrary : Path.Combine(directoryName, materialLibrary);
+			if (!File.Exists(absolutePathToMtlFile))
+				continue;
+
+			if (_materials.ContainsKey(materialLibrary))
+				continue;
+
+			MaterialsData materialsData = MtlParser.Parse(File.ReadAllBytes(absolutePathToMtlFile));
+			_materials.Add(materialLibrary, materialsData);
+		}
+
 		List<MeshEntry> meshes = [];
 		foreach (MeshData meshData in modelData.Meshes)
 		{
@@ -148,9 +167,18 @@ public static class ModelContainer
 				lineIndices.Add(edge.Key.B);
 			}
 
-			// TODO: Add a material parser to Detach.
+			MaterialData? material = null;
+			foreach (MaterialsData materials in _materials.Values)
+			{
+				material = materials.Materials.Find(m => m.Name == meshData.MaterialName);
+				if (material != null)
+					break;
+			}
 
-			meshes.Add(new MeshEntry(mesh, vao, lineIndices.ToArray(), VaoUtils.CreateLineVao(modelData.Positions.ToArray()), boundingMin, boundingMax));
+			if (material == null)
+				material = new MaterialData("Default", Vector3.One, Vector3.One, Vector3.One, Vector3.One, 1, 1, 1, string.Empty);
+
+			meshes.Add(new MeshEntry(mesh, new Material(material.DiffuseMap), vao, lineIndices.ToArray(), VaoUtils.CreateLineVao(modelData.Positions.ToArray()), boundingMin, boundingMax));
 		}
 
 		return new ModelEntry(meshes);
