@@ -17,12 +17,26 @@ public static class SimpleLevelEditorJsonSerializer
 
 	public static EntityConfigData? DeserializeEntityConfig(string json)
 	{
-		return JsonSerializer.Deserialize<EntityConfigData>(json, _defaultSerializerOptions);
+		try
+		{
+			return JsonSerializer.Deserialize<EntityConfigData>(json, _defaultSerializerOptions);
+		}
+		catch (JsonException)
+		{
+			return null;
+		}
 	}
 
 	public static EntityConfigData? DeserializeEntityConfig(Stream stream)
 	{
-		return JsonSerializer.Deserialize<EntityConfigData>(stream, _defaultSerializerOptions);
+		try
+		{
+			return JsonSerializer.Deserialize<EntityConfigData>(stream, _defaultSerializerOptions);
+		}
+		catch (JsonException)
+		{
+			return null;
+		}
 	}
 
 	public static string SerializeEntityConfig(EntityConfigData entityConfig)
@@ -37,12 +51,26 @@ public static class SimpleLevelEditorJsonSerializer
 
 	public static Level3dData? DeserializeLevel(string json)
 	{
-		return JsonSerializer.Deserialize<Level3dData>(json, _defaultSerializerOptions);
+		try
+		{
+			return JsonSerializer.Deserialize<Level3dData>(json, _defaultSerializerOptions);
+		}
+		catch (JsonException)
+		{
+			return null;
+		}
 	}
 
 	public static Level3dData? DeserializeLevel(Stream stream)
 	{
-		return JsonSerializer.Deserialize<Level3dData>(stream, _defaultSerializerOptions);
+		try
+		{
+			return JsonSerializer.Deserialize<Level3dData>(stream, _defaultSerializerOptions);
+		}
+		catch (JsonException)
+		{
+			return null;
+		}
 	}
 
 	public static string SerializeLevel(Level3dData level)
