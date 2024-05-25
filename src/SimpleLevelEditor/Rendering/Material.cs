@@ -1,3 +1,3 @@
 namespace SimpleLevelEditor.Rendering;
 
-public record Material(string DiffuseTexturePath);
+public record Material(string Name, Map DiffuseMap);

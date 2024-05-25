@@ -89,12 +89,12 @@ public sealed class MeshRenderer
 		{
 			Mesh mesh = model.Meshes[i];
 
-			// TODO: Add these textures to the container.
-			uint? textureId = TextureContainer.GetTexture(mesh.Material.DiffuseTexturePath);
-			if (textureId == null)
+			Material? materialData = model.GetMaterial(mesh.MaterialName);
+			if (materialData == null)
 				continue;
 
-			Gl.BindTexture(TextureTarget.Texture2D, textureId.Value);
+			uint textureId = TextureContainer.GetTexture(materialData.DiffuseMap.TextureData);
+			Gl.BindTexture(TextureTarget.Texture2D, textureId);
 
 			Gl.BindVertexArray(mesh.MeshVao);
 			fixed (uint* index = &mesh.Geometry.Indices[0])

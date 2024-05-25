@@ -1,6 +1,8 @@
 using Detach.Parsers.Model;
 using Detach.Parsers.Model.MtlFormat;
 using Detach.Parsers.Model.ObjFormat;
+using Detach.Parsers.Texture;
+using Detach.Parsers.Texture.TgaFormat;
 using SimpleLevelEditor.State;
 using SimpleLevelEditor.Utils;
 
@@ -77,15 +79,15 @@ public sealed class ModelContainer
 		}
 	}
 
-	private static Model? ReadModel(string absolutePath)
+	private static Model? ReadModel(string absolutePathToObjFile)
 	{
-		ModelData modelData = ObjParser.Parse(File.ReadAllBytes(absolutePath));
+		ModelData modelData = ObjParser.Parse(File.ReadAllBytes(absolutePathToObjFile));
 		if (modelData.Meshes.Count == 0)
 			return null;
 
-		string? directoryName = Path.GetDirectoryName(absolutePath);
+		string? directoryName = Path.GetDirectoryName(absolutePathToObjFile);
 
-		Dictionary<string, MaterialsData> allMaterials = [];
+		Dictionary<string, MaterialLibrary> allMaterials = [];
 		foreach (string materialLibrary in modelData.MaterialLibraries)
 		{
 			string absolutePathToMtlFile = directoryName == null ? materialLibrary : Path.Combine(directoryName, materialLibrary);
@@ -96,7 +98,13 @@ public sealed class ModelContainer
 				continue;
 
 			MaterialsData materialsData = MtlParser.Parse(File.ReadAllBytes(absolutePathToMtlFile));
-			allMaterials.Add(materialLibrary, materialsData);
+			allMaterials.Add(materialLibrary, new MaterialLibrary(absolutePathToMtlFile, materialsData.Materials.ConvertAll(m =>
+			{
+				string mtlDirectory = Path.GetDirectoryName(absolutePathToMtlFile) ?? throw new InvalidOperationException("MTL file is not in a directory.");
+				string absolutePathToDiffuseMap = Path.Combine(mtlDirectory, m.DiffuseMap);
+				TextureData textureData = TgaParser.Parse(File.ReadAllBytes(absolutePathToDiffuseMap));
+				return new Material(m.Name, new Map(absolutePathToDiffuseMap, textureData));
+			})));
 		}
 
 		List<Mesh> meshes = [];
@@ -145,21 +153,10 @@ public sealed class ModelContainer
 				lineIndices.Add(edge.Key.B);
 			}
 
-			MaterialData? material = null;
-			foreach (MaterialsData materials in allMaterials.Values)
-			{
-				material = materials.Materials.Find(m => m.Name == meshData.MaterialName);
-				if (material != null)
-					break;
-			}
-
-			if (material == null)
-				material = new MaterialData("Default", Vector3.One, Vector3.One, Vector3.One, Vector3.One, 1, 1, 1, string.Empty);
-
-			meshes.Add(new Mesh(geometry, new Material(material.DiffuseMap), vao, lineIndices.ToArray(), VaoUtils.CreateLineVao(modelData.Positions.ToArray()), boundingMin, boundingMax));
+			meshes.Add(new Mesh(geometry, meshData.MaterialName, vao, lineIndices.ToArray(), VaoUtils.CreateLineVao(modelData.Positions.ToArray()), boundingMin, boundingMax));
 		}
 
-		return new Model(allMaterials, meshes);
+		return new Model(absolutePathToObjFile, allMaterials, meshes);
 	}
 
 	private static void AddEdge(IDictionary<Edge, List<Vector3>> edges, Edge edge, Vector3 normal)
