@@ -84,7 +84,7 @@ public class MeshPreviewFramebuffer
 
 		Gl.BindFramebuffer(FramebufferTarget.Framebuffer, _framebufferId);
 
-		// Keep track of the original viewport so we can restore it later.
+		// Keep track of the original viewport, so we can restore it later.
 		Span<int> originalViewport = stackalloc int[4];
 		Gl.GetInteger(GLEnum.Viewport, originalViewport);
 		Gl.Viewport(0, 0, (uint)size.X, (uint)size.Y);

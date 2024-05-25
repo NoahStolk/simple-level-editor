@@ -1,13 +1,12 @@
 {
   "Models": [
-    "mesh\\DebugArrow.obj",
-    "mesh\\Sphere.obj"
+    "..\\Models\\Altar.obj",
+    "..\\Models\\Ammonite.obj"
   ],
   "Textures": [
-    "tex\\Blue.tga",
-    "tex\\Bricks.tga",
-    "tex\\LightIcon.tga",
-    "tex\\AudioSourceIcon.tga"
+    "Sprites\\AudioSourceIcon.tga",
+    "Sprites\\Blue.tga",
+    "Sprites\\LightIcon.tga"
   ],
   "Entities": [
     {
@@ -38,7 +37,7 @@
           {
             "Case": "BillboardSprite",
             "Fields": [
-              "tex\\Blue.tga",
+              "Sprites\\Blue.tga",
               0.5
             ]
           }
@@ -54,7 +53,7 @@
           {
             "Case": "Model",
             "Fields": [
-              "mesh\\DebugArrow.obj",
+              "..\\Models\\Altar.obj",
               0.5
             ]
           }
@@ -98,7 +97,7 @@
           {
             "Case": "BillboardSprite",
             "Fields": [
-              "tex\\LightIcon.tga",
+              "Sprites\\LightIcon.tga",
               0.5
             ]
           }
@@ -152,7 +151,7 @@
           {
             "Case": "Model",
             "Fields": [
-              "mesh\\Sphere.obj",
+              "..\\Models\\Ammonite.obj",
               0.5
             ]
           }
@@ -219,7 +218,7 @@
           {
             "Case": "BillboardSprite",
             "Fields": [
-              "tex\\AudioSourceIcon.tga",
+              "Sprites\\AudioSourceIcon.tga",
               0.5
             ]
           }
