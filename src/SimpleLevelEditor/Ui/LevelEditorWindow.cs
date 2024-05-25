@@ -38,7 +38,7 @@ public static class LevelEditorWindow
 
 			Vector2 cursorPosition = ImGui.GetCursorPos();
 
-			RenderLevelEditorMenus();
+			RenderLevelEditorMenus(ImGui.GetCursorScreenPos());
 
 			Matrix4x4 viewProjection = Camera3d.ViewMatrix * Camera3d.Projection;
 			Plane nearPlane = new(-viewProjection.M13, -viewProjection.M23, -viewProjection.M33, -viewProjection.M43);
@@ -98,10 +98,12 @@ public static class LevelEditorWindow
 		}
 	}
 
-	private static void RenderLevelEditorMenus()
+	private static void RenderLevelEditorMenus(Vector2 windowPosition)
 	{
-		ImGui.PushStyleColor(ImGuiCol.ChildBg, new Vector4(0, 0, 0, 0.4f));
-		if (ImGui.BeginChild("Level Editor Menu", new Vector2(280, 192), ImGuiChildFlags.Border))
+		ImGui.PushStyleColor(ImGuiCol.WindowBg, new Vector4(0, 0, 0, 0.4f));
+		ImGui.SetNextWindowPos(windowPosition, ImGuiCond.Always);
+		ImGui.SetNextWindowSizeConstraints(new Vector2(280, 160), new Vector2(360, 1024));
+		if (ImGui.Begin("Level Editor Menu", ImGuiWindowFlags.NoMove))
 		{
 			const int itemWidth = 160;
 			if (ImGui.BeginTabBar("LevelEditorMenus"))
@@ -145,7 +147,7 @@ public static class LevelEditorWindow
 			}
 		}
 
-		ImGui.EndChild(); // End Level Editor Menu
+		ImGui.End(); // End Level Editor Menu
 
 		ImGui.PopStyleColor();
 	}
