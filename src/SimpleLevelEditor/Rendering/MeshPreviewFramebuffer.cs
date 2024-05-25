@@ -78,7 +78,7 @@ public class MeshPreviewFramebuffer
 		Gl.DeleteTexture(FramebufferTextureId);
 	}
 
-	public unsafe void Render(Vector2 size)
+	public unsafe void Render(Vector4 backgroundColor, Vector2 size)
 	{
 		Rebuild(size);
 
@@ -89,6 +89,7 @@ public class MeshPreviewFramebuffer
 		Gl.GetInteger(GLEnum.Viewport, originalViewport);
 		Gl.Viewport(0, 0, (uint)size.X, (uint)size.Y);
 
+		Gl.ClearColor(backgroundColor.X, backgroundColor.Y, backgroundColor.Z, backgroundColor.W);
 		Gl.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
 		Gl.Enable(EnableCap.DepthTest);

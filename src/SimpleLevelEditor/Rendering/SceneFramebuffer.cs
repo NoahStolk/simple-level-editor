@@ -52,11 +52,12 @@ public static class SceneFramebuffer
 	{
 		Gl.BindFramebuffer(FramebufferTarget.Framebuffer, _framebufferId);
 
-		// Keep track of the original viewport so we can restore it later.
+		// Keep track of the original viewport, so we can restore it later.
 		Span<int> originalViewport = stackalloc int[4];
 		Gl.GetInteger(GLEnum.Viewport, originalViewport);
 		Gl.Viewport(0, 0, (uint)size.X, (uint)size.Y);
 
+		Gl.ClearColor(0.3f, 0.3f, 0.3f, 0);
 		Gl.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
 		Gl.Enable(EnableCap.DepthTest);
