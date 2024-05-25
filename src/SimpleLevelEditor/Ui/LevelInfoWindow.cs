@@ -44,7 +44,7 @@ public static class LevelInfoWindow
 
 	private static void RenderEntityConfig(EntityConfigData entityConfig)
 	{
-		if (ImGui.TreeNode("Meshes"))
+		if (ImGui.TreeNode("Models"))
 		{
 			for (int i = 0; i < entityConfig.Models.Length; i++)
 				ImGui.Text(entityConfig.Models[i]);

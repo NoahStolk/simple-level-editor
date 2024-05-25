@@ -225,7 +225,17 @@ public static class LevelState
 		try
 		{
 			ModelContainer.LevelContainer.Rebuild(levelFilePath, Level.Models.ToList());
-			ModelContainer.EntityConfigContainer.Rebuild(Level.EntityConfigPath?.Value, EntityConfigState.EntityConfig.Models.ToList());
+
+			if (Level.EntityConfigPath != null)
+			{
+				string? levelDirectory = Path.GetDirectoryName(levelFilePath);
+				if (levelDirectory != null)
+				{
+					string absolutePathToEntityConfig = Path.Combine(levelDirectory, Level.EntityConfigPath.Value);
+					ModelContainer.EntityConfigContainer.Rebuild(absolutePathToEntityConfig, EntityConfigState.EntityConfig.Models.ToList());
+				}
+			}
+
 			return true;
 		}
 		catch (Exception ex)
