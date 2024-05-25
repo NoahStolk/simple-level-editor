@@ -1,0 +1,29 @@
+{
+  "EntityConfigPath": null,
+  "Models": [
+    "mesh\\meshtest.obj"
+  ],
+  "WorldObjects": [
+    {
+      "Id": 0,
+      "ModelPath": "mesh\\meshtest.obj",
+      "Scale": {
+        "X": 1,
+        "Y": 1,
+        "Z": 1
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "Position": {
+        "X": 4,
+        "Y": 0,
+        "Z": -3
+      },
+      "Flags": []
+    }
+  ],
+  "Entities": []
+}
