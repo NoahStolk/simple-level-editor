@@ -196,7 +196,7 @@ public static class EntityEditorWindow
 		ImGui.Text("Box Size");
 
 		Vector3 size = aabb.Size;
-		if (ImGui.DragFloat3(Inline.Span($"##box_size{entityId}"), ref size, 0.1f, float.MinValue, -0.1f, "%.1f"))
+		if (ImGui.DragFloat3(Inline.Span($"##box_size{entityId}"), ref size, 0.1f, 0.1f, float.MaxValue, "%.1f"))
 			aabb = (EntityShape.Aabb)EntityShape.NewAabb(size);
 		if (ImGui.IsItemDeactivatedAfterEdit())
 			LevelState.Track("Changed entity box size");
