@@ -17,7 +17,7 @@ model
 public sealed class ModelContainer
 {
 	private readonly Dictionary<string, Model> _models = new();
-	private readonly Dictionary<string, MeshPreviewFramebuffer> _meshPreviewFramebuffers = new();
+	private readonly Dictionary<string, ModelPreviewFramebuffer> _modelPreviewFramebuffers = new();
 	private readonly string _containerName;
 
 	private ModelContainer(string containerName)
@@ -37,9 +37,9 @@ public sealed class ModelContainer
 		return null;
 	}
 
-	public MeshPreviewFramebuffer? GetMeshPreviewFramebuffer(string path)
+	public ModelPreviewFramebuffer? GetModelPreviewFramebuffer(string path)
 	{
-		if (_meshPreviewFramebuffers.TryGetValue(path, out MeshPreviewFramebuffer? data))
+		if (_modelPreviewFramebuffers.TryGetValue(path, out ModelPreviewFramebuffer? data))
 			return data;
 
 		DebugState.AddWarning($"Cannot find mesh preview framebuffer '{path}' in container '{_containerName}'.");
@@ -48,11 +48,11 @@ public sealed class ModelContainer
 
 	public void Rebuild(string? sourceFilePath, List<string> modelPaths)
 	{
-		foreach (KeyValuePair<string, MeshPreviewFramebuffer> kvp in _meshPreviewFramebuffers)
+		foreach (KeyValuePair<string, ModelPreviewFramebuffer> kvp in _modelPreviewFramebuffers)
 			kvp.Value.Destroy();
 
 		_models.Clear();
-		_meshPreviewFramebuffers.Clear();
+		_modelPreviewFramebuffers.Clear();
 
 		string? levelDirectory = Path.GetDirectoryName(sourceFilePath);
 		if (levelDirectory == null)
@@ -70,11 +70,7 @@ public sealed class ModelContainer
 			if (model != null)
 			{
 				_models.Add(modelPath, model);
-
-				// TODO: Rewrite MeshPreviewFramebuffer to support multiple meshes as well.
-				if (model.Meshes.Count == 0)
-					throw new InvalidOperationException("ReadModel should not return models with no meshes.");
-				_meshPreviewFramebuffers.Add(modelPath, new MeshPreviewFramebuffer(model.Meshes[0]));
+				_modelPreviewFramebuffers.Add(modelPath, new ModelPreviewFramebuffer(model));
 			}
 		}
 	}

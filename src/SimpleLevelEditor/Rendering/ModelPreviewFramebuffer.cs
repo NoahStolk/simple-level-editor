@@ -7,9 +7,9 @@ using static SimpleLevelEditor.Graphics;
 
 namespace SimpleLevelEditor.Rendering;
 
-public class MeshPreviewFramebuffer
+public class ModelPreviewFramebuffer
 {
-	private readonly Mesh _mesh;
+	private readonly Model _model;
 	private readonly float _zoom;
 	private readonly Vector3 _origin;
 	private Vector2 _cachedFramebufferSize;
@@ -18,14 +18,13 @@ public class MeshPreviewFramebuffer
 
 	private uint _framebufferId;
 
-	public MeshPreviewFramebuffer(Mesh mesh)
+	public ModelPreviewFramebuffer(Model model)
 	{
-		_mesh = mesh;
+		_model = model;
 
-		Vector3 distance = mesh.BoundingMax - mesh.BoundingMin;
-		_zoom = distance.Length();
-
-		_origin = (mesh.BoundingMin + mesh.BoundingMax) / 2;
+		// TODO: Fix this.
+		_zoom = 10;
+		_origin = Vector3.Zero;
 	}
 
 	public uint FramebufferTextureId { get; private set; }
@@ -107,8 +106,8 @@ public class MeshPreviewFramebuffer
 	{
 		_timer += ImGui.GetIO().DeltaTime;
 
-		ShaderCacheEntry lineShader = InternalContent.Shaders["Line"];
-		Gl.UseProgram(lineShader.Id);
+		ShaderCacheEntry meshShader = InternalContent.Shaders["Mesh"];
+		Gl.UseProgram(meshShader.Id);
 
 		Quaternion cameraRotation = Quaternion.CreateFromYawPitchRoll(_timer, 0.5f, 0);
 		Vector3 cameraPosition = _origin + Vector3.Transform(new Vector3(0, 0, -_zoom), cameraRotation);
@@ -116,14 +115,24 @@ public class MeshPreviewFramebuffer
 		Vector3 lookDirection = Vector3.Transform(Vector3.UnitZ, cameraRotation);
 		Matrix4x4 viewMatrix = Matrix4x4.CreateLookAt(cameraPosition, cameraPosition + lookDirection, upDirection);
 
-		Gl.UniformMatrix4x4(lineShader.GetUniformLocation("view"), viewMatrix);
-		Gl.UniformMatrix4x4(lineShader.GetUniformLocation("projection"), _projection);
+		Gl.UniformMatrix4x4(meshShader.GetUniformLocation("view"), viewMatrix);
+		Gl.UniformMatrix4x4(meshShader.GetUniformLocation("projection"), _projection);
+		Gl.UniformMatrix4x4(meshShader.GetUniformLocation("model"), Matrix4x4.Identity);
 
-		Gl.Uniform4(lineShader.GetUniformLocation("color"), new Vector4(1, 0, 0, 1));
-		Gl.UniformMatrix4x4(lineShader.GetUniformLocation("model"), Matrix4x4.Identity);
+		for (int i = 0; i < _model.Meshes.Count; i++)
+		{
+			Mesh mesh = _model.Meshes[i];
 
-		Gl.BindVertexArray(_mesh.LineVao);
-		fixed (uint* index = &_mesh.LineIndices[0])
-			Gl.DrawElements(PrimitiveType.Lines, (uint)_mesh.LineIndices.Length, DrawElementsType.UnsignedInt, index);
+			Material? materialData = _model.GetMaterial(mesh.MaterialName);
+			if (materialData == null)
+				continue;
+
+			uint textureId = TextureContainer.GetTexture(materialData.DiffuseMap.TextureData);
+			Gl.BindTexture(TextureTarget.Texture2D, textureId);
+
+			Gl.BindVertexArray(mesh.MeshVao);
+			fixed (uint* index = &mesh.Geometry.Indices[0])
+				Gl.DrawElements(PrimitiveType.Triangles, (uint)mesh.Geometry.Indices.Length, DrawElementsType.UnsignedInt, index);
+		}
 	}
 }

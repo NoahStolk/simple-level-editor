@@ -131,7 +131,7 @@ public static class WorldObjectEditorWindow
 			{
 				string meshName = LevelState.Level.Models[i];
 
-				MeshPreviewFramebuffer? framebuffer = ModelContainer.LevelContainer.GetMeshPreviewFramebuffer(meshName);
+				ModelPreviewFramebuffer? framebuffer = ModelContainer.LevelContainer.GetModelPreviewFramebuffer(meshName);
 				if (framebuffer != null)
 				{
 					framebuffer.Render(GetBorderColor(worldObject.ModelPath == meshName), new Vector2(tileSize));
