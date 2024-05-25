@@ -56,23 +56,23 @@ public sealed class ModelContainer
 		if (levelDirectory == null)
 			return;
 
-		// Load level meshes.
-		foreach (string meshPath in modelPaths)
+		// Load level models.
+		foreach (string modelPath in modelPaths)
 		{
-			string absolutePath = Path.Combine(levelDirectory, meshPath);
+			string absolutePath = Path.Combine(levelDirectory, modelPath);
 
 			if (!File.Exists(absolutePath))
 				continue;
 
-			Model? entry = ReadModel(absolutePath);
-			if (entry != null)
+			Model? model = ReadModel(absolutePath);
+			if (model != null)
 			{
-				_models.Add(meshPath, entry);
+				_models.Add(modelPath, model);
 
 				// TODO: Rewrite MeshPreviewFramebuffer to support multiple meshes as well.
-				if (entry.Meshes.Count == 0)
+				if (model.Meshes.Count == 0)
 					throw new InvalidOperationException("ReadModel should not return models with no meshes.");
-				_meshPreviewFramebuffers.Add(meshPath, new MeshPreviewFramebuffer(entry.Meshes[0]));
+				_meshPreviewFramebuffers.Add(modelPath, new MeshPreviewFramebuffer(model.Meshes[0]));
 			}
 		}
 	}
@@ -115,11 +115,11 @@ public sealed class ModelContainer
 
 			// Find mesh edges.
 			Dictionary<Edge, List<Vector3>> edges = new();
-			for (int i = 0; i < modelData.Meshes[0].Faces.Count; i += 3)
+			for (int i = 0; i < meshData.Faces.Count; i += 3)
 			{
-				uint a = (ushort)(modelData.Meshes[0].Faces[i + 0].Position - 1);
-				uint b = (ushort)(modelData.Meshes[0].Faces[i + 1].Position - 1);
-				uint c = (ushort)(modelData.Meshes[0].Faces[i + 2].Position - 1);
+				uint a = (ushort)(meshData.Faces[i + 0].Position - 1);
+				uint b = (ushort)(meshData.Faces[i + 1].Position - 1);
+				uint c = (ushort)(meshData.Faces[i + 2].Position - 1);
 
 				Vector3 positionA = modelData.Positions[(int)a];
 				Vector3 positionB = modelData.Positions[(int)b];
