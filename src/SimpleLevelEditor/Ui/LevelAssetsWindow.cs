@@ -1,6 +1,5 @@
 using Detach;
 using ImGuiNET;
-using Microsoft.FSharp.Collections;
 using SimpleLevelEditor.State;
 using System.Diagnostics;
 
@@ -46,22 +45,22 @@ public static class LevelAssetsWindow
 
 			ImGui.EndDisabled();
 
-			RenderAssetPaths("Models", "obj", LevelState.Level.ModelPaths, l => LevelState.Level.ModelPaths = l);
+			RenderModelPaths();
 		}
 
 		ImGui.End();
 	}
 
-	private static void RenderAssetPaths(ReadOnlySpan<char> name, string dialogFilterList, FSharpList<string> list, Action<FSharpList<string>> setList)
+	private static void RenderModelPaths()
 	{
-		ImGui.SeparatorText(name);
+		ImGui.SeparatorText("Models");
 
 		ImGui.BeginDisabled(LevelState.LevelFilePath == null);
-		if (ImGui.Button(Inline.Span($"Add {name}")))
+		if (ImGui.Button("Add models"))
 		{
 			Debug.Assert(LevelState.LevelFilePath != null, "Cannot click this button because it should be disabled.");
 
-			DialogWrapper.FileOpenMultiple(p => AddAssetsCallback(list, setList, p), dialogFilterList);
+			DialogWrapper.FileOpenMultiple(AddAssetsCallback, "obj");
 		}
 
 		ImGui.EndDisabled();
@@ -75,30 +74,26 @@ public static class LevelAssetsWindow
 		}
 
 		ImGui.BeginDisabled(LevelState.LevelFilePath == null);
-		if (ImGui.BeginChild(Inline.Span($"{name}List"), Vector2.Zero, ImGuiChildFlags.Border))
+		if (ImGui.BeginChild("ModelsList", Vector2.Zero, ImGuiChildFlags.Border))
 		{
 			string? toRemove = null;
-			foreach (string item in list)
+			foreach (string modelPath in LevelState.Level.ModelPaths)
 			{
-				ImGui.PushID(Inline.Span($"button_delete_{name}_{item}"));
+				ImGui.PushID(Inline.Span($"button_delete_{modelPath}"));
 				if (ImGui.Button("X"))
-					toRemove = item;
+					toRemove = modelPath;
 
 				ImGui.PopID();
 
 				ImGui.SameLine();
-				ImGui.Text(item);
+				ImGui.Text(modelPath);
 			}
 
 			if (toRemove != null)
 			{
-				// TODO: Refactor.
-				List<string> mutatedList = list.ToList();
-				mutatedList.Remove(toRemove);
-				setList(ListModule.OfSeq(mutatedList));
-				LevelState.ReloadAssets(LevelState.LevelFilePath);
-
-				LevelState.Track("Removed assets");
+				LevelState.Level.RemoveModel(toRemove);
+				AssetLoadScheduleState.Schedule(LevelState.LevelFilePath);
+				LevelState.Track($"Removed model '{toRemove}'");
 			}
 		}
 
@@ -106,7 +101,7 @@ public static class LevelAssetsWindow
 		ImGui.EndDisabled();
 	}
 
-	private static void AddAssetsCallback(FSharpList<string> list, Action<FSharpList<string>> setList, IReadOnlyList<string>? paths)
+	private static void AddAssetsCallback(IReadOnlyList<string>? paths)
 	{
 		if (paths == null)
 			return;
@@ -116,11 +111,9 @@ public static class LevelAssetsWindow
 
 		string[] relativePaths = paths.Select(path => Path.GetRelativePath(parentDirectory, path)).ToArray();
 
-		// TODO: Refactor.
-		List<string> mutatedList = list.ToList();
-		mutatedList.AddRange(relativePaths);
-		mutatedList = mutatedList.Order().Distinct().ToList();
-		setList(ListModule.OfSeq(mutatedList));
+		foreach (string relativePath in relativePaths)
+			LevelState.Level.AddModel(relativePath);
+
 		AssetLoadScheduleState.Schedule(LevelState.LevelFilePath);
 
 		LevelState.Track("Added assets");

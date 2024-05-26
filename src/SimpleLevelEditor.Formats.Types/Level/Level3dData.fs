@@ -18,8 +18,9 @@ type Level3dData =
             WorldObjects = this.WorldObjects |> List.map (_.DeepCopy())
             Entities = this.Entities |> List.map (_.DeepCopy()) }
 
-    member this.AddMesh(mesh: string) =
-        this.ModelPaths <- this.ModelPaths @ [mesh]
+    member this.AddModel(model: string) =
+        if not (this.ModelPaths |> List.exists (fun v -> v = model)) then
+            this.ModelPaths <- this.ModelPaths @ [model]
 
     member this.AddWorldObject(worldObject: WorldObject) =
         this.WorldObjects <- this.WorldObjects @ [worldObject]
@@ -27,8 +28,8 @@ type Level3dData =
     member this.AddEntity(entity: Entity) =
         this.Entities <- this.Entities @ [entity]
 
-    member this.RemoveMesh(mesh: string) =
-        this.ModelPaths <- this.ModelPaths |> List.filter (fun v -> v <> mesh)
+    member this.RemoveModel(model: string) =
+        this.ModelPaths <- this.ModelPaths |> List.filter (fun v -> v <> model)
 
     member this.RemoveWorldObject(worldObject: WorldObject) =
         this.WorldObjects <- this.WorldObjects |> List.filter (fun v -> v <> worldObject)

@@ -27,7 +27,10 @@ public static class LevelState
 
 	public static int CurrentHistoryIndex { get; private set; }
 	public static string? LevelFilePath { get; private set; }
+
+	// TODO: This appears to be bugged. It should be set to true when the level is modified (test by moving a world object).
 	public static bool IsModified { get; private set; }
+
 	public static Level3dData Level
 	{
 		get => _level;
