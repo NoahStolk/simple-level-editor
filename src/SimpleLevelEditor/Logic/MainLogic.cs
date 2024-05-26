@@ -142,7 +142,7 @@ public static class MainLogic
 
 		Vector3? closestIntersection = null;
 
-		if (LevelEditorState.ShouldRenderWorldObjects())
+		if (LevelEditorState.ShouldRenderWorldObjects)
 			RaycastWorldObjects(rayStartPosition, rayDirection, ref closestIntersection);
 
 		float? closestDistance = closestIntersection.HasValue ? Vector3.Distance(Camera3d.Position, closestIntersection.Value) : null;

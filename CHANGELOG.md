@@ -2,6 +2,10 @@
 
 ## SimpleLevelEditor
 
+### 0.12.3
+
+- Fixed render filter bugs.
+
 ### 0.12.2
 
 - Internal changes only.

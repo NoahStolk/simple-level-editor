@@ -57,6 +57,8 @@ public static class LevelState
 
 	public static void New()
 	{
+		// TODO: Refactor clearing the render filter.
+		LevelEditorState.EntityRenderFilter.Clear();
 		Level3dData level = Level3dData.CreateDefault();
 		SetLevel(null, level);
 		ClearState();
@@ -86,6 +88,8 @@ public static class LevelState
 			SetLevel(path, level.Value);
 		}
 
+		// TODO: Refactor clearing the render filter.
+		LevelEditorState.EntityRenderFilter.Clear();
 		string? levelDirectory = Path.GetDirectoryName(path);
 		if (levelDirectory != null && Level.EntityConfigPath != null)
 		{

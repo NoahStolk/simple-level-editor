@@ -124,16 +124,21 @@ public static class LevelEditorWindow
 					ImGui.SliderInt("Cells per side", ref LevelEditorState.GridCellCount, 1, 64);
 					ImGui.SliderInt("Cell size", ref LevelEditorState.GridCellSize, 1, 4);
 
-					foreach (KeyValuePair<string, bool> filter in LevelEditorState.RenderFilter)
+					bool shouldRenderWorldObjects = LevelEditorState.ShouldRenderWorldObjects;
+					if (ImGui.Checkbox("WorldObjects", ref shouldRenderWorldObjects))
+					{
+						LevelEditorState.ShouldRenderWorldObjects = shouldRenderWorldObjects;
+						LevelEditorState.ClearSelectedWorldObject();
+					}
+
+					foreach (KeyValuePair<string, bool> filter in LevelEditorState.EntityRenderFilter)
 					{
 						bool value = filter.Value;
 						if (ImGui.Checkbox(filter.Key, ref value))
 						{
-							LevelEditorState.RenderFilter[filter.Key] = value;
+							LevelEditorState.EntityRenderFilter[filter.Key] = value;
 
-							if (filter.Key == "WorldObjects")
-								LevelEditorState.ClearSelectedWorldObject();
-							else if (filter.Key == $"Entities:{LevelEditorState.SelectedEntity?.Name}")
+							if (filter.Key == LevelEditorState.SelectedEntity?.Name)
 								LevelEditorState.ClearSelectedEntity();
 						}
 					}

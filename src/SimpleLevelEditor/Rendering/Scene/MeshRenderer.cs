@@ -28,7 +28,7 @@ public sealed class MeshRenderer
 
 		RenderMeshEntities();
 
-		if (LevelEditorState.ShouldRenderWorldObjects())
+		if (LevelEditorState.ShouldRenderWorldObjects)
 			RenderWorldObjects();
 	}
 

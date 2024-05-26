@@ -21,10 +21,9 @@ public static class EntityConfigState
 
 		EntityConfig = entityConfig.Value;
 
-		LevelEditorState.RenderFilter.Clear();
-		LevelEditorState.RenderFilter.Add("WorldObjects", true);
+		LevelEditorState.EntityRenderFilter.Clear();
 		foreach (EntityDescriptor entity in EntityConfig.Entities)
-			LevelEditorState.RenderFilter.Add($"Entities:{entity.Name}", true);
+			LevelEditorState.EntityRenderFilter.Add(entity.Name, true);
 	}
 
 	public static EntityShapeDescriptor? GetEntityShapeDescriptor(Entity entity)

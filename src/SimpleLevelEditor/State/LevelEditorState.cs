@@ -28,16 +28,13 @@ public static class LevelEditorState
 
 	public static Vector3? MoveTargetPosition { get; set; }
 
-	public static Dictionary<string, bool> RenderFilter { get; } = [];
+	public static bool ShouldRenderWorldObjects { get; set; } = true;
 
-	public static bool ShouldRenderWorldObjects()
-	{
-		return RenderFilter.TryGetValue("WorldObjects", out bool value) && value;
-	}
+	public static Dictionary<string, bool> EntityRenderFilter { get; } = [];
 
 	public static bool ShouldRenderEntity(Entity entity)
 	{
-		return !RenderFilter.TryGetValue($"Entities:{entity.Name}", out bool value) || value;
+		return !EntityRenderFilter.TryGetValue(entity.Name, out bool value) || value;
 	}
 
 	public static void ClearHighlight()
