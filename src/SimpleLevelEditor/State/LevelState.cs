@@ -1,3 +1,4 @@
+using Microsoft.FSharp.Core;
 using SimpleLevelEditor.Formats;
 using SimpleLevelEditor.Formats.Types.Level;
 using SimpleLevelEditor.Rendering;
@@ -50,7 +51,7 @@ public static class LevelState
 	private static byte[] GetBytes(Level3dData obj)
 	{
 		using MemoryStream ms = new();
-		SimpleLevelEditorJsonSerializer.SerializeLevel(ms, obj);
+		SimpleLevelEditorJsonSerializer.SerializeLevelToStream(ms, obj);
 		return ms.ToArray();
 	}
 
@@ -75,14 +76,14 @@ public static class LevelState
 
 		using (FileStream fs = new(path, FileMode.Open))
 		{
-			Level3dData? level = SimpleLevelEditorJsonSerializer.DeserializeLevel(fs);
+			FSharpOption<Level3dData>? level = SimpleLevelEditorJsonSerializer.DeserializeLevelFromStream(fs);
 			if (level == null)
 			{
 				DebugState.AddWarning("Failed to load level.");
 				return;
 			}
 
-			SetLevel(path, level);
+			SetLevel(path, level.Value);
 		}
 
 		string? levelDirectory = Path.GetDirectoryName(path);
@@ -182,7 +183,7 @@ public static class LevelState
 	{
 		using MemoryStream ms = new();
 
-		SimpleLevelEditorJsonSerializer.SerializeLevel(ms, Level);
+		SimpleLevelEditorJsonSerializer.SerializeLevelToStream(ms, Level);
 		File.WriteAllBytes(path, ms.ToArray());
 		SetLevel(path, Level);
 	}

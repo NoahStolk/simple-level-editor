@@ -2,6 +2,10 @@
 
 ## SimpleLevelEditor
 
+### 0.12.2
+
+- Internal changes only.
+
 ### 0.12.1
 
 - Fixed JSON serialization not being compatible with optimized release builds due to assembly trimming.
@@ -17,6 +21,12 @@
 ## SimpleLevelEditor.Formats
 
 This library uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+### 0.2.2
+
+#### Fixed
+
+- Fixed not including internal dependency.
 
 ### 0.2.1
 

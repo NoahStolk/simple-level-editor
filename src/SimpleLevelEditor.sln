@@ -2,11 +2,9 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleLevelEditor", "SimpleLevelEditor\SimpleLevelEditor.csproj", "{A18C33F3-C9C0-4900-8CE8-80C15D9D0C2C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleLevelEditor.Formats", "SimpleLevelEditor.Formats\SimpleLevelEditor.Formats.csproj", "{12B447B4-0B01-4D9C-9A65-66FBD61F8AD7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleLevelEditor.Formats", "SimpleLevelEditor.Formats\SimpleLevelEditor.Formats.fsproj", "{12B447B4-0B01-4D9C-9A65-66FBD61F8AD7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleLevelEditor.Formats.Tests", "SimpleLevelEditor.Formats.Tests\SimpleLevelEditor.Formats.Tests.csproj", "{706CA3B9-A327-4D18-B581-414685DB5EF3}"
-EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "SimpleLevelEditor.Formats.Types", "SimpleLevelEditor.Formats.Types\SimpleLevelEditor.Formats.Types.fsproj", "{4A2C880B-AE85-496E-81F0-676D49042F8D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

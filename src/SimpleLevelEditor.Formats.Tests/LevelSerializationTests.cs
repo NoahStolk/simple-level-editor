@@ -1,5 +1,6 @@
 using FluentAssertions;
 using Microsoft.FSharp.Collections;
+using Microsoft.FSharp.Core;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SimpleLevelEditor.Formats.Types;
 using SimpleLevelEditor.Formats.Types.Level;
@@ -74,12 +75,13 @@ public class LevelSerializationTests
 		string levelJson = SanitizeString(File.ReadAllText(levelPath));
 
 		using FileStream fsV2 = File.OpenRead(levelPath);
-		Level3dData? levelV2 = SimpleLevelEditorJsonSerializer.DeserializeLevel(fsV2);
-		Assert.IsNotNull(levelV2);
+		FSharpOption<Level3dData>? result = SimpleLevelEditorJsonSerializer.DeserializeLevelFromStream(fsV2);
+		Assert.IsNotNull(result);
+		Level3dData levelV2 = result.Value;
 		AssertLevelValues(levelV2);
 
 		using MemoryStream msV2 = new();
-		SimpleLevelEditorJsonSerializer.SerializeLevel(msV2, levelV2);
+		SimpleLevelEditorJsonSerializer.SerializeLevelToStream(msV2, levelV2);
 		string serializedLevel = SanitizeString(Encoding.UTF8.GetString(msV2.ToArray()));
 		serializedLevel.Should().BeEquivalentTo(levelJson);
 	}

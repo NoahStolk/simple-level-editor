@@ -1,5 +1,5 @@
 <linker>
 	<assembly fullname="FSharp.Core" preserve="all" />
 	<assembly fullname="FSharp.SystemTextJson" preserve="all" />
-	<assembly fullname="SimpleLevelEditor.Formats.Types" preserve="all" />
+	<assembly fullname="SimpleLevelEditor.Formats" preserve="all" />
 </linker>

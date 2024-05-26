@@ -1,3 +1,4 @@
+using Microsoft.FSharp.Core;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SimpleLevelEditor.Formats.Types;
 using SimpleLevelEditor.Formats.Types.EntityConfig;
@@ -22,8 +23,9 @@ public class EntityConfigDeserializationTests
 	public void DeserializeEntityConfig()
 	{
 		using FileStream fs = File.OpenRead(Path.Combine("Resources", "EntityConfig.json"));
-		EntityConfigData? data = SimpleLevelEditorJsonSerializer.DeserializeEntityConfig(fs);
-		Assert.IsNotNull(data);
+		FSharpOption<EntityConfigData>? result = SimpleLevelEditorJsonSerializer.DeserializeEntityConfigFromStream(fs);
+		Assert.IsNotNull(result);
+		EntityConfigData? data = result.Value;
 
 		Assert.AreEqual(1, data.ModelPaths.Length);
 		Assert.AreEqual(2, data.TexturePaths.Length);

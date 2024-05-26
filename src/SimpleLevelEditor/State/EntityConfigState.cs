@@ -1,3 +1,4 @@
+using Microsoft.FSharp.Core;
 using SimpleLevelEditor.Formats;
 using SimpleLevelEditor.Formats.Types.EntityConfig;
 using SimpleLevelEditor.Formats.Types.Level;
@@ -11,18 +12,18 @@ public static class EntityConfigState
 	public static void LoadEntityConfig(string path)
 	{
 		using FileStream fs = new(path, FileMode.Open);
-		EntityConfigData? entityConfig = SimpleLevelEditorJsonSerializer.DeserializeEntityConfig(fs);
+		FSharpOption<EntityConfigData>? entityConfig = SimpleLevelEditorJsonSerializer.DeserializeEntityConfigFromStream(fs);
 		if (entityConfig == null)
 		{
 			DebugState.AddWarning("Failed to load entity config.");
 			return;
 		}
 
-		EntityConfig = entityConfig;
+		EntityConfig = entityConfig.Value;
 
 		LevelEditorState.RenderFilter.Clear();
 		LevelEditorState.RenderFilter.Add("WorldObjects", true);
-		foreach (EntityDescriptor entity in entityConfig.Entities)
+		foreach (EntityDescriptor entity in EntityConfig.Entities)
 			LevelEditorState.RenderFilter.Add($"Entities:{entity.Name}", true);
 	}
 
