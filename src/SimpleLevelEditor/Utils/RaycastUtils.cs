@@ -23,19 +23,19 @@ public static class RaycastUtils
 		return Math.Min(t1Distance, t2Distance);
 	}
 
-	public static float? RaycastEntityModel(Matrix4x4 modelMatrix, Model? mesh, Vector3 rayStartPosition, Vector3 rayDirection)
+	public static float? RaycastEntityModel(Matrix4x4 modelMatrix, Model? model, Vector3 rayStartPosition, Vector3 rayDirection)
 	{
-		if (mesh == null)
+		if (model == null)
 			return null;
 
 		Vector3? closestIntersection = null;
-		if (!RaycastModel(modelMatrix, mesh, rayStartPosition, rayDirection, ref closestIntersection))
+		if (!RaycastModel(modelMatrix, model, rayStartPosition, rayDirection, ref closestIntersection))
 			return null;
 
 		return Vector3.Distance(rayStartPosition, closestIntersection.Value);
 	}
 
-	public static bool RaycastModel(Matrix4x4 modelMatrix, Model model, Vector3 rayStartPosition, Vector3 rayDirection, [NotNullWhen(true)] ref Vector3? closestIntersection)
+	private static bool RaycastModel(Matrix4x4 modelMatrix, Model model, Vector3 rayStartPosition, Vector3 rayDirection, [NotNullWhen(true)] ref Vector3? closestIntersection)
 	{
 		for (int i = 0; i < model.Meshes.Count; i++)
 		{
