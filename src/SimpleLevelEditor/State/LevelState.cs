@@ -195,7 +195,7 @@ public static class LevelState
 
 		string? baseDirectory = Path.GetDirectoryName(levelFilePath);
 		if (baseDirectory != null)
-			RefreshAssetFileWatcher(baseDirectory, level.Models);
+			RefreshAssetFileWatcher(baseDirectory, level.ModelPaths);
 	}
 
 	private static void RefreshAssetFileWatcher(string baseDirectory, IEnumerable<string> assetPaths)
@@ -224,7 +224,7 @@ public static class LevelState
 	{
 		try
 		{
-			ModelContainer.LevelContainer.Rebuild(levelFilePath, Level.Models.ToList());
+			ModelContainer.LevelContainer.Rebuild(levelFilePath, Level.ModelPaths.ToList());
 
 			if (Level.EntityConfigPath != null)
 			{

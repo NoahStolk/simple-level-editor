@@ -14,7 +14,7 @@ public class LevelModelTests
 	{
 		Level3dData defaultLevel = Level3dData.CreateDefault();
 		Assert.IsNull(defaultLevel.EntityConfigPath);
-		Assert.AreEqual(0, defaultLevel.Models.Length);
+		Assert.AreEqual(0, defaultLevel.ModelPaths.Length);
 		Assert.AreEqual(0, defaultLevel.WorldObjects.Length);
 		Assert.AreEqual(0, defaultLevel.Entities.Length);
 	}
@@ -36,7 +36,7 @@ public class LevelModelTests
 
 		// Test counts.
 		Assert.AreEqual(level.Entities.Length, copy.Entities.Length);
-		Assert.AreEqual(level.Models.Length, copy.Models.Length);
+		Assert.AreEqual(level.ModelPaths.Length, copy.ModelPaths.Length);
 		Assert.AreEqual(level.WorldObjects.Length, copy.WorldObjects.Length);
 		Assert.AreEqual(level.EntityConfigPath, copy.EntityConfigPath);
 

@@ -1,14 +1,14 @@
 {
   "EntityConfigPath": "..\\EntityConfig.json",
-  "Models": [
-    "..\\Meshes\\Crate.obj",
-    "..\\Meshes\\Cube.obj",
-    "..\\Meshes\\Sphere.obj"
+  "ModelPaths": [
+    "..\\Models\\Crate.obj",
+    "..\\Models\\Cube.obj",
+    "..\\Models\\Sphere.obj"
   ],
   "WorldObjects": [
     {
       "Id": 1,
-      "ModelPath": "..\\Meshes\\Cube.obj",
+      "ModelPath": "..\\Models\\Cube.obj",
       "Scale": {
         "X": 64,
         "Y": 8,
@@ -30,7 +30,7 @@
     },
     {
       "Id": 2,
-      "ModelPath": "..\\Meshes\\Crate.obj",
+      "ModelPath": "..\\Models\\Crate.obj",
       "Scale": {
         "X": 1,
         "Y": 1,
@@ -52,7 +52,7 @@
     },
     {
       "Id": 3,
-      "ModelPath": "..\\Meshes\\Crate.obj",
+      "ModelPath": "..\\Models\\Crate.obj",
       "Scale": {
         "X": 1,
         "Y": 1,
@@ -75,7 +75,7 @@
     },
     {
       "Id": 4,
-      "ModelPath": "..\\Meshes\\Crate.obj",
+      "ModelPath": "..\\Models\\Crate.obj",
       "Scale": {
         "X": 1,
         "Y": 1,
@@ -95,7 +95,7 @@
     },
     {
       "Id": 5,
-      "ModelPath": "..\\Meshes\\Sphere.obj",
+      "ModelPath": "..\\Models\\Sphere.obj",
       "Scale": {
         "X": 1,
         "Y": 1,
@@ -115,7 +115,7 @@
     },
     {
       "Id": 6,
-      "ModelPath": "..\\Meshes\\Cube.obj",
+      "ModelPath": "..\\Models\\Cube.obj",
       "Scale": {
         "X": 16,
         "Y": 4,

@@ -1,6 +1,6 @@
 {
   "EntityConfigPath": "EntityConfig\\EntityConfig.json",
-  "Models": [
+  "ModelPaths": [
     "Models\\Altar.obj",
     "Models\\Ammonite.obj",
     "Models\\meshtest.obj",

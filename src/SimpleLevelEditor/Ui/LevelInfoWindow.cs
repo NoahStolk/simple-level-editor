@@ -31,7 +31,7 @@ public static class LevelInfoWindow
 
 	private static void RenderLevel(Level3dData level)
 	{
-		ImGui.Text(Inline.Span($"Models: {level.Models.Length}"));
+		ImGui.Text(Inline.Span($"Models: {level.ModelPaths.Length}"));
 		ImGui.Text(Inline.Span($"WorldObjects: {level.WorldObjects.Length}"));
 		ImGui.Text(Inline.Span($"Entities: {level.Entities.Length}"));
 		ImGui.TextWrapped(Inline.Span($"EntityConfig: {(level.EntityConfigPath == null ? "<No entity config loaded>" : level.EntityConfigPath.Value)}"));

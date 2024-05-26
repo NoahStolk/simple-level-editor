@@ -127,9 +127,9 @@ public static class WorldObjectEditorWindow
 		{
 			float childWidth = ImGui.GetContentRegionAvail().X;
 			float tileSize = childWidth / rowLength - padding * rowLength;
-			for (int i = 0; i < LevelState.Level.Models.Length; i++)
+			for (int i = 0; i < LevelState.Level.ModelPaths.Length; i++)
 			{
-				string meshName = LevelState.Level.Models[i];
+				string meshName = LevelState.Level.ModelPaths[i];
 
 				ModelPreviewFramebuffer? framebuffer = ModelContainer.LevelContainer.GetModelPreviewFramebuffer(meshName);
 				if (framebuffer != null)
@@ -139,7 +139,7 @@ public static class WorldObjectEditorWindow
 				}
 			}
 
-			AddScrollMarker(LevelState.Level.Models.Length, rowLength, tileSize);
+			AddScrollMarker(LevelState.Level.ModelPaths.Length, rowLength, tileSize);
 		}
 
 		ImGui.EndChild(); // End Mesh

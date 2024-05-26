@@ -11,48 +11,47 @@ namespace SimpleLevelEditor.Formats.Tests;
 [TestClass]
 public class LevelSerializationTests
 {
-	private static readonly string[] _expectedMeshes = [@"..\Meshes\Crate.obj", @"..\Meshes\Cube.obj", @"..\Meshes\Sphere.obj"];
-	private static readonly string[] _expectedTextures = [@"..\Textures\Blank.tga", @"..\Textures\StoneBlue.tga", @"..\Textures\TilesColor.tga"];
+	private static readonly string[] _expectedModels = [@"..\Models\Crate.obj", @"..\Models\Cube.obj", @"..\Models\Sphere.obj"];
 	private static readonly WorldObject[] _expectedWorldObjects =
 	[
 		new WorldObject(
 			id: 1,
-			modelPath: @"..\Meshes\Cube.obj",
+			modelPath: @"..\Models\Cube.obj",
 			scale: new Vector3(64, 8, 64),
 			rotation: new Vector3(0, 0, 0),
 			position: new Vector3(16, -4, 0),
 			flags: ListModule.OfSeq(["Transparent"])),
 		new WorldObject(
 			id: 2,
-			modelPath: @"..\Meshes\Crate.obj",
+			modelPath: @"..\Models\Crate.obj",
 			scale: new Vector3(1, 1, 1),
 			rotation: new Vector3(0, 0, 0),
 			position: new Vector3(-4, 0.5f, 1),
 			flags: ListModule.OfSeq(["Dynamic"])),
 		new WorldObject(
 			id: 3,
-			modelPath: @"..\Meshes\Crate.obj",
+			modelPath: @"..\Models\Crate.obj",
 			scale: new Vector3(1, 1, 1),
 			rotation: new Vector3(0, 0, 0),
 			position: new Vector3(-0.5f, 0.5f, -4.5f),
 			flags: ListModule.OfSeq(["Transparent", "Dynamic"])),
 		new WorldObject(
 			id: 4,
-			modelPath: @"..\Meshes\Crate.obj",
+			modelPath: @"..\Models\Crate.obj",
 			scale: new Vector3(1, 1, 1),
 			rotation: new Vector3(90, 0, 0),
 			position: new Vector3(-4.5f, 0.5f, -3f),
 			flags: ListModule.Empty<string>()),
 		new WorldObject(
 			id: 5,
-			modelPath: @"..\Meshes\Sphere.obj",
+			modelPath: @"..\Models\Sphere.obj",
 			scale: new Vector3(1, 1, 1),
 			rotation: new Vector3(0, 90, 0),
 			position: new Vector3(6, 1, 2),
 			flags: ListModule.Empty<string>()),
 		new WorldObject(
 			id: 6,
-			modelPath: @"..\Meshes\Cube.obj",
+			modelPath: @"..\Models\Cube.obj",
 			scale: new Vector3(16, 4, 1),
 			rotation: new Vector3(0, 0, 0),
 			position: new Vector3(0, 2, -7.5f),
@@ -89,9 +88,9 @@ public class LevelSerializationTests
 	{
 		Assert.AreEqual("..\\EntityConfig.json", level.EntityConfigPath);
 
-		Assert.AreEqual(_expectedMeshes.Length, level.Models.Length);
-		for (int i = 0; i < _expectedMeshes.Length; i++)
-			Assert.AreEqual(_expectedMeshes[i], level.Models[i]);
+		Assert.AreEqual(_expectedModels.Length, level.ModelPaths.Length);
+		for (int i = 0; i < _expectedModels.Length; i++)
+			Assert.AreEqual(_expectedModels[i], level.ModelPaths[i]);
 
 		Assert.AreEqual(_expectedWorldObjects.Length, level.WorldObjects.Length);
 		for (int i = 0; i < _expectedWorldObjects.Length; i++)
