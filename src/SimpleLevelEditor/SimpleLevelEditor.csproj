@@ -3,7 +3,7 @@
   <PropertyGroup Label="Build properties">
     <OutputType>Exe</OutputType>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <Version>0.11.1</Version>
+    <Version>0.12.0</Version>
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
 
