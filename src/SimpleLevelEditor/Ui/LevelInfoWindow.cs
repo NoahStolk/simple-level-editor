@@ -46,16 +46,16 @@ public static class LevelInfoWindow
 	{
 		if (ImGui.TreeNode("Models"))
 		{
-			for (int i = 0; i < entityConfig.Models.Length; i++)
-				ImGui.Text(entityConfig.Models[i]);
+			for (int i = 0; i < entityConfig.ModelPaths.Length; i++)
+				ImGui.Text(entityConfig.ModelPaths[i]);
 
 			ImGui.TreePop();
 		}
 
 		if (ImGui.TreeNode("Textures"))
 		{
-			for (int i = 0; i < entityConfig.Textures.Length; i++)
-				ImGui.Text(entityConfig.Textures[i]);
+			for (int i = 0; i < entityConfig.TexturePaths.Length; i++)
+				ImGui.Text(entityConfig.TexturePaths[i]);
 
 			ImGui.TreePop();
 		}

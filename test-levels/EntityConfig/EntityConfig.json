@@ -1,9 +1,9 @@
 {
-  "Models": [
+  "ModelPaths": [
     "..\\Models\\Altar.obj",
     "..\\Models\\Ammonite.obj"
   ],
-  "Textures": [
+  "TexturePaths": [
     "Sprites\\AudioSourceIcon.tga",
     "Sprites\\Blue.tga",
     "Sprites\\LightIcon.tga"

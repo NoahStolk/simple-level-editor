@@ -1,8 +1,8 @@
 {
-  "Models": [
+  "ModelPaths": [
 	  "Sphere.obj"
   ],
-  "Textures": [
+  "TexturePaths": [
 	  "Checkerboard.tga",
 	  "PlayerIcon.tga"
   ],

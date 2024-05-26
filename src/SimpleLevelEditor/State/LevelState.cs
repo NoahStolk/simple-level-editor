@@ -232,7 +232,7 @@ public static class LevelState
 				if (levelDirectory != null)
 				{
 					string absolutePathToEntityConfig = Path.Combine(levelDirectory, Level.EntityConfigPath.Value);
-					ModelContainer.EntityConfigContainer.Rebuild(absolutePathToEntityConfig, EntityConfigState.EntityConfig.Models.ToList());
+					ModelContainer.EntityConfigContainer.Rebuild(absolutePathToEntityConfig, EntityConfigState.EntityConfig.ModelPaths.ToList());
 				}
 			}
 

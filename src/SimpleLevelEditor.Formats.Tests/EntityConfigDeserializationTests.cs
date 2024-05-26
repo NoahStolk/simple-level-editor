@@ -25,8 +25,8 @@ public class EntityConfigDeserializationTests
 		EntityConfigData? data = SimpleLevelEditorJsonSerializer.DeserializeEntityConfig(fs);
 		Assert.IsNotNull(data);
 
-		Assert.AreEqual(1, data.Models.Length);
-		Assert.AreEqual(2, data.Textures.Length);
+		Assert.AreEqual(1, data.ModelPaths.Length);
+		Assert.AreEqual(2, data.TexturePaths.Length);
 		Assert.AreEqual(5, data.Entities.Length);
 
 		EntityDescriptor entity = data.Entities[0];
