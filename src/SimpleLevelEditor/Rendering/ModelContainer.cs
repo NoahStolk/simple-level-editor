@@ -13,19 +13,21 @@ public sealed class ModelContainer
 	private readonly Dictionary<string, Model> _models = new();
 	private readonly Dictionary<string, ModelPreviewFramebuffer> _modelPreviewFramebuffers = new();
 	private readonly string _containerName;
+	private readonly bool _addModelPreviewFramebuffers;
 
-	private ModelContainer(string containerName)
+	private ModelContainer(string containerName, bool addModelPreviewFramebuffers)
 	{
 		_containerName = containerName;
+		_addModelPreviewFramebuffers = addModelPreviewFramebuffers;
 	}
 
-	public static ModelContainer LevelContainer { get; } = new("Level");
-	public static ModelContainer EntityConfigContainer { get; } = new("EntityConfig");
+	public static ModelContainer LevelContainer { get; } = new("Level", true);
+	public static ModelContainer EntityConfigContainer { get; } = new("EntityConfig", false);
 
 	public Model? GetModel(string path)
 	{
-		if (_models.TryGetValue(path, out Model? data))
-			return data;
+		if (_models.TryGetValue(path, out Model? model))
+			return model;
 
 		DebugState.AddWarning($"Cannot find level model '{path}' in container '{_containerName}'.");
 		return null;
@@ -33,8 +35,8 @@ public sealed class ModelContainer
 
 	public ModelPreviewFramebuffer? GetModelPreviewFramebuffer(string path)
 	{
-		if (_modelPreviewFramebuffers.TryGetValue(path, out ModelPreviewFramebuffer? data))
-			return data;
+		if (_modelPreviewFramebuffers.TryGetValue(path, out ModelPreviewFramebuffer? modelPreviewFramebuffer))
+			return modelPreviewFramebuffer;
 
 		DebugState.AddWarning($"Cannot find model preview framebuffer '{path}' in container '{_containerName}'.");
 		return null;
@@ -42,17 +44,19 @@ public sealed class ModelContainer
 
 	public void Rebuild(string? sourceFilePath, List<string> modelPaths)
 	{
-		foreach (KeyValuePair<string, ModelPreviewFramebuffer> kvp in _modelPreviewFramebuffers)
-			kvp.Value.Destroy();
+		if (_addModelPreviewFramebuffers)
+		{
+			foreach (KeyValuePair<string, ModelPreviewFramebuffer> kvp in _modelPreviewFramebuffers)
+				kvp.Value.Destroy();
+			_modelPreviewFramebuffers.Clear();
+		}
 
 		_models.Clear();
-		_modelPreviewFramebuffers.Clear();
 
 		string? levelDirectory = Path.GetDirectoryName(sourceFilePath);
 		if (levelDirectory == null)
 			return;
 
-		// Load level models.
 		foreach (string modelPath in modelPaths)
 		{
 			string absolutePath = Path.Combine(levelDirectory, modelPath);
@@ -64,7 +68,9 @@ public sealed class ModelContainer
 			if (model != null)
 			{
 				_models.Add(modelPath, model);
-				_modelPreviewFramebuffers.Add(modelPath, new ModelPreviewFramebuffer(model));
+
+				if (_addModelPreviewFramebuffers)
+					_modelPreviewFramebuffers.Add(modelPath, new ModelPreviewFramebuffer(model));
 			}
 		}
 	}

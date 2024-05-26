@@ -40,8 +40,8 @@ public sealed class MeshRenderer
 			if (!LevelEditorState.ShouldRenderEntity(entity))
 				continue;
 
-			EntityShapeDescriptor? entityShape = EntityConfigState.GetEntityShape(entity);
-			if (entityShape is EntityShapeDescriptor.Point { Visualization: PointEntityVisualization.Model modelVisualization })
+			EntityShapeDescriptor? entityShapeDescriptor = EntityConfigState.GetEntityShapeDescriptor(entity);
+			if (entityShapeDescriptor is EntityShapeDescriptor.Point { Visualization: PointEntityVisualization.Model modelVisualization })
 			{
 				Model? model = ModelContainer.EntityConfigContainer.GetModel(modelVisualization.ModelPath);
 				if (model != null)
@@ -52,8 +52,8 @@ public sealed class MeshRenderer
 		if (LevelEditorState.MoveTargetPosition.HasValue && LevelEditorState.SelectedEntity != null)
 		{
 			Entity selectedEntity = LevelEditorState.SelectedEntity;
-			EntityShapeDescriptor? entityShape = EntityConfigState.GetEntityShape(selectedEntity);
-			if (entityShape is EntityShapeDescriptor.Point { Visualization: PointEntityVisualization.Model modelVisualization })
+			EntityShapeDescriptor? entityShapeDescriptor = EntityConfigState.GetEntityShapeDescriptor(selectedEntity);
+			if (entityShapeDescriptor is EntityShapeDescriptor.Point { Visualization: PointEntityVisualization.Model modelVisualization })
 			{
 				Model? model = ModelContainer.EntityConfigContainer.GetModel(modelVisualization.ModelPath);
 				if (model != null)
