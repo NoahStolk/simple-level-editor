@@ -18,9 +18,8 @@ public static class DialogWrapper
 			return;
 
 		DialogOpen = true;
-		OpenDialog(callback, async () =>
+		OpenDialog(callback, () =>
 		{
-			await Task.Yield();
 			DialogResult dialogResult = Dialog.FileOpen(filterList, defaultPath);
 			DialogOpen = false;
 			return dialogResult.Path;
@@ -33,9 +32,8 @@ public static class DialogWrapper
 			return;
 
 		DialogOpen = true;
-		OpenDialog(callback, async () =>
+		OpenDialog(callback, () =>
 		{
-			await Task.Yield();
 			DialogResult dialogResult = Dialog.FileSave(filterList, defaultPath);
 			DialogOpen = false;
 			return dialogResult.Path;
@@ -48,9 +46,8 @@ public static class DialogWrapper
 			return;
 
 		DialogOpen = true;
-		OpenDialog(callback, async () =>
+		OpenDialog(callback, () =>
 		{
-			await Task.Yield();
 			DialogResult dialogResult = Dialog.FolderPicker(defaultPath);
 			DialogOpen = false;
 			return dialogResult.Path;
@@ -63,22 +60,21 @@ public static class DialogWrapper
 			return;
 
 		DialogOpen = true;
-		OpenDialog(callback, async () =>
+		OpenDialog(callback, () =>
 		{
-			await Task.Yield();
 			DialogResult dialogResult = Dialog.FileOpenMultiple(filterList, defaultPath);
 			DialogOpen = false;
 			return dialogResult.Paths;
 		});
 	}
 
-	private static void OpenDialog(Action<string?> callback, Func<Task<string?>> call)
+	private static void OpenDialog(Action<string?> callback, Func<string?> call)
 	{
-		Task.Run(async () => callback(await call()));
+		Task.Run(() => callback(call()));
 	}
 
-	private static void OpenDialog(Action<IReadOnlyList<string>?> callback, Func<Task<IReadOnlyList<string>?>> call)
+	private static void OpenDialog(Action<IReadOnlyList<string>?> callback, Func<IReadOnlyList<string>?> call)
 	{
-		Task.Run(async () => callback(await call()));
+		Task.Run(() => callback(call()));
 	}
 }

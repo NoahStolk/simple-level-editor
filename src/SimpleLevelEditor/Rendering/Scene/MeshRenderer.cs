@@ -40,24 +40,24 @@ public sealed class MeshRenderer
 			if (!LevelEditorState.ShouldRenderEntity(entity))
 				continue;
 
-			EntityShape? entityShape = EntityConfigState.GetEntityShape(entity);
-			if (entityShape is EntityShape.Point { Visualization: PointEntityVisualization.Mesh meshVisualization })
+			EntityShapeDescriptor? entityShapeDescriptor = EntityConfigState.GetEntityShapeDescriptor(entity);
+			if (entityShapeDescriptor is EntityShapeDescriptor.Point { Visualization: PointEntityVisualization.Model modelVisualization })
 			{
-				MeshEntry? meshEntry = MeshContainer.GetEntityConfigMesh(meshVisualization.MeshName);
-				if (meshEntry != null)
-					RenderMesh(meshEntry, meshVisualization.TextureName, Matrix4x4.CreateTranslation(entity.Position));
+				Model? model = ModelContainer.EntityConfigContainer.GetModel(modelVisualization.ModelPath);
+				if (model != null)
+					RenderModel(model, Matrix4x4.CreateTranslation(entity.Position));
 			}
 		}
 
 		if (LevelEditorState.MoveTargetPosition.HasValue && LevelEditorState.SelectedEntity != null)
 		{
 			Entity selectedEntity = LevelEditorState.SelectedEntity;
-			EntityShape? entityShape = EntityConfigState.GetEntityShape(selectedEntity);
-			if (entityShape is EntityShape.Point { Visualization: PointEntityVisualization.Mesh meshVisualization })
+			EntityShapeDescriptor? entityShapeDescriptor = EntityConfigState.GetEntityShapeDescriptor(selectedEntity);
+			if (entityShapeDescriptor is EntityShapeDescriptor.Point { Visualization: PointEntityVisualization.Model modelVisualization })
 			{
-				MeshEntry? meshEntry = MeshContainer.GetEntityConfigMesh(meshVisualization.MeshName);
-				if (meshEntry != null)
-					RenderMesh(meshEntry, meshVisualization.TextureName, Matrix4x4.CreateTranslation(LevelEditorState.MoveTargetPosition.Value));
+				Model? model = ModelContainer.EntityConfigContainer.GetModel(modelVisualization.ModelPath);
+				if (model != null)
+					RenderModel(model, Matrix4x4.CreateTranslation(LevelEditorState.MoveTargetPosition.Value));
 			}
 		}
 	}
@@ -67,32 +67,38 @@ public sealed class MeshRenderer
 		for (int i = 0; i < LevelState.Level.WorldObjects.Length; i++)
 		{
 			WorldObject worldObject = LevelState.Level.WorldObjects[i];
-			MeshEntry? mesh = MeshContainer.GetLevelMesh(worldObject.Mesh);
-			if (mesh != null)
-				RenderMesh(mesh, worldObject.Texture, worldObject.GetModelMatrix());
+			Model? model = ModelContainer.LevelContainer.GetModel(worldObject.ModelPath);
+			if (model != null)
+				RenderModel(model, worldObject.GetModelMatrix());
 		}
 
 		if (LevelEditorState.MoveTargetPosition.HasValue && LevelEditorState.SelectedWorldObject != null)
 		{
 			WorldObject selectedWorldObject = LevelEditorState.SelectedWorldObject;
-			MeshEntry? mesh = MeshContainer.GetLevelMesh(selectedWorldObject.Mesh);
-			if (mesh != null)
-				RenderMesh(mesh, selectedWorldObject.Texture, selectedWorldObject.GetModelMatrix(LevelEditorState.MoveTargetPosition.Value));
+			Model? model = ModelContainer.LevelContainer.GetModel(selectedWorldObject.ModelPath);
+			if (model != null)
+				RenderModel(model, selectedWorldObject.GetModelMatrix(LevelEditorState.MoveTargetPosition.Value));
 		}
 	}
 
-	private unsafe void RenderMesh(MeshEntry mesh, string textureName, Matrix4x4 modelMatrix)
+	private unsafe void RenderModel(Model model, Matrix4x4 modelMatrix)
 	{
-		uint? textureId = TextureContainer.GetLevelTexture(textureName);
-		if (textureId == null)
-			return;
-
 		Gl.UniformMatrix4x4(_modelUniform, modelMatrix);
 
-		Gl.BindTexture(TextureTarget.Texture2D, textureId.Value);
+		for (int i = 0; i < model.Meshes.Count; i++)
+		{
+			Mesh mesh = model.Meshes[i];
 
-		Gl.BindVertexArray(mesh.MeshVao);
-		fixed (uint* index = &mesh.Mesh.Indices[0])
-			Gl.DrawElements(PrimitiveType.Triangles, (uint)mesh.Mesh.Indices.Length, DrawElementsType.UnsignedInt, index);
+			Material? materialData = model.GetMaterial(mesh.MaterialName);
+			if (materialData == null)
+				continue;
+
+			uint textureId = TextureContainer.GetTexture(materialData.DiffuseMap.TextureData);
+			Gl.BindTexture(TextureTarget.Texture2D, textureId);
+
+			Gl.BindVertexArray(mesh.MeshVao);
+			fixed (uint* index = &mesh.Geometry.Indices[0])
+				Gl.DrawElements(PrimitiveType.Triangles, (uint)mesh.Geometry.Indices.Length, DrawElementsType.UnsignedInt, index);
+		}
 	}
 }

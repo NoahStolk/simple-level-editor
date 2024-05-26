@@ -72,8 +72,8 @@ public static class MainLogic
 			return;
 
 		WorldObject referenceWorldObject = LevelEditorState.SelectedWorldObject ?? WorldObjectEditorWindow.DefaultObject;
-		if (referenceWorldObject.Mesh.Length == 0 || referenceWorldObject.Texture.Length == 0)
-			return;
+		if (referenceWorldObject.ModelPath.Length == 0)
+			return; // TODO: Show popup.
 
 		WorldObject worldObject = referenceWorldObject.CloneAndPlaceAtPosition(LevelState.Level.WorldObjects.Length > 0 ? LevelState.Level.WorldObjects.Max(o => o.Id) + 1 : 0, LevelEditorState.TargetPosition.Value);
 		LevelState.Level.AddWorldObject(worldObject);
@@ -155,21 +155,26 @@ public static class MainLogic
 		for (int i = 0; i < LevelState.Level.WorldObjects.Length; i++)
 		{
 			WorldObject worldObject = LevelState.Level.WorldObjects[i];
-			MeshEntry? mesh = MeshContainer.GetLevelMesh(worldObject.Mesh);
-			if (mesh == null)
+			Model? model = ModelContainer.LevelContainer.GetModel(worldObject.ModelPath);
+			if (model == null)
 				continue;
 
-			Vector3 bbScale = worldObject.Scale * (mesh.BoundingMax - mesh.BoundingMin);
-			Vector3 bbOffset = (mesh.BoundingMax + mesh.BoundingMin) / 2;
-			float maxScale = Math.Max(bbScale.X, Math.Max(bbScale.Y, bbScale.Z));
-			Vector3? sphereIntersection = Ray.IntersectsSphere(rayStartPosition, rayDirection, worldObject.Position + bbOffset, maxScale);
-			if (sphereIntersection == null)
-				continue;
-
-			Matrix4x4 modelMatrix = worldObject.GetModelMatrix();
-			if (RaycastUtils.RaycastMesh(modelMatrix, mesh.Mesh, rayStartPosition, rayDirection, ref closestIntersection))
+			for (int j = 0; j < model.Meshes.Count; j++)
 			{
-				LevelEditorState.SetHighlightedWorldObject(worldObject);
+				Mesh mesh = model.Meshes[j];
+				Vector3 bbScale = worldObject.Scale * (mesh.BoundingMax - mesh.BoundingMin);
+				Vector3 bbOffset = (mesh.BoundingMax + mesh.BoundingMin) / 2;
+				float maxScale = Math.Max(bbScale.X, Math.Max(bbScale.Y, bbScale.Z));
+				Vector3? sphereIntersection = Ray.IntersectsSphere(rayStartPosition, rayDirection, worldObject.Position + bbOffset, maxScale);
+				if (sphereIntersection == null)
+					continue;
+
+				Matrix4x4 modelMatrix = worldObject.GetModelMatrix();
+				if (RaycastUtils.RaycastMesh(modelMatrix, mesh, rayStartPosition, rayDirection, ref closestIntersection))
+				{
+					// TODO: For clarity, consider returning the world object instead of setting it as highlighted on every iteration.
+					LevelEditorState.SetHighlightedWorldObject(worldObject);
+				}
 			}
 		}
 	}
@@ -206,23 +211,23 @@ public static class MainLogic
 		{
 			if (entity.Shape.IsPoint)
 			{
-				EntityShape? entityShape = EntityConfigState.EntityConfig.Entities.FirstOrDefault(e => e.Name == entity.Name)?.Shape;
-				if (entityShape is not EntityShape.Point point)
+				EntityShapeDescriptor? entityShape = EntityConfigState.EntityConfig.Entities.FirstOrDefault(e => e.Name == entity.Name)?.Shape;
+				if (entityShape is not EntityShapeDescriptor.Point point)
 					return null;
 
 				return point.Visualization switch
 				{
 					PointEntityVisualization.SimpleSphere simpleSphere => IntersectsSphere(entity.Position, simpleSphere.Radius),
 					PointEntityVisualization.BillboardSprite billboardSprite => RaycastUtils.RaycastPlane(Matrix4x4.CreateScale(billboardSprite.Size * 0.5f) * EntityMatrixUtils.GetBillboardMatrix(entity.Position), rayStartPosition, rayDirection),
-					PointEntityVisualization.Mesh mesh => RaycastUtils.RaycastEntityMesh(Matrix4x4.CreateScale(mesh.Size * 2) * Matrix4x4.CreateTranslation(entity.Position), MeshContainer.GetEntityConfigMesh(mesh.MeshName)?.Mesh, rayStartPosition, rayDirection),
+					PointEntityVisualization.Model mesh => RaycastUtils.RaycastEntityModel(Matrix4x4.CreateScale(mesh.Size * 2) * Matrix4x4.CreateTranslation(entity.Position), ModelContainer.EntityConfigContainer.GetModel(mesh.ModelPath), rayStartPosition, rayDirection),
 					_ => throw new InvalidOperationException($"Unknown point entity visualization: {point.Visualization}"),
 				};
 			}
 
 			return entity.Shape switch
 			{
-				ShapeDescriptor.Sphere sphere => IntersectsSphere(entity.Position, sphere.Radius),
-				ShapeDescriptor.Aabb aabb => Ray.IntersectsAxisAlignedBoundingBox(rayStartPosition, rayDirection, entity.Position - aabb.Size / 2f, entity.Position + aabb.Size / 2f)?.Distance,
+				EntityShape.Sphere sphere => IntersectsSphere(entity.Position, sphere.Radius),
+				EntityShape.Aabb aabb => Ray.IntersectsAxisAlignedBoundingBox(rayStartPosition, rayDirection, entity.Position - aabb.Size / 2f, entity.Position + aabb.Size / 2f)?.Distance,
 				_ => throw new UnreachableException($"Unknown entity shape: {entity.Shape}"),
 			};
 		}

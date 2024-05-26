@@ -2,30 +2,25 @@ namespace SimpleLevelEditor.Formats.Types.Level
 
 type Level3dData =
     { mutable EntityConfigPath: string option
-      mutable Meshes: string list
-      mutable Textures: string list
+      mutable ModelPaths: string list
       mutable WorldObjects: WorldObject list
       mutable Entities: Entity list }
 
     static member CreateDefault() =
         { EntityConfigPath = None
-          Meshes = []
-          Textures = []
+          ModelPaths = []
           WorldObjects = []
           Entities = [] }
 
     member this.DeepCopy() =
         { this with
-            Meshes = this.Meshes |> List.map id
-            Textures = this.Textures |> List.map id
+            ModelPaths = this.ModelPaths |> List.map id
             WorldObjects = this.WorldObjects |> List.map (_.DeepCopy())
             Entities = this.Entities |> List.map (_.DeepCopy()) }
 
-    member this.AddMesh(mesh: string) =
-        this.Meshes <- this.Meshes @ [mesh]
-
-    member this.AddTexture(texture: string) =
-        this.Textures <- this.Textures @ [texture]
+    member this.AddModel(model: string) =
+        if not (this.ModelPaths |> List.exists (fun v -> v = model)) then
+            this.ModelPaths <- this.ModelPaths @ [model]
 
     member this.AddWorldObject(worldObject: WorldObject) =
         this.WorldObjects <- this.WorldObjects @ [worldObject]
@@ -33,11 +28,8 @@ type Level3dData =
     member this.AddEntity(entity: Entity) =
         this.Entities <- this.Entities @ [entity]
 
-    member this.RemoveMesh(mesh: string) =
-        this.Meshes <- this.Meshes |> List.filter (fun v -> v <> mesh)
-
-    member this.RemoveTexture(texture: string) =
-        this.Textures <- this.Textures |> List.filter (fun v -> v <> texture)
+    member this.RemoveModel(model: string) =
+        this.ModelPaths <- this.ModelPaths |> List.filter (fun v -> v <> model)
 
     member this.RemoveWorldObject(worldObject: WorldObject) =
         this.WorldObjects <- this.WorldObjects |> List.filter (fun v -> v <> worldObject)

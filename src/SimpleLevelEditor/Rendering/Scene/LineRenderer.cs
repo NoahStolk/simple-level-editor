@@ -198,29 +198,24 @@ public sealed class LineRenderer
 			WorldObject worldObject = LevelState.Level.WorldObjects[i];
 			Vector4 color = GetWorldObjectLineColor(worldObject);
 
-			MeshEntry? mesh = MeshContainer.GetLevelMesh(worldObject.Mesh);
-			if (mesh == null)
+			Model? model = ModelContainer.LevelContainer.GetModel(worldObject.ModelPath);
+			if (model == null)
 				continue;
 
 			Matrix4x4 rotationMatrix = MathUtils.CreateRotationMatrixFromEulerAngles(MathUtils.ToRadians(worldObject.Rotation));
 			Matrix4x4 modelMatrix = Matrix4x4.CreateScale(worldObject.Scale) * rotationMatrix * Matrix4x4.CreateTranslation(worldObject.Position);
-			RenderEdges(mesh.LineVao, mesh.LineIndices, modelMatrix, color);
+			RenderModelEdges(model, modelMatrix, color);
 		}
 
 		if (LevelEditorState.MoveTargetPosition.HasValue && LevelEditorState.SelectedWorldObject != null)
 		{
-			MeshEntry? mesh = MeshContainer.GetLevelMesh(LevelEditorState.SelectedWorldObject.Mesh);
-			if (mesh != null)
-				RenderMeshEdges(mesh, LevelEditorState.SelectedWorldObject.GetModelMatrix(LevelEditorState.MoveTargetPosition.Value), GetWorldObjectLineColor(LevelEditorState.SelectedWorldObject));
+			Model? model = ModelContainer.LevelContainer.GetModel(LevelEditorState.SelectedWorldObject.ModelPath);
+			if (model != null)
+				RenderModelEdges(model, LevelEditorState.SelectedWorldObject.GetModelMatrix(LevelEditorState.MoveTargetPosition.Value), GetWorldObjectLineColor(LevelEditorState.SelectedWorldObject));
 		}
 	}
 
-	private void RenderMeshEdges(MeshEntry mesh, Matrix4x4 modelMatrix, Vector4 color)
-	{
-		RenderEdges(mesh.LineVao, mesh.LineIndices, modelMatrix, color);
-	}
-
-	private unsafe void RenderEdges(uint lineVao, uint[] lineIndices, Matrix4x4 modelMatrix, Vector4 color)
+	private void RenderModelEdges(Model model, Matrix4x4 modelMatrix, Vector4 color)
 	{
 		if (color.W < float.Epsilon)
 			return;
@@ -228,6 +223,15 @@ public sealed class LineRenderer
 		Gl.UniformMatrix4x4(_modelUniform, modelMatrix);
 		Gl.Uniform4(_colorUniform, color);
 
+		for (int i = 0; i < model.Meshes.Count; i++)
+		{
+			Mesh mesh = model.Meshes[i];
+			RenderEdges(mesh.LineVao, mesh.LineIndices);
+		}
+	}
+
+	private static unsafe void RenderEdges(uint lineVao, uint[] lineIndices)
+	{
 		Gl.BindVertexArray(lineVao);
 		fixed (uint* index = &lineIndices[0])
 			Gl.DrawElements(PrimitiveType.Lines, (uint)lineIndices.Length, DrawElementsType.UnsignedInt, index);
@@ -250,8 +254,8 @@ public sealed class LineRenderer
 
 	private void RenderEntity(Entity entity, Vector3 entityPosition)
 	{
-		EntityShape? entityShape = EntityConfigState.GetEntityShape(entity);
-		if (entityShape is EntityShape.Point point)
+		EntityShapeDescriptor? entityShapeDescriptor = EntityConfigState.GetEntityShapeDescriptor(entity);
+		if (entityShapeDescriptor is EntityShapeDescriptor.Point point)
 		{
 			if (point.Visualization is PointEntityVisualization.SimpleSphere simpleSphere)
 			{
@@ -260,32 +264,35 @@ public sealed class LineRenderer
 				Gl.BindVertexArray(_pointVao);
 				Gl.DrawArrays(PrimitiveType.Lines, 0, (uint)_pointVertices.Length);
 			}
-			else if (point.Visualization is PointEntityVisualization.Mesh mesh)
+			else if (point.Visualization is PointEntityVisualization.Model modelVisualization)
 			{
-				MeshEntry? meshEntry = MeshContainer.GetEntityConfigMesh(mesh.MeshName);
-				if (meshEntry != null)
-					RenderMeshEdges(meshEntry, Matrix4x4.CreateTranslation(entityPosition), GetEntityLineColor(entity, new Rgb(191, 63, 63), Vector4.Zero));
+				Model? model = ModelContainer.EntityConfigContainer.GetModel(modelVisualization.ModelPath);
+				if (model != null)
+					RenderModelEdges(model, Matrix4x4.CreateTranslation(entityPosition), GetEntityLineColor(entity, new Rgb(191, 63, 63), Vector4.Zero));
 			}
 			else if (point.Visualization is PointEntityVisualization.BillboardSprite billboardSprite)
 			{
 				Matrix4x4 modelMatrix = Matrix4x4.CreateScale(billboardSprite.Size) * EntityMatrixUtils.GetBillboardMatrix(entityPosition);
-				RenderEdges(_planeLineVao, _planeLineIndices, modelMatrix, GetEntityLineColor(entity, new Rgb(63, 63, 191), Vector4.Zero));
+
+				Gl.UniformMatrix4x4(_modelUniform, modelMatrix);
+				Gl.Uniform4(_colorUniform, GetEntityLineColor(entity, new Rgb(63, 63, 191), Vector4.Zero));
+				RenderEdges(_planeLineVao, _planeLineIndices);
 			}
 		}
-		else if (entityShape is EntityShape.Sphere sphere)
+		else if (entityShapeDescriptor is EntityShapeDescriptor.Sphere sphere)
 		{
-			if (entity.Shape is not ShapeDescriptor.Sphere sphereDescriptor)
-				throw new InvalidOperationException($"Entity '{entity.Name}' is of shape type '{entity.Shape}' which does not match shape type '{entityShape}' from the EntityConfig.");
+			if (entity.Shape is not EntityShape.Sphere sphereDescriptor)
+				throw new InvalidOperationException($"Entity '{entity.Name}' is of shape type '{entity.Shape}' which does not match shape type '{entityShapeDescriptor}' from the EntityConfig.");
 
 			Gl.UniformMatrix4x4(_modelUniform, Matrix4x4.CreateScale(sphereDescriptor.Radius) * Matrix4x4.CreateTranslation(entityPosition));
 			Gl.Uniform4(_colorUniform, GetEntityLineColor(entity, sphere.Color, sphere.Color.ToVector4()));
 			Gl.BindVertexArray(_sphereVao);
 			Gl.DrawArrays(PrimitiveType.Lines, 0, (uint)_sphereVertices.Length);
 		}
-		else if (entityShape is EntityShape.Aabb aabb)
+		else if (entityShapeDescriptor is EntityShapeDescriptor.Aabb aabb)
 		{
-			if (entity.Shape is not ShapeDescriptor.Aabb aabbDescriptor)
-				throw new InvalidOperationException($"Entity '{entity.Name}' is of shape type '{entity.Shape}' which does not match shape type '{entityShape}' from the EntityConfig.");
+			if (entity.Shape is not EntityShape.Aabb aabbDescriptor)
+				throw new InvalidOperationException($"Entity '{entity.Name}' is of shape type '{entity.Shape}' which does not match shape type '{entityShapeDescriptor}' from the EntityConfig.");
 
 			Gl.UniformMatrix4x4(_modelUniform, Matrix4x4.CreateScale(aabbDescriptor.Size) * Matrix4x4.CreateTranslation(entityPosition));
 			Gl.Uniform4(_colorUniform, GetEntityLineColor(entity, aabb.Color, aabb.Color.ToVector4()));

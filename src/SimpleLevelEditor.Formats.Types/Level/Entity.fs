@@ -7,7 +7,7 @@ type Entity =
     { Id: int32 // The id is only used to keep track of the object in the editor.
       mutable Name: string
       mutable Position: Vector3
-      mutable Shape: ShapeDescriptor
+      mutable Shape: EntityShape
       mutable Properties: EntityProperty list }
 
     member this.DeepCopy() =
@@ -26,5 +26,5 @@ type Entity =
         { Id = 0
           Name = System.String.Empty
           Position = Vector3.Zero
-          Shape = ShapeDescriptor.Point
+          Shape = EntityShape.Point
           Properties = [] }

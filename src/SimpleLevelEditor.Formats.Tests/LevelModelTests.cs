@@ -14,8 +14,7 @@ public class LevelModelTests
 	{
 		Level3dData defaultLevel = Level3dData.CreateDefault();
 		Assert.IsNull(defaultLevel.EntityConfigPath);
-		Assert.AreEqual(0, defaultLevel.Meshes.Length);
-		Assert.AreEqual(0, defaultLevel.Textures.Length);
+		Assert.AreEqual(0, defaultLevel.ModelPaths.Length);
 		Assert.AreEqual(0, defaultLevel.WorldObjects.Length);
 		Assert.AreEqual(0, defaultLevel.Entities.Length);
 	}
@@ -23,14 +22,13 @@ public class LevelModelTests
 	[TestMethod]
 	public void DeepCopy()
 	{
-		Entity entity = new(0, "test", new Vector3(1, 2, 3), ShapeDescriptor.NewSphere(0.5f), ListModule.OfSeq([new EntityProperty("test", EntityPropertyValue.NewFloat(0.5f))]));
+		Entity entity = new(0, "test", new Vector3(1, 2, 3), EntityShape.NewSphere(0.5f), ListModule.OfSeq([new EntityProperty("test", EntityPropertyValue.NewFloat(0.5f))]));
 
-		WorldObject worldObject = new(0, "Test.obj", "Test.tga", Vector3.One, new Vector3(4, 5, 6), new Vector3(1, 2, 3), ListModule.OfSeq(["flag"]));
+		WorldObject worldObject = new(0, "Test.obj", Vector3.One, new Vector3(4, 5, 6), new Vector3(1, 2, 3), ListModule.OfSeq(["flag"]));
 
 		Level3dData level = new(
 			FSharpOption<string>.None,
 			ListModule.OfSeq(["Test.obj"]),
-			ListModule.OfSeq(["Test.tga"]),
 			ListModule.OfSeq([worldObject]),
 			ListModule.OfSeq([entity]));
 
@@ -38,8 +36,7 @@ public class LevelModelTests
 
 		// Test counts.
 		Assert.AreEqual(level.Entities.Length, copy.Entities.Length);
-		Assert.AreEqual(level.Meshes.Length, copy.Meshes.Length);
-		Assert.AreEqual(level.Textures.Length, copy.Textures.Length);
+		Assert.AreEqual(level.ModelPaths.Length, copy.ModelPaths.Length);
 		Assert.AreEqual(level.WorldObjects.Length, copy.WorldObjects.Length);
 		Assert.AreEqual(level.EntityConfigPath, copy.EntityConfigPath);
 
@@ -74,11 +71,8 @@ public class LevelModelTests
 		Assert.AreEqual(worldObject.Flags[0], level.WorldObjects[0].Flags[0]);
 		Assert.AreEqual(worldObject.Flags[0], copy.WorldObjects[0].Flags[0]);
 
-		// Test world object mesh and texture references. Strings are immutable, so it doesn't matter that they're technically not deep copied.
-		Assert.AreEqual(worldObject.Mesh, level.WorldObjects[0].Mesh);
-		Assert.AreEqual(worldObject.Mesh, copy.WorldObjects[0].Mesh);
-
-		Assert.AreEqual(worldObject.Texture, level.WorldObjects[0].Texture);
-		Assert.AreEqual(worldObject.Texture, copy.WorldObjects[0].Texture);
+		// Test world object model references. Strings are immutable, so it doesn't matter that they're technically not deep copied.
+		Assert.AreEqual(worldObject.ModelPath, level.WorldObjects[0].ModelPath);
+		Assert.AreEqual(worldObject.ModelPath, copy.WorldObjects[0].ModelPath);
 	}
 }

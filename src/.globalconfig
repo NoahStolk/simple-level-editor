@@ -246,6 +246,9 @@ dotnet_diagnostic.S1135.severity                                              = 
 # Do not declare static members on generic types.
 dotnet_diagnostic.CA1000.severity                                             = none
 
+# Change 'List<T>' into 'Collection<T>', 'ReadOnlyCollection<T>' or 'KeyedCollection<K,V>'.
+dotnet_diagnostic.CA1002.severity                                             = none
+
 # Do not declare visible instance fields.
 dotnet_diagnostic.CA1051.severity                                             = none
 

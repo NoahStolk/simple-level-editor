@@ -118,103 +118,51 @@ public static class WorldObjectEditorWindow
 		}
 
 		const int rowLength = 4;
+		const float padding = 3;
 
-		ImGui.SeparatorText("Mesh");
+		ImGui.SeparatorText("Model");
 
-		if (ImGui.BeginChild("Mesh", new Vector2(0, 280), ImGuiChildFlags.Border))
+		Vector2 availableSize = ImGui.GetContentRegionAvail();
+		if (ImGui.BeginChild("Model", availableSize, ImGuiChildFlags.Border))
 		{
 			float childWidth = ImGui.GetContentRegionAvail().X;
-			float tileSize = childWidth / rowLength;
-			Vector2 origin = ImGui.GetCursorScreenPos();
-			for (int i = 0; i < LevelState.Level.Meshes.Length; i++)
+			float tileSize = childWidth / rowLength - padding * rowLength;
+			for (int i = 0; i < LevelState.Level.ModelPaths.Length; i++)
 			{
-				string meshName = LevelState.Level.Meshes[i];
+				string meshName = LevelState.Level.ModelPaths[i];
 
-				Vector2 localPosition = new(i % rowLength * tileSize, MathF.Floor(i / (float)rowLength) * tileSize);
-				ImDrawListPtr drawList = ImGui.GetWindowDrawList();
-				Vector2 cursorPos = origin + localPosition;
-
-				MeshPreviewFramebuffer? framebuffer = MeshContainer.GetMeshPreviewFramebuffer(meshName);
+				ModelPreviewFramebuffer? framebuffer = ModelContainer.LevelContainer.GetModelPreviewFramebuffer(meshName);
 				if (framebuffer != null)
 				{
-					const float padding = 12;
-					Vector2 start = cursorPos + new Vector2(padding);
-					Vector2 end = cursorPos + new Vector2(tileSize) - new Vector2(padding);
-					Vector2 size = end - start;
-
-					framebuffer.Render(size);
-					drawList.AddImage((IntPtr)framebuffer.FramebufferTextureId, start, end, Vector2.UnitY, Vector2.UnitX);
-				}
-
-				if (AssetTile(meshName, cursorPos, tileSize, drawList, worldObject.Mesh == meshName))
-				{
-					worldObject.Mesh = meshName;
-					LevelState.Track("Changed object mesh");
+					framebuffer.Render(GetBorderColor(worldObject.ModelPath == meshName), new Vector2(tileSize));
+					AssetTile(worldObject, i, (IntPtr)framebuffer.FramebufferTextureId, rowLength, tileSize, meshName);
 				}
 			}
 
-			AddScrollMarker(LevelState.Level.Meshes.Length, rowLength, tileSize);
+			AddScrollMarker(LevelState.Level.ModelPaths.Length, rowLength, tileSize);
 		}
 
 		ImGui.EndChild(); // End Mesh
 
-		ImGui.SeparatorText("Texture");
-
-		if (ImGui.BeginChild("Texture", new Vector2(0, 280), ImGuiChildFlags.Border))
+		static Vector4 GetBorderColor(bool isSelected)
 		{
-			float childWidth = ImGui.GetContentRegionAvail().X;
-			float tileSize = childWidth / rowLength;
-			Vector2 origin = ImGui.GetCursorScreenPos();
-			for (int i = 0; i < LevelState.Level.Textures.Length; i++)
+			return isSelected switch
 			{
-				string textureName = LevelState.Level.Textures[i];
-
-				Vector2 localPosition = new(i % rowLength * tileSize, MathF.Floor(i / (float)rowLength) * tileSize);
-				ImDrawListPtr drawList = ImGui.GetWindowDrawList();
-				Vector2 cursorPos = origin + localPosition;
-
-				uint? textureId = TextureContainer.GetLevelTexture(textureName);
-				if (textureId.HasValue)
-				{
-					const float padding = 12;
-					drawList.AddImage((IntPtr)textureId.Value, cursorPos + new Vector2(padding), cursorPos + new Vector2(tileSize) - new Vector2(padding));
-				}
-
-				if (AssetTile(textureName, cursorPos, tileSize, drawList, worldObject.Texture == textureName))
-				{
-					worldObject.Texture = textureName;
-					LevelState.Track("Changed object texture");
-				}
-			}
-
-			AddScrollMarker(LevelState.Level.Textures.Length, rowLength, tileSize);
-		}
-
-		ImGui.EndChild(); // End Texture
-
-		static bool AssetTile(string assetName, Vector2 cursorPos, float tileSize, ImDrawListPtr drawList, bool isSelected)
-		{
-			ReadOnlySpan<char> displayName = Path.GetFileNameWithoutExtension(assetName.AsSpan());
-			Vector2 displayNameSize = ImGui.CalcTextSize(displayName);
-			Vector2 textOrigin = cursorPos + new Vector2(tileSize / 2f - displayNameSize.X / 2f, 3);
-			drawList.AddRectFilled(textOrigin, textOrigin + displayNameSize, 0xB0000000);
-			drawList.AddText(textOrigin, 0xFFFFFFFF, displayName);
-
-			bool isHovered = ImGui.IsMouseHoveringRect(cursorPos, cursorPos + new Vector2(tileSize));
-			drawList.AddRect(cursorPos, cursorPos + new Vector2(tileSize), GetBorderColor(isSelected, isHovered));
-
-			return isHovered && ImGui.IsMouseClicked(ImGuiMouseButton.Left);
-		}
-
-		static uint GetBorderColor(bool isSelected, bool isHovered)
-		{
-			return (isSelected, isHovered) switch
-			{
-				(true, true) => 0xFF88FFFF,
-				(true, false) => 0xFFFFFFFF,
-				(false, true) => 0xFF448888,
-				(false, false) => 0xFF444444,
+				true => new Vector4(0.3f, 0.7f, 0.3f, 1),
+				false => new Vector4(0.3f, 0.3f, 0.3f, 1),
 			};
+		}
+
+		static void AssetTile(WorldObject worldObject, int i, IntPtr textureId, int rowLength, float tileSize, string meshName)
+		{
+			if (i % rowLength != 0)
+				ImGui.SameLine();
+
+			if (ImGui.ImageButton(Inline.Span($"Image{i}"), textureId, new Vector2(tileSize), Vector2.UnitY, Vector2.UnitX))
+			{
+				worldObject.ModelPath = meshName;
+				LevelState.Track("Changed world object model");
+			}
 		}
 	}
 

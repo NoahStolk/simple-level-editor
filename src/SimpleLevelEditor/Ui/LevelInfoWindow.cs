@@ -31,8 +31,7 @@ public static class LevelInfoWindow
 
 	private static void RenderLevel(Level3dData level)
 	{
-		ImGui.Text(Inline.Span($"Meshes: {level.Meshes.Length}"));
-		ImGui.Text(Inline.Span($"Textures: {level.Textures.Length}"));
+		ImGui.Text(Inline.Span($"Models: {level.ModelPaths.Length}"));
 		ImGui.Text(Inline.Span($"WorldObjects: {level.WorldObjects.Length}"));
 		ImGui.Text(Inline.Span($"Entities: {level.Entities.Length}"));
 		ImGui.TextWrapped(Inline.Span($"EntityConfig: {(level.EntityConfigPath == null ? "<No entity config loaded>" : level.EntityConfigPath.Value)}"));
@@ -45,18 +44,18 @@ public static class LevelInfoWindow
 
 	private static void RenderEntityConfig(EntityConfigData entityConfig)
 	{
-		if (ImGui.TreeNode("Meshes"))
+		if (ImGui.TreeNode("Models"))
 		{
-			for (int i = 0; i < entityConfig.Meshes.Length; i++)
-				ImGui.Text(entityConfig.Meshes[i]);
+			for (int i = 0; i < entityConfig.ModelPaths.Length; i++)
+				ImGui.Text(entityConfig.ModelPaths[i]);
 
 			ImGui.TreePop();
 		}
 
 		if (ImGui.TreeNode("Textures"))
 		{
-			for (int i = 0; i < entityConfig.Textures.Length; i++)
-				ImGui.Text(entityConfig.Textures[i]);
+			for (int i = 0; i < entityConfig.TexturePaths.Length; i++)
+				ImGui.Text(entityConfig.TexturePaths[i]);
 
 			ImGui.TreePop();
 		}
@@ -93,7 +92,7 @@ public static class LevelInfoWindow
 
 				switch (entity.Shape)
 				{
-					case EntityShape.Point point:
+					case EntityShapeDescriptor.Point point:
 						NextColumnTextColored(Color.Green, "Type");
 						NextColumnText(point.Visualization.GetTypeId());
 
@@ -106,29 +105,27 @@ public static class LevelInfoWindow
 								NextColumnText(simpleSphere.Radius.ToString(CultureInfo.InvariantCulture));
 								break;
 							case PointEntityVisualization.BillboardSprite billboardSprite:
-								NextColumnTextColored(Color.Purple, "Texture");
-								NextColumnText(billboardSprite.TextureName);
+								NextColumnTextColored(Color.Purple, "Texture path");
+								NextColumnText(billboardSprite.TexturePath);
 								NextColumnTextColored(Color.Aqua, "Size");
 								NextColumnText(billboardSprite.Size.ToString(CultureInfo.InvariantCulture));
 								break;
-							case PointEntityVisualization.Mesh mesh:
-								NextColumnTextColored(Color.Red, "Mesh");
-								NextColumnText(mesh.MeshName);
-								NextColumnTextColored(Color.Purple, "Texture");
-								NextColumnText(mesh.TextureName);
+							case PointEntityVisualization.Model model:
+								NextColumnTextColored(Color.Red, "Model path");
+								NextColumnText(model.ModelPath);
 								NextColumnTextColored(Color.Aqua, "Size");
-								NextColumnText(mesh.Size.ToString(CultureInfo.InvariantCulture));
+								NextColumnText(model.Size.ToString(CultureInfo.InvariantCulture));
 								break;
 							default:
 								throw new UnreachableException($"Unknown point visualization type: {point.Visualization.GetTypeId()}");
 						}
 
 						break;
-					case EntityShape.Sphere sphere:
+					case EntityShapeDescriptor.Sphere sphere:
 						NextColumnTextColored(Color.Yellow, "Color");
 						NextColumnText(sphere.Color.ToDisplayString());
 						break;
-					case EntityShape.Aabb aabb:
+					case EntityShapeDescriptor.Aabb aabb:
 						NextColumnTextColored(Color.Yellow, "Color");
 						NextColumnText(aabb.Color.ToDisplayString());
 						break;

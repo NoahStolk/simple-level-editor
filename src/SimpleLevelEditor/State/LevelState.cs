@@ -27,7 +27,10 @@ public static class LevelState
 
 	public static int CurrentHistoryIndex { get; private set; }
 	public static string? LevelFilePath { get; private set; }
+
+	// TODO: This appears to be bugged. It should be set to true when the level is modified (test by moving a world object).
 	public static bool IsModified { get; private set; }
+
 	public static Level3dData Level
 	{
 		get => _level;
@@ -195,7 +198,7 @@ public static class LevelState
 
 		string? baseDirectory = Path.GetDirectoryName(levelFilePath);
 		if (baseDirectory != null)
-			RefreshAssetFileWatcher(baseDirectory, level.Meshes.Concat(level.Textures));
+			RefreshAssetFileWatcher(baseDirectory, level.ModelPaths);
 	}
 
 	private static void RefreshAssetFileWatcher(string baseDirectory, IEnumerable<string> assetPaths)
@@ -224,8 +227,18 @@ public static class LevelState
 	{
 		try
 		{
-			MeshContainer.Rebuild(levelFilePath);
-			TextureContainer.Rebuild(levelFilePath);
+			ModelContainer.LevelContainer.Rebuild(levelFilePath, Level.ModelPaths.ToList());
+
+			if (Level.EntityConfigPath != null)
+			{
+				string? levelDirectory = Path.GetDirectoryName(levelFilePath);
+				if (levelDirectory != null)
+				{
+					string absolutePathToEntityConfig = Path.Combine(levelDirectory, Level.EntityConfigPath.Value);
+					ModelContainer.EntityConfigContainer.Rebuild(absolutePathToEntityConfig, EntityConfigState.EntityConfig.ModelPaths.ToList());
+				}
+			}
+
 			return true;
 		}
 		catch (Exception ex)

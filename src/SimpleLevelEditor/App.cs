@@ -29,8 +29,6 @@ public sealed class App
 	{
 		_imGuiController = imGuiController;
 
-		Graphics.Gl.ClearColor(0.3f, 0.3f, 0.3f, 0);
-
 		TextureData texture = TgaParser.Parse(File.ReadAllBytes(Path.Combine("Resources", "Textures", "Icon.tga")));
 
 		IntPtr iconPtr = Marshal.AllocHGlobal(texture.Width * texture.Height * 4);

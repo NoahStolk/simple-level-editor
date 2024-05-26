@@ -1,5 +1,4 @@
 using Detach.Collisions;
-using SimpleLevelEditor.Content.Data;
 using SimpleLevelEditor.Rendering;
 using System.Diagnostics.CodeAnalysis;
 
@@ -24,25 +23,37 @@ public static class RaycastUtils
 		return Math.Min(t1Distance, t2Distance);
 	}
 
-	public static float? RaycastEntityMesh(Matrix4x4 modelMatrix, Mesh? mesh, Vector3 rayStartPosition, Vector3 rayDirection)
+	public static float? RaycastEntityModel(Matrix4x4 modelMatrix, Model? model, Vector3 rayStartPosition, Vector3 rayDirection)
 	{
-		if (mesh == null)
+		if (model == null)
 			return null;
 
 		Vector3? closestIntersection = null;
-		if (!RaycastMesh(modelMatrix, mesh, rayStartPosition, rayDirection, ref closestIntersection))
+		if (!RaycastModel(modelMatrix, model, rayStartPosition, rayDirection, ref closestIntersection))
 			return null;
 
 		return Vector3.Distance(rayStartPosition, closestIntersection.Value);
 	}
 
+	private static bool RaycastModel(Matrix4x4 modelMatrix, Model model, Vector3 rayStartPosition, Vector3 rayDirection, [NotNullWhen(true)] ref Vector3? closestIntersection)
+	{
+		for (int i = 0; i < model.Meshes.Count; i++)
+		{
+			Mesh mesh = model.Meshes[i];
+			if (RaycastMesh(modelMatrix, mesh, rayStartPosition, rayDirection, ref closestIntersection))
+				return true;
+		}
+
+		return false;
+	}
+
 	public static bool RaycastMesh(Matrix4x4 modelMatrix, Mesh mesh, Vector3 rayStartPosition, Vector3 rayDirection, [NotNullWhen(true)] ref Vector3? closestIntersection)
 	{
-		for (int i = 0; i < mesh.Indices.Length; i += 3)
+		for (int i = 0; i < mesh.Geometry.Indices.Length; i += 3)
 		{
-			Vector3 p1 = Vector3.Transform(mesh.Vertices[mesh.Indices[i + 0]].Position, modelMatrix);
-			Vector3 p2 = Vector3.Transform(mesh.Vertices[mesh.Indices[i + 1]].Position, modelMatrix);
-			Vector3 p3 = Vector3.Transform(mesh.Vertices[mesh.Indices[i + 2]].Position, modelMatrix);
+			Vector3 p1 = Vector3.Transform(mesh.Geometry.Vertices[mesh.Geometry.Indices[i + 0]].Position, modelMatrix);
+			Vector3 p2 = Vector3.Transform(mesh.Geometry.Vertices[mesh.Geometry.Indices[i + 1]].Position, modelMatrix);
+			Vector3 p3 = Vector3.Transform(mesh.Geometry.Vertices[mesh.Geometry.Indices[i + 2]].Position, modelMatrix);
 
 			Vector3? triangleIntersection = Ray.IntersectsTriangle(rayStartPosition, rayDirection, p1, p2, p3);
 			if (triangleIntersection == null)

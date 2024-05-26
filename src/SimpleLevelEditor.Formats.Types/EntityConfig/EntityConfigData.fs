@@ -1,11 +1,11 @@
 namespace SimpleLevelEditor.Formats.Types.EntityConfig
 
 type EntityConfigData =
-    { Meshes: string list
-      Textures: string list
+    { ModelPaths: string list
+      TexturePaths: string list
       Entities: EntityDescriptor list }
 
     static member CreateDefault() =
-        { Meshes = []
-          Textures = []
+        { ModelPaths = []
+          TexturePaths = []
           Entities = [] }

@@ -1,3 +1,5 @@
+using Detach.Parsers.Texture;
+using Detach.Parsers.Texture.TgaFormat;
 using Silk.NET.OpenGL;
 using SimpleLevelEditor.Content;
 using SimpleLevelEditor.Extensions;
@@ -21,6 +23,8 @@ public sealed class SpriteRenderer
 
 	private readonly ShaderCacheEntry _spriteShader;
 	private readonly int _modelUniform;
+
+	private readonly Dictionary<string, TextureData> _billboardSpriteTextures = new();
 
 	public SpriteRenderer()
 	{
@@ -55,17 +59,33 @@ public sealed class SpriteRenderer
 
 	private unsafe void RenderSpriteEntity(Entity entity, Vector3 entityPosition)
 	{
-		EntityShape? entityShape = EntityConfigState.GetEntityShape(entity);
-		if (entityShape is not EntityShape.Point { Visualization: PointEntityVisualization.BillboardSprite billboardSprite })
+		EntityShapeDescriptor? entityShapeDescriptor = EntityConfigState.GetEntityShapeDescriptor(entity);
+		if (entityShapeDescriptor is not EntityShapeDescriptor.Point { Visualization: PointEntityVisualization.BillboardSprite billboardSprite })
 			return;
 
-		uint? textureId = TextureContainer.GetEntityConfigTexture(billboardSprite.TextureName);
-		if (textureId == null)
+		if (LevelState.Level.EntityConfigPath == null)
 			return;
+
+		string? levelDirectory = Path.GetDirectoryName(LevelState.LevelFilePath);
+		if (levelDirectory == null)
+			return;
+
+		string absolutePathToEntityConfig = Path.Combine(levelDirectory, LevelState.Level.EntityConfigPath.Value);
+		string? entityConfigDirectory = Path.GetDirectoryName(absolutePathToEntityConfig);
+		if (entityConfigDirectory == null)
+			return;
+
+		string absolutePathToSpriteTexture = Path.Combine(entityConfigDirectory, billboardSprite.TexturePath);
+		if (!_billboardSpriteTextures.TryGetValue(absolutePathToSpriteTexture, out TextureData? textureData))
+		{
+			textureData = TgaParser.Parse(File.ReadAllBytes(absolutePathToSpriteTexture));
+			_billboardSpriteTextures.Add(absolutePathToSpriteTexture, textureData);
+		}
+
+		uint textureId = TextureContainer.GetTexture(textureData);
+		Gl.BindTexture(TextureTarget.Texture2D, textureId);
 
 		Gl.UniformMatrix4x4(_modelUniform, Matrix4x4.CreateScale(new Vector3(billboardSprite.Size, billboardSprite.Size, 1)) * EntityMatrixUtils.GetBillboardMatrix(entityPosition));
-
-		Gl.BindTexture(TextureTarget.Texture2D, textureId.Value);
 
 		Gl.BindVertexArray(_planeVao);
 		fixed (uint* indexPtr = &_planeIndices[0])
