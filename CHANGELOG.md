@@ -1,18 +1,12 @@
 # Changelog
 
-Certain releases may also include an update for the `SimpleLevelEditor.Formats` library. This library uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+## SimpleLevelEditor
 
-## 0.12.1
+### 0.12.1
 
 - Fixed JSON serialization not being compatible with optimized release builds due to assembly trimming.
 
-### SimpleLevelEditor.Formats 0.2.1
-
-#### Changed
-
-- The `SimpleLevelEditorJsonSerializer` class is now marked with `RequiresUnreferencedCodeAttribute`.
-
-## 0.12.0
+### 0.12.0
 
 - Added support for models with multiple meshes and materials (although only the material's diffuse texture is used in the renderer for now).
 - Assigning arbitrary textures to meshes (now models) has been removed in favor of rendering models.
@@ -20,7 +14,17 @@ Certain releases may also include an update for the `SimpleLevelEditor.Formats` 
 - Entities can now be rendered as points, boxes, spheres, sprites, and models.
 - Various improvements have been made to the renderer and editor.
 
-### SimpleLevelEditor.Formats 0.2.0
+## SimpleLevelEditor.Formats
+
+This library uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+### 0.2.1
+
+#### Changed
+
+- The `SimpleLevelEditorJsonSerializer` class is now marked with `RequiresUnreferencedCodeAttribute`.
+
+### 0.2.0
 
 #### Changed
 
