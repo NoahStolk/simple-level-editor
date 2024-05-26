@@ -46,15 +46,13 @@ public static class LevelAssetsWindow
 
 			ImGui.EndDisabled();
 
-			float height = ImGui.GetContentRegionAvail().Y / 2f - 48;
-
-			RenderAssetPaths(height, "Models", "obj", LevelState.Level.ModelPaths, l => LevelState.Level.ModelPaths = l);
+			RenderAssetPaths("Models", "obj", LevelState.Level.ModelPaths, l => LevelState.Level.ModelPaths = l);
 		}
 
 		ImGui.End();
 	}
 
-	private static void RenderAssetPaths(float windowHeight, ReadOnlySpan<char> name, string dialogFilterList, FSharpList<string> list, Action<FSharpList<string>> setList)
+	private static void RenderAssetPaths(ReadOnlySpan<char> name, string dialogFilterList, FSharpList<string> list, Action<FSharpList<string>> setList)
 	{
 		ImGui.SeparatorText(name);
 
@@ -77,7 +75,7 @@ public static class LevelAssetsWindow
 		}
 
 		ImGui.BeginDisabled(LevelState.LevelFilePath == null);
-		if (ImGui.BeginChild(Inline.Span($"{name}List"), new Vector2(0, windowHeight), ImGuiChildFlags.Border))
+		if (ImGui.BeginChild(Inline.Span($"{name}List"), Vector2.Zero, ImGuiChildFlags.Border))
 		{
 			string? toRemove = null;
 			foreach (string item in list)
