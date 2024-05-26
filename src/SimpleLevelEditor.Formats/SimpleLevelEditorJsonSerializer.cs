@@ -1,10 +1,12 @@
 using SimpleLevelEditor.Formats.Types.EntityConfig;
 using SimpleLevelEditor.Formats.Types.Level;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace SimpleLevelEditor.Formats;
 
+[RequiresUnreferencedCode("This class is used for serialization and deserialization of types that are not known at compile time.")]
 public static class SimpleLevelEditorJsonSerializer
 {
 	private static readonly JsonSerializerOptions _defaultSerializerOptions = JsonFSharpOptions.Default().ToJsonSerializerOptions();

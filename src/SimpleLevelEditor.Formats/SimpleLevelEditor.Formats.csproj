@@ -6,7 +6,7 @@
     <Copyright>Copyright © Noah Stolk</Copyright>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/NoahStolk/simple-level-editor</RepositoryUrl>
-    <Version>0.2.0</Version>
+    <Version>0.2.1</Version>
   </PropertyGroup>
 
   <ItemGroup Label="External dependencies">

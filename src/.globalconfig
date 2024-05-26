@@ -232,6 +232,13 @@ dotnet_diagnostic.RS0030.severity                                             = 
 # Add a way to break out of this method/property's recursion.
 dotnet_diagnostic.S2190.severity                                              = error
 
+########################
+# Diagnostics: Warning #
+########################
+
+# Members attributed with RequiresUnreferencedCode may break when trimming.
+dotnet_diagnostic.IL2026.severity                                             = warning
+
 ###########################
 # Diagnostics: Suggestion #
 ###########################

@@ -1,15 +1,5 @@
 <linker>
-	<assembly fullname="SimpleLevelEditor.Formats">
-		<type fullname="SimpleLevelEditor.Formats.Level.XmlModel.XmlLevel" preserve="all" />
-		<type fullname="SimpleLevelEditor.Formats.Level.XmlModel.XmlLevelEntity" preserve="all" />
-		<type fullname="SimpleLevelEditor.Formats.Level.XmlModel.XmlLevelEntityProperty" preserve="all" />
-		<type fullname="SimpleLevelEditor.Formats.Level.XmlModel.XmlLevelMesh" preserve="all" />
-		<type fullname="SimpleLevelEditor.Formats.Level.XmlModel.XmlLevelTexture" preserve="all" />
-		<type fullname="SimpleLevelEditor.Formats.Level.XmlModel.XmlLevelWorldObject" preserve="all" />
-		<type fullname="SimpleLevelEditor.Formats.EntityConfig.XmlModel.XmlEntityConfigData" preserve="all" />
-		<type fullname="SimpleLevelEditor.Formats.EntityConfig.XmlModel.XmlEntityConfigEntity" preserve="all" />
-		<type fullname="SimpleLevelEditor.Formats.EntityConfig.XmlModel.XmlEntityConfigEntityShape" preserve="all" />
-		<type fullname="SimpleLevelEditor.Formats.EntityConfig.XmlModel.XmlEntityConfigProperty" preserve="all" />
-		<type fullname="SimpleLevelEditor.Formats.EntityConfig.XmlModel.XmlEntityConfigPropertyType" preserve="all" />
-	</assembly>
+	<assembly fullname="FSharp.Core" preserve="all" />
+	<assembly fullname="FSharp.SystemTextJson" preserve="all" />
+	<assembly fullname="SimpleLevelEditor.Formats.Types" preserve="all" />
 </linker>
