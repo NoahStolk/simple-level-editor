@@ -9,22 +9,23 @@ namespace SimpleLevelEditor.Rendering;
 
 public class ModelPreviewFramebuffer
 {
+	private const int _fieldOfView = 2;
+
 	private readonly Model _model;
 	private readonly float _zoom;
 	private readonly Vector3 _origin;
+
 	private Vector2 _cachedFramebufferSize;
 	private Matrix4x4 _projection;
 	private float _timer;
-
 	private uint _framebufferId;
 
 	public ModelPreviewFramebuffer(Model model)
 	{
 		_model = model;
 
-		// TODO: Fix this.
-		_zoom = 10;
-		_origin = Vector3.Zero;
+		_zoom = model.BoundingSphereRadius * 2f / MathF.Tan(_fieldOfView / 2f);
+		_origin = model.BoundingSphereOrigin;
 	}
 
 	public uint FramebufferTextureId { get; private set; }
@@ -64,11 +65,10 @@ public class ModelPreviewFramebuffer
 
 		_cachedFramebufferSize = framebufferSize;
 
-		const int fieldOfView = 2;
 		const float nearPlaneDistance = 0.05f;
 		const float farPlaneDistance = 100f;
 		float aspectRatio = framebufferSize.X / framebufferSize.Y;
-		_projection = Matrix4x4.CreatePerspectiveFieldOfView(MathF.PI / 4 * fieldOfView, aspectRatio, nearPlaneDistance, farPlaneDistance);
+		_projection = Matrix4x4.CreatePerspectiveFieldOfView(MathF.PI / 4 * _fieldOfView, aspectRatio, nearPlaneDistance, farPlaneDistance);
 	}
 
 	public void Destroy()

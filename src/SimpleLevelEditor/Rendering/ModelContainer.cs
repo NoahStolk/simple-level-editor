@@ -152,7 +152,17 @@ public sealed class ModelContainer
 			meshes.Add(new Mesh(geometry, meshData.MaterialName, vao, lineIndices.ToArray(), VaoUtils.CreateLineVao(modelData.Positions.ToArray()), boundingMin, boundingMax));
 		}
 
-		return new Model(absolutePathToObjFile, allMaterials, meshes);
+		Vector3 modelBoundingMin = new(float.MaxValue);
+		Vector3 modelBoundingMax = new(float.MinValue);
+		foreach (Mesh mesh in meshes)
+		{
+			modelBoundingMin = Vector3.Min(modelBoundingMin, mesh.BoundingMin);
+			modelBoundingMax = Vector3.Max(modelBoundingMax, mesh.BoundingMax);
+		}
+
+		Vector3 modelBoundingCenter = (modelBoundingMin + modelBoundingMax) / 2;
+		float modelBoundingRadius = Vector3.Distance(modelBoundingCenter, modelBoundingMax);
+		return new Model(absolutePathToObjFile, allMaterials, meshes, modelBoundingCenter, modelBoundingRadius);
 	}
 
 	private static void AddEdge(IDictionary<Edge, List<Vector3>> edges, Edge edge, Vector3 normal)

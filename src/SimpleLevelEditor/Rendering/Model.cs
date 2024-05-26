@@ -1,6 +1,6 @@
 namespace SimpleLevelEditor.Rendering;
 
-public record Model(string AbsolutePath, Dictionary<string, MaterialLibrary> MaterialLibraries, List<Mesh> Meshes)
+public record Model(string AbsolutePath, Dictionary<string, MaterialLibrary> MaterialLibraries, List<Mesh> Meshes, Vector3 BoundingSphereOrigin, float BoundingSphereRadius)
 {
 	public Material? GetMaterial(string materialName)
 	{
