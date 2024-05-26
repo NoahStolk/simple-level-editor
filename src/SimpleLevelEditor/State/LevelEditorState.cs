@@ -30,6 +30,7 @@ public static class LevelEditorState
 
 	public static bool ShouldRenderWorldObjects { get; set; } = true;
 
+	// TODO: The entity filter should be based on the entity config.
 	public static Dictionary<string, bool> EntityRenderFilter { get; } = [];
 
 	public static bool ShouldRenderEntity(Entity entity)

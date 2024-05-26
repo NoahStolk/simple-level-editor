@@ -2,6 +2,7 @@ using Microsoft.FSharp.Core;
 using SimpleLevelEditor.Formats;
 using SimpleLevelEditor.Formats.Types.Level;
 using SimpleLevelEditor.Rendering;
+using SimpleLevelEditor.State.Messages;
 using SimpleLevelEditor.Ui.ChildWindows;
 using System.Security.Cryptography;
 
@@ -81,7 +82,7 @@ public static class LevelState
 			FSharpOption<Level3dData>? level = SimpleLevelEditorJsonSerializer.DeserializeLevelFromStream(fs);
 			if (level == null)
 			{
-				DebugState.AddWarning("Failed to load level.");
+				MessagesState.AddError("Failed to load level.");
 				return;
 			}
 
@@ -248,7 +249,7 @@ public static class LevelState
 		}
 		catch (Exception ex)
 		{
-			DebugState.AddWarning($"Failed to reload assets: {ex.Message}");
+			MessagesState.AddError($"Failed to reload assets: {ex.Message}");
 			return false;
 		}
 	}

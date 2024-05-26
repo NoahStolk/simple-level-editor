@@ -89,6 +89,6 @@ public static class MainWindow
 		HistoryWindow.Render();
 		LevelEditorWindow.Render();
 		ObjectEditorWindow.Render();
-		WarningsWindow.Render();
+		MessagesWindow.Render();
 	}
 }

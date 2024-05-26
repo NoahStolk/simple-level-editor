@@ -1,4 +1,5 @@
 using SimpleLevelEditor.State;
+using SimpleLevelEditor.State.Messages;
 
 namespace SimpleLevelEditor;
 
@@ -15,7 +16,7 @@ public static class AssetFileWatcher
 		{
 			if (directory == null || !Directory.Exists(directory))
 			{
-				DebugState.AddWarning($"Asset directory {directory} does not exist");
+				MessagesState.AddError($"Asset directory {directory} does not exist");
 				return;
 			}
 
@@ -28,7 +29,7 @@ public static class AssetFileWatcher
 			};
 			fileSystemWatcher.Changed += (_, _) =>
 			{
-				DebugState.AddWarning("Asset file changed");
+				MessagesState.AddInfo("Asset file changed");
 				AssetLoadScheduleState.Schedule(LevelState.LevelFilePath);
 			};
 
@@ -37,7 +38,7 @@ public static class AssetFileWatcher
 		}
 		catch (Exception ex)
 		{
-			DebugState.AddWarning($"Failed to watch directory '{directory}': {ex.Message}");
+			MessagesState.AddError($"Failed to watch directory '{directory}': {ex.Message}");
 		}
 	}
 

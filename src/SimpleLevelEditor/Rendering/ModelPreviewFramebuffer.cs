@@ -2,7 +2,7 @@ using ImGuiNET;
 using Silk.NET.OpenGL;
 using SimpleLevelEditor.Content;
 using SimpleLevelEditor.Extensions;
-using SimpleLevelEditor.State;
+using SimpleLevelEditor.State.Messages;
 using static SimpleLevelEditor.Graphics;
 
 namespace SimpleLevelEditor.Rendering;
@@ -58,7 +58,7 @@ public class ModelPreviewFramebuffer
 		Gl.FramebufferRenderbuffer(FramebufferTarget.Framebuffer, FramebufferAttachment.DepthAttachment, RenderbufferTarget.Renderbuffer, rbo);
 
 		if (Gl.CheckFramebufferStatus(FramebufferTarget.Framebuffer) != GLEnum.FramebufferComplete)
-			DebugState.AddWarning("Framebuffer is not complete");
+			MessagesState.AddError($"Model preview framebuffer for '{_model.AbsolutePath}' is not complete.");
 
 		Gl.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
 		Gl.DeleteRenderbuffer(rbo);

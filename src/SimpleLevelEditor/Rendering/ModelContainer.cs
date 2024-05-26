@@ -3,7 +3,7 @@ using Detach.Parsers.Model.MtlFormat;
 using Detach.Parsers.Model.ObjFormat;
 using Detach.Parsers.Texture;
 using Detach.Parsers.Texture.TgaFormat;
-using SimpleLevelEditor.State;
+using SimpleLevelEditor.State.Messages;
 using SimpleLevelEditor.Utils;
 
 namespace SimpleLevelEditor.Rendering;
@@ -29,7 +29,7 @@ public sealed class ModelContainer
 		if (_models.TryGetValue(path, out Model? model))
 			return model;
 
-		DebugState.AddWarning($"Cannot find level model '{path}' in container '{_containerName}'.");
+		MessagesState.AddWarning($"Cannot find level model '{path}' in container '{_containerName}'.");
 		return null;
 	}
 
@@ -38,7 +38,7 @@ public sealed class ModelContainer
 		if (_modelPreviewFramebuffers.TryGetValue(path, out ModelPreviewFramebuffer? modelPreviewFramebuffer))
 			return modelPreviewFramebuffer;
 
-		DebugState.AddWarning($"Cannot find model preview framebuffer '{path}' in container '{_containerName}'.");
+		MessagesState.AddWarning($"Cannot find model preview framebuffer '{path}' in container '{_containerName}'.");
 		return null;
 	}
 

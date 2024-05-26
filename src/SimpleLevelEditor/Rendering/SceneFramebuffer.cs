@@ -1,6 +1,6 @@
 using Silk.NET.OpenGL;
 using SimpleLevelEditor.Rendering.Scene;
-using SimpleLevelEditor.State;
+using SimpleLevelEditor.State.Messages;
 using static SimpleLevelEditor.Graphics;
 
 namespace SimpleLevelEditor.Rendering;
@@ -40,7 +40,7 @@ public static class SceneFramebuffer
 		Gl.FramebufferRenderbuffer(FramebufferTarget.Framebuffer, FramebufferAttachment.DepthAttachment, RenderbufferTarget.Renderbuffer, rbo);
 
 		if (Gl.CheckFramebufferStatus(FramebufferTarget.Framebuffer) != GLEnum.FramebufferComplete)
-			DebugState.AddWarning("Framebuffer is not complete");
+			MessagesState.AddError("Framebuffer for scene is not complete.");
 
 		Gl.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
 		Gl.DeleteRenderbuffer(rbo);

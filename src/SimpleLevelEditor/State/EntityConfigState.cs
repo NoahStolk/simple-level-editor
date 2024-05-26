@@ -2,6 +2,7 @@ using Microsoft.FSharp.Core;
 using SimpleLevelEditor.Formats;
 using SimpleLevelEditor.Formats.Types.EntityConfig;
 using SimpleLevelEditor.Formats.Types.Level;
+using SimpleLevelEditor.State.Messages;
 
 namespace SimpleLevelEditor.State;
 
@@ -15,7 +16,7 @@ public static class EntityConfigState
 		FSharpOption<EntityConfigData>? entityConfig = SimpleLevelEditorJsonSerializer.DeserializeEntityConfigFromStream(fs);
 		if (entityConfig == null)
 		{
-			DebugState.AddWarning("Failed to load entity config.");
+			MessagesState.AddError("Failed to load entity config.");
 			return;
 		}
 
