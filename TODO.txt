@@ -3,17 +3,7 @@ HIGH PRIORITY
 MEDIUM PRIORITY
 - Fix z-fighting with grid lines
 - Save state indicated by asterisk in title bar
-- Settings
-	- FOV
-	- Look speed
-	- Pan speed
-	- Invert pan X
-	- Invert pan Y
 
 BACKLOG
 - Multiple selection
-	- Hold shift to select multiple meshes?
-- Add texture UV sliders?
-
-UI
-- World object editor mesh/texture grids should scale with window height just like level assets lists
+	- Hold shift to select multiple objects?

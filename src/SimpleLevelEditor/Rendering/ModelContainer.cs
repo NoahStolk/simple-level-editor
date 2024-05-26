@@ -8,12 +8,6 @@ using SimpleLevelEditor.Utils;
 
 namespace SimpleLevelEditor.Rendering;
 
-/*
-model
-	materials
-		textures
-	meshes
- */
 public sealed class ModelContainer
 {
 	private readonly Dictionary<string, Model> _models = new();
@@ -42,7 +36,7 @@ public sealed class ModelContainer
 		if (_modelPreviewFramebuffers.TryGetValue(path, out ModelPreviewFramebuffer? data))
 			return data;
 
-		DebugState.AddWarning($"Cannot find mesh preview framebuffer '{path}' in container '{_containerName}'.");
+		DebugState.AddWarning($"Cannot find model preview framebuffer '{path}' in container '{_containerName}'.");
 		return null;
 	}
 

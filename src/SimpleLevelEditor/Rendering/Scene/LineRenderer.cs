@@ -264,9 +264,9 @@ public sealed class LineRenderer
 				Gl.BindVertexArray(_pointVao);
 				Gl.DrawArrays(PrimitiveType.Lines, 0, (uint)_pointVertices.Length);
 			}
-			else if (point.Visualization is PointEntityVisualization.Model mesh)
+			else if (point.Visualization is PointEntityVisualization.Model modelVisualization)
 			{
-				Model? model = ModelContainer.EntityConfigContainer.GetModel(mesh.ModelPath);
+				Model? model = ModelContainer.EntityConfigContainer.GetModel(modelVisualization.ModelPath);
 				if (model != null)
 					RenderModelEdges(model, Matrix4x4.CreateTranslation(entityPosition), GetEntityLineColor(entity, new Rgb(191, 63, 63), Vector4.Zero));
 			}
