@@ -6,7 +6,7 @@ using SimpleLevelEditor.State.Messages;
 using SimpleLevelEditor.Ui.ChildWindows;
 using System.Security.Cryptography;
 
-namespace SimpleLevelEditor.State;
+namespace SimpleLevelEditor.State.Level;
 
 public static class LevelState
 {

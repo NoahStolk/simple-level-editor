@@ -1,6 +1,7 @@
 using Detach;
 using ImGuiNET;
 using SimpleLevelEditor.State;
+using SimpleLevelEditor.State.Level;
 using System.Diagnostics;
 
 namespace SimpleLevelEditor.Ui;

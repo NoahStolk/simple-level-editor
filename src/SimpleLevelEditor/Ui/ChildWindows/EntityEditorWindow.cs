@@ -5,6 +5,7 @@ using SimpleLevelEditor.Formats.Types;
 using SimpleLevelEditor.Formats.Types.EntityConfig;
 using SimpleLevelEditor.Formats.Types.Level;
 using SimpleLevelEditor.State;
+using SimpleLevelEditor.State.Level;
 using SimpleLevelEditor.Utils;
 using System.Diagnostics;
 using Color = Detach.Numerics.Color;

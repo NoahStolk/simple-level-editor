@@ -2,6 +2,7 @@ using ImGuiNET;
 using Silk.NET.GLFW;
 using SimpleLevelEditor.Rendering;
 using SimpleLevelEditor.State;
+using SimpleLevelEditor.State.Level;
 
 namespace SimpleLevelEditor.Ui.ChildWindows;
 

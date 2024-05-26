@@ -4,6 +4,7 @@ using SimpleLevelEditor.Extensions;
 using SimpleLevelEditor.Formats.Types.EntityConfig;
 using SimpleLevelEditor.Formats.Types.Level;
 using SimpleLevelEditor.State;
+using SimpleLevelEditor.State.Level;
 using static SimpleLevelEditor.Graphics;
 
 namespace SimpleLevelEditor.Rendering.Scene;

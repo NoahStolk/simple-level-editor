@@ -5,6 +5,7 @@ using SimpleLevelEditor.Formats.Types.EntityConfig;
 using SimpleLevelEditor.Formats.Types.Level;
 using SimpleLevelEditor.Rendering;
 using SimpleLevelEditor.State;
+using SimpleLevelEditor.State.Level;
 using SimpleLevelEditor.Ui.ChildWindows;
 using SimpleLevelEditor.Utils;
 using System.Diagnostics;
