@@ -2,6 +2,10 @@
 
 ## SimpleLevelEditor
 
+### [unreleased]
+
+- Improved messages window.
+
 ### 0.12.3
 
 - Fixed render filter bugs.
