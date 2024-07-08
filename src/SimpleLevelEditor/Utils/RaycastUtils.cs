@@ -15,6 +15,7 @@ public static class RaycastUtils
 		Vector3 p3 = Vector3.Transform(new Vector3(+1, +1, 0), modelMatrix);
 		Vector3 p4 = Vector3.Transform(new Vector3(-1, +1, 0), modelMatrix);
 
+		// TODO: Raycast with triangle might be incorrect? Add unit tests to Detach.Collisions.
 		bool raycastT1 = Geometry3D.Raycast(new Triangle(p1, p3, p2), ray, out RaycastResult raycastResultT1);
 		bool raycastT2 = Geometry3D.Raycast(new Triangle(p1, p4, p3), ray, out RaycastResult raycastResultT2);
 
