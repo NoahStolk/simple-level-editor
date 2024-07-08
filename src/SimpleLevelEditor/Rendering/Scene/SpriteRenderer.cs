@@ -86,7 +86,7 @@ public sealed class SpriteRenderer
 		uint textureId = TextureContainer.GetTexture(textureData);
 		Gl.BindTexture(TextureTarget.Texture2D, textureId);
 
-		Gl.UniformMatrix4x4(_modelUniform, Matrix4x4.CreateScale(new Vector3(billboardSprite.Size, billboardSprite.Size, 1)) * EntityMatrixUtils.GetBillboardMatrix(entityPosition));
+		Gl.UniformMatrix4x4(_modelUniform, Matrix4x4.CreateScale(billboardSprite.Size) * EntityMatrixUtils.GetBillboardMatrix(entityPosition));
 
 		Gl.BindVertexArray(_planeVao);
 		fixed (uint* indexPtr = &_planeIndices[0])

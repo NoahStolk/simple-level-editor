@@ -165,11 +165,11 @@ public static class MainLogic
 			for (int j = 0; j < model.Meshes.Count; j++)
 			{
 				Mesh mesh = model.Meshes[j];
-				Vector3 bbScale = worldObject.Scale * (mesh.BoundingMax - mesh.BoundingMin);
-				Vector3 bbOffset = (mesh.BoundingMax + mesh.BoundingMin) / 2;
-				float maxScale = Math.Max(bbScale.X, Math.Max(bbScale.Y, bbScale.Z));
-				if (!Geometry3D.Raycast(new Sphere(worldObject.Position + bbOffset, maxScale), ray, out RaycastResult _))
-					continue;
+				// Vector3 bbScale = worldObject.Scale * (mesh.BoundingMax - mesh.BoundingMin);
+				// Vector3 bbOffset = (mesh.BoundingMax + mesh.BoundingMin) / 2;
+				// float maxScale = Math.Max(bbScale.X, Math.Max(bbScale.Y, bbScale.Z));
+				// if (!Geometry3D.Raycast(new Sphere(worldObject.Position + bbOffset, maxScale), ray, out RaycastResult _))
+				// 	continue;
 
 				Matrix4x4 modelMatrix = worldObject.GetModelMatrix();
 				if (RaycastUtils.RaycastMesh(modelMatrix, mesh, ray, ref closestIntersection))
@@ -211,8 +211,8 @@ public static class MainLogic
 				return point.Visualization switch
 				{
 					PointEntityVisualization.SimpleSphere simpleSphere => Geometry3D.Raycast(new Sphere(entity.Position, simpleSphere.Radius), ray, out RaycastResult raycastResult) ? raycastResult.Distance : null,
-					PointEntityVisualization.BillboardSprite billboardSprite => RaycastUtils.RaycastPlane(Matrix4x4.CreateScale(billboardSprite.Size * 0.5f) * EntityMatrixUtils.GetBillboardMatrix(entity.Position), ray),
-					PointEntityVisualization.Model mesh => RaycastUtils.RaycastEntityModel(Matrix4x4.CreateScale(mesh.Size * 2) * Matrix4x4.CreateTranslation(entity.Position), ModelContainer.EntityConfigContainer.GetModel(mesh.ModelPath), ray),
+					PointEntityVisualization.BillboardSprite billboardSprite => RaycastUtils.RaycastPlane(Matrix4x4.CreateScale(billboardSprite.Size) * EntityMatrixUtils.GetBillboardMatrix(entity.Position), ray),
+					PointEntityVisualization.Model model => RaycastUtils.RaycastEntityModel(Matrix4x4.CreateScale(model.Size * 2) * Matrix4x4.CreateTranslation(entity.Position), ModelContainer.EntityConfigContainer.GetModel(model.ModelPath), ray),
 					_ => throw new InvalidOperationException($"Unknown point entity visualization: {point.Visualization}"),
 				};
 			}

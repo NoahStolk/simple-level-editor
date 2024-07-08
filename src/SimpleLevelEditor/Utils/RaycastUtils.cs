@@ -1,5 +1,6 @@
 using Detach.Collisions;
 using Detach.Collisions.Primitives;
+using ImGuiNET;
 using SimpleLevelEditor.Rendering;
 using System.Diagnostics.CodeAnalysis;
 
@@ -14,12 +15,19 @@ public static class RaycastUtils
 		Vector3 p3 = Vector3.Transform(new Vector3(+1, +1, 0), modelMatrix);
 		Vector3 p4 = Vector3.Transform(new Vector3(-1, +1, 0), modelMatrix);
 
-		float? t1 = Geometry3D.Raycast(new Triangle(p1, p2, p3), ray, out RaycastResult raycastResultT1) ? raycastResultT1.Distance : null;
-		float? t2 = Geometry3D.Raycast(new Triangle(p1, p3, p4), ray, out RaycastResult raycastResultT2) ? raycastResultT2.Distance : null;
-		if (t1 == null && t2 == null)
-			return null;
+		bool raycastT1 = Geometry3D.Raycast(new Triangle(p1, p3, p2), ray, out RaycastResult raycastResultT1);
+		bool raycastT2 = Geometry3D.Raycast(new Triangle(p1, p4, p3), ray, out RaycastResult raycastResultT2);
 
-		return Math.Min(t1 ?? float.MaxValue, t2 ?? float.MaxValue);
+		if (raycastT1 || raycastT2)
+			ImGui.SetTooltip($"{ray.Origin}\n{ray.Direction}\n\n{p1}\n{p2}\n{p3}\n{p4}\n\n{raycastT1}\n{raycastT2}\n{raycastResultT1}\n{raycastResultT2}");
+
+		return (raycastT1, raycastT2) switch
+		{
+			(true, true) => Math.Min(raycastResultT1.Distance, raycastResultT2.Distance),
+			(true, false) => raycastResultT1.Distance,
+			(false, true) => raycastResultT2.Distance,
+			_ => null,
+		};
 	}
 
 	public static float? RaycastEntityModel(Matrix4x4 modelMatrix, Model? model, Ray ray)
