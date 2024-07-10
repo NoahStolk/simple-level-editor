@@ -165,11 +165,11 @@ public static class MainLogic
 			for (int j = 0; j < model.Meshes.Count; j++)
 			{
 				Mesh mesh = model.Meshes[j];
-				// Vector3 bbScale = worldObject.Scale * (mesh.BoundingMax - mesh.BoundingMin);
-				// Vector3 bbOffset = (mesh.BoundingMax + mesh.BoundingMin) / 2;
-				// float maxScale = Math.Max(bbScale.X, Math.Max(bbScale.Y, bbScale.Z));
-				// if (!Geometry3D.Raycast(new Sphere(worldObject.Position + bbOffset, maxScale), ray, out RaycastResult _))
-				// 	continue;
+				Vector3 bbScale = worldObject.Scale * (mesh.BoundingMax - mesh.BoundingMin);
+				Vector3 bbOffset = (mesh.BoundingMax + mesh.BoundingMin) / 2;
+				float maxScale = Math.Max(bbScale.X, Math.Max(bbScale.Y, bbScale.Z));
+				if (!Geometry3D.Raycast(new Sphere(worldObject.Position + bbOffset, maxScale), ray, out float _))
+					continue;
 
 				Matrix4x4 modelMatrix = worldObject.GetModelMatrix();
 				if (RaycastUtils.RaycastMesh(modelMatrix, mesh, ray, ref closestIntersection))
