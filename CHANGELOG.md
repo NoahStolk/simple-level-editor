@@ -2,9 +2,10 @@
 
 ## SimpleLevelEditor
 
-### [unreleased]
+### 0.12.4
 
 - Improved messages window.
+- Rewrote raycasting.
 
 ### 0.12.3
 
