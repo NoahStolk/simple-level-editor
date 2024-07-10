@@ -143,17 +143,15 @@ public static class MainLogic
 		if (Input.GlfwInput.IsMouseButtonDown(Camera3d.LookButton))
 			return;
 
-		Vector3? closestIntersection = null;
+		float? closestDistance = null;
 
 		if (LevelEditorState.ShouldRenderWorldObjects)
-			RaycastWorldObjects(ray, ref closestIntersection);
-
-		float? closestDistance = closestIntersection.HasValue ? Vector3.Distance(Camera3d.Position, closestIntersection.Value) : null;
+			RaycastWorldObjects(ray, ref closestDistance);
 
 		RaycastEntities(ray, closestDistance);
 	}
 
-	private static void RaycastWorldObjects(Ray ray, ref Vector3? closestIntersection)
+	private static void RaycastWorldObjects(Ray ray, ref float? closestIntersection)
 	{
 		for (int i = 0; i < LevelState.Level.WorldObjects.Length; i++)
 		{
@@ -210,7 +208,7 @@ public static class MainLogic
 
 				return point.Visualization switch
 				{
-					PointEntityVisualization.SimpleSphere simpleSphere => Geometry3D.Raycast(new Sphere(entity.Position, simpleSphere.Radius), ray, out RaycastResult raycastResult) ? raycastResult.Distance : null,
+					PointEntityVisualization.SimpleSphere simpleSphere => Geometry3D.Raycast(new Sphere(entity.Position, simpleSphere.Radius), ray, out float distance) ? distance : null,
 					PointEntityVisualization.BillboardSprite billboardSprite => RaycastUtils.RaycastPlane(Matrix4x4.CreateScale(billboardSprite.Size * 0.5f) * EntityMatrixUtils.GetBillboardMatrix(entity.Position), ray),
 					PointEntityVisualization.Model model => RaycastUtils.RaycastEntityModel(Matrix4x4.CreateScale(model.Size * 2) * Matrix4x4.CreateTranslation(entity.Position), ModelContainer.EntityConfigContainer.GetModel(model.ModelPath), ray),
 					_ => throw new InvalidOperationException($"Unknown point entity visualization: {point.Visualization}"),
@@ -219,8 +217,8 @@ public static class MainLogic
 
 			return entity.Shape switch
 			{
-				EntityShape.Sphere sphere => Geometry3D.Raycast(new Sphere(entity.Position, sphere.Radius), ray, out RaycastResult raycastResult) ? raycastResult.Distance : null,
-				EntityShape.Aabb aabb => Geometry3D.Raycast(new Aabb(entity.Position, aabb.Size), ray, out RaycastResult raycastResult) ? raycastResult.Distance : null,
+				EntityShape.Sphere sphere => Geometry3D.Raycast(new Sphere(entity.Position, sphere.Radius), ray, out float distance) ? distance : null,
+				EntityShape.Aabb aabb => Geometry3D.Raycast(new Aabb(entity.Position, aabb.Size), ray, out float distance) ? distance : null,
 				_ => throw new UnreachableException($"Unknown entity shape: {entity.Shape}"),
 			};
 		}

@@ -14,13 +14,13 @@ public static class RaycastUtils
 		Vector3 p3 = Vector3.Transform(new Vector3(+1, +1, 0), modelMatrix);
 		Vector3 p4 = Vector3.Transform(new Vector3(-1, +1, 0), modelMatrix);
 
-		bool raycastT1 = Geometry3D.Raycast(new Triangle3D(p1, p3, p2), ray, out RaycastResult raycastResultT1);
-		bool raycastT2 = Geometry3D.Raycast(new Triangle3D(p1, p4, p3), ray, out RaycastResult raycastResultT2);
+		bool raycastT1 = Geometry3D.Raycast(new Triangle3D(p1, p3, p2), ray, out float distanceT1);
+		bool raycastT2 = Geometry3D.Raycast(new Triangle3D(p1, p4, p3), ray, out float distanceT2);
 		return (raycastT1, raycastT2) switch
 		{
-			(true, true) => Math.Min(raycastResultT1.Distance, raycastResultT2.Distance),
-			(true, false) => raycastResultT1.Distance,
-			(false, true) => raycastResultT2.Distance,
+			(true, true) => Math.Min(distanceT1, distanceT2),
+			(true, false) => distanceT1,
+			(false, true) => distanceT2,
 			_ => null,
 		};
 	}
@@ -30,14 +30,14 @@ public static class RaycastUtils
 		if (model == null)
 			return null;
 
-		Vector3? closestIntersection = null;
-		if (!RaycastModel(modelMatrix, model, ray, ref closestIntersection))
+		float? closestDistance = null;
+		if (!RaycastModel(modelMatrix, model, ray, ref closestDistance))
 			return null;
 
-		return Vector3.Distance(ray.Origin, closestIntersection.Value);
+		return closestDistance.Value;
 	}
 
-	private static bool RaycastModel(Matrix4x4 modelMatrix, Model model, Ray ray, [NotNullWhen(true)] ref Vector3? closestIntersection)
+	private static bool RaycastModel(Matrix4x4 modelMatrix, Model model, Ray ray, [NotNullWhen(true)] ref float? closestIntersection)
 	{
 		for (int i = 0; i < model.Meshes.Count; i++)
 		{
@@ -49,7 +49,7 @@ public static class RaycastUtils
 		return false;
 	}
 
-	public static bool RaycastMesh(Matrix4x4 modelMatrix, Mesh mesh, Ray ray, [NotNullWhen(true)] ref Vector3? closestIntersection)
+	public static bool RaycastMesh(Matrix4x4 modelMatrix, Mesh mesh, Ray ray, [NotNullWhen(true)] ref float? closestIntersection)
 	{
 		for (int i = 0; i < mesh.Geometry.Indices.Length; i += 3)
 		{
@@ -57,13 +57,12 @@ public static class RaycastUtils
 			Vector3 p2 = Vector3.Transform(mesh.Geometry.Vertices[mesh.Geometry.Indices[i + 1]].Position, modelMatrix);
 			Vector3 p3 = Vector3.Transform(mesh.Geometry.Vertices[mesh.Geometry.Indices[i + 2]].Position, modelMatrix);
 
-			Vector3? triangleIntersection = Geometry3D.Raycast(new Triangle3D(p1, p2, p3), ray, out RaycastResult raycastResult) ? raycastResult.Point : null;
-			if (triangleIntersection == null)
+			if (!Geometry3D.Raycast(new Triangle3D(p1, p2, p3), ray, out float intersectionDistance))
 				continue;
 
-			if (closestIntersection == null || Vector3.DistanceSquared(Camera3d.Position, triangleIntersection.Value) < Vector3.DistanceSquared(Camera3d.Position, closestIntersection.Value))
+			if (closestIntersection == null || intersectionDistance < closestIntersection.Value)
 			{
-				closestIntersection = triangleIntersection.Value;
+				closestIntersection = intersectionDistance;
 				return true;
 			}
 		}
