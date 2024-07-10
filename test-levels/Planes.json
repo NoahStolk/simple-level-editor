@@ -1,0 +1,25 @@
+{
+  "EntityConfigPath": "EntityConfig\\EntityConfig.json",
+  "ModelPaths": [
+    "Models\\Altar.obj",
+    "Models\\Ammonite.obj",
+    "Models\\meshtest.obj",
+    "Models\\Pillar.obj"
+  ],
+  "WorldObjects": [],
+  "Entities": [
+    {
+      "Id": 2,
+      "Name": "Point_BillboardSprite",
+      "Position": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "Shape": {
+        "Case": "Point"
+      },
+      "Properties": []
+    }
+  ]
+}

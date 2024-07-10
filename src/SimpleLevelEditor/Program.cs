@@ -7,7 +7,7 @@ using SimpleLevelEditor.Content;
 using SimpleLevelEditor.User;
 using SimpleLevelEditor.Utils;
 
-AppDomain.CurrentDomain.UnhandledException += (_, args) => LogUtils.Log.Fatal(args.ExceptionObject.ToString());
+AppDomain.CurrentDomain.UnhandledException += (_, args) => LogUtils.Log.Fatal(args.ExceptionObject.ToString() ?? "<NO ERROR>");
 
 UserSettings.LoadSettings();
 

@@ -8,7 +8,6 @@ using SimpleLevelEditor.State;
 using SimpleLevelEditor.State.Level;
 using SimpleLevelEditor.Utils;
 using System.Diagnostics;
-using Color = Detach.Numerics.Color;
 
 namespace SimpleLevelEditor.Ui.ChildWindows;
 
@@ -97,7 +96,7 @@ public static class EntityEditorWindow
 		EntityDescriptor? entityDescriptor = EntityConfigState.EntityConfig.Entities.FirstOrDefault(e => e.Name == entity.Name);
 		if (entityDescriptor == null)
 		{
-			ImGui.TextColored(Color.Red, "Unknown entity type");
+			ImGui.TextColored(Detach.Numerics.Rgba.Red, "Unknown entity type");
 			return;
 		}
 
@@ -119,7 +118,7 @@ public static class EntityEditorWindow
 			if (propertyDescriptor.Description != null && !string.IsNullOrWhiteSpace(propertyDescriptor.Description.Value))
 			{
 				ImGui.SameLine();
-				ImGui.TextColored(Color.Gray(0.5f), "(?)");
+				ImGui.TextColored(Detach.Numerics.Rgba.Gray(0.5f), "(?)");
 				if (ImGui.IsItemHovered())
 					ImGui.SetTooltip(propertyDescriptor.Description.Value);
 			}

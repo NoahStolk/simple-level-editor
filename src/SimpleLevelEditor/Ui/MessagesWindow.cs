@@ -1,4 +1,3 @@
-using Detach.Numerics;
 using ImGuiNET;
 using SimpleLevelEditor.State.Messages;
 using SimpleLevelEditor.Utils;
@@ -63,7 +62,7 @@ public static class MessagesWindow
 				}
 				else
 				{
-					ImGui.TextColored(Color.Green, "No warnings");
+					ImGui.TextColored(Detach.Numerics.Rgba.Green, "No warnings");
 				}
 			}
 
@@ -73,14 +72,14 @@ public static class MessagesWindow
 		ImGui.End();
 	}
 
-	private static Color GetMessageColor(MessageSeverity messageSeverity)
+	private static Detach.Numerics.Rgba GetMessageColor(MessageSeverity messageSeverity)
 	{
 		return messageSeverity switch
 		{
-			MessageSeverity.Info => new Color(127, 255, 127, 255),
-			MessageSeverity.Warning => Color.Yellow,
-			MessageSeverity.Error => Color.Red,
-			_ => Color.White,
+			MessageSeverity.Info => new Detach.Numerics.Rgba(127, 255, 127),
+			MessageSeverity.Warning => Detach.Numerics.Rgba.Yellow,
+			MessageSeverity.Error => Detach.Numerics.Rgba.Red,
+			_ => Detach.Numerics.Rgba.White,
 		};
 	}
 }

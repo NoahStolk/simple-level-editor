@@ -11,10 +11,10 @@
   </PropertyGroup>
 
   <ItemGroup Label="External dependencies">
-    <PackageReference Include="NativeFileDialogSharp" Version="0.5.0" />
-    <PackageReference Include="NoahStolk.Detach" Version="0.5.1" />
-    <PackageReference Include="NoahStolk.ImGuiGlfw" Version="0.6.0" />
-    <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
+    <PackageReference Include="NativeFileDialogSharp" Version="0.5.0"/>
+    <PackageReference Include="NoahStolk.Detach" Version="0.11.2"/>
+    <PackageReference Include="NoahStolk.ImGuiGlfw" Version="0.7.0"/>
+    <PackageReference Include="Serilog.Sinks.File" Version="6.0.0"/>
   </ItemGroup>
 
   <ItemGroup Label="Static code analysis">
@@ -30,7 +30,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="SonarAnalyzer.CSharp" Version="9.26.0.92422">
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="9.28.0.94264">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -41,7 +41,7 @@
   </ItemGroup>
 
   <ItemGroup Label="Trimming configuration">
-    <TrimmerRootDescriptor Include="TrimmerRoots.xml" />
+    <TrimmerRootDescriptor Include="TrimmerRoots.xml"/>
   </ItemGroup>
 
   <ItemGroup Label="Resources">
@@ -51,7 +51,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SimpleLevelEditor.Formats\SimpleLevelEditor.Formats.fsproj" />
+    <ProjectReference Include="..\SimpleLevelEditor.Formats\SimpleLevelEditor.Formats.fsproj"/>
   </ItemGroup>
 
 </Project>

@@ -1,5 +1,4 @@
 using Detach;
-using Detach.Numerics;
 using ImGuiNET;
 using SimpleLevelEditor.Extensions;
 using SimpleLevelEditor.Formats.Types.EntityConfig;
@@ -94,27 +93,27 @@ public static class LevelInfoWindow
 				switch (entity.Shape)
 				{
 					case EntityShapeDescriptor.Point point:
-						NextColumnTextColored(Color.Green, "Type");
+						NextColumnTextColored(Detach.Numerics.Rgba.Green, "Type");
 						NextColumnText(point.Visualization.GetTypeId());
 
 						switch (point.Visualization)
 						{
 							case PointEntityVisualization.SimpleSphere simpleSphere:
-								NextColumnTextColored(Color.Yellow, "Color");
+								NextColumnTextColored(Detach.Numerics.Rgba.Yellow, "Color");
 								NextColumnText(simpleSphere.Color.ToDisplayString());
-								NextColumnTextColored(Color.Orange, "Radius");
+								NextColumnTextColored(Detach.Numerics.Rgba.Orange, "Radius");
 								NextColumnText(simpleSphere.Radius.ToString(CultureInfo.InvariantCulture));
 								break;
 							case PointEntityVisualization.BillboardSprite billboardSprite:
-								NextColumnTextColored(Color.Purple, "Texture path");
+								NextColumnTextColored(Detach.Numerics.Rgba.Purple, "Texture path");
 								NextColumnText(billboardSprite.TexturePath);
-								NextColumnTextColored(Color.Aqua, "Size");
+								NextColumnTextColored(Detach.Numerics.Rgba.Aqua, "Size");
 								NextColumnText(billboardSprite.Size.ToString(CultureInfo.InvariantCulture));
 								break;
 							case PointEntityVisualization.Model model:
-								NextColumnTextColored(Color.Red, "Model path");
+								NextColumnTextColored(Detach.Numerics.Rgba.Red, "Model path");
 								NextColumnText(model.ModelPath);
-								NextColumnTextColored(Color.Aqua, "Size");
+								NextColumnTextColored(Detach.Numerics.Rgba.Aqua, "Size");
 								NextColumnText(model.Size.ToString(CultureInfo.InvariantCulture));
 								break;
 							default:
@@ -123,11 +122,11 @@ public static class LevelInfoWindow
 
 						break;
 					case EntityShapeDescriptor.Sphere sphere:
-						NextColumnTextColored(Color.Yellow, "Color");
+						NextColumnTextColored(Detach.Numerics.Rgba.Yellow, "Color");
 						NextColumnText(sphere.Color.ToDisplayString());
 						break;
 					case EntityShapeDescriptor.Aabb aabb:
-						NextColumnTextColored(Color.Yellow, "Color");
+						NextColumnTextColored(Detach.Numerics.Rgba.Yellow, "Color");
 						NextColumnText(aabb.Color.ToDisplayString());
 						break;
 					default:
