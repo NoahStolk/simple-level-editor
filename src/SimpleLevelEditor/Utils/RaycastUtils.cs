@@ -1,5 +1,5 @@
 using Detach.Collisions;
-using Detach.Collisions.Primitives;
+using Detach.Collisions.Primitives3D;
 using ImGuiNET;
 using SimpleLevelEditor.Rendering;
 using System.Diagnostics.CodeAnalysis;
@@ -16,8 +16,8 @@ public static class RaycastUtils
 		Vector3 p4 = Vector3.Transform(new Vector3(-1, +1, 0), modelMatrix);
 
 		// TODO: Raycast with triangle might be incorrect? Add unit tests to Detach.Collisions.
-		bool raycastT1 = Geometry3D.Raycast(new Triangle(p1, p3, p2), ray, out RaycastResult raycastResultT1);
-		bool raycastT2 = Geometry3D.Raycast(new Triangle(p1, p4, p3), ray, out RaycastResult raycastResultT2);
+		bool raycastT1 = Geometry3D.Raycast(new Triangle3D(p1, p3, p2), ray, out RaycastResult raycastResultT1);
+		bool raycastT2 = Geometry3D.Raycast(new Triangle3D(p1, p4, p3), ray, out RaycastResult raycastResultT2);
 
 		if (raycastT1 || raycastT2)
 			ImGui.SetTooltip($"{ray.Origin}\n{ray.Direction}\n\n{p1}\n{p2}\n{p3}\n{p4}\n\n{raycastT1}\n{raycastT2}\n{raycastResultT1}\n{raycastResultT2}");
@@ -63,7 +63,7 @@ public static class RaycastUtils
 			Vector3 p2 = Vector3.Transform(mesh.Geometry.Vertices[mesh.Geometry.Indices[i + 1]].Position, modelMatrix);
 			Vector3 p3 = Vector3.Transform(mesh.Geometry.Vertices[mesh.Geometry.Indices[i + 2]].Position, modelMatrix);
 
-			Vector3? triangleIntersection = Geometry3D.Raycast(new Triangle(p1, p2, p3), ray, out RaycastResult raycastResult) ? raycastResult.Point : null;
+			Vector3? triangleIntersection = Geometry3D.Raycast(new Triangle3D(p1, p2, p3), ray, out RaycastResult raycastResult) ? raycastResult.Point : null;
 			if (triangleIntersection == null)
 				continue;
 

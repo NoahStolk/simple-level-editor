@@ -1,5 +1,4 @@
 using ImGuiNET;
-using SimpleLevelEditor.State;
 using SimpleLevelEditor.State.Level;
 
 namespace SimpleLevelEditor.Ui;

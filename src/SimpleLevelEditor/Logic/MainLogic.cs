@@ -1,5 +1,5 @@
 using Detach.Collisions;
-using Detach.Collisions.Primitives;
+using Detach.Collisions.Primitives3D;
 using Silk.NET.GLFW;
 using SimpleLevelEditor.Extensions;
 using SimpleLevelEditor.Formats.Types.EntityConfig;

@@ -15,7 +15,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Update="FSharp.Core" Version="8.0.300"/>
+    <PackageReference Update="FSharp.Core" Version="8.0.301"/>
     <PackageReference Include="FSharp.SystemTextJson" Version="1.3.13"/>
   </ItemGroup>
 
@@ -35,7 +35,7 @@
     <Compile Include="Types\EntityConfig\EntityPropertyDescriptor.fs"/>
     <Compile Include="Types\EntityConfig\EntityDescriptor.fs"/>
     <Compile Include="Types\EntityConfig\EntityConfigData.fs"/>
-    <Compile Include="SimpleLevelEditorJsonSerializer.fs" />
+    <Compile Include="SimpleLevelEditorJsonSerializer.fs"/>
   </ItemGroup>
 
 </Project>

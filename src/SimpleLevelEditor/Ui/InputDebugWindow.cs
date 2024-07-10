@@ -1,4 +1,3 @@
-using Detach.Numerics;
 using ImGuiNET;
 using Silk.NET.GLFW;
 
@@ -15,13 +14,13 @@ public static class InputDebugWindow
 			ImGuiIOPtr io = ImGui.GetIO();
 
 			ImGui.SeparatorText("ImGui key modifiers");
-			ImGui.TextColored(io.KeyCtrl ? Color.White : Color.Gray(0.4f), "CTRL");
+			ImGui.TextColored(io.KeyCtrl ? Detach.Numerics.Rgba.White : Detach.Numerics.Rgba.Gray(0.4f), "CTRL");
 			ImGui.SameLine();
-			ImGui.TextColored(io.KeyShift ? Color.White : Color.Gray(0.4f), "SHIFT");
+			ImGui.TextColored(io.KeyShift ? Detach.Numerics.Rgba.White : Detach.Numerics.Rgba.Gray(0.4f), "SHIFT");
 			ImGui.SameLine();
-			ImGui.TextColored(io.KeyAlt ? Color.White : Color.Gray(0.4f), "ALT");
+			ImGui.TextColored(io.KeyAlt ? Detach.Numerics.Rgba.White : Detach.Numerics.Rgba.Gray(0.4f), "ALT");
 			ImGui.SameLine();
-			ImGui.TextColored(io.KeySuper ? Color.White : Color.Gray(0.4f), "SUPER");
+			ImGui.TextColored(io.KeySuper ? Detach.Numerics.Rgba.White : Detach.Numerics.Rgba.Gray(0.4f), "SUPER");
 
 			ImGui.SeparatorText("GLFW keys");
 			if (ImGui.BeginTable("GLFW keys", 8))
@@ -38,7 +37,7 @@ public static class InputDebugWindow
 					bool isDown = Input.GlfwInput.IsKeyDown(key);
 
 					ImGui.TableNextColumn();
-					ImGui.TextColored(isDown ? Color.White : Color.Gray(0.4f), key.ToString());
+					ImGui.TextColored(isDown ? Detach.Numerics.Rgba.White : Detach.Numerics.Rgba.Gray(0.4f), key.ToString());
 				}
 
 				ImGui.EndTable();
