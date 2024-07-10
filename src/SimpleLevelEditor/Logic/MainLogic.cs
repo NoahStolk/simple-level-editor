@@ -211,7 +211,7 @@ public static class MainLogic
 				return point.Visualization switch
 				{
 					PointEntityVisualization.SimpleSphere simpleSphere => Geometry3D.Raycast(new Sphere(entity.Position, simpleSphere.Radius), ray, out RaycastResult raycastResult) ? raycastResult.Distance : null,
-					PointEntityVisualization.BillboardSprite billboardSprite => RaycastUtils.RaycastPlane(Matrix4x4.CreateScale(billboardSprite.Size) * EntityMatrixUtils.GetBillboardMatrix(entity.Position), ray),
+					PointEntityVisualization.BillboardSprite billboardSprite => RaycastUtils.RaycastPlane(Matrix4x4.CreateScale(billboardSprite.Size * 0.5f) * EntityMatrixUtils.GetBillboardMatrix(entity.Position), ray),
 					PointEntityVisualization.Model model => RaycastUtils.RaycastEntityModel(Matrix4x4.CreateScale(model.Size * 2) * Matrix4x4.CreateTranslation(entity.Position), ModelContainer.EntityConfigContainer.GetModel(model.ModelPath), ray),
 					_ => throw new InvalidOperationException($"Unknown point entity visualization: {point.Visualization}"),
 				};
