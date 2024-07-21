@@ -1,11 +1,35 @@
-# Simple Level Editor (ALPHA)
+# Simple Level Editor
 
 Simple cross-platform 3D level editor written in C# and F# using .NET 8, OpenGL and ImGui.
 
+> Try the latest alpha version [here](https://github.com/NoahStolk/simple-level-editor/releases).
+
+The GitHub releases only list Windows builds for now, but a Linux build can easily be made. You only need the .NET SDK (version 8.0) to compile the project.
+
+There is also a NuGet package for reading level and entity config files: [![NuGet Version](https://img.shields.io/nuget/v/NoahStolk.SimpleLevelEditor.Formats.svg)](https://www.nuget.org/packages/NoahStolk.SimpleLevelEditor.Formats/)
+
+![](images/simple-level-editor.png)
+
 ## Features
 
-Build levels using .obj meshes and .tga textures. More formats will be supported later.
+### Editor
 
-Levels are saved as JSON for readability and ease of use. Levels can be deserialized using the `NoahStolk.SimpleLevelEditor.Formats` NuGet package.
+- Easily build level geometry using 3D models
+- Full undo/redo support
+- Move, rotate, and scale world objects
 
-Currently, there is only a Windows build, but it should be easy to create builds for Mac and Linux.
+### UI
+
+- Built with the excellent [Dear ImGui](https://github.com/ocornut/imgui) library
+- Docking support
+- Customizable layout
+- UI is saved between sessions
+
+### Entity configuration
+
+- Define your own entities using a JSON file
+
+### Integration
+
+- Save and load levels as JSON files
+- Deserialize levels using the NuGet package
