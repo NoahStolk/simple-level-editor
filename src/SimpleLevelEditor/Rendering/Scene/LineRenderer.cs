@@ -76,12 +76,16 @@ public sealed class LineRenderer
 
 	public void Render()
 	{
+		float fadeOutMinDistance = Math.Min(LevelEditorState.GridCellFadeOutMinDistance, LevelEditorState.GridCellFadeOutMaxDistance);
+		float fadeOutMaxDistance = Math.Max(LevelEditorState.GridCellFadeOutMinDistance, LevelEditorState.GridCellFadeOutMaxDistance);
+
 		Gl.UseProgram(_lineShader.Id);
 
 		Gl.UniformMatrix4x4(_lineShader.GetUniformLocation("view"), Camera3d.ViewMatrix);
 		Gl.UniformMatrix4x4(_lineShader.GetUniformLocation("projection"), Camera3d.Projection);
 		Gl.Uniform3(_lineShader.GetUniformLocation("cameraPosition"), Camera3d.Position);
-		Gl.Uniform1(_lineShader.GetUniformLocation("maxDistance"), LevelEditorState.GridCellFadeOutDistance);
+		Gl.Uniform1(_lineShader.GetUniformLocation("fadeMinDistance"), fadeOutMinDistance);
+		Gl.Uniform1(_lineShader.GetUniformLocation("fadeMaxDistance"), fadeOutMaxDistance);
 
 		Gl.BindVertexArray(_lineVao);
 
@@ -89,7 +93,7 @@ public sealed class LineRenderer
 		RenderOrigin();
 
 		Gl.Uniform1(_fadeOutUniform, 1);
-		RenderGrid(Camera3d.FocusPointTarget with { Y = LevelEditorState.TargetHeight }, new Vector4(1, 1, 1, 0.25f), LevelEditorState.GridCellFadeOutDistance, LevelEditorState.GridCellInterval);
+		RenderGrid(Camera3d.FocusPointTarget with { Y = LevelEditorState.TargetHeight }, new Vector4(1, 1, 1, 0.25f), fadeOutMaxDistance, LevelEditorState.GridCellInterval);
 		if (LevelEditorState.MoveTargetPosition.HasValue)
 		{
 			Vector3? selectedPosition = LevelEditorState.SelectedWorldObject?.Position ?? LevelEditorState.SelectedEntity?.Position;
@@ -97,7 +101,7 @@ public sealed class LineRenderer
 			{
 				bool movedHorizontally = MathF.Abs(LevelEditorState.MoveTargetPosition.Value.X - selectedPosition.Value.X) > float.Epsilon || MathF.Abs(LevelEditorState.MoveTargetPosition.Value.Z - selectedPosition.Value.Z) > float.Epsilon;
 				if (movedHorizontally && MathF.Abs(LevelEditorState.TargetHeight - selectedPosition.Value.Y) > float.Epsilon)
-					RenderGrid(Camera3d.FocusPointTarget with { Y = selectedPosition.Value.Y }, new Vector4(1, 1, 0, 0.25f), LevelEditorState.GridCellFadeOutDistance, LevelEditorState.GridCellInterval);
+					RenderGrid(Camera3d.FocusPointTarget with { Y = selectedPosition.Value.Y }, new Vector4(1, 1, 0, 0.25f), fadeOutMaxDistance, LevelEditorState.GridCellInterval);
 			}
 		}
 

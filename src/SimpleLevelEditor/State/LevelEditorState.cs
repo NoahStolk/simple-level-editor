@@ -9,7 +9,8 @@ public static class LevelEditorState
 	private static int _selectedEntityId = -1;
 
 	public static float TargetHeight;
-	public static float GridCellFadeOutDistance = 125;
+	public static float GridCellFadeOutMinDistance = 64;
+	public static float GridCellFadeOutMaxDistance = 128;
 	public static int GridCellInterval = 8;
 	public static Vector3? TargetPosition;
 

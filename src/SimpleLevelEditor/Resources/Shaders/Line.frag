@@ -2,7 +2,8 @@
 
 uniform vec4 color;
 uniform vec3 cameraPosition;
-uniform float maxDistance;
+uniform float fadeMinDistance;
+uniform float fadeMaxDistance;
 uniform bool fadeOut;
 
 out vec4 FragColor;
@@ -11,9 +12,10 @@ in vec4 fragPos;
 
 void main()
 {
-	float distanceToCamera = length(cameraPosition - fragPos.xyz);
+	vec3 cameraPositionAdjusted = cameraPosition;
+	cameraPositionAdjusted.y = fragPos.y;
+	float distanceToCamera = length(cameraPositionAdjusted - fragPos.xyz);
 
-	const float minDistance = 25;
-	float fadeDistance = maxDistance - minDistance;
-	FragColor = fadeOut ? color * (1 - clamp((distanceToCamera - minDistance) / fadeDistance, 0, 1)) : color;
+	float fadeDistance = fadeMaxDistance - fadeMinDistance;
+	FragColor = fadeOut ? color * (1 - clamp((distanceToCamera - fadeMinDistance) / fadeDistance, 0, 1)) : color;
 }
