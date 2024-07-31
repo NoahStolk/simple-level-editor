@@ -3,6 +3,7 @@ using Detach.Parsers.Model.MtlFormat;
 using Detach.Parsers.Model.ObjFormat;
 using Detach.Parsers.Texture;
 using Detach.Parsers.Texture.TgaFormat;
+using SimpleLevelEditor.Rendering.Vertices;
 using SimpleLevelEditor.State.Messages;
 using SimpleLevelEditor.Utils;
 
@@ -175,7 +176,7 @@ public sealed class ModelContainer
 
 	private static Geometry GetMeshData(ModelData modelData, MeshData meshData)
 	{
-		Vertex[] outVertices = new Vertex[meshData.Faces.Count];
+		PositionTextureNormal[] outVertices = new PositionTextureNormal[meshData.Faces.Count];
 		uint[] outFaces = new uint[meshData.Faces.Count];
 		for (int i = 0; i < meshData.Faces.Count; i++)
 		{
@@ -189,7 +190,7 @@ public sealed class ModelContainer
 
 			texture = texture with { Y = 1 - texture.Y };
 
-			outVertices[i] = new Vertex(position, texture, normal);
+			outVertices[i] = new PositionTextureNormal(position, texture, normal);
 			outFaces[i] = (uint)i;
 		}
 

@@ -1,3 +1,5 @@
+using SimpleLevelEditor.Rendering.Vertices;
+
 namespace SimpleLevelEditor.Rendering;
 
-public record Geometry(Vertex[] Vertices, uint[] Indices);
+public record Geometry(PositionTextureNormal[] Vertices, uint[] Indices);

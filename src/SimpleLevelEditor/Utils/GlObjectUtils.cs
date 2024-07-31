@@ -1,5 +1,6 @@
 using Silk.NET.OpenGL;
 using SimpleLevelEditor.Rendering;
+using SimpleLevelEditor.Rendering.Vertices;
 
 namespace SimpleLevelEditor.Utils;
 
@@ -32,17 +33,17 @@ public static class GlObjectUtils
 		Graphics.Gl.BindVertexArray(vao);
 
 		Graphics.Gl.BindBuffer(BufferTargetARB.ArrayBuffer, vbo);
-		fixed (Vertex* v = &geometry.Vertices[0])
-			Graphics.Gl.BufferData(BufferTargetARB.ArrayBuffer, (uint)(geometry.Vertices.Length * sizeof(Vertex)), v, BufferUsageARB.StaticDraw);
+		fixed (PositionTextureNormal* v = &geometry.Vertices[0])
+			Graphics.Gl.BufferData(BufferTargetARB.ArrayBuffer, (uint)(geometry.Vertices.Length * sizeof(PositionTextureNormal)), v, BufferUsageARB.StaticDraw);
 
 		Graphics.Gl.EnableVertexAttribArray(0);
-		Graphics.Gl.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, (uint)sizeof(Vertex), (void*)0);
+		Graphics.Gl.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, (uint)sizeof(PositionTextureNormal), (void*)0);
 
 		Graphics.Gl.EnableVertexAttribArray(1);
-		Graphics.Gl.VertexAttribPointer(1, 2, VertexAttribPointerType.Float, false, (uint)sizeof(Vertex), (void*)(3 * sizeof(float)));
+		Graphics.Gl.VertexAttribPointer(1, 2, VertexAttribPointerType.Float, false, (uint)sizeof(PositionTextureNormal), (void*)(3 * sizeof(float)));
 
 		Graphics.Gl.EnableVertexAttribArray(2);
-		Graphics.Gl.VertexAttribPointer(2, 3, VertexAttribPointerType.Float, false, (uint)sizeof(Vertex), (void*)(5 * sizeof(float)));
+		Graphics.Gl.VertexAttribPointer(2, 3, VertexAttribPointerType.Float, false, (uint)sizeof(PositionTextureNormal), (void*)(5 * sizeof(float)));
 
 		Graphics.Gl.BindVertexArray(0);
 		Graphics.Gl.BindBuffer(BufferTargetARB.ArrayBuffer, 0);
