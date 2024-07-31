@@ -164,6 +164,9 @@ public static class WorldObjectEditorWindow
 				worldObject.ModelPath = meshName;
 				LevelState.Track("Changed world object model");
 			}
+
+			if (ImGui.IsItemHovered())
+				ImGui.SetTooltip(meshName);
 		}
 	}
 
