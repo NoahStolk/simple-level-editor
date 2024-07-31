@@ -9,8 +9,8 @@ public static class LevelEditorState
 	private static int _selectedEntityId = -1;
 
 	public static float TargetHeight;
-	public static int GridCellCount = 64;
-	public static int GridCellSize = 1;
+	public static float LineFadeOutDistance = 125;
+	public static int GridCellInterval = 8;
 	public static Vector3? TargetPosition;
 
 	public static EditMode Mode = EditMode.WorldObjects;

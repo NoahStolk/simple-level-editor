@@ -2,6 +2,11 @@
 
 ## SimpleLevelEditor
 
+### [unreleased]
+
+- Improved grid and line rendering.
+- Small UI improvements.
+
 ### 0.12.4
 
 - Improved messages window.

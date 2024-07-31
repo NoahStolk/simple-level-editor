@@ -78,10 +78,12 @@ public sealed class LineRenderer
 
 		Gl.UniformMatrix4x4(_lineShader.GetUniformLocation("view"), Camera3d.ViewMatrix);
 		Gl.UniformMatrix4x4(_lineShader.GetUniformLocation("projection"), Camera3d.Projection);
+		Gl.Uniform3(_lineShader.GetUniformLocation("cameraPosition"), Camera3d.Position);
+		Gl.Uniform1(_lineShader.GetUniformLocation("maxDistance"), LevelEditorState.LineFadeOutDistance);
 
 		Gl.BindVertexArray(_lineVao);
 		RenderOrigin();
-		RenderGrid(Camera3d.FocusPointTarget with { Y = LevelEditorState.TargetHeight }, new Vector4(1, 1, 1, 0.25f), LevelEditorState.GridCellCount, LevelEditorState.GridCellSize);
+		RenderGrid(Camera3d.FocusPointTarget with { Y = LevelEditorState.TargetHeight }, new Vector4(1, 1, 1, 0.25f), LevelEditorState.LineFadeOutDistance, LevelEditorState.GridCellInterval);
 		if (LevelEditorState.MoveTargetPosition.HasValue)
 		{
 			Vector3? selectedPosition = LevelEditorState.SelectedWorldObject?.Position ?? LevelEditorState.SelectedEntity?.Position;
@@ -89,7 +91,7 @@ public sealed class LineRenderer
 			{
 				bool movedHorizontally = MathF.Abs(LevelEditorState.MoveTargetPosition.Value.X - selectedPosition.Value.X) > float.Epsilon || MathF.Abs(LevelEditorState.MoveTargetPosition.Value.Z - selectedPosition.Value.Z) > float.Epsilon;
 				if (movedHorizontally && MathF.Abs(LevelEditorState.TargetHeight - selectedPosition.Value.Y) > float.Epsilon)
-					RenderGrid(Camera3d.FocusPointTarget with { Y = selectedPosition.Value.Y }, new Vector4(1, 1, 0, 0.25f), LevelEditorState.GridCellCount, LevelEditorState.GridCellSize);
+					RenderGrid(Camera3d.FocusPointTarget with { Y = selectedPosition.Value.Y }, new Vector4(1, 1, 0, 0.25f), LevelEditorState.LineFadeOutDistance, LevelEditorState.GridCellInterval);
 			}
 		}
 
@@ -161,31 +163,45 @@ public sealed class LineRenderer
 		RenderLine(Matrix4x4.CreateScale(1, 1, halfDistanceZ) * Matrix4x4.CreateFromAxisAngle(Vector3.UnitY, MathF.PI) * Matrix4x4.CreateTranslation(averageOnZ), color);
 	}
 
-	private void RenderGrid(Vector3 origin, Vector4 color, int cellCount, int cellSize)
+	private void RenderGrid(Vector3 origin, Vector4 color, float cellCount, int interval)
 	{
-		Gl.Uniform4(_colorUniform, color);
-		Gl.LineWidth(1);
+		interval = Math.Max(1, interval);
 
-		int min = -cellCount;
-		int max = cellCount;
-		Matrix4x4 scaleMatrix = Matrix4x4.CreateScale(new Vector3(1, 1, (max - min) * cellSize));
+		Gl.Uniform4(_colorUniform, color);
+		int lineWidthCache = 1; // Prevents unnecessary calls to Gl.LineWidth.
+
+		int min = (int)-cellCount;
+		int max = (int)cellCount;
+		Matrix4x4 scaleMatrix = Matrix4x4.CreateScale(new Vector3(1, 1, max - min));
 		Vector3 offset = new(MathF.Round(origin.X), 0, MathF.Round(origin.Z));
-		offset.X = MathF.Round(offset.X / cellSize) * cellSize;
-		offset.Z = MathF.Round(offset.Z / cellSize) * cellSize;
 
 		for (int i = min; i <= max; i++)
 		{
 			// Prevent rendering grid lines on top of origin lines (Z-fighting).
-			if (!origin.Y.IsZero() || !(i * cellSize + offset.X).IsZero())
+			if (!origin.Y.IsZero() || !(i + offset.X).IsZero())
 			{
-				Gl.UniformMatrix4x4(_modelUniform, scaleMatrix * Matrix4x4.CreateTranslation(new Vector3(i * cellSize, origin.Y, min * cellSize) + offset));
+				UpdateLineWidth(i + (int)offset.X);
+
+				Gl.UniformMatrix4x4(_modelUniform, scaleMatrix * Matrix4x4.CreateTranslation(new Vector3(i, origin.Y, min) + offset));
 				Gl.DrawArrays(PrimitiveType.Lines, 0, 2);
 			}
 
-			if (!origin.Y.IsZero() || !(i * cellSize + offset.Z).IsZero())
+			if (!origin.Y.IsZero() || !(i + offset.Z).IsZero())
 			{
-				Gl.UniformMatrix4x4(_modelUniform, scaleMatrix * Matrix4x4.CreateFromAxisAngle(Vector3.UnitY, MathF.PI / 2) * Matrix4x4.CreateTranslation(new Vector3(min * cellSize, origin.Y, i * cellSize) + offset));
+				UpdateLineWidth(i + (int)offset.Z);
+
+				Gl.UniformMatrix4x4(_modelUniform, scaleMatrix * Matrix4x4.CreateFromAxisAngle(Vector3.UnitY, MathF.PI / 2) * Matrix4x4.CreateTranslation(new Vector3(min, origin.Y, i) + offset));
 				Gl.DrawArrays(PrimitiveType.Lines, 0, 2);
+			}
+		}
+
+		void UpdateLineWidth(int i)
+		{
+			int newLineWidth = i % interval == 0 ? 2 : 1;
+			if (newLineWidth != lineWidthCache)
+			{
+				Gl.LineWidth(newLineWidth);
+				lineWidthCache = newLineWidth;
 			}
 		}
 	}

@@ -124,8 +124,8 @@ public static class LevelEditorWindow
 
 				if (ImGui.BeginTabItem("Display"))
 				{
-					ImGui.SliderInt("Cells per side", ref LevelEditorState.GridCellCount, 1, 64);
-					ImGui.SliderInt("Cell size", ref LevelEditorState.GridCellSize, 1, 4);
+					ImGui.SliderFloat("Line fade out distance", ref LevelEditorState.LineFadeOutDistance, 32, 256);
+					ImGui.SliderInt("Cell interval", ref LevelEditorState.GridCellInterval, 2, 16);
 
 					bool shouldRenderWorldObjects = LevelEditorState.ShouldRenderWorldObjects;
 					if (ImGui.Checkbox("WorldObjects", ref shouldRenderWorldObjects))
