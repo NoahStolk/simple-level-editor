@@ -117,7 +117,6 @@ public static class LevelEditorWindow
 				{
 					ImGui.SliderInt("Snap", ref _snapIndex, 0, _snapPoints.Length - 1, Inline.Span(Snap));
 					ImGui.InputFloat("Target height", ref LevelEditorState.TargetHeight, 0.25f, 1, "%.2f");
-					ImGui.SliderFloat("Camera zoom", ref Camera3d.Zoom, 1, 100, "%.2f");
 
 					ImGui.EndTabItem();
 				}
@@ -127,6 +126,7 @@ public static class LevelEditorWindow
 					ImGui.SliderFloat("Cell fade out min distance", ref LevelEditorState.GridCellFadeOutMinDistance, 16, 128);
 					ImGui.SliderFloat("Cell fade out max distance", ref LevelEditorState.GridCellFadeOutMaxDistance, 32, 256);
 					ImGui.SliderInt("Cell interval", ref LevelEditorState.GridCellInterval, 2, 16);
+					ImGui.SliderFloat("Camera zoom", ref Camera3d.Zoom, 1, 100, "%.2f");
 
 					bool shouldRenderWorldObjects = LevelEditorState.ShouldRenderWorldObjects;
 					if (ImGui.Checkbox("WorldObjects", ref shouldRenderWorldObjects))
