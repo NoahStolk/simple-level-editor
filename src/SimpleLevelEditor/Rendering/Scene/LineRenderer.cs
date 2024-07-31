@@ -64,12 +64,14 @@ public sealed class LineRenderer
 	private readonly ShaderCacheEntry _lineShader;
 	private readonly int _modelUniform;
 	private readonly int _colorUniform;
+	private readonly int _fadeOutUniform;
 
 	public LineRenderer()
 	{
 		_lineShader = InternalContent.Shaders["Line"];
 		_modelUniform = _lineShader.GetUniformLocation("model");
 		_colorUniform = _lineShader.GetUniformLocation("color");
+		_fadeOutUniform = _lineShader.GetUniformLocation("fadeOut");
 	}
 
 	public void Render()
@@ -79,11 +81,15 @@ public sealed class LineRenderer
 		Gl.UniformMatrix4x4(_lineShader.GetUniformLocation("view"), Camera3d.ViewMatrix);
 		Gl.UniformMatrix4x4(_lineShader.GetUniformLocation("projection"), Camera3d.Projection);
 		Gl.Uniform3(_lineShader.GetUniformLocation("cameraPosition"), Camera3d.Position);
-		Gl.Uniform1(_lineShader.GetUniformLocation("maxDistance"), LevelEditorState.LineFadeOutDistance);
+		Gl.Uniform1(_lineShader.GetUniformLocation("maxDistance"), LevelEditorState.GridCellFadeOutDistance);
 
 		Gl.BindVertexArray(_lineVao);
+
+		Gl.Uniform1(_fadeOutUniform, 0);
 		RenderOrigin();
-		RenderGrid(Camera3d.FocusPointTarget with { Y = LevelEditorState.TargetHeight }, new Vector4(1, 1, 1, 0.25f), LevelEditorState.LineFadeOutDistance, LevelEditorState.GridCellInterval);
+
+		Gl.Uniform1(_fadeOutUniform, 1);
+		RenderGrid(Camera3d.FocusPointTarget with { Y = LevelEditorState.TargetHeight }, new Vector4(1, 1, 1, 0.25f), LevelEditorState.GridCellFadeOutDistance, LevelEditorState.GridCellInterval);
 		if (LevelEditorState.MoveTargetPosition.HasValue)
 		{
 			Vector3? selectedPosition = LevelEditorState.SelectedWorldObject?.Position ?? LevelEditorState.SelectedEntity?.Position;
@@ -91,10 +97,11 @@ public sealed class LineRenderer
 			{
 				bool movedHorizontally = MathF.Abs(LevelEditorState.MoveTargetPosition.Value.X - selectedPosition.Value.X) > float.Epsilon || MathF.Abs(LevelEditorState.MoveTargetPosition.Value.Z - selectedPosition.Value.Z) > float.Epsilon;
 				if (movedHorizontally && MathF.Abs(LevelEditorState.TargetHeight - selectedPosition.Value.Y) > float.Epsilon)
-					RenderGrid(Camera3d.FocusPointTarget with { Y = selectedPosition.Value.Y }, new Vector4(1, 1, 0, 0.25f), LevelEditorState.LineFadeOutDistance, LevelEditorState.GridCellInterval);
+					RenderGrid(Camera3d.FocusPointTarget with { Y = selectedPosition.Value.Y }, new Vector4(1, 1, 0, 0.25f), LevelEditorState.GridCellFadeOutDistance, LevelEditorState.GridCellInterval);
 			}
 		}
 
+		Gl.Uniform1(_fadeOutUniform, 0);
 		RenderWorldObjectEdges();
 		RenderEntities();
 
