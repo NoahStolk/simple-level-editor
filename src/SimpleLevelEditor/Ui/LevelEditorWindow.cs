@@ -34,6 +34,9 @@ public static class LevelEditorWindow
 			Vector2 focusPointIconPosition = cursorScreenPos + Camera3d.GetScreenPositionFrom3dPoint(Camera3d.FocusPointTarget, framebufferSize) - focusPointIconSize / 2;
 			drawList.AddImage((IntPtr)InternalContent.Textures["FocusPoint"], focusPointIconPosition, focusPointIconPosition + focusPointIconSize);
 
+			ReadOnlySpan<char> fpsText = Inline.Span($"{App.Instance.Fps} FPS");
+			drawList.AddText(new Vector2(cursorScreenPos.X + framebufferSize.X - 4 - ImGui.CalcTextSize(fpsText).X, cursorScreenPos.Y + 4), 0xffffffff, fpsText);
+
 			RenderMoveDistances(drawList, cursorScreenPos, framebufferSize);
 
 			Vector2 cursorPosition = ImGui.GetCursorPos();
