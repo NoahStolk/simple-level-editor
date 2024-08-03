@@ -1,6 +1,7 @@
 using Detach.Parsers.Texture;
+using Silk.NET.OpenGL;
 
-namespace SimpleLevelEditor.Rendering.Content;
+namespace SimpleLevelEditor.State;
 
 public static class InternalContent
 {
@@ -10,13 +11,13 @@ public static class InternalContent
 	public static IReadOnlyDictionary<string, uint> Textures => _textures;
 	public static IReadOnlyDictionary<string, ShaderCacheEntry> Shaders => _shaders;
 
-	public static void AddTexture(string name, TextureData texture)
+	public static void AddTexture(GL gl, string name, TextureData texture)
 	{
-		_textures.Add(name, TextureLoader.Load(texture));
+		_textures.Add(name, TextureLoader.Load(gl, texture));
 	}
 
-	public static void AddShader(string name, string vertexCode, string fragmentCode)
+	public static void AddShader(GL gl, string name, string vertexCode, string fragmentCode)
 	{
-		_shaders.Add(name, new ShaderCacheEntry(ShaderLoader.Load(vertexCode, fragmentCode)));
+		_shaders.Add(name, new ShaderCacheEntry(ShaderLoader.Load(gl, vertexCode, fragmentCode)));
 	}
 }

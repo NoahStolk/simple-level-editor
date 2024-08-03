@@ -4,9 +4,11 @@ using SimpleLevelEditor.Extensions;
 using SimpleLevelEditor.Formats.Types;
 using SimpleLevelEditor.Formats.Types.EntityConfig;
 using SimpleLevelEditor.Formats.Types.Level;
-using SimpleLevelEditor.Rendering.Content;
 using SimpleLevelEditor.State;
+using SimpleLevelEditor.State.Extensions;
 using SimpleLevelEditor.State.Level;
+using SimpleLevelEditor.State.Models;
+using SimpleLevelEditor.State.Utils;
 using SimpleLevelEditor.Utils;
 using static SimpleLevelEditor.Graphics;
 
@@ -14,10 +16,10 @@ namespace SimpleLevelEditor.Rendering.Scene;
 
 public sealed class LineRenderer
 {
-	private static readonly uint _lineVao = VaoUtils.CreateLineVao([Vector3.Zero, Vector3.UnitZ]);
-	private static readonly uint _centeredLineVao = VaoUtils.CreateLineVao([-Vector3.UnitZ, Vector3.UnitZ]);
+	private static readonly uint _lineVao = VaoUtils.CreateLineVao(Gl, [Vector3.Zero, Vector3.UnitZ]);
+	private static readonly uint _centeredLineVao = VaoUtils.CreateLineVao(Gl, [-Vector3.UnitZ, Vector3.UnitZ]);
 
-	private static readonly uint _cubeVao = VaoUtils.CreateLineVao([
+	private static readonly uint _cubeVao = VaoUtils.CreateLineVao(Gl, [
 		new Vector3(-0.5f, -0.5f, -0.5f),
 		new Vector3(-0.5f, -0.5f, 0.5f),
 		new Vector3(-0.5f, 0.5f, -0.5f),
@@ -47,12 +49,12 @@ public sealed class LineRenderer
 	]);
 
 	private static readonly Vector3[] _sphereVertices = VertexUtils.GetSphereVertexPositions(8, 16, 1);
-	private static readonly uint _sphereVao = VaoUtils.CreateLineVao(_sphereVertices);
+	private static readonly uint _sphereVao = VaoUtils.CreateLineVao(Gl, _sphereVertices);
 
 	private static readonly Vector3[] _pointVertices = VertexUtils.GetSphereVertexPositions(3, 6, 1);
-	private static readonly uint _pointVao = VaoUtils.CreateLineVao(_pointVertices);
+	private static readonly uint _pointVao = VaoUtils.CreateLineVao(Gl, _pointVertices);
 
-	private static readonly uint _planeLineVao = VaoUtils.CreateLineVao([
+	private static readonly uint _planeLineVao = VaoUtils.CreateLineVao(Gl, [
 		new Vector3(-0.5f, -0.5f, 0),
 		new Vector3(-0.5f, 0.5f, 0),
 		new Vector3(0.5f, 0.5f, 0),
@@ -69,9 +71,9 @@ public sealed class LineRenderer
 	public LineRenderer()
 	{
 		_lineShader = InternalContent.Shaders["Line"];
-		_modelUniform = _lineShader.GetUniformLocation("model");
-		_colorUniform = _lineShader.GetUniformLocation("color");
-		_fadeOutUniform = _lineShader.GetUniformLocation("fadeOut");
+		_modelUniform = _lineShader.GetUniformLocation(Gl, "model");
+		_colorUniform = _lineShader.GetUniformLocation(Gl, "color");
+		_fadeOutUniform = _lineShader.GetUniformLocation(Gl, "fadeOut");
 	}
 
 	public void Render()
@@ -81,11 +83,11 @@ public sealed class LineRenderer
 
 		Gl.UseProgram(_lineShader.Id);
 
-		Gl.UniformMatrix4x4(_lineShader.GetUniformLocation("view"), Camera3d.ViewMatrix);
-		Gl.UniformMatrix4x4(_lineShader.GetUniformLocation("projection"), Camera3d.Projection);
-		Gl.Uniform3(_lineShader.GetUniformLocation("cameraPosition"), Camera3d.Position);
-		Gl.Uniform1(_lineShader.GetUniformLocation("fadeMinDistance"), fadeOutMinDistance);
-		Gl.Uniform1(_lineShader.GetUniformLocation("fadeMaxDistance"), fadeOutMaxDistance);
+		Gl.UniformMatrix4x4(_lineShader.GetUniformLocation(Gl, "view"), Camera3d.ViewMatrix);
+		Gl.UniformMatrix4x4(_lineShader.GetUniformLocation(Gl, "projection"), Camera3d.Projection);
+		Gl.Uniform3(_lineShader.GetUniformLocation(Gl, "cameraPosition"), Camera3d.Position);
+		Gl.Uniform1(_lineShader.GetUniformLocation(Gl, "fadeMinDistance"), fadeOutMinDistance);
+		Gl.Uniform1(_lineShader.GetUniformLocation(Gl, "fadeMaxDistance"), fadeOutMaxDistance);
 
 		Gl.BindVertexArray(_lineVao);
 

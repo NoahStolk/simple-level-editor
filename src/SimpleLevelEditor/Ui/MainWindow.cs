@@ -37,7 +37,7 @@ public static class MainWindow
 			if (ImGui.BeginMenu("File"))
 			{
 				if (ImGui.MenuItem("New", Shortcuts.GetKeyDescription(Shortcuts.New)))
-					LevelState.New();
+					LevelState.New(Graphics.Gl);
 
 				if (ImGui.MenuItem("Open", Shortcuts.GetKeyDescription(Shortcuts.Open)))
 					LevelState.Load();

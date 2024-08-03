@@ -1,9 +1,9 @@
 using Detach;
 using ImGuiNET;
 using SimpleLevelEditor.Formats.Types.Level;
-using SimpleLevelEditor.Rendering;
 using SimpleLevelEditor.State;
 using SimpleLevelEditor.State.Level;
+using SimpleLevelEditor.State.Models;
 
 namespace SimpleLevelEditor.Ui.ChildWindows;
 
@@ -135,7 +135,7 @@ public static class WorldObjectEditorWindow
 				ModelPreviewFramebuffer? framebuffer = ModelContainer.LevelContainer.GetModelPreviewFramebuffer(meshName);
 				if (framebuffer != null)
 				{
-					framebuffer.Render(GetBorderColor(worldObject.ModelPath == meshName), new Vector2(tileSize));
+					framebuffer.Render(Graphics.Gl, GetBorderColor(worldObject.ModelPath == meshName), new Vector2(tileSize));
 					AssetTile(worldObject, i, (IntPtr)framebuffer.FramebufferTextureId, rowLength, tileSize, meshName);
 				}
 			}

@@ -1,6 +1,7 @@
 using Silk.NET.OpenGL;
+using System.Numerics;
 
-namespace SimpleLevelEditor.Extensions;
+namespace SimpleLevelEditor.State.Extensions;
 
 public static class GlExtensions
 {

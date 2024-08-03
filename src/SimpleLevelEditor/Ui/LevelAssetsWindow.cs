@@ -14,7 +14,7 @@ public static class LevelAssetsWindow
 		{
 			if (ImGui.Button("Reload all"))
 			{
-				LevelState.ReloadAssets(LevelState.LevelFilePath);
+				LevelState.ReloadAssets(Graphics.Gl, LevelState.LevelFilePath);
 				if (LevelState.Level.EntityConfigPath != null)
 				{
 					string? parentDirectory = Path.GetDirectoryName(LevelState.LevelFilePath);

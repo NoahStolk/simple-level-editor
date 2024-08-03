@@ -2,7 +2,6 @@ using Detach;
 using ImGuiNET;
 using SimpleLevelEditor.Logic;
 using SimpleLevelEditor.Rendering;
-using SimpleLevelEditor.Rendering.Content;
 using SimpleLevelEditor.State;
 using SimpleLevelEditor.Ui.ChildWindows;
 

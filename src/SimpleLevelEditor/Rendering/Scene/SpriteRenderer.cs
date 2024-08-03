@@ -1,12 +1,12 @@
 using Detach.Parsers.Texture;
 using Detach.Parsers.Texture.TgaFormat;
 using Silk.NET.OpenGL;
-using SimpleLevelEditor.Extensions;
 using SimpleLevelEditor.Formats.Types.EntityConfig;
 using SimpleLevelEditor.Formats.Types.Level;
-using SimpleLevelEditor.Rendering.Content;
 using SimpleLevelEditor.State;
+using SimpleLevelEditor.State.Extensions;
 using SimpleLevelEditor.State.Level;
+using SimpleLevelEditor.State.Utils;
 using SimpleLevelEditor.Utils;
 using static SimpleLevelEditor.Graphics;
 
@@ -14,7 +14,7 @@ namespace SimpleLevelEditor.Rendering.Scene;
 
 public sealed class SpriteRenderer
 {
-	private static readonly uint _planeVao = VaoUtils.CreatePlaneVao([
+	private static readonly uint _planeVao = VaoUtils.CreatePlaneVao(Gl, [
 		-0.5f, -0.5f, 0, 0, 0,
 		-0.5f, 0.5f, 0, 0, 1,
 		0.5f, -0.5f, 0, 1, 0,
@@ -30,15 +30,15 @@ public sealed class SpriteRenderer
 	public SpriteRenderer()
 	{
 		_spriteShader = InternalContent.Shaders["Sprite"];
-		_modelUniform = _spriteShader.GetUniformLocation("model");
+		_modelUniform = _spriteShader.GetUniformLocation(Gl, "model");
 	}
 
 	public void Render()
 	{
 		Gl.UseProgram(_spriteShader.Id);
 
-		Gl.UniformMatrix4x4(_spriteShader.GetUniformLocation("view"), Camera3d.ViewMatrix);
-		Gl.UniformMatrix4x4(_spriteShader.GetUniformLocation("projection"), Camera3d.Projection);
+		Gl.UniformMatrix4x4(_spriteShader.GetUniformLocation(Gl, "view"), Camera3d.ViewMatrix);
+		Gl.UniformMatrix4x4(_spriteShader.GetUniformLocation(Gl, "projection"), Camera3d.Projection);
 
 		RenderSpriteEntities();
 	}
@@ -83,7 +83,7 @@ public sealed class SpriteRenderer
 			_billboardSpriteTextures.Add(absolutePathToSpriteTexture, textureData);
 		}
 
-		uint textureId = TextureContainer.GetTexture(textureData);
+		uint textureId = TextureContainer.GetTexture(Gl, textureData);
 		Gl.BindTexture(TextureTarget.Texture2D, textureId);
 
 		// Note; keep Z scale at 1 to avoid rendering glitches.

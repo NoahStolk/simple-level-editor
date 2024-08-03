@@ -1,9 +1,9 @@
 using Microsoft.FSharp.Core;
+using Silk.NET.OpenGL;
 using SimpleLevelEditor.Formats;
 using SimpleLevelEditor.Formats.Types.Level;
-using SimpleLevelEditor.Rendering;
 using SimpleLevelEditor.State.Messages;
-using SimpleLevelEditor.Ui.ChildWindows;
+using SimpleLevelEditor.State.Models;
 using System.Security.Cryptography;
 
 namespace SimpleLevelEditor.State.Level;
@@ -56,14 +56,14 @@ public static class LevelState
 		return ms.ToArray();
 	}
 
-	public static void New()
+	public static void New(GL gl)
 	{
 		// TODO: Refactor clearing the render filter.
 		LevelEditorState.EntityRenderFilter.Clear();
 		Level3dData level = Level3dData.CreateDefault();
 		SetLevel(null, level);
 		ClearState();
-		ReloadAssets(null);
+		ReloadAssets(gl, null);
 		Track("Reset");
 	}
 
@@ -229,11 +229,11 @@ public static class LevelState
 		EntityEditorWindow.Reset();
 	}
 
-	public static bool ReloadAssets(string? levelFilePath)
+	public static bool ReloadAssets(GL gl, string? levelFilePath)
 	{
 		try
 		{
-			ModelContainer.LevelContainer.Rebuild(levelFilePath, Level.ModelPaths.ToList());
+			ModelContainer.LevelContainer.Rebuild(gl, levelFilePath, Level.ModelPaths.ToList());
 
 			if (Level.EntityConfigPath != null)
 			{
@@ -241,7 +241,7 @@ public static class LevelState
 				if (levelDirectory != null)
 				{
 					string absolutePathToEntityConfig = Path.Combine(levelDirectory, Level.EntityConfigPath.Value);
-					ModelContainer.EntityConfigContainer.Rebuild(absolutePathToEntityConfig, EntityConfigState.EntityConfig.ModelPaths.ToList());
+					ModelContainer.EntityConfigContainer.Rebuild(gl, absolutePathToEntityConfig, EntityConfigState.EntityConfig.ModelPaths.ToList());
 				}
 			}
 

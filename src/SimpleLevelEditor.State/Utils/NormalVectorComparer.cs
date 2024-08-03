@@ -1,4 +1,6 @@
-namespace SimpleLevelEditor.Utils;
+using System.Numerics;
+
+namespace SimpleLevelEditor.State.Utils;
 
 public sealed class NormalVectorComparer : IEqualityComparer<Vector3>
 {

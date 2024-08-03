@@ -7,6 +7,7 @@ using SimpleLevelEditor.Formats.Types.Level;
 using SimpleLevelEditor.Rendering;
 using SimpleLevelEditor.State;
 using SimpleLevelEditor.State.Level;
+using SimpleLevelEditor.State.Models;
 using SimpleLevelEditor.Ui.ChildWindows;
 using SimpleLevelEditor.Utils;
 using System.Diagnostics;
@@ -17,7 +18,7 @@ public static class MainLogic
 {
 	public static void Run(bool isFocused, Vector2 normalizedMousePosition, Plane nearPlane, float gridSnap)
 	{
-		AssetLoadScheduleState.LoadIfScheduled();
+		AssetLoadScheduleState.LoadIfScheduled(Graphics.Gl);
 
 		CalculateTargetPosition(normalizedMousePosition, nearPlane, gridSnap);
 		CalculateHighlightedObject(normalizedMousePosition, isFocused);

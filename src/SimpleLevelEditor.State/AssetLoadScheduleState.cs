@@ -1,3 +1,4 @@
+using Silk.NET.OpenGL;
 using SimpleLevelEditor.State.Level;
 
 namespace SimpleLevelEditor.State;
@@ -16,12 +17,12 @@ public static class AssetLoadScheduleState
 		_path = path;
 	}
 
-	public static void LoadIfScheduled()
+	public static void LoadIfScheduled(GL gl)
 	{
 		if (!_needsLoad)
 			return;
 
-		bool reloadedSuccessfully = LevelState.ReloadAssets(_path);
+		bool reloadedSuccessfully = LevelState.ReloadAssets(gl, _path);
 		_needsLoad = !reloadedSuccessfully;
 	}
 }

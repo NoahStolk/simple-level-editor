@@ -1,8 +1,9 @@
 using Detach.Parsers.Texture;
+using Silk.NET.OpenGL;
 using SimpleLevelEditor.State.Messages;
-using SimpleLevelEditor.Utils;
+using SimpleLevelEditor.State.Utils;
 
-namespace SimpleLevelEditor.Rendering;
+namespace SimpleLevelEditor.State;
 
 // TODO: We would need a robust way to resolve file paths from:
 // - The entity config file.
@@ -13,14 +14,14 @@ public static class TextureContainer
 {
 	private static readonly Dictionary<TextureData, uint> _textures = new();
 
-	public static uint GetTexture(TextureData textureData)
+	public static uint GetTexture(GL gl, TextureData textureData)
 	{
 		if (_textures.TryGetValue(textureData, out uint textureId))
 			return textureId;
 
 		MessagesState.AddInfo("Loading unallocated texture...");
 
-		textureId = GlObjectUtils.CreateTexture(textureData.Width, textureData.Height, textureData.ColorData);
+		textureId = GlObjectUtils.CreateTexture(gl, textureData.Width, textureData.Height, textureData.ColorData);
 		_textures.Add(textureData, textureId);
 		return textureId;
 	}

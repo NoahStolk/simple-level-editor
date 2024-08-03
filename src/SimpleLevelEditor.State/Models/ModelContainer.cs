@@ -3,16 +3,17 @@ using Detach.Parsers.Model.MtlFormat;
 using Detach.Parsers.Model.ObjFormat;
 using Detach.Parsers.Texture;
 using Detach.Parsers.Texture.TgaFormat;
-using SimpleLevelEditor.Rendering.Vertices;
+using Silk.NET.OpenGL;
 using SimpleLevelEditor.State.Messages;
-using SimpleLevelEditor.Utils;
+using SimpleLevelEditor.State.Utils;
+using System.Numerics;
 
-namespace SimpleLevelEditor.Rendering;
+namespace SimpleLevelEditor.State.Models;
 
 public sealed class ModelContainer
 {
 	private readonly Dictionary<string, Model> _models = new();
-	private readonly Dictionary<string, ModelPreviewFramebuffer> _modelPreviewFramebuffers = new();
+	private readonly Dictionary<string, ModelPreviewFramebuffer> _modelPreviewFramebuffers = new(); // TODO: Extract these to a separate class.
 	private readonly string _containerName;
 	private readonly bool _addModelPreviewFramebuffers;
 
@@ -43,12 +44,12 @@ public sealed class ModelContainer
 		return null;
 	}
 
-	public void Rebuild(string? sourceFilePath, List<string> modelPaths)
+	public void Rebuild(GL gl, string? sourceFilePath, List<string> modelPaths)
 	{
 		if (_addModelPreviewFramebuffers)
 		{
 			foreach (KeyValuePair<string, ModelPreviewFramebuffer> kvp in _modelPreviewFramebuffers)
-				kvp.Value.Destroy();
+				kvp.Value.Destroy(gl);
 			_modelPreviewFramebuffers.Clear();
 		}
 
@@ -65,7 +66,7 @@ public sealed class ModelContainer
 			if (!File.Exists(absolutePath))
 				continue;
 
-			Model? model = ReadModel(absolutePath);
+			Model? model = ReadModel(gl, absolutePath);
 			if (model != null)
 			{
 				_models.Add(modelPath, model);
@@ -76,7 +77,7 @@ public sealed class ModelContainer
 		}
 	}
 
-	private static Model? ReadModel(string absolutePathToObjFile)
+	private static Model? ReadModel(GL gl, string absolutePathToObjFile)
 	{
 		ModelData modelData = ObjParser.Parse(File.ReadAllBytes(absolutePathToObjFile));
 		if (modelData.Meshes.Count == 0)
@@ -108,7 +109,7 @@ public sealed class ModelContainer
 		foreach (MeshData meshData in modelData.Meshes)
 		{
 			Geometry geometry = GetMeshData(modelData, meshData);
-			uint vao = GlObjectUtils.CreateMesh(geometry);
+			uint vao = GlObjectUtils.CreateMesh(gl, geometry);
 
 			Vector3 boundingMin = new(float.MaxValue);
 			Vector3 boundingMax = new(float.MinValue);
@@ -150,7 +151,7 @@ public sealed class ModelContainer
 				lineIndices.Add(edge.Key.B);
 			}
 
-			meshes.Add(new Mesh(geometry, meshData.MaterialName, vao, lineIndices.ToArray(), VaoUtils.CreateLineVao(modelData.Positions.ToArray()), boundingMin, boundingMax));
+			meshes.Add(new Mesh(geometry, meshData.MaterialName, vao, lineIndices.ToArray(), VaoUtils.CreateLineVao(gl, modelData.Positions.ToArray()), boundingMin, boundingMax));
 		}
 
 		Vector3 modelBoundingMin = new(float.MaxValue);

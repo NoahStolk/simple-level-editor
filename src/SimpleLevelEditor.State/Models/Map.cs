@@ -1,5 +1,5 @@
 using Detach.Parsers.Texture;
 
-namespace SimpleLevelEditor.Rendering;
+namespace SimpleLevelEditor.State.Models;
 
 public record Map(string AbsolutePath, TextureData TextureData);
