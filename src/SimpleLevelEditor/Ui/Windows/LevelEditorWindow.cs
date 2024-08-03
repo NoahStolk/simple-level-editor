@@ -32,6 +32,12 @@ public static class LevelEditorWindow
 			ReadOnlySpan<char> fpsText = Inline.Span($"{App.Instance.Fps} FPS");
 			drawList.AddText(new Vector2(cursorScreenPos.X + framebufferSize.X - 4 - ImGui.CalcTextSize(fpsText).X, cursorScreenPos.Y + 4), 0xffffffff, fpsText);
 
+			if (LevelEditorState.IsAnyObjectHidden())
+			{
+				ReadOnlySpan<char> hiddenText = Inline.Span("Warning: Some objects are hidden by the display filter.");
+				drawList.AddText(new Vector2(cursorScreenPos.X + framebufferSize.X - 4 - ImGui.CalcTextSize(hiddenText).X, cursorScreenPos.Y + 24), 0xff00ffff, hiddenText);
+			}
+
 			RenderMoveDistances(drawList, cursorScreenPos, framebufferSize);
 
 			Vector2 cursorPosition = ImGui.GetCursorPos();

@@ -49,6 +49,11 @@ public static class LevelEditorState
 		return !EntityRenderFilter.TryGetValue(entity.Name, out bool value) || value;
 	}
 
+	public static bool IsAnyObjectHidden()
+	{
+		return !ShouldRenderWorldObjects || EntityRenderFilter.Values.Any(v => !v);
+	}
+
 	public static void ClearHighlight()
 	{
 		HighlightedObject = null;

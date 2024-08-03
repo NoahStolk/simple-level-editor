@@ -48,6 +48,14 @@ public static class LevelAssetsWindow
 
 			ImGui.EndDisabled();
 
+			if (LevelState.LevelFilePath == null)
+			{
+				ImGui.SameLine();
+				ImGui.Text("(?)");
+				if (ImGui.IsItemHovered())
+					ImGui.SetTooltip("You must save the level before you can load an entity config.");
+			}
+
 			RenderModelPaths();
 		}
 
@@ -73,7 +81,7 @@ public static class LevelAssetsWindow
 			ImGui.SameLine();
 			ImGui.Text("(?)");
 			if (ImGui.IsItemHovered())
-				ImGui.SetTooltip("You must save the level before you can add assets.");
+				ImGui.SetTooltip("You must save the level before you can add models.");
 		}
 
 		ImGui.BeginDisabled(LevelState.LevelFilePath == null);
