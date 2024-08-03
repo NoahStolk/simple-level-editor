@@ -2,9 +2,13 @@ using Silk.NET.OpenGL;
 using SimpleLevelEditor.Extensions;
 using SimpleLevelEditor.Formats.Types.EntityConfig;
 using SimpleLevelEditor.Formats.Types.Level;
-using SimpleLevelEditor.Rendering.Content;
 using SimpleLevelEditor.State;
-using SimpleLevelEditor.State.Level;
+using SimpleLevelEditor.State.Extensions;
+using SimpleLevelEditor.State.States.Assets;
+using SimpleLevelEditor.State.States.EntityConfig;
+using SimpleLevelEditor.State.States.InternalContent;
+using SimpleLevelEditor.State.States.Level;
+using SimpleLevelEditor.State.States.LevelEditor;
 using static SimpleLevelEditor.Graphics;
 
 namespace SimpleLevelEditor.Rendering.Scene;
@@ -16,16 +20,16 @@ public sealed class MeshRenderer
 
 	public MeshRenderer()
 	{
-		_meshShader = InternalContent.Shaders["Mesh"];
-		_modelUniform = _meshShader.GetUniformLocation("model");
+		_meshShader = InternalContentState.Shaders["Mesh"];
+		_modelUniform = _meshShader.GetUniformLocation(Gl, "model");
 	}
 
 	public void Render()
 	{
 		Gl.UseProgram(_meshShader.Id);
 
-		Gl.UniformMatrix4x4(_meshShader.GetUniformLocation("view"), Camera3d.ViewMatrix);
-		Gl.UniformMatrix4x4(_meshShader.GetUniformLocation("projection"), Camera3d.Projection);
+		Gl.UniformMatrix4x4(_meshShader.GetUniformLocation(Gl, "view"), Camera3d.ViewMatrix);
+		Gl.UniformMatrix4x4(_meshShader.GetUniformLocation(Gl, "projection"), Camera3d.Projection);
 
 		RenderMeshEntities();
 
@@ -94,7 +98,7 @@ public sealed class MeshRenderer
 			if (materialData == null)
 				continue;
 
-			uint textureId = TextureContainer.GetTexture(materialData.DiffuseMap.TextureData);
+			uint textureId = TextureContainer.GetTexture(Gl, materialData.DiffuseMap.TextureData);
 			Gl.BindTexture(TextureTarget.Texture2D, textureId);
 
 			Gl.BindVertexArray(mesh.MeshVao);

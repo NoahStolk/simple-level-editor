@@ -1,7 +1,10 @@
 using Detach;
 using ImGuiNET;
 using SimpleLevelEditor.State;
-using SimpleLevelEditor.State.Level;
+using SimpleLevelEditor.State.States.Assets;
+using SimpleLevelEditor.State.States.EntityConfig;
+using SimpleLevelEditor.State.States.Level;
+using SimpleLevelEditor.State.Utils;
 using System.Diagnostics;
 
 namespace SimpleLevelEditor.Ui;
@@ -14,7 +17,7 @@ public static class LevelAssetsWindow
 		{
 			if (ImGui.Button("Reload all"))
 			{
-				LevelState.ReloadAssets(LevelState.LevelFilePath);
+				LevelState.ReloadAssets(Graphics.Gl, LevelState.LevelFilePath);
 				if (LevelState.Level.EntityConfigPath != null)
 				{
 					string? parentDirectory = Path.GetDirectoryName(LevelState.LevelFilePath);

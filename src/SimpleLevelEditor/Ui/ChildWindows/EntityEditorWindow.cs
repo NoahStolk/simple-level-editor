@@ -5,7 +5,10 @@ using SimpleLevelEditor.Formats.Types;
 using SimpleLevelEditor.Formats.Types.EntityConfig;
 using SimpleLevelEditor.Formats.Types.Level;
 using SimpleLevelEditor.State;
-using SimpleLevelEditor.State.Level;
+using SimpleLevelEditor.State.States.EntityConfig;
+using SimpleLevelEditor.State.States.EntityEditor;
+using SimpleLevelEditor.State.States.Level;
+using SimpleLevelEditor.State.States.LevelEditor;
 using SimpleLevelEditor.Utils;
 using System.Diagnostics;
 
@@ -13,23 +16,16 @@ namespace SimpleLevelEditor.Ui.ChildWindows;
 
 public static class EntityEditorWindow
 {
-	public static Entity DefaultEntity { get; private set; } = Entity.CreateDefault();
-
 	public static void Render()
 	{
 		if (ImGui.BeginChild("Edit Entity", default, ImGuiChildFlags.Border))
 		{
 			ImGui.SeparatorText("Edit Entity");
 
-			RenderEntityInputs(LevelEditorState.SelectedEntity ?? DefaultEntity);
+			RenderEntityInputs(LevelEditorState.SelectedEntity ?? EntityEditorState.DefaultEntity);
 		}
 
 		ImGui.EndChild(); // End Object Editor
-	}
-
-	public static void Reset()
-	{
-		DefaultEntity = Entity.CreateDefault();
 	}
 
 	private static void RenderEntityInputs(Entity entity)

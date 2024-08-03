@@ -25,6 +25,8 @@ public static class DateTimeUtils
 		return dateTime.ToString("yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture);
 
 		static string S(int value)
-			=> value == 1 ? string.Empty : "s";
+		{
+			return value == 1 ? string.Empty : "s";
+		}
 	}
 }

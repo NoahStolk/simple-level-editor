@@ -1,9 +1,11 @@
 using Detach;
 using ImGuiNET;
 using SimpleLevelEditor.Formats.Types.Level;
-using SimpleLevelEditor.Rendering;
 using SimpleLevelEditor.State;
-using SimpleLevelEditor.State.Level;
+using SimpleLevelEditor.State.States.Assets;
+using SimpleLevelEditor.State.States.Level;
+using SimpleLevelEditor.State.States.LevelEditor;
+using SimpleLevelEditor.State.States.WorldObjectEditor;
 
 namespace SimpleLevelEditor.Ui.ChildWindows;
 
@@ -11,23 +13,16 @@ public static class WorldObjectEditorWindow
 {
 	private static bool _proportionalScaling;
 
-	public static WorldObject DefaultObject { get; private set; } = WorldObject.CreateDefault();
-
 	public static void Render()
 	{
 		if (ImGui.BeginChild("Edit World Object", default, ImGuiChildFlags.Border))
 		{
 			ImGui.SeparatorText("Edit World Object");
 
-			RenderWorldObjectInputs(LevelEditorState.SelectedWorldObject ?? DefaultObject);
+			RenderWorldObjectInputs(LevelEditorState.SelectedWorldObject ?? WorldObjectEditorState.DefaultObject);
 		}
 
 		ImGui.EndChild(); // End Object Editor
-	}
-
-	public static void Reset()
-	{
-		DefaultObject = WorldObject.CreateDefault();
 	}
 
 	private static void RenderWorldObjectInputs(WorldObject worldObject)
@@ -135,7 +130,7 @@ public static class WorldObjectEditorWindow
 				ModelPreviewFramebuffer? framebuffer = ModelContainer.LevelContainer.GetModelPreviewFramebuffer(meshName);
 				if (framebuffer != null)
 				{
-					framebuffer.Render(GetBorderColor(worldObject.ModelPath == meshName), new Vector2(tileSize));
+					framebuffer.Render(Graphics.Gl, GetBorderColor(worldObject.ModelPath == meshName), new Vector2(tileSize));
 					AssetTile(worldObject, i, (IntPtr)framebuffer.FramebufferTextureId, rowLength, tileSize, meshName);
 				}
 			}

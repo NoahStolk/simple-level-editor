@@ -1,7 +1,7 @@
 using ImGuiNET;
 using Silk.NET.GLFW;
 using SimpleLevelEditor.Logic;
-using SimpleLevelEditor.State.Level;
+using SimpleLevelEditor.State.States.Level;
 
 namespace SimpleLevelEditor;
 
@@ -19,7 +19,7 @@ public static class Shortcuts
 
 	private static readonly List<Shortcut> _shortcuts =
 	[
-		new Shortcut(New, Keys.N, true, false, "New level", LevelState.New),
+		new Shortcut(New, Keys.N, true, false, "New level", () => LevelState.New(Graphics.Gl)),
 		new Shortcut(Open, Keys.O, true, false, "Open level", LevelState.Load),
 		new Shortcut(Save, Keys.S, true, false, "Save level", LevelState.Save),
 		new Shortcut(SaveAs, Keys.S, true, true, "Save level as", LevelState.SaveAs),

@@ -2,8 +2,9 @@ using Detach;
 using ImGuiNET;
 using SimpleLevelEditor.Logic;
 using SimpleLevelEditor.Rendering;
-using SimpleLevelEditor.Rendering.Content;
 using SimpleLevelEditor.State;
+using SimpleLevelEditor.State.States.InternalContent;
+using SimpleLevelEditor.State.States.LevelEditor;
 using SimpleLevelEditor.Ui.ChildWindows;
 
 namespace SimpleLevelEditor.Ui;
@@ -32,7 +33,7 @@ public static class LevelEditorWindow
 
 			Vector2 focusPointIconSize = new(16, 16);
 			Vector2 focusPointIconPosition = cursorScreenPos + Camera3d.GetScreenPositionFrom3dPoint(Camera3d.FocusPointTarget, framebufferSize) - focusPointIconSize / 2;
-			drawList.AddImage((IntPtr)InternalContent.Textures["FocusPoint"], focusPointIconPosition, focusPointIconPosition + focusPointIconSize);
+			drawList.AddImage((IntPtr)InternalContentState.Textures["FocusPoint"], focusPointIconPosition, focusPointIconPosition + focusPointIconSize);
 
 			ReadOnlySpan<char> fpsText = Inline.Span($"{App.Instance.Fps} FPS");
 			drawList.AddText(new Vector2(cursorScreenPos.X + framebufferSize.X - 4 - ImGui.CalcTextSize(fpsText).X, cursorScreenPos.Y + 4), 0xffffffff, fpsText);
