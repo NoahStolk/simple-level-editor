@@ -1,7 +1,6 @@
 using Detach;
 using ImGuiNET;
 using SimpleLevelEditor.Formats.Types.Level;
-using SimpleLevelEditor.State;
 using SimpleLevelEditor.State.States.Assets;
 using SimpleLevelEditor.State.States.Level;
 using SimpleLevelEditor.State.States.LevelEditor;
@@ -22,7 +21,7 @@ public static class WorldObjectEditorWindow
 			RenderWorldObjectInputs(LevelEditorState.SelectedWorldObject ?? WorldObjectEditorState.DefaultObject);
 		}
 
-		ImGui.EndChild(); // End Object Editor
+		ImGui.EndChild();
 	}
 
 	private static void RenderWorldObjectInputs(WorldObject worldObject)
@@ -138,7 +137,7 @@ public static class WorldObjectEditorWindow
 			AddScrollMarker(LevelState.Level.ModelPaths.Length, rowLength, tileSize);
 		}
 
-		ImGui.EndChild(); // End Model
+		ImGui.EndChild();
 
 		static Vector4 GetBorderColor(bool isSelected)
 		{

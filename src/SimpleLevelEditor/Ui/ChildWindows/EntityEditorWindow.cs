@@ -4,7 +4,6 @@ using Microsoft.FSharp.Collections;
 using SimpleLevelEditor.Formats.Types;
 using SimpleLevelEditor.Formats.Types.EntityConfig;
 using SimpleLevelEditor.Formats.Types.Level;
-using SimpleLevelEditor.State;
 using SimpleLevelEditor.State.States.EntityConfig;
 using SimpleLevelEditor.State.States.EntityEditor;
 using SimpleLevelEditor.State.States.Level;
@@ -25,7 +24,7 @@ public static class EntityEditorWindow
 			RenderEntityInputs(LevelEditorState.SelectedEntity ?? EntityEditorState.DefaultEntity);
 		}
 
-		ImGui.EndChild(); // End Object Editor
+		ImGui.EndChild();
 	}
 
 	private static void RenderEntityInputs(Entity entity)

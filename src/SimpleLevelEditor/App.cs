@@ -4,7 +4,6 @@ using ImGuiGlfw;
 using ImGuiNET;
 using Silk.NET.GLFW;
 using Silk.NET.OpenGL;
-using SimpleLevelEditor.State;
 using SimpleLevelEditor.State.States.Assets;
 using SimpleLevelEditor.Ui;
 using SimpleLevelEditor.User;

@@ -1,7 +1,6 @@
 using ImGuiNET;
 using Silk.NET.GLFW;
 using SimpleLevelEditor.Rendering;
-using SimpleLevelEditor.State;
 using SimpleLevelEditor.State.States.Level;
 using SimpleLevelEditor.State.States.LevelEditor;
 

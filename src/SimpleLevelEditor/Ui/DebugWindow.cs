@@ -1,6 +1,5 @@
 using Detach;
 using ImGuiNET;
-using SimpleLevelEditor.State;
 using SimpleLevelEditor.State.States.Assets;
 
 namespace SimpleLevelEditor.Ui;

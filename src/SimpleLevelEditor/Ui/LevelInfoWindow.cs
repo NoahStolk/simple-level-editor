@@ -1,7 +1,6 @@
 using Detach;
 using ImGuiNET;
 using SimpleLevelEditor.Formats.Types.Level;
-using SimpleLevelEditor.State;
 using SimpleLevelEditor.State.States.EntityConfig;
 using SimpleLevelEditor.State.States.Level;
 using SimpleLevelEditor.Ui.ChildWindows;

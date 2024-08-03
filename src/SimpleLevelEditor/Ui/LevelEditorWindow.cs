@@ -2,7 +2,6 @@ using Detach;
 using ImGuiNET;
 using SimpleLevelEditor.Logic;
 using SimpleLevelEditor.Rendering;
-using SimpleLevelEditor.State;
 using SimpleLevelEditor.State.States.InternalContent;
 using SimpleLevelEditor.State.States.LevelEditor;
 using SimpleLevelEditor.Ui.ChildWindows;
@@ -157,7 +156,7 @@ public static class LevelEditorWindow
 			}
 		}
 
-		ImGui.End(); // End Level Editor Menu
+		ImGui.End();
 
 		ImGui.PopStyleColor();
 	}

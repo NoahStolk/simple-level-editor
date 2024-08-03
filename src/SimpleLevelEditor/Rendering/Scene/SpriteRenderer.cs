@@ -3,7 +3,6 @@ using Detach.Parsers.Texture.TgaFormat;
 using Silk.NET.OpenGL;
 using SimpleLevelEditor.Formats.Types.EntityConfig;
 using SimpleLevelEditor.Formats.Types.Level;
-using SimpleLevelEditor.State;
 using SimpleLevelEditor.State.Extensions;
 using SimpleLevelEditor.State.States.Assets;
 using SimpleLevelEditor.State.States.EntityConfig;

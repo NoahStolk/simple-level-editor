@@ -1,5 +1,4 @@
 using ImGuiNET;
-using SimpleLevelEditor.State;
 using SimpleLevelEditor.State.States.LevelEditor;
 using SimpleLevelEditor.Ui.ChildWindows;
 

@@ -62,6 +62,6 @@ public static class ControlsWindow
 			}
 		}
 
-		ImGui.End(); // End Shortcuts
+		ImGui.End();
 	}
 }
