@@ -1,8 +1,7 @@
-using SimpleLevelEditor.State;
 using SimpleLevelEditor.State.Level;
 using SimpleLevelEditor.State.Messages;
 
-namespace SimpleLevelEditor;
+namespace SimpleLevelEditor.State;
 
 public static class AssetFileWatcher
 {

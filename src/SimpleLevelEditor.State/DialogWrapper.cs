@@ -1,6 +1,6 @@
 using NativeFileDialogSharp;
 
-namespace SimpleLevelEditor;
+namespace SimpleLevelEditor.State;
 
 /// <summary>
 /// Wrapper to make sure the <see cref="Dialog"/> class doesn't block the main thread and cause other problems like key states getting stuck.

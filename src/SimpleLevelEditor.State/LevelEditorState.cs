@@ -1,5 +1,6 @@
 using SimpleLevelEditor.Formats.Types.Level;
 using SimpleLevelEditor.State.Level;
+using System.Numerics;
 
 namespace SimpleLevelEditor.State;
 

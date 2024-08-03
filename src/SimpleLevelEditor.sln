@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleLevelEditor.Formats",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleLevelEditor.Formats.Tests", "SimpleLevelEditor.Formats.Tests\SimpleLevelEditor.Formats.Tests.csproj", "{706CA3B9-A327-4D18-B581-414685DB5EF3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleLevelEditor.State", "SimpleLevelEditor.State\SimpleLevelEditor.State.csproj", "{547C3D9C-5400-4E24-A9DC-5A1CF72F600C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -28,5 +30,9 @@ Global
 		{4A2C880B-AE85-496E-81F0-676D49042F8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4A2C880B-AE85-496E-81F0-676D49042F8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4A2C880B-AE85-496E-81F0-676D49042F8D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{547C3D9C-5400-4E24-A9DC-5A1CF72F600C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{547C3D9C-5400-4E24-A9DC-5A1CF72F600C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{547C3D9C-5400-4E24-A9DC-5A1CF72F600C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{547C3D9C-5400-4E24-A9DC-5A1CF72F600C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

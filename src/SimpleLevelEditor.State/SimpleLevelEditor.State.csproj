@@ -1,0 +1,11 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup Label="External dependencies">
+    <PackageReference Include="NativeFileDialogSharp" Version="0.5.0"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SimpleLevelEditor.Formats\SimpleLevelEditor.Formats.fsproj"/>
+  </ItemGroup>
+
+</Project>
