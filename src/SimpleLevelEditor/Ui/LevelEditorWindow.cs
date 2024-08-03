@@ -10,11 +10,6 @@ namespace SimpleLevelEditor.Ui;
 
 public static class LevelEditorWindow
 {
-	private static readonly float[] _snapPoints = [0, 0.125f, 0.25f, 0.5f, 1, 2, 4, 8];
-	private static int _snapIndex = 4;
-
-	private static float Snap => _snapIndex >= 0 && _snapIndex < _snapPoints.Length ? _snapPoints[_snapIndex] : 0;
-
 	public static void Render()
 	{
 		if (ImGui.Begin("Level Editor"))
@@ -41,21 +36,21 @@ public static class LevelEditorWindow
 
 			Vector2 cursorPosition = ImGui.GetCursorPos();
 
-			RenderLevelEditorMenus(ImGui.GetCursorScreenPos());
+			LevelEditorMenuWindow.Render(ImGui.GetCursorScreenPos());
 
 			Matrix4x4 viewProjection = Camera3d.ViewMatrix * Camera3d.Projection;
 			Plane nearPlane = new(-viewProjection.M13, -viewProjection.M23, -viewProjection.M33, -viewProjection.M43);
 			Vector2 mousePosition = Input.GlfwInput.CursorPosition - cursorScreenPos;
 			Vector2 normalizedMousePosition = new Vector2(mousePosition.X / framebufferSize.X - 0.5f, -(mousePosition.Y / framebufferSize.Y - 0.5f)) * 2;
 
-			LevelEditorSelectionMenu.RenderSelectionMenu(framebufferSize, drawList, cursorScreenPos, nearPlane, normalizedMousePosition, Snap);
+			LevelEditorSelectionMenu.RenderSelectionMenu(framebufferSize, drawList, cursorScreenPos, nearPlane, normalizedMousePosition, LevelEditorState.Snap);
 
 			ImGui.SetCursorPos(cursorPosition);
 			ImGui.InvisibleButton("3d_view", framebufferSize);
 			bool isFocused = ImGui.IsItemHovered();
 			Camera3d.Update(ImGui.GetIO().DeltaTime, isFocused);
 
-			MainLogic.Run(isFocused, normalizedMousePosition, nearPlane, Snap);
+			MainLogic.Run(isFocused, normalizedMousePosition, nearPlane, LevelEditorState.Snap);
 		}
 
 		ImGui.End();
@@ -99,65 +94,5 @@ public static class LevelEditorWindow
 			drawList.AddRectFilled(origin - padding, origin + textSize + padding, 0xff000000);
 			drawList.AddText(origin, colorAsInt, text);
 		}
-	}
-
-	private static void RenderLevelEditorMenus(Vector2 windowPosition)
-	{
-		ImGui.PushStyleColor(ImGuiCol.WindowBg, new Vector4(0, 0, 0, 0.4f));
-		ImGui.SetNextWindowPos(windowPosition, ImGuiCond.Always);
-		ImGui.SetNextWindowSizeConstraints(new Vector2(280, 160), new Vector2(360, 1024));
-		if (ImGui.Begin("Level Editor Menu", ImGuiWindowFlags.NoMove))
-		{
-			const int itemWidth = 160;
-			if (ImGui.BeginTabBar("LevelEditorMenus"))
-			{
-				ImGui.PushItemWidth(itemWidth);
-
-				if (ImGui.BeginTabItem("Editing"))
-				{
-					ImGui.SliderInt("Snap", ref _snapIndex, 0, _snapPoints.Length - 1, Inline.Span(Snap));
-					ImGui.InputFloat("Target height", ref LevelEditorState.TargetHeight, 0.25f, 1, "%.2f");
-
-					ImGui.EndTabItem();
-				}
-
-				if (ImGui.BeginTabItem("Display"))
-				{
-					ImGui.SliderFloat("Cell fade out min distance", ref LevelEditorState.GridCellFadeOutMinDistance, 16, 128);
-					ImGui.SliderFloat("Cell fade out max distance", ref LevelEditorState.GridCellFadeOutMaxDistance, 32, 256);
-					ImGui.SliderInt("Cell interval", ref LevelEditorState.GridCellInterval, 2, 16);
-					ImGui.SliderFloat("Camera zoom", ref Camera3d.Zoom, 1, 100, "%.2f");
-
-					bool shouldRenderWorldObjects = LevelEditorState.ShouldRenderWorldObjects;
-					if (ImGui.Checkbox("WorldObjects", ref shouldRenderWorldObjects))
-					{
-						LevelEditorState.ShouldRenderWorldObjects = shouldRenderWorldObjects;
-						LevelEditorState.ClearSelectedWorldObject();
-					}
-
-					foreach (KeyValuePair<string, bool> filter in LevelEditorState.EntityRenderFilter)
-					{
-						bool value = filter.Value;
-						if (ImGui.Checkbox(filter.Key, ref value))
-						{
-							LevelEditorState.EntityRenderFilter[filter.Key] = value;
-
-							if (filter.Key == LevelEditorState.SelectedEntity?.Name)
-								LevelEditorState.ClearSelectedEntity();
-						}
-					}
-
-					ImGui.EndTabItem();
-				}
-
-				ImGui.PopItemWidth();
-
-				ImGui.EndTabBar();
-			}
-		}
-
-		ImGui.End();
-
-		ImGui.PopStyleColor();
 	}
 }

@@ -6,6 +6,8 @@ namespace SimpleLevelEditor.State.States.LevelEditor;
 
 public static class LevelEditorState
 {
+	private static readonly float[] _snapPoints = [0, 0.125f, 0.25f, 0.5f, 1, 2, 4, 8];
+
 	private static int _selectedWorldObjectId = -1;
 	private static int _selectedEntityId = -1;
 
@@ -16,6 +18,12 @@ public static class LevelEditorState
 	public static Vector3? TargetPosition;
 
 	public static EditMode Mode = EditMode.WorldObjects;
+
+	public static int SnapIndex = 4;
+
+	public static float Snap => SnapIndex >= 0 && SnapIndex < _snapPoints.Length ? _snapPoints[SnapIndex] : 0;
+
+	public static IReadOnlyList<float> SnapPoints => _snapPoints;
 
 	public enum EditMode
 	{
