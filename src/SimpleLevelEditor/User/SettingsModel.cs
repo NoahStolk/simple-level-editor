@@ -3,7 +3,7 @@ using System.Text;
 
 namespace SimpleLevelEditor.User;
 
-public class SettingsModel
+public sealed class SettingsModel
 {
 	public bool StartMaximized { get; set; }
 
