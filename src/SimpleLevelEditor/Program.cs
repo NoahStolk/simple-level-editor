@@ -14,15 +14,15 @@ UserSettings.LoadSettings();
 Graphics.CreateWindow($"Simple Level Editor v{AssemblyUtils.VersionString}", Constants.WindowWidth, Constants.WindowHeight, UserSettings.Settings.StartMaximized);
 Graphics.SetWindowSizeLimits(1024, 768, 4096, 2160);
 
-foreach (string filePath in Directory.GetFiles(Path.Combine("Resources", "Shaders")).DistinctBy(Path.GetFileNameWithoutExtension))
+foreach (string filePath in Directory.GetFiles(Path.Combine(Constants.ContentDirectoryName, "Shaders")).DistinctBy(Path.GetFileNameWithoutExtension))
 {
 	string shaderName = Path.GetFileNameWithoutExtension(filePath);
-	string vertexCode = File.ReadAllText(Path.Combine("Resources", "Shaders", $"{shaderName}.vert"));
-	string fragmentCode = File.ReadAllText(Path.Combine("Resources", "Shaders", $"{shaderName}.frag"));
+	string vertexCode = File.ReadAllText(Path.Combine(Constants.ContentDirectoryName, "Shaders", $"{shaderName}.vert"));
+	string fragmentCode = File.ReadAllText(Path.Combine(Constants.ContentDirectoryName, "Shaders", $"{shaderName}.frag"));
 	InternalContent.AddShader(shaderName, vertexCode, fragmentCode);
 }
 
-foreach (string filePath in Directory.GetFiles(Path.Combine("Resources", "Textures")).DistinctBy(Path.GetFileNameWithoutExtension))
+foreach (string filePath in Directory.GetFiles(Path.Combine(Constants.ContentDirectoryName, "Textures")).DistinctBy(Path.GetFileNameWithoutExtension))
 {
 	string textureName = Path.GetFileNameWithoutExtension(filePath);
 	TextureData texture = TgaParser.Parse(File.ReadAllBytes(filePath));

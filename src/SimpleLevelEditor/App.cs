@@ -29,7 +29,7 @@ public sealed class App
 	{
 		_imGuiController = imGuiController;
 
-		TextureData texture = TgaParser.Parse(File.ReadAllBytes(Path.Combine("Resources", "Textures", "Icon.tga")));
+		TextureData texture = TgaParser.Parse(File.ReadAllBytes(Path.Combine(Constants.ContentDirectoryName, "Textures", "Icon.tga")));
 
 		IntPtr iconPtr = Marshal.AllocHGlobal(texture.Width * texture.Height * 4);
 		Marshal.Copy(texture.ColorData, 0, iconPtr, texture.Width * texture.Height * 4);

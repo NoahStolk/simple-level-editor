@@ -44,8 +44,8 @@
     <TrimmerRootDescriptor Include="TrimmerRoots.xml"/>
   </ItemGroup>
 
-  <ItemGroup Label="Resources">
-    <None Include="Resources\**\*">
+  <ItemGroup Label="Content">
+    <None Include="Content\**\*">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
