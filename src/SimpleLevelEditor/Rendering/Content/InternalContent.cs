@@ -1,6 +1,6 @@
 using Detach.Parsers.Texture;
 
-namespace SimpleLevelEditor.Content;
+namespace SimpleLevelEditor.Rendering.Content;
 
 public static class InternalContent
 {

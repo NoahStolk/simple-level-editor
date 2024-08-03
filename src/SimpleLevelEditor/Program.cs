@@ -3,7 +3,7 @@ using Detach.Parsers.Texture.TgaFormat;
 using ImGuiGlfw;
 using ImGuiNET;
 using SimpleLevelEditor;
-using SimpleLevelEditor.Content;
+using SimpleLevelEditor.Rendering.Content;
 using SimpleLevelEditor.User;
 using SimpleLevelEditor.Utils;
 

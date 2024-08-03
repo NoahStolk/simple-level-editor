@@ -143,7 +143,7 @@ public static class WorldObjectEditorWindow
 			AddScrollMarker(LevelState.Level.ModelPaths.Length, rowLength, tileSize);
 		}
 
-		ImGui.EndChild(); // End Mesh
+		ImGui.EndChild(); // End Model
 
 		static Vector4 GetBorderColor(bool isSelected)
 		{

@@ -1,7 +1,7 @@
 using ImGuiNET;
 using Silk.NET.OpenGL;
-using SimpleLevelEditor.Content;
 using SimpleLevelEditor.Extensions;
+using SimpleLevelEditor.Rendering.Content;
 using SimpleLevelEditor.State.Messages;
 using static SimpleLevelEditor.Graphics;
 

@@ -1,7 +1,7 @@
 using Detach.Parsers.Texture;
 using Silk.NET.OpenGL;
 
-namespace SimpleLevelEditor.Content;
+namespace SimpleLevelEditor.Rendering.Content;
 
 public static class TextureLoader
 {

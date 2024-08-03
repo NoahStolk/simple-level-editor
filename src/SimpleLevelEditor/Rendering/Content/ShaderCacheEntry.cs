@@ -1,6 +1,6 @@
-namespace SimpleLevelEditor.Content;
+namespace SimpleLevelEditor.Rendering.Content;
 
-public class ShaderCacheEntry
+public sealed class ShaderCacheEntry
 {
 	private readonly Dictionary<string, int> _uniformLocations = new();
 
