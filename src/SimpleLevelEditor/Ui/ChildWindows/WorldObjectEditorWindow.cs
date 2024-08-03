@@ -2,6 +2,7 @@ using Detach;
 using ImGuiNET;
 using SimpleLevelEditor.Formats.Types.Level;
 using SimpleLevelEditor.State;
+using SimpleLevelEditor.State.Editor;
 using SimpleLevelEditor.State.Level;
 using SimpleLevelEditor.State.Models;
 
@@ -11,23 +12,16 @@ public static class WorldObjectEditorWindow
 {
 	private static bool _proportionalScaling;
 
-	public static WorldObject DefaultObject { get; private set; } = WorldObject.CreateDefault();
-
 	public static void Render()
 	{
 		if (ImGui.BeginChild("Edit World Object", default, ImGuiChildFlags.Border))
 		{
 			ImGui.SeparatorText("Edit World Object");
 
-			RenderWorldObjectInputs(LevelEditorState.SelectedWorldObject ?? DefaultObject);
+			RenderWorldObjectInputs(LevelEditorState.SelectedWorldObject ?? WorldObjectEditorState.DefaultObject);
 		}
 
 		ImGui.EndChild(); // End Object Editor
-	}
-
-	public static void Reset()
-	{
-		DefaultObject = WorldObject.CreateDefault();
 	}
 
 	private static void RenderWorldObjectInputs(WorldObject worldObject)

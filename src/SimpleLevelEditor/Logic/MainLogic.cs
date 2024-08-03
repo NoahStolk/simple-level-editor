@@ -6,9 +6,9 @@ using SimpleLevelEditor.Formats.Types.EntityConfig;
 using SimpleLevelEditor.Formats.Types.Level;
 using SimpleLevelEditor.Rendering;
 using SimpleLevelEditor.State;
+using SimpleLevelEditor.State.Editor;
 using SimpleLevelEditor.State.Level;
 using SimpleLevelEditor.State.Models;
-using SimpleLevelEditor.Ui.ChildWindows;
 using SimpleLevelEditor.Utils;
 using System.Diagnostics;
 
@@ -74,7 +74,7 @@ public static class MainLogic
 		if (!LevelEditorState.TargetPosition.HasValue)
 			return;
 
-		WorldObject referenceWorldObject = LevelEditorState.SelectedWorldObject ?? WorldObjectEditorWindow.DefaultObject;
+		WorldObject referenceWorldObject = LevelEditorState.SelectedWorldObject ?? WorldObjectEditorState.DefaultObject;
 		if (referenceWorldObject.ModelPath.Length == 0)
 			return; // TODO: Show popup.
 
@@ -91,7 +91,7 @@ public static class MainLogic
 		if (!LevelEditorState.TargetPosition.HasValue)
 			return;
 
-		Entity referenceEntity = LevelEditorState.SelectedEntity ?? EntityEditorWindow.DefaultEntity;
+		Entity referenceEntity = LevelEditorState.SelectedEntity ?? EntityEditorState.DefaultEntity;
 
 		Entity entity = referenceEntity.CloneAndPlaceAtPosition(LevelState.Level.Entities.Length > 0 ? LevelState.Level.Entities.Max(o => o.Id) + 1 : 0, LevelEditorState.TargetPosition.Value);
 		LevelState.Level.AddEntity(entity);

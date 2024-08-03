@@ -2,6 +2,7 @@ using Microsoft.FSharp.Core;
 using Silk.NET.OpenGL;
 using SimpleLevelEditor.Formats;
 using SimpleLevelEditor.Formats.Types.Level;
+using SimpleLevelEditor.State.Editor;
 using SimpleLevelEditor.State.Messages;
 using SimpleLevelEditor.State.Models;
 using System.Security.Cryptography;
@@ -225,8 +226,8 @@ public static class LevelState
 	{
 		LevelEditorState.SetSelectedWorldObject(null);
 		LevelEditorState.SetSelectedEntity(null);
-		WorldObjectEditorWindow.Reset();
-		EntityEditorWindow.Reset();
+		WorldObjectEditorState.Reset();
+		EntityEditorState.Reset();
 	}
 
 	public static bool ReloadAssets(GL gl, string? levelFilePath)
