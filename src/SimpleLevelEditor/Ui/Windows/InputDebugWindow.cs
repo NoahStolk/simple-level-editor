@@ -1,7 +1,7 @@
 using ImGuiNET;
 using Silk.NET.GLFW;
 
-namespace SimpleLevelEditor.Ui;
+namespace SimpleLevelEditor.Ui.Windows;
 
 public static class InputDebugWindow
 {

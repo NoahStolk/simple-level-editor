@@ -2,7 +2,7 @@ using ImGuiNET;
 using SimpleLevelEditor.State.States.Messages;
 using SimpleLevelEditor.Utils;
 
-namespace SimpleLevelEditor.Ui;
+namespace SimpleLevelEditor.Ui.Windows;
 
 public static class MessagesWindow
 {

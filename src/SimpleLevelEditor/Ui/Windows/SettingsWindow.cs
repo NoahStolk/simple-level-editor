@@ -1,6 +1,6 @@
 using ImGuiNET;
 
-namespace SimpleLevelEditor.Ui;
+namespace SimpleLevelEditor.Ui.Windows;
 
 public static class SettingsWindow
 {

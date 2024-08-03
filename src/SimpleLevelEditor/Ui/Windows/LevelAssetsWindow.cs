@@ -6,7 +6,7 @@ using SimpleLevelEditor.State.States.Level;
 using SimpleLevelEditor.State.Utils;
 using System.Diagnostics;
 
-namespace SimpleLevelEditor.Ui;
+namespace SimpleLevelEditor.Ui.Windows;
 
 public static class LevelAssetsWindow
 {

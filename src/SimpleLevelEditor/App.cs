@@ -5,7 +5,9 @@ using ImGuiNET;
 using Silk.NET.GLFW;
 using Silk.NET.OpenGL;
 using SimpleLevelEditor.State.States.Assets;
+using SimpleLevelEditor.State.States.Windows;
 using SimpleLevelEditor.Ui;
+using SimpleLevelEditor.Ui.Windows;
 using SimpleLevelEditor.User;
 using System.Runtime.InteropServices;
 
@@ -108,7 +110,7 @@ public sealed class App
 
 		ImGui.DockSpaceOverViewport(null, ImGuiDockNodeFlags.PassthruCentralNode);
 
-		MainWindow.Render();
+		RenderUi();
 
 		ImGuiIOPtr io = ImGui.GetIO();
 		if (io.WantSaveIniSettings)
@@ -117,5 +119,32 @@ public sealed class App
 		_imGuiController.Render();
 
 		Input.GlfwInput.PostRender();
+	}
+
+	private static void RenderUi()
+	{
+		if (WindowsState.ShowControlsWindow)
+			ControlsWindow.Render(ref WindowsState.ShowControlsWindow);
+
+		if (WindowsState.ShowSettingsWindow)
+			SettingsWindow.Render(ref WindowsState.ShowSettingsWindow);
+
+		if (WindowsState.ShowDemoWindow)
+			ImGui.ShowDemoWindow(ref WindowsState.ShowDemoWindow);
+
+		if (WindowsState.ShowInputDebugWindow)
+			InputDebugWindow.Render(ref WindowsState.ShowInputDebugWindow);
+
+		if (WindowsState.ShowDebugWindow)
+			DebugWindow.Render(ref WindowsState.ShowDebugWindow);
+
+		MainMenuBar.Render();
+
+		LevelInfoWindow.Render();
+		LevelAssetsWindow.Render();
+		HistoryWindow.Render();
+		LevelEditorWindow.Render();
+		ObjectEditorWindow.Render();
+		MessagesWindow.Render();
 	}
 }

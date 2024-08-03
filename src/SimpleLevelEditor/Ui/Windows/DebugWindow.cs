@@ -2,7 +2,7 @@ using Detach;
 using ImGuiNET;
 using SimpleLevelEditor.State.States.Assets;
 
-namespace SimpleLevelEditor.Ui;
+namespace SimpleLevelEditor.Ui.Windows;
 
 public static class DebugWindow
 {

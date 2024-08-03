@@ -3,7 +3,7 @@ using ImGuiNET;
 using SimpleLevelEditor.Rendering;
 using SimpleLevelEditor.State.States.LevelEditor;
 
-namespace SimpleLevelEditor.Ui;
+namespace SimpleLevelEditor.Ui.Windows;
 
 public static class LevelEditorMenuWindow
 {

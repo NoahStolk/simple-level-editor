@@ -1,37 +1,13 @@
 using ImGuiNET;
 using SimpleLevelEditor.State.States.Level;
+using SimpleLevelEditor.State.States.Windows;
 
 namespace SimpleLevelEditor.Ui;
 
-public static class MainWindow
+public static class MainMenuBar
 {
-	private static bool _showControlsWindow;
-	private static bool _showSettingsWindow;
-	private static bool _showDemoWindow;
-	private static bool _showInputDebugWindow;
-	private static bool _showDebugWindow;
-
 	public static void Render()
 	{
-		if (_showControlsWindow)
-			ControlsWindow.Render(ref _showControlsWindow);
-
-		if (_showSettingsWindow)
-			SettingsWindow.Render(ref _showSettingsWindow);
-
-		if (_showDemoWindow)
-			ImGui.ShowDemoWindow(ref _showDemoWindow);
-
-		if (_showInputDebugWindow)
-			InputDebugWindow.Render(ref _showInputDebugWindow);
-
-		if (_showDebugWindow)
-			DebugWindow.Render(ref _showDebugWindow);
-
-		Vector2 viewportSize = ImGui.GetMainViewport().Size;
-		ImGui.SetNextWindowSize(viewportSize);
-		ImGui.SetNextWindowPos(Vector2.Zero);
-
 		if (ImGui.BeginMainMenuBar())
 		{
 			if (ImGui.BeginMenu("File"))
@@ -54,7 +30,7 @@ public static class MainWindow
 			if (ImGui.BeginMenu("Settings"))
 			{
 				if (ImGui.MenuItem("Settings"))
-					_showSettingsWindow = true;
+					WindowsState.ShowSettingsWindow = true;
 
 				ImGui.EndMenu();
 			}
@@ -62,13 +38,13 @@ public static class MainWindow
 			if (ImGui.BeginMenu("Debug"))
 			{
 				if (ImGui.MenuItem("Show ImGui Demo"))
-					_showDemoWindow = true;
+					WindowsState.ShowDemoWindow = true;
 
 				if (ImGui.MenuItem("Show Input Debug"))
-					_showInputDebugWindow = true;
+					WindowsState.ShowInputDebugWindow = true;
 
 				if (ImGui.MenuItem("Show Debug"))
-					_showDebugWindow = true;
+					WindowsState.ShowDebugWindow = true;
 
 				ImGui.EndMenu();
 			}
@@ -76,19 +52,12 @@ public static class MainWindow
 			if (ImGui.BeginMenu("Help"))
 			{
 				if (ImGui.MenuItem("Controls & Shortcuts"))
-					_showControlsWindow = true;
+					WindowsState.ShowControlsWindow = true;
 
 				ImGui.EndMenu();
 			}
 
 			ImGui.EndMainMenuBar();
 		}
-
-		LevelInfoWindow.Render();
-		LevelAssetsWindow.Render();
-		HistoryWindow.Render();
-		LevelEditorWindow.Render();
-		ObjectEditorWindow.Render();
-		MessagesWindow.Render();
 	}
 }

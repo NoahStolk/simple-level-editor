@@ -6,7 +6,7 @@ using SimpleLevelEditor.State.States.InternalContent;
 using SimpleLevelEditor.State.States.LevelEditor;
 using SimpleLevelEditor.Ui.ChildWindows;
 
-namespace SimpleLevelEditor.Ui;
+namespace SimpleLevelEditor.Ui.Windows;
 
 public static class LevelEditorWindow
 {

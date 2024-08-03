@@ -5,7 +5,7 @@ using SimpleLevelEditor.State.States.EntityConfig;
 using SimpleLevelEditor.State.States.Level;
 using SimpleLevelEditor.Ui.ChildWindows;
 
-namespace SimpleLevelEditor.Ui;
+namespace SimpleLevelEditor.Ui.Windows;
 
 public static class LevelInfoWindow
 {

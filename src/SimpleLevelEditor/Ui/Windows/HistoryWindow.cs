@@ -1,7 +1,7 @@
 using ImGuiNET;
 using SimpleLevelEditor.State.States.Level;
 
-namespace SimpleLevelEditor.Ui;
+namespace SimpleLevelEditor.Ui.Windows;
 
 public static class HistoryWindow
 {
