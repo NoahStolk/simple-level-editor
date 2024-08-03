@@ -3,7 +3,7 @@ using Silk.NET.OpenGL;
 using SimpleLevelEditor.State.States.Messages;
 using SimpleLevelEditor.State.Utils;
 
-namespace SimpleLevelEditor.State.States.Models;
+namespace SimpleLevelEditor.State.States.Assets;
 
 // TODO: We would need a robust way to resolve file paths from:
 // - The entity config file.

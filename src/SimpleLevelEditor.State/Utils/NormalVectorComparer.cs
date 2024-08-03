@@ -2,7 +2,7 @@ using System.Numerics;
 
 namespace SimpleLevelEditor.State.Utils;
 
-public sealed class NormalVectorComparer : IEqualityComparer<Vector3>
+internal sealed class NormalVectorComparer : IEqualityComparer<Vector3>
 {
 	public static readonly NormalVectorComparer Instance = new();
 

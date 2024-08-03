@@ -4,11 +4,11 @@ using SimpleLevelEditor.Formats.Types.EntityConfig;
 using SimpleLevelEditor.Formats.Types.Level;
 using SimpleLevelEditor.State;
 using SimpleLevelEditor.State.Extensions;
+using SimpleLevelEditor.State.States.Assets;
 using SimpleLevelEditor.State.States.EntityConfig;
 using SimpleLevelEditor.State.States.InternalContent;
 using SimpleLevelEditor.State.States.Level;
 using SimpleLevelEditor.State.States.LevelEditor;
-using SimpleLevelEditor.State.States.Models;
 using static SimpleLevelEditor.Graphics;
 
 namespace SimpleLevelEditor.Rendering.Scene;

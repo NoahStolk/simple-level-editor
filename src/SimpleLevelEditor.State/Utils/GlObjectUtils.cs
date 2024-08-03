@@ -1,9 +1,9 @@
 using Silk.NET.OpenGL;
-using SimpleLevelEditor.State.States.Models;
+using SimpleLevelEditor.State.States.Assets;
 
 namespace SimpleLevelEditor.State.Utils;
 
-public static class GlObjectUtils
+internal static class GlObjectUtils
 {
 	public static unsafe uint CreateTexture(GL gl, uint width, uint height, byte[] pixels)
 	{

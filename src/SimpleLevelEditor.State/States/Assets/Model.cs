@@ -1,6 +1,6 @@
 using System.Numerics;
 
-namespace SimpleLevelEditor.State.States.Models;
+namespace SimpleLevelEditor.State.States.Assets;
 
 public record Model(string AbsolutePath, Dictionary<string, MaterialLibrary> MaterialLibraries, List<Mesh> Meshes, Vector3 BoundingSphereOrigin, float BoundingSphereRadius)
 {

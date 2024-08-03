@@ -5,7 +5,7 @@ using SimpleLevelEditor.State.States.InternalContent;
 using SimpleLevelEditor.State.States.Messages;
 using System.Numerics;
 
-namespace SimpleLevelEditor.State.States.Models;
+namespace SimpleLevelEditor.State.States.Assets;
 
 public sealed class ModelPreviewFramebuffer
 {

@@ -1,7 +1,7 @@
 using Silk.NET.OpenGL;
 using SimpleLevelEditor.State.States.Level;
 
-namespace SimpleLevelEditor.State.States.Models;
+namespace SimpleLevelEditor.State.States.Assets;
 
 /// <summary>
 /// Workaround due to native file dialog callbacks not always running on the main thread causing OpenGL problems.

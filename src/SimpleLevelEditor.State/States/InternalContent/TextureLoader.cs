@@ -3,7 +3,7 @@ using Silk.NET.OpenGL;
 
 namespace SimpleLevelEditor.State.States.InternalContent;
 
-public static class TextureLoader
+internal static class TextureLoader
 {
 	public static unsafe uint Load(GL gl, TextureData texture)
 	{

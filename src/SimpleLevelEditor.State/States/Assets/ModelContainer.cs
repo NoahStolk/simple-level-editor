@@ -8,7 +8,7 @@ using SimpleLevelEditor.State.States.Messages;
 using SimpleLevelEditor.State.Utils;
 using System.Numerics;
 
-namespace SimpleLevelEditor.State.States.Models;
+namespace SimpleLevelEditor.State.States.Assets;
 
 public sealed class ModelContainer
 {

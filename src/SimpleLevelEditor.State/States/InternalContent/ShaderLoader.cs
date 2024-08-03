@@ -2,7 +2,7 @@ using Silk.NET.OpenGL;
 
 namespace SimpleLevelEditor.State.States.InternalContent;
 
-public static class ShaderLoader
+internal static class ShaderLoader
 {
 	public static uint Load(GL gl, string vertexCode, string fragmentCode)
 	{
