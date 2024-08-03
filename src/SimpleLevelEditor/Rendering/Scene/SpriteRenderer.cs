@@ -5,7 +5,11 @@ using SimpleLevelEditor.Formats.Types.EntityConfig;
 using SimpleLevelEditor.Formats.Types.Level;
 using SimpleLevelEditor.State;
 using SimpleLevelEditor.State.Extensions;
-using SimpleLevelEditor.State.Level;
+using SimpleLevelEditor.State.States.EntityConfig;
+using SimpleLevelEditor.State.States.InternalContent;
+using SimpleLevelEditor.State.States.Level;
+using SimpleLevelEditor.State.States.LevelEditor;
+using SimpleLevelEditor.State.States.Models;
 using SimpleLevelEditor.State.Utils;
 using SimpleLevelEditor.Utils;
 using static SimpleLevelEditor.Graphics;
@@ -29,7 +33,7 @@ public sealed class SpriteRenderer
 
 	public SpriteRenderer()
 	{
-		_spriteShader = InternalContent.Shaders["Sprite"];
+		_spriteShader = InternalContentState.Shaders["Sprite"];
 		_modelUniform = _spriteShader.GetUniformLocation(Gl, "model");
 	}
 

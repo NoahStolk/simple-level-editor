@@ -1,5 +1,5 @@
 using Silk.NET.OpenGL;
-using SimpleLevelEditor.State.Models;
+using SimpleLevelEditor.State.States.Models;
 
 namespace SimpleLevelEditor.State.Utils;
 

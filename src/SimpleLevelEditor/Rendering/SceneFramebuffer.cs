@@ -1,6 +1,6 @@
 using Silk.NET.OpenGL;
 using SimpleLevelEditor.Rendering.Scene;
-using SimpleLevelEditor.State.Messages;
+using SimpleLevelEditor.State.States.Messages;
 using static SimpleLevelEditor.Graphics;
 
 namespace SimpleLevelEditor.Rendering;

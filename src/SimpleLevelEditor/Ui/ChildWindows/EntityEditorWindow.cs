@@ -5,8 +5,10 @@ using SimpleLevelEditor.Formats.Types;
 using SimpleLevelEditor.Formats.Types.EntityConfig;
 using SimpleLevelEditor.Formats.Types.Level;
 using SimpleLevelEditor.State;
-using SimpleLevelEditor.State.Editor;
-using SimpleLevelEditor.State.Level;
+using SimpleLevelEditor.State.States.EntityConfig;
+using SimpleLevelEditor.State.States.EntityEditor;
+using SimpleLevelEditor.State.States.Level;
+using SimpleLevelEditor.State.States.LevelEditor;
 using SimpleLevelEditor.Utils;
 using System.Diagnostics;
 

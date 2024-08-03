@@ -1,6 +1,6 @@
 using Detach.Collisions;
 using Detach.Collisions.Primitives3D;
-using SimpleLevelEditor.State.Models;
+using SimpleLevelEditor.State.States.Models;
 using System.Diagnostics.CodeAnalysis;
 
 namespace SimpleLevelEditor.Utils;

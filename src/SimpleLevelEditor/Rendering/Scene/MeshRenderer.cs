@@ -4,8 +4,11 @@ using SimpleLevelEditor.Formats.Types.EntityConfig;
 using SimpleLevelEditor.Formats.Types.Level;
 using SimpleLevelEditor.State;
 using SimpleLevelEditor.State.Extensions;
-using SimpleLevelEditor.State.Level;
-using SimpleLevelEditor.State.Models;
+using SimpleLevelEditor.State.States.EntityConfig;
+using SimpleLevelEditor.State.States.InternalContent;
+using SimpleLevelEditor.State.States.Level;
+using SimpleLevelEditor.State.States.LevelEditor;
+using SimpleLevelEditor.State.States.Models;
 using static SimpleLevelEditor.Graphics;
 
 namespace SimpleLevelEditor.Rendering.Scene;
@@ -17,7 +20,7 @@ public sealed class MeshRenderer
 
 	public MeshRenderer()
 	{
-		_meshShader = InternalContent.Shaders["Mesh"];
+		_meshShader = InternalContentState.Shaders["Mesh"];
 		_modelUniform = _meshShader.GetUniformLocation(Gl, "model");
 	}
 

@@ -1,5 +1,5 @@
 using ImGuiNET;
-using SimpleLevelEditor.State.Messages;
+using SimpleLevelEditor.State.States.Messages;
 
 namespace SimpleLevelEditor.User;
 

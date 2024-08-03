@@ -6,8 +6,11 @@ using SimpleLevelEditor.Formats.Types.EntityConfig;
 using SimpleLevelEditor.Formats.Types.Level;
 using SimpleLevelEditor.State;
 using SimpleLevelEditor.State.Extensions;
-using SimpleLevelEditor.State.Level;
-using SimpleLevelEditor.State.Models;
+using SimpleLevelEditor.State.States.EntityConfig;
+using SimpleLevelEditor.State.States.InternalContent;
+using SimpleLevelEditor.State.States.Level;
+using SimpleLevelEditor.State.States.LevelEditor;
+using SimpleLevelEditor.State.States.Models;
 using SimpleLevelEditor.State.Utils;
 using SimpleLevelEditor.Utils;
 using static SimpleLevelEditor.Graphics;
@@ -70,7 +73,7 @@ public sealed class LineRenderer
 
 	public LineRenderer()
 	{
-		_lineShader = InternalContent.Shaders["Line"];
+		_lineShader = InternalContentState.Shaders["Line"];
 		_modelUniform = _lineShader.GetUniformLocation(Gl, "model");
 		_colorUniform = _lineShader.GetUniformLocation(Gl, "color");
 		_fadeOutUniform = _lineShader.GetUniformLocation(Gl, "fadeOut");

@@ -1,7 +1,10 @@
 using Detach;
 using ImGuiNET;
 using SimpleLevelEditor.State;
-using SimpleLevelEditor.State.Level;
+using SimpleLevelEditor.State.States.EntityConfig;
+using SimpleLevelEditor.State.States.Level;
+using SimpleLevelEditor.State.States.Models;
+using SimpleLevelEditor.State.Utils;
 using System.Diagnostics;
 
 namespace SimpleLevelEditor.Ui;
