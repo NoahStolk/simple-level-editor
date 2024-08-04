@@ -2,10 +2,8 @@
 
 ## SimpleLevelEditor
 
-### [unreleased]
+### 0.13.0
 
-- Improved grid and line rendering.
-- Small UI improvements.
 - Now supports more image formats in addition to Tga:
   - Bmp
   - Gif
@@ -14,6 +12,8 @@
   - Png
   - Tiff
   - WebP
+- Improved grid and line rendering.
+- Small UI improvements.
 
 ### 0.12.4
 
