@@ -1,5 +1,4 @@
 using Detach.Parsers.Texture;
-using Detach.Parsers.Texture.TgaFormat;
 using Silk.NET.OpenGL;
 using SimpleLevelEditor.Formats.Types.EntityConfig;
 using SimpleLevelEditor.Formats.Types.Level;
@@ -70,6 +69,7 @@ public sealed class SpriteRenderer
 		if (LevelState.Level.EntityConfigPath == null)
 			return;
 
+		// TODO: Move path handling and reading texture files to a separate class.
 		string? levelDirectory = Path.GetDirectoryName(LevelState.LevelFilePath);
 		if (levelDirectory == null)
 			return;
@@ -82,7 +82,10 @@ public sealed class SpriteRenderer
 		string absolutePathToSpriteTexture = Path.Combine(entityConfigDirectory, billboardSprite.TexturePath);
 		if (!_billboardSpriteTextures.TryGetValue(absolutePathToSpriteTexture, out TextureData? textureData))
 		{
-			textureData = TgaParser.Parse(File.ReadAllBytes(absolutePathToSpriteTexture));
+			textureData = TextureParser.Parse(absolutePathToSpriteTexture);
+			if (textureData == null)
+				return;
+
 			_billboardSpriteTextures.Add(absolutePathToSpriteTexture, textureData);
 		}
 

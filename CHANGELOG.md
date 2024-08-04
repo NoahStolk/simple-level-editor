@@ -6,6 +6,14 @@
 
 - Improved grid and line rendering.
 - Small UI improvements.
+- Now supports more image formats in addition to Tga:
+  - Bmp
+  - Gif
+  - Jpeg
+  - Pbm
+  - Png
+  - Tiff
+  - WebP
 
 ### 0.12.4
 

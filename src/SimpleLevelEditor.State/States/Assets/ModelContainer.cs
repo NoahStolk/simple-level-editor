@@ -2,7 +2,6 @@ using Detach.Parsers.Model;
 using Detach.Parsers.Model.MtlFormat;
 using Detach.Parsers.Model.ObjFormat;
 using Detach.Parsers.Texture;
-using Detach.Parsers.Texture.TgaFormat;
 using Silk.NET.OpenGL;
 using SimpleLevelEditor.State.States.Messages;
 using SimpleLevelEditor.State.Utils;
@@ -86,23 +85,29 @@ public sealed class ModelContainer
 		string? directoryName = Path.GetDirectoryName(absolutePathToObjFile);
 
 		Dictionary<string, MaterialLibrary> allMaterials = [];
-		foreach (string materialLibrary in modelData.MaterialLibraries)
+		foreach (string materialLibraryName in modelData.MaterialLibraries)
 		{
-			string absolutePathToMtlFile = directoryName == null ? materialLibrary : Path.Combine(directoryName, materialLibrary);
+			string absolutePathToMtlFile = directoryName == null ? materialLibraryName : Path.Combine(directoryName, materialLibraryName);
 			if (!File.Exists(absolutePathToMtlFile))
 				continue;
 
-			if (allMaterials.ContainsKey(materialLibrary))
+			if (allMaterials.ContainsKey(materialLibraryName))
 				continue;
 
 			MaterialsData materialsData = MtlParser.Parse(File.ReadAllBytes(absolutePathToMtlFile));
-			allMaterials.Add(materialLibrary, new MaterialLibrary(absolutePathToMtlFile, materialsData.Materials.ConvertAll(m =>
-			{
-				string mtlDirectory = Path.GetDirectoryName(absolutePathToMtlFile) ?? throw new InvalidOperationException("MTL file is not in a directory.");
-				string absolutePathToDiffuseMap = Path.Combine(mtlDirectory, m.DiffuseMap);
-				TextureData textureData = TgaParser.Parse(File.ReadAllBytes(absolutePathToDiffuseMap));
-				return new Material(m.Name, new Map(absolutePathToDiffuseMap, textureData));
-			})));
+
+			List<Material> materials = materialsData.Materials
+				.Select(materialData =>
+				{
+					string mtlDirectory = Path.GetDirectoryName(absolutePathToMtlFile) ?? throw new InvalidOperationException("MTL file is not in a directory.");
+					string absolutePathToDiffuseMap = Path.Combine(mtlDirectory, materialData.DiffuseMap);
+					TextureData? textureData = TextureParser.Parse(absolutePathToDiffuseMap);
+					return textureData == null ? null : new Material(materialData.Name, new Map(absolutePathToDiffuseMap, textureData));
+				})
+				.Where(m => m != null)
+				.ToList()!;
+
+			allMaterials.Add(materialLibraryName, new MaterialLibrary(absolutePathToMtlFile, materials));
 		}
 
 		List<Mesh> meshes = [];

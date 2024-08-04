@@ -17,10 +17,19 @@ There is also a NuGet package for reading level and entity config files: [![NuGe
 - Easily build level geometry using 3D models
 - Full undo/redo support
 - Move, rotate, and scale world objects
+- Supports rendering Wavefront OBJ models with multiple meshes and materials
+- Supports rendering the following texture formats:
+  - Bmp
+  - Gif
+  - Jpeg
+  - Pbm
+  - Png
+  - Tiff
+  - Tga
+  - WebP
 
 ### UI
 
-- Built with the excellent [Dear ImGui](https://github.com/ocornut/imgui) library
 - Docking support
 - Customizable layout
 - UI is saved between sessions
@@ -28,8 +37,23 @@ There is also a NuGet package for reading level and entity config files: [![NuGe
 ### Entity configuration
 
 - Define your own entities using a JSON file
+- Entities can be of different shapes with configurable sizes
+  - Points
+  - Boxes
+  - Spheres
+  - Sprites
+  - Models
+- Entities can have custom properties
 
 ### Integration
 
 - Save and load levels as JSON files
 - Deserialize levels using the NuGet package
+
+## Dependencies
+
+- [Dear ImGui](https://github.com/ocornut/imgui) and [ImGui.NET](https://github.com/ImGuiNET/ImGui.NET)
+- [Silk.NET](https://github.com/dotnet/Silk.NET)
+- [ImageSharp](https://github.com/SixLabors/ImageSharp)
+- [Serilog.Sinks.File](https://github.com/serilog/serilog-sinks-file)
+- [Native File Dialog](https://github.com/mlabbe/nativefiledialog) and [Native File Dialog Sharp](https://github.com/milleniumbug/NativeFileDialogSharp)
