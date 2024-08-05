@@ -19,3 +19,9 @@ type EntityShapeDescriptor =
         | Point _  -> nameof Point
         | Sphere _ -> nameof Sphere
         | Aabb _   -> nameof Aabb
+
+    member this.DeepCopy() =
+        match this with
+        | Point visualization -> Point (visualization.DeepCopy())
+        | Sphere color        -> Sphere color
+        | Aabb color          -> Aabb color

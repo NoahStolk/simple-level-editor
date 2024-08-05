@@ -13,3 +13,9 @@ type PointEntityVisualization =
         | SimpleSphere _    -> nameof SimpleSphere
         | BillboardSprite _ -> nameof BillboardSprite
         | Model _           -> nameof Model
+
+    member this.DeepCopy() : PointEntityVisualization =
+        match this with
+        | SimpleSphere (color, radius)        -> SimpleSphere (color, radius)
+        | BillboardSprite (texturePath, size) -> BillboardSprite (texturePath, size)
+        | Model (modelPath, size)             -> Model (modelPath, size)

@@ -7,3 +7,11 @@ MEDIUM PRIORITY
 BACKLOG
 - Multiple selection
 	- Hold shift to select multiple objects?
+- Debug item to delete imgui.ini
+- Terrain editor?
+
+REFACTORING
+- Refactor "ChildWindows"
+- Move UI to separate project
+	- Remove any state from UI classes (make sure they don't have mutable properties / fields)
+	- Maybe add an analyzer to enforce all UI classes to be immutable and static, containing rendering logic only
