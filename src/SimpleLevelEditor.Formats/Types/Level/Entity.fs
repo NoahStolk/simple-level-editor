@@ -1,5 +1,6 @@
 namespace SimpleLevelEditor.Formats.Types.Level
 
+open System
 open System.Numerics
 open SimpleLevelEditor.Formats.Types.Level
 
@@ -24,7 +25,7 @@ type Entity =
 
     static member CreateDefault() =
         { Id = 0
-          Name = System.String.Empty
+          Name = String.Empty
           Position = Vector3.Zero
           Shape = EntityShape.Point
           Properties = [] }
