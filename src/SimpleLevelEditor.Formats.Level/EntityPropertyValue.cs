@@ -1,10 +1,20 @@
 using Dunet;
 using SimpleLevelEditor.Formats.Core;
 using System.Diagnostics;
+using System.Text.Json.Serialization;
 
 namespace SimpleLevelEditor.Formats.Level;
 
 [Union]
+[JsonDerivedType(typeof(Bool), typeDiscriminator: nameof(Bool))]
+[JsonDerivedType(typeof(Int), typeDiscriminator: nameof(Int))]
+[JsonDerivedType(typeof(Float), typeDiscriminator: nameof(Float))]
+[JsonDerivedType(typeof(Vector2), typeDiscriminator: nameof(Vector2))]
+[JsonDerivedType(typeof(Vector3), typeDiscriminator: nameof(Vector3))]
+[JsonDerivedType(typeof(Vector4), typeDiscriminator: nameof(Vector4))]
+[JsonDerivedType(typeof(String), typeDiscriminator: nameof(String))]
+[JsonDerivedType(typeof(Rgba), typeDiscriminator: nameof(Rgba))]
+[JsonDerivedType(typeof(Rgb), typeDiscriminator: nameof(Rgb))]
 public partial record EntityPropertyValue
 {
 	// TODO: Use a better naming convention:

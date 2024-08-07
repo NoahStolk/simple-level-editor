@@ -1,3 +1,4 @@
+using SimpleLevelEditor.Formats.Core;
 using SimpleLevelEditor.Formats.EntityConfig;
 using SimpleLevelEditor.Formats.Level;
 using System.Text.Json;
@@ -6,7 +7,11 @@ namespace SimpleLevelEditor.Formats;
 
 public static class SimpleLevelEditorJsonSerializer
 {
-	private static readonly JsonSerializerOptions _defaultSerializerOptions = new() { WriteIndented = true, IncludeFields = true };
+	private static readonly JsonSerializerOptions _defaultSerializerOptions = new()
+	{
+		WriteIndented = true,
+		IncludeFields = true,
+	};
 
 	public static EntityConfigData? DeserializeEntityConfigFromString(string json)
 	{

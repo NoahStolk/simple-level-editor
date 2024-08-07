@@ -2,10 +2,14 @@ using Dunet;
 using SimpleLevelEditor.Formats.Core;
 using System.Diagnostics;
 using System.Numerics;
+using System.Text.Json.Serialization;
 
 namespace SimpleLevelEditor.Formats.Level;
 
 [Union]
+[JsonDerivedType(typeof(Point), typeDiscriminator: nameof(Point))]
+[JsonDerivedType(typeof(Sphere), typeDiscriminator: nameof(Sphere))]
+[JsonDerivedType(typeof(Aabb), typeDiscriminator: nameof(Aabb))]
 public partial record EntityShape
 {
 	public sealed partial record Point;

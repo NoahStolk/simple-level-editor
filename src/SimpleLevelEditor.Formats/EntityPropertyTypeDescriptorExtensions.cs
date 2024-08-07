@@ -19,7 +19,7 @@ public static class EntityPropertyTypeDescriptorExtensions
 			EntityPropertyTypeDescriptor.StringProperty stringProperty => new EntityPropertyValue.String(stringProperty.Default),
 			EntityPropertyTypeDescriptor.RgbProperty rgbProperty => new EntityPropertyValue.Rgb(rgbProperty.Default),
 			EntityPropertyTypeDescriptor.RgbaProperty rgbaProperty => new EntityPropertyValue.Rgba(rgbaProperty.Default),
-			_ => throw new UnreachableException(),
+			_ => throw new UnreachableException($"Unknown entity property type descriptor: {entityPropertyTypeDescriptor.GetType().FullName}"),
 		};
 	}
 }

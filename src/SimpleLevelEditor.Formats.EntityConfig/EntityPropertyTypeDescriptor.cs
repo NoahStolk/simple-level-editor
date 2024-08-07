@@ -2,10 +2,20 @@ using Dunet;
 using SimpleLevelEditor.Formats.Core;
 using System.Diagnostics;
 using System.Numerics;
+using System.Text.Json.Serialization;
 
 namespace SimpleLevelEditor.Formats.EntityConfig;
 
 [Union]
+[JsonDerivedType(typeof(BoolProperty), typeDiscriminator: nameof(BoolProperty))]
+[JsonDerivedType(typeof(IntProperty), typeDiscriminator: nameof(IntProperty))]
+[JsonDerivedType(typeof(FloatProperty), typeDiscriminator: nameof(FloatProperty))]
+[JsonDerivedType(typeof(Vector2Property), typeDiscriminator: nameof(Vector2Property))]
+[JsonDerivedType(typeof(Vector3Property), typeDiscriminator: nameof(Vector3Property))]
+[JsonDerivedType(typeof(Vector4Property), typeDiscriminator: nameof(Vector4Property))]
+[JsonDerivedType(typeof(StringProperty), typeDiscriminator: nameof(StringProperty))]
+[JsonDerivedType(typeof(RgbaProperty), typeDiscriminator: nameof(RgbaProperty))]
+[JsonDerivedType(typeof(RgbProperty), typeDiscriminator: nameof(RgbProperty))]
 public partial record EntityPropertyTypeDescriptor
 {
 	public sealed partial record BoolProperty(bool Default);

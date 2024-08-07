@@ -1,10 +1,14 @@
 using Dunet;
 using SimpleLevelEditor.Formats.Core;
 using System.Diagnostics;
+using System.Text.Json.Serialization;
 
 namespace SimpleLevelEditor.Formats.EntityConfig;
 
 [Union]
+[JsonDerivedType(typeof(SimpleSphere), typeDiscriminator: nameof(SimpleSphere))]
+[JsonDerivedType(typeof(BillboardSprite), typeDiscriminator: nameof(BillboardSprite))]
+[JsonDerivedType(typeof(Model), typeDiscriminator: nameof(Model))]
 public partial record PointEntityVisualization
 {
 	public sealed partial record SimpleSphere(Rgb Color, float Radius);

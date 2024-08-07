@@ -1,9 +1,13 @@
 using Dunet;
 using SimpleLevelEditor.Formats.Core;
+using System.Text.Json.Serialization;
 
 namespace SimpleLevelEditor.Formats.EntityConfig;
 
 [Union]
+[JsonDerivedType(typeof(Point), typeDiscriminator: nameof(Point))]
+[JsonDerivedType(typeof(Sphere), typeDiscriminator: nameof(Sphere))]
+[JsonDerivedType(typeof(Aabb), typeDiscriminator: nameof(Aabb))]
 public partial record EntityShapeDescriptor
 {
 	public sealed partial record Point(PointEntityVisualization Visualization);
