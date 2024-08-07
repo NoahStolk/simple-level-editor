@@ -25,7 +25,7 @@ type EntityConfigData =
             this.TexturePaths <- this.TexturePaths @ [ texture ]
 
     member this.AddEntity(entity: EntityDescriptor) =
-        this.Entities <- this.Entities @ [ entity ]
+        this.Entities <- this.Entities @ [ entity ] // TODO: Check for duplicates
 
     member this.RemoveModel(model: string) =
         this.ModelPaths <- this.ModelPaths |> List.filter (fun v -> v <> model)

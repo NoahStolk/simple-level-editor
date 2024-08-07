@@ -17,3 +17,5 @@ REFACTORING
 	- Maybe add an analyzer to enforce all UI classes to be immutable and static, containing rendering logic only
 - States should not be static
 	- Make sure all states are passed as arguments to functions
+- Use Dunet instead of F#?
+- Remove all Debug.Assert calls

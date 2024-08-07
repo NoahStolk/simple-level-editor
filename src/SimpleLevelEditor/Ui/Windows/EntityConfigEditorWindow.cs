@@ -1,7 +1,8 @@
 using Detach;
 using ImGuiNET;
 using Microsoft.FSharp.Collections;
-using SimpleLevelEditor.State.States.EntityConfig;
+using SimpleLevelEditor.Formats.Types;
+using SimpleLevelEditor.Formats.Types.EntityConfig;
 using SimpleLevelEditor.State.States.EntityConfigEditor;
 using SimpleLevelEditor.State.Utils;
 using System.Diagnostics;
@@ -63,6 +64,8 @@ public static class EntityConfigEditorWindow
 			paths => AddCallback(EntityConfigEditorState.EntityConfig.AddTexture, paths),
 			EntityConfigEditorState.EntityConfig.RemoveTexture,
 			"bmp,gif,jpeg,pbm,png,tiff,tga,webp");
+
+		RenderEntities();
 	}
 
 	private static void RenderPaths(
@@ -116,5 +119,30 @@ public static class EntityConfigEditorWindow
 
 		foreach (string relativePath in relativePaths)
 			callback(relativePath);
+	}
+
+	private static void RenderEntities()
+	{
+		ImGui.SeparatorText("Entities");
+
+		if (ImGui.Button("Add entity"))
+		{
+			EntityDescriptor entity = new("New entity", EntityShapeDescriptor.NewPoint(PointEntityVisualization.NewSimpleSphere(new Rgb(255, 127, 0), 0.5f)), FSharpList<EntityPropertyDescriptor>.Empty);
+			EntityConfigEditorState.EntityConfig.AddEntity(entity);
+		}
+
+		if (ImGui.BeginChild("Entities", new Vector2(0, 160), ImGuiChildFlags.Border))
+		{
+			foreach (EntityDescriptor entity in EntityConfigEditorState.EntityConfig.Entities)
+			{
+				ImGui.PushID(entity.Name);
+				ImGui.Text(entity.Name);
+				ImGui.PopID();
+
+				ImGui.Text(entity.Shape.ToString());
+			}
+		}
+
+		ImGui.EndChild();
 	}
 }
