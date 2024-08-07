@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 
 namespace SimpleLevelEditor.Formats.Level;
@@ -15,6 +16,17 @@ public sealed record WorldObject
 	public required Vector3 Position { get; set; }
 
 	public required List<string> Flags { get; set; }
+
+	[SetsRequiredMembers]
+	public WorldObject(int id, string modelPath, Vector3 scale, Vector3 rotation, Vector3 position, List<string> flags)
+	{
+		Id = id;
+		ModelPath = modelPath;
+		Scale = scale;
+		Rotation = rotation;
+		Position = position;
+		Flags = flags;
+	}
 
 	public WorldObject DeepCopy()
 	{
@@ -57,14 +69,6 @@ public sealed record WorldObject
 
 	public static WorldObject CreateDefault()
 	{
-		return new WorldObject
-		{
-			Id = 0,
-			ModelPath = string.Empty,
-			Scale = Vector3.One,
-			Rotation = Vector3.Zero,
-			Position = Vector3.Zero,
-			Flags = [],
-		};
+		return new WorldObject(0, string.Empty, Vector3.One, Vector3.Zero, Vector3.Zero, []);
 	}
 }

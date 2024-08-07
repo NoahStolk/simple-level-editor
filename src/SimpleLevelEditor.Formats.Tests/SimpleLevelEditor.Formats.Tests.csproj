@@ -46,7 +46,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SimpleLevelEditor.Formats\SimpleLevelEditor.Formats.fsproj"/>
+    <ProjectReference Include="..\SimpleLevelEditor.Formats\SimpleLevelEditor.Formats.csproj" />
   </ItemGroup>
 
 </Project>

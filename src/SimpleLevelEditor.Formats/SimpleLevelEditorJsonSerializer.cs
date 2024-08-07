@@ -1,87 +1,84 @@
-using SimpleLevelEditor.Formats.Types.EntityConfig;
-using SimpleLevelEditor.Formats.Types.Level;
-using System.Diagnostics.CodeAnalysis;
+using SimpleLevelEditor.Formats.EntityConfig;
+using SimpleLevelEditor.Formats.Level;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace SimpleLevelEditor.Formats;
 
-[RequiresUnreferencedCode("This class is used for serialization and deserialization of types that are not known at compile time.")]
 public static class SimpleLevelEditorJsonSerializer
 {
-	private static readonly JsonSerializerOptions _defaultSerializerOptions = JsonFSharpOptions.Default().ToJsonSerializerOptions();
+	private static readonly JsonSerializerOptions _defaultSerializerOptions = new() { WriteIndented = true, IncludeFields = true };
 
-	static SimpleLevelEditorJsonSerializer()
+	public static EntityConfigData? DeserializeEntityConfigFromString(string json)
 	{
-		_defaultSerializerOptions.WriteIndented = true;
-		_defaultSerializerOptions.IncludeFields = true;
+		return DeserializeFromString<EntityConfigData>(json);
 	}
 
-	public static EntityConfigData? DeserializeEntityConfig(string json)
+	public static EntityConfigData? DeserializeEntityConfigFromStream(Stream stream)
+	{
+		return DeserializeFromStream<EntityConfigData>(stream);
+	}
+
+	public static string SerializeEntityConfigToString(EntityConfigData entityConfigData)
+	{
+		return SerializeToString(entityConfigData);
+	}
+
+	public static void SerializeEntityConfigToStream(Stream stream, EntityConfigData entityConfigData)
+	{
+		SerializeToStream(stream, entityConfigData);
+	}
+
+	public static Level3dData? DeserializeLevelFromString(string json)
+	{
+		return DeserializeFromString<Level3dData>(json);
+	}
+
+	public static Level3dData? DeserializeLevelFromStream(Stream stream)
+	{
+		return DeserializeFromStream<Level3dData>(stream);
+	}
+
+	public static string SerializeLevelToString(Level3dData level3dData)
+	{
+		return SerializeToString(level3dData);
+	}
+
+	public static void SerializeLevelToStream(Stream stream, Level3dData level3dData)
+	{
+		SerializeToStream(stream, level3dData);
+	}
+
+	private static T? DeserializeFromString<T>(string json)
 	{
 		try
 		{
-			return JsonSerializer.Deserialize<EntityConfigData>(json, _defaultSerializerOptions);
+			return JsonSerializer.Deserialize<T>(json, _defaultSerializerOptions);
 		}
-		catch (JsonException)
+		catch (Exception)
 		{
-			return null;
+			return default;
 		}
 	}
 
-	public static EntityConfigData? DeserializeEntityConfig(Stream stream)
+	private static T? DeserializeFromStream<T>(Stream stream)
 	{
 		try
 		{
-			return JsonSerializer.Deserialize<EntityConfigData>(stream, _defaultSerializerOptions);
+			return JsonSerializer.Deserialize<T>(stream, _defaultSerializerOptions);
 		}
-		catch (JsonException)
+		catch (Exception)
 		{
-			return null;
+			return default;
 		}
 	}
 
-	public static string SerializeEntityConfig(EntityConfigData entityConfig)
+	private static string SerializeToString<T>(T obj)
 	{
-		return JsonSerializer.Serialize(entityConfig, _defaultSerializerOptions);
+		return JsonSerializer.Serialize(obj, _defaultSerializerOptions);
 	}
 
-	public static void SerializeEntityConfig(Stream stream, EntityConfigData entityConfig)
+	private static void SerializeToStream<T>(Stream stream, T obj)
 	{
-		JsonSerializer.Serialize(stream, entityConfig, _defaultSerializerOptions);
-	}
-
-	public static Level3dData? DeserializeLevel(string json)
-	{
-		try
-		{
-			return JsonSerializer.Deserialize<Level3dData>(json, _defaultSerializerOptions);
-		}
-		catch (JsonException)
-		{
-			return null;
-		}
-	}
-
-	public static Level3dData? DeserializeLevel(Stream stream)
-	{
-		try
-		{
-			return JsonSerializer.Deserialize<Level3dData>(stream, _defaultSerializerOptions);
-		}
-		catch (JsonException)
-		{
-			return null;
-		}
-	}
-
-	public static string SerializeLevel(Level3dData level)
-	{
-		return JsonSerializer.Serialize(level, _defaultSerializerOptions);
-	}
-
-	public static void SerializeLevel(Stream stream, Level3dData level)
-	{
-		JsonSerializer.Serialize(stream, level, _defaultSerializerOptions);
+		JsonSerializer.Serialize(stream, obj, _defaultSerializerOptions);
 	}
 }

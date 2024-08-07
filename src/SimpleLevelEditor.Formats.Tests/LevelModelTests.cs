@@ -1,7 +1,5 @@
-using Microsoft.FSharp.Collections;
-using Microsoft.FSharp.Core;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SimpleLevelEditor.Formats.Types.Level;
+using SimpleLevelEditor.Formats.Level;
 using System.Numerics;
 
 namespace SimpleLevelEditor.Formats.Tests;
@@ -14,30 +12,30 @@ public class LevelModelTests
 	{
 		Level3dData defaultLevel = Level3dData.CreateDefault();
 		Assert.IsNull(defaultLevel.EntityConfigPath);
-		Assert.AreEqual(0, defaultLevel.ModelPaths.Length);
-		Assert.AreEqual(0, defaultLevel.WorldObjects.Length);
-		Assert.AreEqual(0, defaultLevel.Entities.Length);
+		Assert.AreEqual(0, defaultLevel.ModelPaths.Count);
+		Assert.AreEqual(0, defaultLevel.WorldObjects.Count);
+		Assert.AreEqual(0, defaultLevel.Entities.Count);
 	}
 
 	[TestMethod]
 	public void DeepCopy()
 	{
-		Entity entity = new(0, "test", new Vector3(1, 2, 3), EntityShape.NewSphere(0.5f), ListModule.OfSeq([new EntityProperty("test", EntityPropertyValue.NewFloat(0.5f))]));
+		Entity entity = new(0, "test", new Vector3(1, 2, 3), new EntityShape.Sphere(0.5f), [new EntityProperty("test", new EntityPropertyValue.Float(0.5f))]);
 
-		WorldObject worldObject = new(0, "Test.obj", Vector3.One, new Vector3(4, 5, 6), new Vector3(1, 2, 3), ListModule.OfSeq(["flag"]));
+		WorldObject worldObject = new(0, "Test.obj", Vector3.One, new Vector3(4, 5, 6), new Vector3(1, 2, 3), ["flag"]);
 
 		Level3dData level = new(
-			FSharpOption<string>.None,
-			ListModule.OfSeq(["Test.obj"]),
-			ListModule.OfSeq([worldObject]),
-			ListModule.OfSeq([entity]));
+			null,
+			["Test.obj"],
+			[worldObject],
+			[entity]);
 
 		Level3dData copy = level.DeepCopy();
 
 		// Test counts.
-		Assert.AreEqual(level.Entities.Length, copy.Entities.Length);
-		Assert.AreEqual(level.ModelPaths.Length, copy.ModelPaths.Length);
-		Assert.AreEqual(level.WorldObjects.Length, copy.WorldObjects.Length);
+		Assert.AreEqual(level.Entities.Count, copy.Entities.Count);
+		Assert.AreEqual(level.ModelPaths.Count, copy.ModelPaths.Count);
+		Assert.AreEqual(level.WorldObjects.Count, copy.WorldObjects.Count);
 		Assert.AreEqual(level.EntityConfigPath, copy.EntityConfigPath);
 
 		// Test entity and world object references.

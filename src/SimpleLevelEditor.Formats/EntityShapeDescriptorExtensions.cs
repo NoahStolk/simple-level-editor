@@ -3,7 +3,7 @@ using SimpleLevelEditor.Formats.Level;
 using System.Diagnostics;
 using System.Numerics;
 
-namespace SimpleLevelEditor.Formats2;
+namespace SimpleLevelEditor.Formats;
 
 public static class EntityShapeDescriptorExtensions
 {

@@ -1,7 +1,6 @@
-using Microsoft.FSharp.Collections;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SimpleLevelEditor.Formats.Types;
-using SimpleLevelEditor.Formats.Types.EntityConfig;
+using SimpleLevelEditor.Formats.Core;
+using SimpleLevelEditor.Formats.EntityConfig;
 
 namespace SimpleLevelEditor.Formats.Tests;
 
@@ -12,9 +11,9 @@ public class EntityConfigModelTests
 	public void CreateDefault()
 	{
 		EntityConfigData defaultEntityConfig = EntityConfigData.CreateDefault();
-		Assert.AreEqual(0, defaultEntityConfig.ModelPaths.Length);
-		Assert.AreEqual(0, defaultEntityConfig.TexturePaths.Length);
-		Assert.AreEqual(0, defaultEntityConfig.Entities.Length);
+		Assert.AreEqual(0, defaultEntityConfig.ModelPaths.Count);
+		Assert.AreEqual(0, defaultEntityConfig.TexturePaths.Count);
+		Assert.AreEqual(0, defaultEntityConfig.Entities.Count);
 	}
 
 	[TestMethod]
@@ -22,20 +21,20 @@ public class EntityConfigModelTests
 	{
 		EntityDescriptor entity = new(
 			"TestEntity",
-			EntityShapeDescriptor.NewSphere(new Rgb(255, 0, 127)),
-			ListModule.OfSeq([new EntityPropertyDescriptor("TestProperty", EntityPropertyTypeDescriptor.NewFloatProperty(10, 1, 1000, 0.5f), "Test description")]));
+			new EntityShapeDescriptor.Sphere(new Rgb(255, 0, 127)),
+			[new EntityPropertyDescriptor("TestProperty", new EntityPropertyTypeDescriptor.FloatProperty(10, 1, 1000, 0.5f), "Test description")]);
 
 		EntityConfigData entityConfig = new(
-			ListModule.OfSeq(["Test.obj"]),
-			ListModule.OfSeq(["Test.png"]),
-			ListModule.OfSeq([entity]));
+			["Test.obj"],
+			["Test.png"],
+			[entity]);
 
 		EntityConfigData copy = entityConfig.DeepCopy();
 
 		// Test counts.
-		Assert.AreEqual(entityConfig.Entities.Length, copy.Entities.Length);
-		Assert.AreEqual(entityConfig.ModelPaths.Length, copy.ModelPaths.Length);
-		Assert.AreEqual(entityConfig.TexturePaths.Length, copy.TexturePaths.Length);
+		Assert.AreEqual(entityConfig.Entities.Count, copy.Entities.Count);
+		Assert.AreEqual(entityConfig.ModelPaths.Count, copy.ModelPaths.Count);
+		Assert.AreEqual(entityConfig.TexturePaths.Count, copy.TexturePaths.Count);
 
 		// Test lists.
 		Assert.AreNotSame(entityConfig.Entities, copy.Entities);

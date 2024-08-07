@@ -2,7 +2,7 @@ using SimpleLevelEditor.Formats.EntityConfig;
 using SimpleLevelEditor.Formats.Level;
 using System.Diagnostics;
 
-namespace SimpleLevelEditor.Formats2;
+namespace SimpleLevelEditor.Formats;
 
 public static class EntityPropertyTypeDescriptorExtensions
 {

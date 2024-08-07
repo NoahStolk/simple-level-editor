@@ -1,8 +1,0 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
-  <ItemGroup>
-    <ProjectReference Include="..\SimpleLevelEditor.Formats.EntityConfig\SimpleLevelEditor.Formats.EntityConfig.csproj" />
-    <ProjectReference Include="..\SimpleLevelEditor.Formats.Level\SimpleLevelEditor.Formats.Level.csproj"/>
-  </ItemGroup>
-
-</Project>
