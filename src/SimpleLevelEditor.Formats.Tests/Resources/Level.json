@@ -144,7 +144,7 @@
         "Z": 0
       },
       "Shape": {
-        "Case": "Point"
+        "$type": "Point"
       },
       "Properties": []
     },
@@ -157,29 +157,25 @@
         "Z": 2
       },
       "Shape": {
-        "Case": "Point"
+        "$type": "Point"
       },
       "Properties": [
         {
           "Key": "Color",
           "Value": {
-            "Case": "Rgb",
-            "Fields": [
-              {
-                "R": 255,
-                "G": 255,
-                "B": 255
-              }
-            ]
+            "$type": "Rgb",
+            "Value": {
+              "R": 255,
+              "G": 255,
+              "B": 255
+            }
           }
         },
         {
           "Key": "Radius",
           "Value": {
-            "Case": "Float",
-            "Fields": [
-              20
-            ]
+            "$type": "Float",
+            "Value": 20
           }
         }
       ]
@@ -193,29 +189,25 @@
         "Z": 12
       },
       "Shape": {
-        "Case": "Point"
+        "$type": "Point"
       },
       "Properties": [
         {
           "Key": "Color",
           "Value": {
-            "Case": "Rgb",
-            "Fields": [
-              {
-                "R": 255,
-                "G": 47,
-                "B": 0
-              }
-            ]
+            "$type": "Rgb",
+            "Value": {
+              "R": 255,
+              "G": 47,
+              "B": 0
+            }
           }
         },
         {
           "Key": "Radius",
           "Value": {
-            "Case": "Float",
-            "Fields": [
-              6
-            ]
+            "$type": "Float",
+            "Value": 6
           }
         }
       ]
@@ -229,29 +221,25 @@
         "Z": 2
       },
       "Shape": {
-        "Case": "Point"
+        "$type": "Point"
       },
       "Properties": [
         {
           "Key": "Color",
           "Value": {
-            "Case": "Rgb",
-            "Fields": [
-              {
-                "R": 0,
-                "G": 40,
-                "B": 255
-              }
-            ]
+            "$type": "Rgb",
+            "Value": {
+              "R": 0,
+              "G": 40,
+              "B": 255
+            }
           }
         },
         {
           "Key": "Radius",
           "Value": {
-            "Case": "Float",
-            "Fields": [
-              20
-            ]
+            "$type": "Float",
+            "Value": 20
           }
         }
       ]
@@ -265,10 +253,8 @@
         "Z": 1
       },
       "Shape": {
-        "Case": "Sphere",
-        "Fields": [
-          10
-        ]
+        "$type": "Sphere",
+        "Radius": 10
       },
       "Properties": []
     }

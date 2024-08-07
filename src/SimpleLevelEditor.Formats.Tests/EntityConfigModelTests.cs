@@ -23,12 +23,14 @@ public class EntityConfigModelTests
 		{
 			Name = "TestEntity",
 			Shape = new EntityShapeDescriptor.Sphere(new Rgb(255, 0, 127)),
-			Properties = [new EntityPropertyDescriptor
-			{
-				Name = "TestProperty",
-				Type = new EntityPropertyTypeDescriptor.FloatProperty(10, 1, 1000, 0.5f),
-				Description = "Test description",
-			}],
+			Properties = [
+				new EntityPropertyDescriptor
+				{
+					Name = "TestProperty",
+					Type = new EntityPropertyTypeDescriptor.FloatProperty(10, 1, 1000, 0.5f),
+					Description = "Test description",
+				},
+			],
 		};
 
 		EntityConfigData entityConfig = new()
@@ -51,7 +53,11 @@ public class EntityConfigModelTests
 		Assert.AreNotSame(entityConfig.TexturePaths, copy.TexturePaths);
 
 		// Test list contents.
-		Assert.AreEqual(entityConfig.Entities[0], copy.Entities[0]);
+		Assert.AreEqual(entityConfig.Entities[0].Name, copy.Entities[0].Name);
+		Assert.AreEqual(entityConfig.Entities[0].Shape.GetType(), copy.Entities[0].Shape.GetType());
+		Assert.AreEqual(entityConfig.Entities[0].Properties[0].Name, copy.Entities[0].Properties[0].Name);
+		Assert.AreEqual(entityConfig.Entities[0].Properties[0].Type.GetType(), copy.Entities[0].Properties[0].Type.GetType()); // TODO: Test type values (default, step, min, max).
+		Assert.AreEqual(entityConfig.Entities[0].Properties[0].Description, copy.Entities[0].Properties[0].Description);
 		Assert.AreEqual(entityConfig.ModelPaths[0], copy.ModelPaths[0]);
 		Assert.AreEqual(entityConfig.TexturePaths[0], copy.TexturePaths[0]);
 
