@@ -19,3 +19,8 @@ REFACTORING
 	- Make sure all states are passed as arguments to functions
 - Use Dunet instead of F#?
 - Remove all Debug.Assert calls
+
+NEW MODEL
+- Entity config required for all levels
+- World objects removed; always use entities
+- Entities can have rotation and scale
