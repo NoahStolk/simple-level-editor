@@ -18,8 +18,6 @@ public partial record EntityPropertyTypeDescriptor
 	public sealed partial record RgbaProperty(Rgba Default);
 	public sealed partial record RgbProperty(Rgb Default);
 
-	// public EntityPropertyValue GetDefaultValue()
-
 	public float GetStep()
 	{
 		return this switch

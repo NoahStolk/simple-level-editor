@@ -10,17 +10,6 @@ public partial record EntityShapeDescriptor
 	public sealed partial record Sphere(Rgb Color);
 	public sealed partial record Aabb(Rgb Color);
 
-	// public EntityShape GetDefaultEntityShape()
-	// {
-	// 	return this switch
-	// 	{
-	// 		Point _ => new Point(new PointEntityVisualization.SimpleSphere(new Rgb(255, 255, 255), 1)),
-	// 		Sphere _ => new Sphere(new Rgb(255, 255, 255)),
-	// 		Aabb _ => new Aabb(new Rgb(255, 255, 255)),
-	// 		_ => throw new InvalidOperationException()
-	// 	};
-	// }
-
 	public string GetTypeId()
 	{
 		return this switch

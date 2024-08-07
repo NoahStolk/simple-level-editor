@@ -14,6 +14,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleLevelEditor.Formats.L
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleLevelEditor.Formats.EntityConfig", "SimpleLevelEditor.Formats.EntityConfig\SimpleLevelEditor.Formats.EntityConfig.csproj", "{03DF97B9-D575-423C-8A32-403F0C6CE19C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleLevelEditor.Formats2", "SimpleLevelEditor.Formats2\SimpleLevelEditor.Formats2.csproj", "{359FAF11-1A77-4608-A763-C057296F850D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -52,5 +54,9 @@ Global
 		{03DF97B9-D575-423C-8A32-403F0C6CE19C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{03DF97B9-D575-423C-8A32-403F0C6CE19C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{03DF97B9-D575-423C-8A32-403F0C6CE19C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{359FAF11-1A77-4608-A763-C057296F850D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{359FAF11-1A77-4608-A763-C057296F850D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{359FAF11-1A77-4608-A763-C057296F850D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{359FAF11-1A77-4608-A763-C057296F850D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
