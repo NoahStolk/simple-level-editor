@@ -141,10 +141,11 @@ public sealed class App
 		MainMenuBar.Render();
 
 		LevelInfoWindow.Render();
-		LevelAssetsWindow.Render();
+		LevelModelsWindow.Render();
 		HistoryWindow.Render();
 		LevelEditorWindow.Render();
 		ObjectEditorWindow.Render();
 		MessagesWindow.Render();
+		EntityConfigEditorWindow.Render();
 	}
 }

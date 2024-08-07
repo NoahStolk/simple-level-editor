@@ -8,11 +8,11 @@ using System.Diagnostics;
 
 namespace SimpleLevelEditor.Ui.Windows;
 
-public static class LevelAssetsWindow
+public static class LevelModelsWindow
 {
 	public static void Render()
 	{
-		if (ImGui.Begin("Level Assets"))
+		if (ImGui.Begin("Level Models"))
 		{
 			if (ImGui.Button("Reload all"))
 			{
@@ -127,6 +127,6 @@ public static class LevelAssetsWindow
 
 		AssetLoadScheduleState.Schedule(LevelState.LevelFilePath);
 
-		LevelState.Track("Added assets");
+		LevelState.Track("Added models");
 	}
 }
