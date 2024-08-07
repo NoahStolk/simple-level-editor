@@ -1,5 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
-
 namespace SimpleLevelEditor.Formats.EntityConfig;
 
 public sealed record EntityConfigData
@@ -10,22 +8,24 @@ public sealed record EntityConfigData
 
 	public required List<EntityDescriptor> Entities { get; init; }
 
-	[SetsRequiredMembers]
-	public EntityConfigData(List<string> modelPaths, List<string> texturePaths, List<EntityDescriptor> entities)
-	{
-		ModelPaths = modelPaths;
-		TexturePaths = texturePaths;
-		Entities = entities;
-	}
-
 	public static EntityConfigData CreateDefault()
 	{
-		return new EntityConfigData([], [], []);
+		return new EntityConfigData
+		{
+			ModelPaths = [],
+			TexturePaths = [],
+			Entities = [],
+		};
 	}
 
 	public EntityConfigData DeepCopy()
 	{
-		return new EntityConfigData([..ModelPaths], [..TexturePaths], [..Entities.Select(e => e.DeepCopy())]);
+		return new EntityConfigData
+		{
+			ModelPaths = [..ModelPaths],
+			TexturePaths = [..TexturePaths],
+			Entities = [..Entities.Select(e => e.DeepCopy())],
+		};
 	}
 
 	public void AddModelPath(string path)

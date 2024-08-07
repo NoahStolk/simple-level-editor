@@ -19,15 +19,24 @@ public class EntityConfigModelTests
 	[TestMethod]
 	public void DeepCopy()
 	{
-		EntityDescriptor entity = new(
-			"TestEntity",
-			new EntityShapeDescriptor.Sphere(new Rgb(255, 0, 127)),
-			[new EntityPropertyDescriptor("TestProperty", new EntityPropertyTypeDescriptor.FloatProperty(10, 1, 1000, 0.5f), "Test description")]);
+		EntityDescriptor entity = new()
+		{
+			Name = "TestEntity",
+			Shape = new EntityShapeDescriptor.Sphere(new Rgb(255, 0, 127)),
+			Properties = [new EntityPropertyDescriptor
+			{
+				Name = "TestProperty",
+				Type = new EntityPropertyTypeDescriptor.FloatProperty(10, 1, 1000, 0.5f),
+				Description = "Test description",
+			}],
+		};
 
-		EntityConfigData entityConfig = new(
-			["Test.obj"],
-			["Test.png"],
-			[entity]);
+		EntityConfigData entityConfig = new()
+		{
+			ModelPaths = ["Test.obj"],
+			TexturePaths = ["Test.png"],
+			Entities = [entity],
+		};
 
 		EntityConfigData copy = entityConfig.DeepCopy();
 

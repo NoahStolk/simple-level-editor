@@ -1,4 +1,3 @@
-using SimpleLevelEditor.Formats.Core;
 using SimpleLevelEditor.Formats.EntityConfig;
 using SimpleLevelEditor.Formats.Level;
 using System.Text.Json;

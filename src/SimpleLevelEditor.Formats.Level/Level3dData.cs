@@ -1,5 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
-
 namespace SimpleLevelEditor.Formats.Level;
 
 public sealed record Level3dData
@@ -12,23 +10,26 @@ public sealed record Level3dData
 
 	public required List<Entity> Entities { get; set; }
 
-	[SetsRequiredMembers]
-	public Level3dData(string? entityConfigPath, List<string> modelPaths, List<WorldObject> worldObjects, List<Entity> entities)
-	{
-		EntityConfigPath = entityConfigPath;
-		ModelPaths = modelPaths;
-		WorldObjects = worldObjects;
-		Entities = entities;
-	}
-
 	public static Level3dData CreateDefault()
 	{
-		return new Level3dData(null, [], [], []);
+		return new Level3dData
+		{
+			EntityConfigPath = null,
+			ModelPaths = [],
+			WorldObjects = [],
+			Entities = [],
+		};
 	}
 
 	public Level3dData DeepCopy()
 	{
-		return new Level3dData(EntityConfigPath, [..ModelPaths], [..WorldObjects.Select(wo => wo.DeepCopy())], [..Entities.Select(e => e.DeepCopy())]);
+		return new Level3dData
+		{
+			EntityConfigPath = EntityConfigPath,
+			ModelPaths = [..ModelPaths],
+			WorldObjects = [..WorldObjects.Select(wo => wo.DeepCopy())],
+			Entities = [..Entities.Select(e => e.DeepCopy())],
+		};
 	}
 
 	public void AddModel(string modelPath)

@@ -13,56 +13,136 @@ public class LevelSerializationTests
 	private static readonly string[] _expectedModels = [@"..\Models\Crate.obj", @"..\Models\Cube.obj", @"..\Models\Sphere.obj"];
 	private static readonly WorldObject[] _expectedWorldObjects =
 	[
-		new WorldObject(
-			id: 1,
-			modelPath: @"..\Models\Cube.obj",
-			scale: new Vector3(64, 8, 64),
-			rotation: new Vector3(0, 0, 0),
-			position: new Vector3(16, -4, 0),
-			flags: ["Transparent"]),
-		new WorldObject(
-			id: 2,
-			modelPath: @"..\Models\Crate.obj",
-			scale: new Vector3(1, 1, 1),
-			rotation: new Vector3(0, 0, 0),
-			position: new Vector3(-4, 0.5f, 1),
-			flags: ["Dynamic"]),
-		new WorldObject(
-			id: 3,
-			modelPath: @"..\Models\Crate.obj",
-			scale: new Vector3(1, 1, 1),
-			rotation: new Vector3(0, 0, 0),
-			position: new Vector3(-0.5f, 0.5f, -4.5f),
-			flags: ["Transparent", "Dynamic"]),
-		new WorldObject(
-			id: 4,
-			modelPath: @"..\Models\Crate.obj",
-			scale: new Vector3(1, 1, 1),
-			rotation: new Vector3(90, 0, 0),
-			position: new Vector3(-4.5f, 0.5f, -3f),
-			flags: []),
-		new WorldObject(
-			id: 5,
-			modelPath: @"..\Models\Sphere.obj",
-			scale: new Vector3(1, 1, 1),
-			rotation: new Vector3(0, 90, 0),
-			position: new Vector3(6, 1, 2),
-			flags: []),
-		new WorldObject(
-			id: 6,
-			modelPath: @"..\Models\Cube.obj",
-			scale: new Vector3(16, 4, 1),
-			rotation: new Vector3(0, 0, 0),
-			position: new Vector3(0, 2, -7.5f),
-			flags: []),
+		new WorldObject
+		{
+			Id = 1,
+			ModelPath = @"..\Models\Cube.obj",
+			Scale = new Vector3(64, 8, 64),
+			Rotation = new Vector3(0, 0, 0),
+			Position = new Vector3(16, -4, 0),
+			Flags = ["Transparent"],
+		},
+		new WorldObject
+		{
+			Id = 2,
+			ModelPath = @"..\Models\Crate.obj",
+			Scale = new Vector3(1, 1, 1),
+			Rotation = new Vector3(0, 0, 0),
+			Position = new Vector3(-4, 0.5f, 1),
+			Flags = ["Dynamic"],
+		},
+		new WorldObject
+		{
+			Id = 3,
+			ModelPath = @"..\Models\Crate.obj",
+			Scale = new Vector3(1, 1, 1),
+			Rotation = new Vector3(0, 0, 0),
+			Position = new Vector3(-0.5f, 0.5f, -4.5f),
+			Flags = ["Transparent", "Dynamic"],
+		},
+		new WorldObject
+		{
+			Id = 4,
+			ModelPath = @"..\Models\Crate.obj",
+			Scale = new Vector3(1, 1, 1),
+			Rotation = new Vector3(90, 0, 0),
+			Position = new Vector3(-4.5f, 0.5f, -3f),
+			Flags = [],
+		},
+		new WorldObject
+		{
+			Id = 5,
+			ModelPath = @"..\Models\Sphere.obj",
+			Scale = new Vector3(1, 1, 1),
+			Rotation = new Vector3(0, 90, 0),
+			Position = new Vector3(6, 1, 2),
+			Flags = [],
+		},
+		new WorldObject
+		{
+			Id = 6,
+			ModelPath = @"..\Models\Cube.obj",
+			Scale = new Vector3(16, 4, 1),
+			Rotation = new Vector3(0, 0, 0),
+			Position = new Vector3(0, 2, -7.5f),
+			Flags = [],
+		},
 	];
 	private static readonly Entity[] _expectedEntities =
 	[
-		new Entity(1, "PlayerSpawn", new Vector3(0, 1, 0), new EntityShape.Point(), []),
-		new Entity(2, "Light", new Vector3(20, 3, 2), new EntityShape.Point(), [new EntityProperty("Color", new EntityPropertyValue.Rgb(new Rgb(255, 255, 255))), new EntityProperty("Radius", new EntityPropertyValue.Float(20f))]),
-		new Entity(3, "Light", new Vector3(27, 1, 12), new EntityShape.Point(), [new EntityProperty("Color", new EntityPropertyValue.Rgb(new Rgb(255, 47, 0))), new EntityProperty("Radius", new EntityPropertyValue.Float(6f))]),
-		new Entity(4, "Light", new Vector3(33, 1, 2), new EntityShape.Point(), [new EntityProperty("Color", new EntityPropertyValue.Rgb(new Rgb(0, 40, 255))), new EntityProperty("Radius", new EntityPropertyValue.Float(20f))]),
-		new Entity(5, "Field", new Vector3(1, 1, 1), new EntityShape.Sphere(10), []),
+		new Entity
+		{
+			Id = 1,
+			Name = "PlayerSpawn",
+			Position = new Vector3(0, 1, 0),
+			Shape = new EntityShape.Point(),
+			Properties = [],
+		},
+		new Entity
+		{
+			Id = 2,
+			Name = "Light",
+			Position = new Vector3(20, 3, 2),
+			Shape = new EntityShape.Point(),
+			Properties = [
+				new EntityProperty
+				{
+					Key = "Color",
+					Value = new EntityPropertyValue.Rgb(new Rgb(255, 255, 255)),
+				},
+				new EntityProperty
+				{
+					Key = "Radius",
+					Value = new EntityPropertyValue.Float(20f),
+				},
+			],
+		},
+		new Entity
+		{
+			Id = 3,
+			Name = "Light",
+			Position = new Vector3(27, 1, 12),
+			Shape = new EntityShape.Point(),
+			Properties = [
+				new EntityProperty
+				{
+					Key = "Color",
+					Value = new EntityPropertyValue.Rgb(new Rgb(255, 47, 0)),
+				},
+				new EntityProperty
+				{
+					Key = "Radius",
+					Value = new EntityPropertyValue.Float(6f),
+				},
+			],
+		},
+		new Entity
+		{
+			Id = 4,
+			Name = "Light",
+			Position = new Vector3(33, 1, 2),
+			Shape = new EntityShape.Point(),
+			Properties = [
+				new EntityProperty
+				{
+					Key = "Color",
+					Value = new EntityPropertyValue.Rgb(new Rgb(0, 40, 255)),
+				},
+				new EntityProperty
+				{
+					Key = "Radius",
+					Value = new EntityPropertyValue.Float(20f),
+				},
+			],
+		},
+		new Entity
+		{
+			Id = 5,
+			Name = "Field",
+			Position = new Vector3(1, 1, 1),
+			Shape = new EntityShape.Sphere(10),
+			Properties = [],
+		},
 	];
 
 	[TestMethod]

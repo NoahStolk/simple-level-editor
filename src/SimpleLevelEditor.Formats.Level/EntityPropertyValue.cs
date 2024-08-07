@@ -50,7 +50,7 @@ public partial record EntityPropertyValue
 			String s => new String(s.Value),
 			Rgba rgba => new Rgba(rgba.Value),
 			Rgb rgb => new Rgb(rgb.Value),
-			_ => throw new UnreachableException(),
+			_ => throw new UnreachableException($"Unknown type: {GetType().FullName}"),
 		};
 	}
 
@@ -67,7 +67,7 @@ public partial record EntityPropertyValue
 			String s => s.Value,
 			Rgba rgba => rgba.Value.ToDisplayString(),
 			Rgb rgb => rgb.Value.ToDisplayString(),
-			_ => throw new UnreachableException(),
+			_ => throw new UnreachableException($"Unknown type: {GetType().FullName}"),
 		};
 	}
 }

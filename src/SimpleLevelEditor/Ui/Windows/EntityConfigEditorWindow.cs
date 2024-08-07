@@ -126,7 +126,12 @@ public static class EntityConfigEditorWindow
 
 		if (ImGui.Button("Add entity"))
 		{
-			EntityDescriptor entity = new("New entity", new EntityShapeDescriptor.Point(new PointEntityVisualization.SimpleSphere(new Rgb(255, 127, 0), 0.5f)), []);
+			EntityDescriptor entity = new()
+			{
+				Name = "New entity",
+				Shape = new EntityShapeDescriptor.Point(new PointEntityVisualization.SimpleSphere(new Rgb(255, 127, 0), 0.5f)),
+				Properties = [],
+			};
 			EntityConfigEditorState.EntityConfig.AddEntity(entity);
 		}
 

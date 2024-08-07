@@ -20,15 +20,38 @@ public class LevelModelTests
 	[TestMethod]
 	public void DeepCopy()
 	{
-		Entity entity = new(0, "test", new Vector3(1, 2, 3), new EntityShape.Sphere(0.5f), [new EntityProperty("test", new EntityPropertyValue.Float(0.5f))]);
+		Entity entity = new()
+		{
+			Id = 0,
+			Name = "test",
+			Position = new Vector3(1, 2, 3),
+			Shape = new EntityShape.Sphere(0.5f),
+			Properties = [
+				new EntityProperty
+				{
+					Key = "test",
+					Value = new EntityPropertyValue.Float(0.5f),
+				},
+			],
+		};
 
-		WorldObject worldObject = new(0, "Test.obj", Vector3.One, new Vector3(4, 5, 6), new Vector3(1, 2, 3), ["flag"]);
+		WorldObject worldObject = new()
+		{
+			Id = 0,
+			ModelPath = "Test.obj",
+			Scale = Vector3.One,
+			Rotation = new Vector3(4, 5, 6),
+			Position = new Vector3(1, 2, 3),
+			Flags = ["flag"],
+		};
 
-		Level3dData level = new(
-			null,
-			["Test.obj"],
-			[worldObject],
-			[entity]);
+		Level3dData level = new()
+		{
+			EntityConfigPath = null,
+			ModelPaths = ["Test.obj"],
+			WorldObjects = [worldObject],
+			Entities = [entity],
+		};
 
 		Level3dData copy = level.DeepCopy();
 

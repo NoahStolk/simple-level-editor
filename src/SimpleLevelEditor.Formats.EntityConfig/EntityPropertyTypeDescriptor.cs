@@ -80,7 +80,7 @@ public partial record EntityPropertyTypeDescriptor
 			StringProperty => "String",
 			RgbaProperty => "Rgba",
 			RgbProperty => "Rgb",
-			_ => throw new UnreachableException(),
+			_ => throw new UnreachableException($"Unknown type: {GetType().FullName}"),
 		};
 	}
 
@@ -97,7 +97,7 @@ public partial record EntityPropertyTypeDescriptor
 			StringProperty => new Vector4(1.00f, 0.50f, 0.00f, 1.00f),
 			RgbaProperty => new Vector4(1.00f, 0.75f, 0.00f, 1.00f),
 			RgbProperty => new Vector4(1.00f, 1.00f, 0.00f, 1.00f),
-			_ => throw new UnreachableException(),
+			_ => throw new UnreachableException($"Unknown type: {GetType().FullName}"),
 		};
 	}
 
@@ -114,7 +114,7 @@ public partial record EntityPropertyTypeDescriptor
 			StringProperty p => new StringProperty(p.Default),
 			RgbaProperty p => new RgbaProperty(p.Default),
 			RgbProperty p => new RgbProperty(p.Default),
-			_ => throw new UnreachableException(),
+			_ => throw new UnreachableException($"Unknown type: {GetType().FullName}"),
 		};
 	}
 }

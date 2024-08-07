@@ -1,5 +1,6 @@
 using Dunet;
 using SimpleLevelEditor.Formats.Core;
+using System.Diagnostics;
 using System.Text.Json.Serialization;
 
 namespace SimpleLevelEditor.Formats.EntityConfig;
@@ -21,7 +22,7 @@ public partial record EntityShapeDescriptor
 			Point => nameof(Point),
 			Sphere => nameof(Sphere),
 			Aabb => nameof(Aabb),
-			_ => throw new InvalidOperationException(),
+			_ => throw new UnreachableException($"Unknown type: {GetType().FullName}"),
 		};
 	}
 
@@ -32,7 +33,7 @@ public partial record EntityShapeDescriptor
 			Point point => new Point(point.Visualization.DeepCopy()),
 			Sphere sphere => new Sphere(sphere.Color),
 			Aabb aabb => new Aabb(aabb.Color),
-			_ => throw new InvalidOperationException(),
+			_ => throw new UnreachableException($"Unknown type: {GetType().FullName}"),
 		};
 	}
 }

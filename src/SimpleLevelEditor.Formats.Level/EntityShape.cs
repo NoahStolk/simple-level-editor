@@ -23,7 +23,7 @@ public partial record EntityShape
 			Point => new Point(),
 			Sphere sphere => new Sphere(sphere.Radius),
 			Aabb aabb => new Aabb(aabb.Size),
-			_ => throw new UnreachableException(),
+			_ => throw new UnreachableException($"Unknown type: {GetType().FullName}"),
 		};
 	}
 
@@ -34,7 +34,7 @@ public partial record EntityShape
 			Point => string.Empty,
 			Sphere sphere => sphere.Radius.ToDisplayString(),
 			Aabb aabb => aabb.Size.ToDisplayString(),
-			_ => throw new UnreachableException(),
+			_ => throw new UnreachableException($"Unknown type: {GetType().FullName}"),
 		};
 	}
 }

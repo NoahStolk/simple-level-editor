@@ -22,7 +22,7 @@ public partial record PointEntityVisualization
 			SimpleSphere => nameof(SimpleSphere),
 			BillboardSprite => nameof(BillboardSprite),
 			Model => nameof(Model),
-			_ => throw new UnreachableException(),
+			_ => throw new UnreachableException($"Unknown type: {GetType().FullName}"),
 		};
 	}
 
@@ -33,7 +33,7 @@ public partial record PointEntityVisualization
 			SimpleSphere simpleSphere => new SimpleSphere(simpleSphere.Color, simpleSphere.Radius),
 			BillboardSprite billboardSprite => new BillboardSprite(billboardSprite.TexturePath, billboardSprite.Size),
 			Model model => new Model(model.ModelPath, model.Size),
-			_ => throw new UnreachableException(),
+			_ => throw new UnreachableException($"Unknown type: {GetType().FullName}"),
 		};
 	}
 }

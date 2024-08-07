@@ -45,7 +45,11 @@ public static class EntityEditorWindow
 				{
 					entity.Name = descriptor.Name;
 					entity.Shape = descriptor.Shape.GetDefaultEntityShape();
-					entity.Properties = descriptor.Properties.Select(p => new EntityProperty(p.Name, p.Type.GetDefaultValue())).ToList();
+					entity.Properties = descriptor.Properties.ConvertAll(p => new EntityProperty
+					{
+						Key = p.Name,
+						Value = p.Type.GetDefaultValue(),
+					});
 					LevelState.Track("Changed entity type");
 				}
 			}
@@ -88,7 +92,7 @@ public static class EntityEditorWindow
 	{
 		ImGui.SeparatorText("Properties");
 
-		EntityDescriptor? entityDescriptor = EntityConfigState.EntityConfig.Entities.FirstOrDefault(e => e.Name == entity.Name);
+		EntityDescriptor? entityDescriptor = EntityConfigState.EntityConfig.Entities.Find(e => e.Name == entity.Name);
 		if (entityDescriptor == null)
 		{
 			ImGui.TextColored(Detach.Numerics.Rgba.Red, "Unknown entity type");
@@ -98,10 +102,14 @@ public static class EntityEditorWindow
 		for (int i = 0; i < entityDescriptor.Properties.Count; i++)
 		{
 			EntityPropertyDescriptor propertyDescriptor = entityDescriptor.Properties[i];
-			EntityProperty? property = entity.Properties.Find(p => p.Key == propertyDescriptor.Name);
+			EntityProperty? property = entity.Properties.FirstOrDefault(p => p.Key == propertyDescriptor.Name);
 			if (property == null)
 			{
-				property = new EntityProperty(propertyDescriptor.Name, propertyDescriptor.Type.GetDefaultValue());
+				property = new EntityProperty
+				{
+					Key = propertyDescriptor.Name,
+					Value = propertyDescriptor.Type.GetDefaultValue(),
+				};
 				entity.Properties = entity.Properties.Append(property).ToList();
 			}
 
@@ -165,7 +173,7 @@ public static class EntityEditorWindow
 					if (ImGuiUtils.ColorEdit4Rgba(Inline.Span($"##property_value{entity.Id}_{i}"), ref rgbaValue))
 						property.Value = new EntityPropertyValue.Rgba(rgbaValue);
 					break;
-				default: throw new UnreachableException();
+				default: throw new UnreachableException($"Unknown type: {property.Value.GetType().FullName}");
 			}
 
 			if (ImGui.IsItemDeactivatedAfterEdit())

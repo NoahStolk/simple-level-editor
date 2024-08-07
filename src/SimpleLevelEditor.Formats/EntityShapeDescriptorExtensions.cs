@@ -14,7 +14,7 @@ public static class EntityShapeDescriptorExtensions
 			EntityShapeDescriptor.Point => new EntityShape.Point(),
 			EntityShapeDescriptor.Sphere => new EntityShape.Sphere(2),
 			EntityShapeDescriptor.Aabb => new EntityShape.Aabb(Vector3.One),
-			_ => throw new UnreachableException(),
+			_ => throw new UnreachableException($"Unknown type: {entityShapeDescriptor.GetType().FullName}"),
 		};
 	}
 }
