@@ -205,7 +205,7 @@ public static class MainLogic
 		{
 			if (entity.Shape is EntityShape.Point)
 			{
-				EntityShapeDescriptor? entityShape = EntityConfigState.EntityConfig.Entities.FirstOrDefault(e => e.Name == entity.Name)?.Shape;
+				EntityShapeDescriptor? entityShape = EntityConfigState.EntityConfig.Entities.Find(e => e.Name == entity.Name)?.Shape;
 				if (entityShape is not EntityShapeDescriptor.Point point)
 					return null;
 

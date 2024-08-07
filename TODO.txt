@@ -22,4 +22,3 @@ REFACTORING
 NEW MODEL
 - Entity config required for all levels
 - World objects removed; always use entities
-- Entities can have rotation and scale
