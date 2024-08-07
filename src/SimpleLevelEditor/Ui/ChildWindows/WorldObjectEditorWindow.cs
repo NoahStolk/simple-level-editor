@@ -1,6 +1,6 @@
 using Detach;
 using ImGuiNET;
-using SimpleLevelEditor.Formats.Types.Level;
+using SimpleLevelEditor.Formats.Level;
 using SimpleLevelEditor.State.States.Assets;
 using SimpleLevelEditor.State.States.Level;
 using SimpleLevelEditor.State.States.LevelEditor;
@@ -88,7 +88,7 @@ public static class WorldObjectEditorWindow
 
 		ImGui.Separator();
 
-		for (int i = 0; i < worldObject.Flags.Length; i++)
+		for (int i = 0; i < worldObject.Flags.Count; i++)
 		{
 			string value = worldObject.Flags[i];
 
@@ -122,7 +122,7 @@ public static class WorldObjectEditorWindow
 		{
 			float childWidth = ImGui.GetContentRegionAvail().X;
 			float tileSize = childWidth / rowLength - padding * rowLength;
-			for (int i = 0; i < LevelState.Level.ModelPaths.Length; i++)
+			for (int i = 0; i < LevelState.Level.ModelPaths.Count; i++)
 			{
 				string meshName = LevelState.Level.ModelPaths[i];
 
@@ -134,7 +134,7 @@ public static class WorldObjectEditorWindow
 				}
 			}
 
-			AddScrollMarker(LevelState.Level.ModelPaths.Length, rowLength, tileSize);
+			AddScrollMarker(LevelState.Level.ModelPaths.Count, rowLength, tileSize);
 		}
 
 		ImGui.EndChild();

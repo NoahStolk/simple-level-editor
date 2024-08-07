@@ -1,9 +1,9 @@
 using Detach.Utils;
 using Silk.NET.OpenGL;
 using SimpleLevelEditor.Extensions;
-using SimpleLevelEditor.Formats.Types;
-using SimpleLevelEditor.Formats.Types.EntityConfig;
-using SimpleLevelEditor.Formats.Types.Level;
+using SimpleLevelEditor.Formats.Core;
+using SimpleLevelEditor.Formats.EntityConfig;
+using SimpleLevelEditor.Formats.Level;
 using SimpleLevelEditor.State.Extensions;
 using SimpleLevelEditor.State.States.Assets;
 using SimpleLevelEditor.State.States.EntityConfig;
@@ -225,7 +225,7 @@ public sealed class LineRenderer
 	{
 		Gl.LineWidth(2);
 
-		for (int i = 0; i < LevelState.Level.WorldObjects.Length; i++)
+		for (int i = 0; i < LevelState.Level.WorldObjects.Count; i++)
 		{
 			WorldObject worldObject = LevelState.Level.WorldObjects[i];
 			Vector4 color = GetWorldObjectLineColor(worldObject);
@@ -271,7 +271,7 @@ public sealed class LineRenderer
 
 	private void RenderEntities()
 	{
-		for (int i = 0; i < LevelState.Level.Entities.Length; i++)
+		for (int i = 0; i < LevelState.Level.Entities.Count; i++)
 		{
 			Entity entity = LevelState.Level.Entities[i];
 			if (!LevelEditorState.ShouldRenderEntity(entity))
