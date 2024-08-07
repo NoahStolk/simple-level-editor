@@ -80,3 +80,15 @@ type EntityPropertyTypeDescriptor =
         | StringProperty  _ -> new Vector4(1.00f, 0.50f, 0.00f, 1.00f)
         | RgbProperty     _ -> new Vector4(1.00f, 0.75f, 0.00f, 1.00f)
         | RgbaProperty    _ -> new Vector4(1.00f, 1.00f, 0.00f, 1.00f)
+
+    member this.DeepCopy() =
+        match this with
+        | BoolProperty    value                   -> BoolProperty    value
+        | IntProperty     (value, step, min, max) -> IntProperty     (value, step, min, max)
+        | FloatProperty   (value, step, min, max) -> FloatProperty   (value, step, min, max)
+        | Vector2Property (value, step, min, max) -> Vector2Property (value, step, min, max)
+        | Vector3Property (value, step, min, max) -> Vector3Property (value, step, min, max)
+        | Vector4Property (value, step, min, max) -> Vector4Property (value, step, min, max)
+        | StringProperty  value                   -> StringProperty  value
+        | RgbProperty     value                   -> RgbProperty     value
+        | RgbaProperty    value                   -> RgbaProperty    value
