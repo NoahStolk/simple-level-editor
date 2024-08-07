@@ -1,7 +1,6 @@
-using Microsoft.FSharp.Core;
 using Silk.NET.OpenGL;
 using SimpleLevelEditor.Formats;
-using SimpleLevelEditor.Formats.Types.Level;
+using SimpleLevelEditor.Formats.Level;
 using SimpleLevelEditor.State.States.Assets;
 using SimpleLevelEditor.State.States.EntityConfig;
 using SimpleLevelEditor.State.States.EntityEditor;
@@ -84,14 +83,14 @@ public static class LevelState
 
 		using (FileStream fs = new(path, FileMode.Open))
 		{
-			FSharpOption<Level3dData>? level = SimpleLevelEditorJsonSerializer.DeserializeLevelFromStream(fs);
+			Level3dData? level = SimpleLevelEditorJsonSerializer.DeserializeLevelFromStream(fs);
 			if (level == null)
 			{
 				MessagesState.AddError("Failed to load level.");
 				return;
 			}
 
-			SetLevel(path, level.Value);
+			SetLevel(path, level);
 		}
 
 		// TODO: Refactor clearing the render filter.
@@ -99,7 +98,7 @@ public static class LevelState
 		string? levelDirectory = Path.GetDirectoryName(path);
 		if (levelDirectory != null && Level.EntityConfigPath != null)
 		{
-			string entityConfigPath = Path.Combine(levelDirectory, Level.EntityConfigPath.Value);
+			string entityConfigPath = Path.Combine(levelDirectory, Level.EntityConfigPath);
 			if (File.Exists(entityConfigPath))
 				EntityConfigState.LoadEntityConfig(entityConfigPath);
 		}
@@ -245,7 +244,7 @@ public static class LevelState
 				string? levelDirectory = Path.GetDirectoryName(levelFilePath);
 				if (levelDirectory != null)
 				{
-					string absolutePathToEntityConfig = Path.Combine(levelDirectory, Level.EntityConfigPath.Value);
+					string absolutePathToEntityConfig = Path.Combine(levelDirectory, Level.EntityConfigPath);
 					ModelContainer.EntityConfigContainer.Rebuild(gl, absolutePathToEntityConfig, EntityConfigState.EntityConfig.ModelPaths.ToList());
 				}
 			}

@@ -1,7 +1,6 @@
-using Microsoft.FSharp.Core;
 using SimpleLevelEditor.Formats;
-using SimpleLevelEditor.Formats.Types.EntityConfig;
-using SimpleLevelEditor.Formats.Types.Level;
+using SimpleLevelEditor.Formats.EntityConfig;
+using SimpleLevelEditor.Formats.Level;
 using SimpleLevelEditor.State.States.LevelEditor;
 using SimpleLevelEditor.State.States.Messages;
 
@@ -14,14 +13,14 @@ public static class EntityConfigState
 	public static void LoadEntityConfig(string path)
 	{
 		using FileStream fs = new(path, FileMode.Open);
-		FSharpOption<EntityConfigData>? entityConfig = SimpleLevelEditorJsonSerializer.DeserializeEntityConfigFromStream(fs);
+		EntityConfigData? entityConfig = SimpleLevelEditorJsonSerializer.DeserializeEntityConfigFromStream(fs);
 		if (entityConfig == null)
 		{
 			MessagesState.AddError("Failed to load entity config.");
 			return;
 		}
 
-		EntityConfig = entityConfig.Value;
+		EntityConfig = entityConfig;
 
 		LevelEditorState.EntityRenderFilter.Clear();
 		foreach (EntityDescriptor entity in EntityConfig.Entities)
@@ -30,7 +29,7 @@ public static class EntityConfigState
 
 	public static EntityShapeDescriptor? GetEntityShapeDescriptor(Entity entity)
 	{
-		if (EntityConfig.Entities.Length == 0)
+		if (EntityConfig.Entities.Count == 0)
 			return null; // EntityConfig not loaded yet.
 
 		EntityShapeDescriptor? entityShapeDescriptor = EntityConfig.Entities.FirstOrDefault(e => e.Name == entity.Name)?.Shape;

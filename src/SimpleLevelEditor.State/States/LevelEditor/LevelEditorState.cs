@@ -1,4 +1,4 @@
-using SimpleLevelEditor.Formats.Types.Level;
+using SimpleLevelEditor.Formats.Level;
 using SimpleLevelEditor.State.States.Level;
 using System.Numerics;
 
