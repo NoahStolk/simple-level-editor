@@ -1,0 +1,11 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <PackageReference Include="Dunet" Version="1.11.2"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="GameEntityConfig"/>
+  </ItemGroup>
+
+</Project>

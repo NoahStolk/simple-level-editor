@@ -1,71 +1,12 @@
 # Simple Level Editor
 
-## Data Type
-
-### Default Data Types
-
-- `i8`
-- `i16`
-- `i32`
-- `i64`
-- `u8`
-- `u16`
-- `u32`
-- `u64`
-- `f16`
-- `f32`
-- `f64`
-- `str`
-- `vec2`
-  - `x: f32`
-  - `y: f32`
-- `vec3`
-  - `x: f32`
-  - `y: f32`
-  - `z: f32`
-- `vec4`
-  - `x: f32`
-  - `y: f32`
-  - `z: f32`
-  - `w: f32`
-- `rgb`
-  - `r: u8`
-  - `g: u8`
-  - `b: u8`
-- `rgba`
-  - `r: u8`
-  - `g: u8`
-  - `b: u8`
-  - `a: u8`
-- `model`
-  - `model_path: str`
-- `billboard`
-  - `texture_path: str`
-- `wireframe`
-  - `thickness: f32`
-  - `shape: union(cube / sphere / cylinder)`
-
-### Custom Data Types
-
-Custom data types can be created by the user.
-
-#### Examples of Custom Data Types
-
-- `cube`
-  - `min: vec3`
-  - `max: vec3`
-- `sphere`
-  - `radius: f32`
-
 ## Component
-
-TODO: Is there really a difference between a component and a data type?
 
 Components are individual parts that can be assigned to an entity descriptor. They are the building blocks of an entity descriptor.
 
 An entity descriptor can have zero or more components, but a component type can only be assigned once to an entity descriptor.
 
-Components are made up of a name and multiple data types, exactly like a struct. Component fields may have a union type.
+Components are made up of a name and one or more fields, like a struct.
 
 ### Default Components
 
@@ -152,20 +93,19 @@ Components can either be "fixed", or "varying". Fixed components are components 
 
 Fixed components are components that are always the same for all entities of the same type.
 
-- `fixed_component`
-  - `component_type: str`
-  - `component: (component data)`
+- `fixed_component<T>`
+  - `component: T`
 
 ### Varying Components
 
 Varying components are components that can be different for each entity of the same type.
 
-- `varying_component`
-  - `component_type: str`
-  - `default_value: (component data)`
-  - `step_value: (component data or none)`
-  - `min_value: (component data or none)`
-  - `max_value: (component data or none)`
+- `varying_component<T, U>`
+  - `default_value: T`
+  - `slider_config: slider_config / null`
+    - `step: U`
+    - `min_value: U`
+    - `max_value: U`
 
 The actual data for varying components will be stored in the entity itself (in the level), not in the entity descriptor.
 
