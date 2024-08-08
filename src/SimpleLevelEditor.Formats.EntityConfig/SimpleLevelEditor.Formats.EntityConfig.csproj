@@ -1,0 +1,11 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\SimpleLevelEditor.Formats.Core\SimpleLevelEditor.Formats.Core.csproj"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Dunet" Version="1.11.2"/>
+  </ItemGroup>
+
+</Project>

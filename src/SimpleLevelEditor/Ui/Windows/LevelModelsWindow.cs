@@ -21,13 +21,13 @@ public static class LevelModelsWindow
 				{
 					string? parentDirectory = Path.GetDirectoryName(LevelState.LevelFilePath);
 					Debug.Assert(parentDirectory != null, "Parent directory should not be null.");
-					string absolutePath = Path.Combine(parentDirectory, LevelState.Level.EntityConfigPath.Value);
+					string absolutePath = Path.Combine(parentDirectory, LevelState.Level.EntityConfigPath);
 					EntityConfigState.LoadEntityConfig(absolutePath);
 				}
 			}
 
 			ImGui.SeparatorText("Entity Config");
-			ImGui.Text(LevelState.Level.EntityConfigPath == null ? "<No entity config loaded>" : LevelState.Level.EntityConfigPath.Value);
+			ImGui.Text(LevelState.Level.EntityConfigPath == null ? "<No entity config loaded>" : LevelState.Level.EntityConfigPath);
 
 			ImGui.BeginDisabled(LevelState.LevelFilePath == null);
 			if (ImGui.Button("Load entity config"))

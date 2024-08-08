@@ -12,132 +12,106 @@
     {
       "Name": "Point_SimpleSphere",
       "Shape": {
-        "Case": "Point",
-        "Fields": [
-          {
-            "Case": "SimpleSphere",
-            "Fields": [
-              {
-                "R": 255,
-                "G": 127,
-                "B": 255
-              },
-              0.25
-            ]
-          }
-        ]
+        "$type": "Point",
+        "Visualization": {
+          "$type": "SimpleSphere",
+          "Color": {
+            "R": 255,
+            "G": 0,
+            "B": 0
+          },
+          "Radius": 0.5
+        }
       },
       "Properties": []
     },
     {
       "Name": "Point_BillboardSprite",
       "Shape": {
-        "Case": "Point",
-        "Fields": [
-          {
-            "Case": "BillboardSprite",
-            "Fields": [
-              "Sprites\\Blue.tga",
-              0.5
-            ]
-          }
-        ]
+        "$type": "Point",
+        "Visualization": {
+          "$type": "BillboardSprite",
+          "TexturePath": "Sprites\\Blue.tga",
+          "Size": 0.5
+        }
       },
       "Properties": []
     },
     {
       "Name": "Point_Model",
       "Shape": {
-        "Case": "Point",
-        "Fields": [
-          {
-            "Case": "Model",
-            "Fields": [
-              "..\\Models\\Altar.obj",
-              0.5
-            ]
-          }
-        ]
+        "$type": "Point",
+        "Visualization": {
+          "$type": "Model",
+          "ModelPath": "..\\Models\\Altar.obj",
+          "Size": 0.5
+        }
       },
       "Properties": []
     },
     {
       "Name": "Sphere",
       "Shape": {
-        "Case": "Sphere",
-        "Fields": [
-          {
-            "R": 255,
-            "G": 0,
-            "B": 0
-          }
-        ]
+        "$type": "Sphere",
+        "Color": {
+          "R": 255,
+          "G": 0,
+          "B": 0
+        }
       },
       "Properties": []
     },
     {
       "Name": "Aabb",
       "Shape": {
-        "Case": "Aabb",
-        "Fields": [
-          {
-            "R": 0,
-            "G": 255,
-            "B": 255
-          }
-        ]
+        "$type": "Aabb",
+        "Color": {
+          "R": 0,
+          "G": 255,
+          "B": 255
+        }
       },
       "Properties": []
     },
     {
       "Name": "Light",
       "Shape": {
-        "Case": "Point",
-        "Fields": [
-          {
-            "Case": "BillboardSprite",
-            "Fields": [
-              "Sprites\\LightIcon.tga",
-              0.5
-            ]
-          }
-        ]
+        "$type": "Point",
+        "Visualization": {
+          "$type": "BillboardSprite",
+          "TexturePath": "Sprites\\LightIcon.tga",
+          "Size": 0.5
+        }
       },
       "Properties": [
         {
           "Name": "Color",
           "Type": {
-            "Case": "RgbProperty",
-            "Fields": [
-              {
-                "R": 255,
-                "G": 255,
-                "B": 255
-              }
-            ]
+            "$type": "RgbProperty",
+            "Default": {
+              "R": 255,
+              "G": 255,
+              "B": 255
+            }
           },
           "Description": "Point light color"
         },
         {
           "Name": "Radius",
           "Type": {
-            "Case": "FloatProperty",
-            "Fields": [
-              5,
-              1,
-              1,
-              1000
-            ]
+            "$type": "FloatProperty",
+            "Default": 5,
+            "Step": 1,
+            "Min": 1,
+            "Max": 1000
           },
           "Description": "Point light radius"
         },
         {
           "Name": "Shadow",
           "Type": {
-            "Case": "BoolProperty",
-            "Fields": [
-              false
-            ]
+            "$type": "BoolProperty",
+            "Default": false
           },
           "Description": "Whether the light casts shadows"
         }
@@ -146,65 +120,53 @@
     {
       "Name": "DynamicObject",
       "Shape": {
-        "Case": "Point",
-        "Fields": [
-          {
-            "Case": "Model",
-            "Fields": [
-              "..\\Models\\Ammonite.obj",
-              0.5
-            ]
-          }
-        ]
+        "$type": "Point",
+        "Visualization": {
+          "$type": "Model",
+          "ModelPath": "..\\Models\\Ammonite.obj",
+          "Size": 0.5
+        }
       },
       "Properties": [
         {
           "Name": "Mesh",
           "Type": {
-            "Case": "StringProperty",
-            "Fields": [
-              ""
-            ]
+            "$type": "StringProperty",
+            "Default": ""
           },
           "Description": "File name (without extension) of the mesh to be used"
         },
         {
           "Name": "Texture",
           "Type": {
-            "Case": "StringProperty",
-            "Fields": [
-              ""
-            ]
+            "$type": "StringProperty",
+            "Default": ""
           },
           "Description": "File name (without extension) of the texture to be used"
         },
         {
           "Name": "Scale",
           "Type": {
-            "Case": "Vector3Property",
-            "Fields": [
-              {
-                "X": 1,
-                "Y": 1,
-                "Z": 1
-              },
-              0.1,
-              0.01,
-              1000
-            ]
+            "$type": "Vector3Property",
+            "Default": {
+              "X": 1,
+              "Y": 1,
+              "Z": 1
+            },
+            "Step": 0.1,
+            "Min": 0.01,
+            "Max": 1000
           },
           "Description": "The scale of the mesh used"
         },
         {
           "Name": "Mass",
           "Type": {
-            "Case": "FloatProperty",
-            "Fields": [
-              1,
-              0.1,
-              0.01,
-              1000
-            ]
+            "$type": "FloatProperty",
+            "Default": 1,
+            "Step": 0.1,
+            "Min": 0.01,
+            "Max": 1000
           },
           "Description": "The mass of the dynamic physics object"
         }
@@ -213,64 +175,52 @@
     {
       "Name": "AudioSource",
       "Shape": {
-        "Case": "Point",
-        "Fields": [
-          {
-            "Case": "BillboardSprite",
-            "Fields": [
-              "Sprites\\AudioSourceIcon.tga",
-              0.5
-            ]
-          }
-        ]
+        "$type": "Point",
+        "Visualization": {
+          "$type": "BillboardSprite",
+          "TexturePath": "Sprites\\AudioSourceIcon.tga",
+          "Size": 0.5
+        }
       },
       "Properties": [
         {
           "Name": "Audio",
           "Type": {
-            "Case": "StringProperty",
-            "Fields": [
-              ""
-            ]
+            "$type": "StringProperty",
+            "Default": ""
           },
           "Description": "File name (without extension) of the audio to be played"
         },
         {
           "Name": "Gain",
           "Type": {
-            "Case": "FloatProperty",
-            "Fields": [
-              1,
-              0.1,
-              0,
-              1
-            ]
+            "$type": "FloatProperty",
+            "Default": 1,
+            "Step": 0.1,
+            "Min": 0,
+            "Max": 1
           },
           "Description": "The gain of the audio"
         },
         {
           "Name": "Pitch",
           "Type": {
-            "Case": "FloatProperty",
-            "Fields": [
-              1,
-              0.1,
-              0.05,
-              2
-            ]
+            "$type": "FloatProperty",
+            "Default": 1,
+            "Step": 0.1,
+            "Min": 0.05,
+            "Max": 2
           },
           "Description": "The pitch of the audio"
         },
         {
           "Name": "Radius",
           "Type": {
-            "Case": "FloatProperty",
-            "Fields": [
-              10,
-              1,
-              1,
-              1000
-            ]
+            "$type": "FloatProperty",
+            "Default": 10,
+            "Step": 1,
+            "Min": 1,
+            "Max": 1000
           },
           "Description": "The radius of the range of the audio"
         }
@@ -279,29 +229,23 @@
     {
       "Name": "Item",
       "Shape": {
-        "Case": "Point",
-        "Fields": [
-          {
-            "Case": "SimpleSphere",
-            "Fields": [
-              {
-                "R": 255,
-                "G": 255,
-                "B": 0
-              },
-              0.5
-            ]
-          }
-        ]
+        "$type": "Point",
+        "Visualization": {
+          "$type": "SimpleSphere",
+          "Color": {
+            "R": 255,
+            "G": 255,
+            "B": 0
+          },
+          "Radius": 0.5
+        }
       },
       "Properties": [
         {
           "Name": "Type",
           "Type": {
-            "Case": "StringProperty",
-            "Fields": [
-              ""
-            ]
+            "$type": "StringProperty",
+            "Default": ""
           },
           "Description": "Item type"
         }

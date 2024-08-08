@@ -256,6 +256,9 @@ dotnet_diagnostic.CA1000.severity                                             = 
 # Change 'List<T>' into 'Collection<T>', 'ReadOnlyCollection<T>' or 'KeyedCollection<K,V>'.
 dotnet_diagnostic.CA1002.severity                                             = none
 
+# Nested types should not be visible.
+dotnet_diagnostic.CA1034.severity                                             = none
+
 # Do not declare visible instance fields.
 dotnet_diagnostic.CA1051.severity                                             = none
 

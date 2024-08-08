@@ -1,7 +1,6 @@
-using Microsoft.FSharp.Collections;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SimpleLevelEditor.Formats.Types;
-using SimpleLevelEditor.Formats.Types.EntityConfig;
+using SimpleLevelEditor.Formats.Core;
+using SimpleLevelEditor.Formats.EntityConfig;
 
 namespace SimpleLevelEditor.Formats.Tests;
 
@@ -12,30 +11,41 @@ public class EntityConfigModelTests
 	public void CreateDefault()
 	{
 		EntityConfigData defaultEntityConfig = EntityConfigData.CreateDefault();
-		Assert.AreEqual(0, defaultEntityConfig.ModelPaths.Length);
-		Assert.AreEqual(0, defaultEntityConfig.TexturePaths.Length);
-		Assert.AreEqual(0, defaultEntityConfig.Entities.Length);
+		Assert.AreEqual(0, defaultEntityConfig.ModelPaths.Count);
+		Assert.AreEqual(0, defaultEntityConfig.TexturePaths.Count);
+		Assert.AreEqual(0, defaultEntityConfig.Entities.Count);
 	}
 
 	[TestMethod]
 	public void DeepCopy()
 	{
-		EntityDescriptor entity = new(
-			"TestEntity",
-			EntityShapeDescriptor.NewSphere(new Rgb(255, 0, 127)),
-			ListModule.OfSeq([new EntityPropertyDescriptor("TestProperty", EntityPropertyTypeDescriptor.NewFloatProperty(10, 1, 1000, 0.5f), "Test description")]));
+		EntityDescriptor entity = new()
+		{
+			Name = "TestEntity",
+			Shape = new EntityShapeDescriptor.Sphere(new Rgb(255, 0, 127)),
+			Properties = [
+				new EntityPropertyDescriptor
+				{
+					Name = "TestProperty",
+					Type = new EntityPropertyTypeDescriptor.FloatProperty(10, 1, 1000, 0.5f),
+					Description = "Test description",
+				},
+			],
+		};
 
-		EntityConfigData entityConfig = new(
-			ListModule.OfSeq(["Test.obj"]),
-			ListModule.OfSeq(["Test.png"]),
-			ListModule.OfSeq([entity]));
+		EntityConfigData entityConfig = new()
+		{
+			ModelPaths = ["Test.obj"],
+			TexturePaths = ["Test.png"],
+			Entities = [entity],
+		};
 
 		EntityConfigData copy = entityConfig.DeepCopy();
 
 		// Test counts.
-		Assert.AreEqual(entityConfig.Entities.Length, copy.Entities.Length);
-		Assert.AreEqual(entityConfig.ModelPaths.Length, copy.ModelPaths.Length);
-		Assert.AreEqual(entityConfig.TexturePaths.Length, copy.TexturePaths.Length);
+		Assert.AreEqual(entityConfig.Entities.Count, copy.Entities.Count);
+		Assert.AreEqual(entityConfig.ModelPaths.Count, copy.ModelPaths.Count);
+		Assert.AreEqual(entityConfig.TexturePaths.Count, copy.TexturePaths.Count);
 
 		// Test lists.
 		Assert.AreNotSame(entityConfig.Entities, copy.Entities);
@@ -43,7 +53,11 @@ public class EntityConfigModelTests
 		Assert.AreNotSame(entityConfig.TexturePaths, copy.TexturePaths);
 
 		// Test list contents.
-		Assert.AreEqual(entityConfig.Entities[0], copy.Entities[0]);
+		Assert.AreEqual(entityConfig.Entities[0].Name, copy.Entities[0].Name);
+		Assert.AreEqual(entityConfig.Entities[0].Shape.GetType(), copy.Entities[0].Shape.GetType());
+		Assert.AreEqual(entityConfig.Entities[0].Properties[0].Name, copy.Entities[0].Properties[0].Name);
+		Assert.AreEqual(entityConfig.Entities[0].Properties[0].Type.GetType(), copy.Entities[0].Properties[0].Type.GetType()); // TODO: Test type values (default, step, min, max).
+		Assert.AreEqual(entityConfig.Entities[0].Properties[0].Description, copy.Entities[0].Properties[0].Description);
 		Assert.AreEqual(entityConfig.ModelPaths[0], copy.ModelPaths[0]);
 		Assert.AreEqual(entityConfig.TexturePaths[0], copy.TexturePaths[0]);
 

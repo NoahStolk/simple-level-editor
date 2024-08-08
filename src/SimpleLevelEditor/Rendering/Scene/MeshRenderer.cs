@@ -1,7 +1,7 @@
 using Silk.NET.OpenGL;
 using SimpleLevelEditor.Extensions;
-using SimpleLevelEditor.Formats.Types.EntityConfig;
-using SimpleLevelEditor.Formats.Types.Level;
+using SimpleLevelEditor.Formats.EntityConfig;
+using SimpleLevelEditor.Formats.Level;
 using SimpleLevelEditor.State.Extensions;
 using SimpleLevelEditor.State.States.Assets;
 using SimpleLevelEditor.State.States.EntityConfig;
@@ -38,7 +38,7 @@ public sealed class MeshRenderer
 
 	private void RenderMeshEntities()
 	{
-		for (int i = 0; i < LevelState.Level.Entities.Length; i++)
+		for (int i = 0; i < LevelState.Level.Entities.Count; i++)
 		{
 			Entity entity = LevelState.Level.Entities[i];
 			if (!LevelEditorState.ShouldRenderEntity(entity))
@@ -68,7 +68,7 @@ public sealed class MeshRenderer
 
 	private void RenderWorldObjects()
 	{
-		for (int i = 0; i < LevelState.Level.WorldObjects.Length; i++)
+		for (int i = 0; i < LevelState.Level.WorldObjects.Count; i++)
 		{
 			WorldObject worldObject = LevelState.Level.WorldObjects[i];
 			Model? model = ModelContainer.LevelContainer.GetModel(worldObject.ModelPath);

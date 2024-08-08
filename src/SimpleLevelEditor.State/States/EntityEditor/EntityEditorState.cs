@@ -1,4 +1,4 @@
-using SimpleLevelEditor.Formats.Types.Level;
+using SimpleLevelEditor.Formats.Level;
 
 namespace SimpleLevelEditor.State.States.EntityEditor;
 
