@@ -7,7 +7,7 @@ using System.Text.Json;
 namespace GameEntityConfig.Tests;
 
 [TestClass]
-public class UnitTest1
+public class GameEntityConfigTests
 {
 	private static readonly JsonSerializerOptions _jsonSerializerOptions = new() { WriteIndented = true, IncludeFields = true };
 
@@ -37,6 +37,7 @@ public class UnitTest1
 		Assert.AreEqual("Light", config.EntityDescriptors[1].Name);
 		Assert.AreEqual("WorldObject", config.EntityDescriptors[2].Name);
 
+		// TODO: Not sure if we should use JSON for this.
 		string json = JsonSerializer.Serialize(config, _jsonSerializerOptions);
 		Console.WriteLine(json);
 	}
