@@ -30,7 +30,7 @@ public sealed class ComponentsChild
 
 		ImGui.Checkbox("Enable Default Components", ref _enableDefaultComponents);
 
-		if (ImGui.BeginTable("ComponentsTable", 3))
+		if (ImGui.BeginTable("ComponentsTable", 3, ImGuiTableFlags.Borders))
 		{
 			ImGui.TableSetupColumn("Component Type", ImGuiTableColumnFlags.WidthFixed, 200);
 			ImGui.TableSetupColumn("Name", ImGuiTableColumnFlags.WidthFixed, 200);

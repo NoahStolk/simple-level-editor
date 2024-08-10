@@ -7,32 +7,32 @@ namespace GameEntityConfig.Editor.Ui.GameEntityConfigBuilder;
 
 public sealed class CreateNewComponentPopup
 {
-	private static readonly List<Type> _primitives =
-	[
-		typeof(bool),
+	private static readonly Dictionary<Type, string> _primitives = new()
+	{
+		{ typeof(bool), "bool" },
 
-		typeof(sbyte),
-		typeof(short),
-		typeof(int),
-		typeof(long),
-		typeof(Int128),
+		{ typeof(sbyte), "i8" },
+		{ typeof(short), "i16" },
+		{ typeof(int), "i32" },
+		{ typeof(long), "i64" },
+		{ typeof(Int128), "i128" },
 
-		typeof(byte),
-		typeof(ushort),
-		typeof(uint),
-		typeof(ulong),
-		typeof(UInt128),
+		{ typeof(byte), "u8" },
+		{ typeof(ushort), "u16" },
+		{ typeof(uint), "u32" },
+		{ typeof(ulong), "u64" },
+		{ typeof(UInt128), "u128" },
 
-		typeof(Half),
-		typeof(float),
-		typeof(double),
+		{ typeof(Half), "f16" },
+		{ typeof(float), "f32" },
+		{ typeof(double), "f64" },
 
-		typeof(decimal),
+		{ typeof(decimal), "d128" },
 
-		typeof(char),
+		{ typeof(char), "char" },
 
-		typeof(string),
-	];
+		{ typeof(string), "str" },
+	};
 
 	private string _newComponentTypeName = string.Empty;
 	private readonly List<ComponentField> _newComponentTypeFields = [];
@@ -58,12 +58,12 @@ public sealed class CreateNewComponentPopup
 			ImGui.SameLine();
 
 			ImGui.PushItemWidth(120);
-			if (ImGui.BeginCombo(Inline.Span($"Field Type##{i}"), componentField.Type?.Name ?? "None"))
+			if (ImGui.BeginCombo(Inline.Span($"Field Type##{i}"), componentField.Type?.Name ?? "None", ImGuiComboFlags.HeightLarge))
 			{
-				foreach (Type type in _primitives)
+				foreach (KeyValuePair<Type, string> type in _primitives)
 				{
-					if (ImGui.Selectable(type.Name))
-						_newComponentTypeFields[i].Type = type;
+					if (ImGui.Selectable(type.Value))
+						_newComponentTypeFields[i].Type = type.Key;
 				}
 
 				ImGui.EndCombo();
