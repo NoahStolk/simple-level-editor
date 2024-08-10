@@ -1,5 +1,6 @@
 using Detach;
 using ImGuiNET;
+using NativeFileDialogUtils;
 using SimpleLevelEditor.Formats.Core;
 using SimpleLevelEditor.Formats.EntityConfig;
 using SimpleLevelEditor.State.States.EntityConfigEditor;
@@ -54,7 +55,7 @@ public static class EntityConfigEditorWindow
 			EntityConfigEditorState.EntityConfig.ModelPaths,
 			paths => AddCallback(EntityConfigEditorState.EntityConfig.AddModelPath, paths),
 			EntityConfigEditorState.EntityConfig.RemoveModelPath,
-			"obj");
+			FileConstants.ModelFormats);
 
 		RenderPaths(
 			"Textures",
@@ -62,7 +63,7 @@ public static class EntityConfigEditorWindow
 			EntityConfigEditorState.EntityConfig.TexturePaths,
 			paths => AddCallback(EntityConfigEditorState.EntityConfig.AddTexturePath, paths),
 			EntityConfigEditorState.EntityConfig.RemoveTexturePath,
-			"bmp,gif,jpeg,pbm,png,tiff,tga,webp");
+			FileConstants.TextureFormats);
 
 		RenderEntities();
 	}

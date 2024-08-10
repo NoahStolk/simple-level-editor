@@ -1,5 +1,6 @@
 using Detach;
 using ImGuiNET;
+using NativeFileDialogUtils;
 using SimpleLevelEditor.State.States.Assets;
 using SimpleLevelEditor.State.States.EntityConfig;
 using SimpleLevelEditor.State.States.Level;
@@ -71,7 +72,7 @@ public static class LevelModelsWindow
 		{
 			Debug.Assert(LevelState.LevelFilePath != null, "Cannot click this button because it should be disabled.");
 
-			DialogWrapper.FileOpenMultiple(AddAssetsCallback, "obj");
+			DialogWrapper.FileOpenMultiple(AddAssetsCallback, FileConstants.ModelFormats);
 		}
 
 		ImGui.EndDisabled();

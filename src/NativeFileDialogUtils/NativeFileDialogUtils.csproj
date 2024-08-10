@@ -1,0 +1,7 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup Label="External dependencies">
+    <PackageReference Include="NativeFileDialogSharp" Version="0.5.0"/>
+  </ItemGroup>
+
+</Project>

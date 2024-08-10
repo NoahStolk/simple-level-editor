@@ -22,6 +22,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameEntityConfig.Tests", "G
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameEntityConfig.Editor", "GameEntityConfig.Editor\GameEntityConfig.Editor.csproj", "{7889C407-8431-437C-9109-F4B4755CD741}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NativeFileDialogUtils", "NativeFileDialogUtils\NativeFileDialogUtils.csproj", "{0F273B95-D3AF-4624-A345-DD7E0CB6109C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -76,5 +78,9 @@ Global
 		{7889C407-8431-437C-9109-F4B4755CD741}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7889C407-8431-437C-9109-F4B4755CD741}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7889C407-8431-437C-9109-F4B4755CD741}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0F273B95-D3AF-4624-A345-DD7E0CB6109C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F273B95-D3AF-4624-A345-DD7E0CB6109C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F273B95-D3AF-4624-A345-DD7E0CB6109C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F273B95-D3AF-4624-A345-DD7E0CB6109C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

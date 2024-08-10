@@ -1,5 +1,7 @@
 using Detach.Parsers.Texture;
 using Detach.Parsers.Texture.TgaFormat;
+using GameEntityConfig.Editor.Ui;
+using GameEntityConfig.Editor.Ui.GameEntityConfigBuilder;
 using ImGuiGlfw;
 using ImGuiNET;
 using Silk.NET.GLFW;
@@ -27,6 +29,8 @@ public sealed class App
 
 	private int _currentSecond;
 	private int _renders;
+
+	private static readonly GameEntityConfigBuilderWindow _gameEntityConfigBuilderWindow = new();
 
 	public unsafe App(ImGuiController imGuiController)
 	{
@@ -139,6 +143,8 @@ public sealed class App
 			DebugWindow.Render(ref WindowsState.ShowDebugWindow);
 
 		MainMenuBar.Render();
+
+		_gameEntityConfigBuilderWindow.Render();
 
 		LevelInfoWindow.Render();
 		LevelModelsWindow.Render();

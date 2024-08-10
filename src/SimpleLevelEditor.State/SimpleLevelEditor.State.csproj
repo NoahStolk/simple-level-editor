@@ -1,13 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup Label="External dependencies">
-    <PackageReference Include="NativeFileDialogSharp" Version="0.5.0"/>
     <PackageReference Include="NoahStolk.Detach" Version="0.11.2"/>
     <PackageReference Include="NoahStolk.ImGuiGlfw" Version="0.7.0"/>
     <PackageReference Include="SixLabors.ImageSharp" Version="3.1.5"/>
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\NativeFileDialogUtils\NativeFileDialogUtils.csproj" />
     <ProjectReference Include="..\SimpleLevelEditor.Formats\SimpleLevelEditor.Formats.csproj" />
   </ItemGroup>
 

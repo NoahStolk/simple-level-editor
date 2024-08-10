@@ -47,6 +47,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\GameEntityConfig.Editor\GameEntityConfig.Editor.csproj" />
     <ProjectReference Include="..\SimpleLevelEditor.State\SimpleLevelEditor.State.csproj"/>
   </ItemGroup>
 
