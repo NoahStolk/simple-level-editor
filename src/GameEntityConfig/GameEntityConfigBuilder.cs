@@ -1,5 +1,6 @@
 using GameEntityConfig.Core;
 using GameEntityConfig.Core.Components;
+using System.Reflection;
 
 namespace GameEntityConfig;
 
@@ -7,14 +8,14 @@ public sealed class GameEntityConfigBuilder
 {
 	private readonly List<string> _modelPaths = [];
 	private readonly List<string> _texturePaths = [];
-	private readonly List<Type> _componentTypes = [];
+	private readonly List<TypeInfo> _componentTypes = [];
 	private readonly List<EntityDescriptor> _entityDescriptors = [];
 
 	public string Name { get; private set; } = string.Empty;
 
 	public IReadOnlyList<string> ModelPaths => _modelPaths;
 	public IReadOnlyList<string> TexturePaths => _texturePaths;
-	public IReadOnlyList<Type> ComponentTypes => _componentTypes;
+	public IReadOnlyList<TypeInfo> ComponentTypes => _componentTypes;
 	public IReadOnlyList<EntityDescriptor> EntityDescriptors => _entityDescriptors;
 
 	public GameEntityConfigBuilder WithName(string name)
@@ -53,10 +54,10 @@ public sealed class GameEntityConfigBuilder
 
 	public GameEntityConfigBuilder WithComponentType<T>()
 	{
-		return WithComponentType(typeof(T));
+		return WithComponentType(typeof(T).GetTypeInfo());
 	}
 
-	public GameEntityConfigBuilder WithComponentType(Type type)
+	public GameEntityConfigBuilder WithComponentType(TypeInfo type)
 	{
 		if (_componentTypes.Contains(type))
 			throw new ArgumentException($"Component type '{type.Name}' already exists.");
@@ -82,6 +83,6 @@ public sealed class GameEntityConfigBuilder
 
 	public Core.GameEntityConfig Build()
 	{
-		return new Core.GameEntityConfig(Name, _modelPaths, _texturePaths, _entityDescriptors);
+		return new Core.GameEntityConfig(Name, _modelPaths, _texturePaths, _componentTypes, _entityDescriptors);
 	}
 }

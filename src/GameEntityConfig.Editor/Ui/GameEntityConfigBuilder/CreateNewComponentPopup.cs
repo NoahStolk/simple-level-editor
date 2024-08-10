@@ -47,7 +47,7 @@ public sealed class CreateNewComponentPopup
 	{
 		ImGui.SeparatorText("Construct New Component");
 
-		ImGui.InputText("Component Type", ref _newComponentTypeName, 100);
+		ImGui.InputText("Component Type Name", ref _newComponentTypeName, 100);
 
 		for (int i = 0; i < _newComponentTypeFields.Count; i++)
 		{
@@ -102,11 +102,12 @@ public sealed class CreateNewComponentPopup
 
 	private TypeInfo ConstructComponent()
 	{
+		// ! LINQ filtering.
 		List<FieldDescriptor> fieldDescriptors = _newComponentTypeFields.Where(f => f.Type != null).Select(cf => new FieldDescriptor(cf.Name, cf.Type!)).ToList();
 		return ComponentTypeBuilder.CompileResultTypeInfo(_newComponentTypeName, fieldDescriptors);
 	}
 
-	private record ComponentField
+	private sealed record ComponentField
 	{
 		public string Name { get; set; } = string.Empty;
 		public Type? Type { get; set; }
