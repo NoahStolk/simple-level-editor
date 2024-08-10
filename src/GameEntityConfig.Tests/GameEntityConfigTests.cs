@@ -2,15 +2,18 @@ using GameEntityConfig.Core;
 using GameEntityConfig.Core.Components;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Numerics;
-using System.Text.Json;
+using System.Reflection;
 
 namespace GameEntityConfig.Tests;
 
 [TestClass]
 public class GameEntityConfigTests
 {
-	private static readonly JsonSerializerOptions _jsonSerializerOptions = new() { WriteIndented = true, IncludeFields = true };
-
+	// TODO: Add failing tests where an entity descriptor is created with unknown component types.
+	// TODO: Add failing tests where an entity descriptor is created with duplicate component types.
+	// TODO: Add failing tests where an entity descriptor is created before its component types are added.
+	// TODO: Add failing tests where component types are duplicated.
+	// TODO: Add failing tests where model/texture paths are duplicated.
 	[TestMethod]
 	public void BuildGameEntityConfig()
 	{
@@ -32,6 +35,15 @@ public class GameEntityConfigTests
 		Assert.AreEqual("Player.obj", config.ModelPaths[0]);
 		Assert.AreEqual(1, config.TexturePaths.Count);
 		Assert.AreEqual("Audio.png", config.TexturePaths[0]);
+		Assert.AreEqual(8, config.ComponentTypes.Count);
+		Assert.AreEqual(typeof(DiffuseColor).GetTypeInfo(), config.ComponentTypes[0]);
+		Assert.AreEqual(typeof(Position).GetTypeInfo(), config.ComponentTypes[1]);
+		Assert.AreEqual(typeof(Rotation).GetTypeInfo(), config.ComponentTypes[2]);
+		Assert.AreEqual(typeof(Scale).GetTypeInfo(), config.ComponentTypes[3]);
+		Assert.AreEqual(typeof(Shape).GetTypeInfo(), config.ComponentTypes[4]);
+		Assert.AreEqual(typeof(Visualizer).GetTypeInfo(), config.ComponentTypes[5]);
+		Assert.AreEqual(typeof(Health).GetTypeInfo(), config.ComponentTypes[6]);
+		Assert.AreEqual(typeof(Radius).GetTypeInfo(), config.ComponentTypes[7]);
 		Assert.AreEqual(3, config.EntityDescriptors.Count);
 		Assert.AreEqual("Player", config.EntityDescriptors[0].Name);
 		Assert.AreEqual("Light", config.EntityDescriptors[1].Name);

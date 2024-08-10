@@ -1,6 +1,5 @@
 using Detach.Parsers.Texture;
 using Detach.Parsers.Texture.TgaFormat;
-using GameEntityConfig.Editor.Ui;
 using GameEntityConfig.Editor.Ui.GameEntityConfigBuilder;
 using ImGuiGlfw;
 using ImGuiNET;

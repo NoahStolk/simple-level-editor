@@ -1,4 +1,3 @@
-using Detach;
 using Detach.Numerics;
 using GameEntityConfig.Core.Components;
 using ImGuiNET;

@@ -8,7 +8,6 @@ using SimpleLevelEditor.State.States.EntityEditor;
 using SimpleLevelEditor.State.States.LevelEditor;
 using SimpleLevelEditor.State.States.Messages;
 using SimpleLevelEditor.State.States.WorldObjectEditor;
-using SimpleLevelEditor.State.Utils;
 using System.Security.Cryptography;
 
 namespace SimpleLevelEditor.State.States.Level;

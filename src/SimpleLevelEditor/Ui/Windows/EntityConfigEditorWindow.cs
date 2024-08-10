@@ -4,7 +4,6 @@ using NativeFileDialogUtils;
 using SimpleLevelEditor.Formats.Core;
 using SimpleLevelEditor.Formats.EntityConfig;
 using SimpleLevelEditor.State.States.EntityConfigEditor;
-using SimpleLevelEditor.State.Utils;
 using System.Diagnostics;
 
 namespace SimpleLevelEditor.Ui.Windows;

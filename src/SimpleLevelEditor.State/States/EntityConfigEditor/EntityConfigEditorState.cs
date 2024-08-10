@@ -2,7 +2,6 @@ using NativeFileDialogUtils;
 using SimpleLevelEditor.Formats;
 using SimpleLevelEditor.Formats.EntityConfig;
 using SimpleLevelEditor.State.States.Messages;
-using SimpleLevelEditor.State.Utils;
 
 namespace SimpleLevelEditor.State.States.EntityConfigEditor;
 
