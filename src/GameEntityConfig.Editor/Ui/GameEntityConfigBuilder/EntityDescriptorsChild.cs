@@ -1,4 +1,6 @@
 using GameEntityConfig.Core;
+using GameEntityConfig.Editor.States;
+using GameEntityConfig.Extensions;
 using ImGuiNET;
 using System.Numerics;
 
@@ -10,7 +12,7 @@ public sealed class EntityDescriptorsChild
 
 	private readonly CreateNewEntityDescriptorPopup _createNewEntityDescriptorPopup = new();
 
-	public void Render()
+	public void Render(GameEntityConfigBuilderState state)
 	{
 		ImGui.SeparatorText("Entity Descriptors");
 
@@ -29,9 +31,7 @@ public sealed class EntityDescriptorsChild
 			for (int j = entityDescriptor.FixedComponents.Count - 1; j >= 0; j--)
 			{
 				FixedComponent fixedComponent = entityDescriptor.FixedComponents[j];
-				string fixedComponentTypeName = fixedComponent.GetType().Name;
-				ImGui.Button($"X##{fixedComponentTypeName}");
-				ImGui.SameLine();
+				string fixedComponentTypeName = fixedComponent.GetType().GetFirstTypeParameter().Name;
 				ImGui.Text(fixedComponentTypeName);
 			}
 
@@ -40,9 +40,7 @@ public sealed class EntityDescriptorsChild
 			for (int j = entityDescriptor.VaryingComponents.Count - 1; j >= 0; j--)
 			{
 				VaryingComponent varyingComponent = entityDescriptor.VaryingComponents[j];
-				string varyingComponentTypeName = varyingComponent.GetType().Name;
-				ImGui.Button($"X##{varyingComponentTypeName}");
-				ImGui.SameLine();
+				string varyingComponentTypeName = varyingComponent.GetType().GetFirstTypeParameter().Name;
 				ImGui.Text(varyingComponentTypeName);
 			}
 
@@ -55,7 +53,7 @@ public sealed class EntityDescriptorsChild
 		ImGui.SetNextWindowSizeConstraints(new Vector2(640, 240), new Vector2(float.MaxValue, float.MaxValue));
 		if (ImGui.BeginPopupModal("Create New Entity Descriptor"))
 		{
-			EntityDescriptor? newEntityDescriptor = _createNewEntityDescriptorPopup.Render();
+			EntityDescriptor? newEntityDescriptor = _createNewEntityDescriptorPopup.Render(state);
 
 			if (newEntityDescriptor != null && _entityDescriptors.TrueForAll(ct => ct.Name != newEntityDescriptor.Name))
 				_entityDescriptors.Add(newEntityDescriptor);

@@ -1,4 +1,5 @@
 using Detach;
+using GameEntityConfig.Editor.Utils;
 using GameEntityConfig.Emit;
 using ImGuiNET;
 using System.Numerics;
@@ -8,27 +9,6 @@ namespace GameEntityConfig.Editor.Ui.GameEntityConfigBuilder;
 
 public sealed class CreateNewComponentPopup
 {
-	private static readonly Dictionary<Type, string> _primitives = new()
-	{
-		{ typeof(bool), "bool" },
-		{ typeof(sbyte), "i8" },
-		{ typeof(short), "i16" },
-		{ typeof(int), "i32" },
-		{ typeof(long), "i64" },
-		{ typeof(Int128), "i128" },
-		{ typeof(byte), "u8" },
-		{ typeof(ushort), "u16" },
-		{ typeof(uint), "u32" },
-		{ typeof(ulong), "u64" },
-		{ typeof(UInt128), "u128" },
-		{ typeof(Half), "f16" },
-		{ typeof(float), "f32" },
-		{ typeof(double), "f64" },
-		{ typeof(decimal), "d128" },
-		{ typeof(char), "char" },
-		{ typeof(string), "str" },
-	};
-
 	private string _newComponentTypeName = string.Empty;
 	private readonly List<ComponentField> _newComponentTypeFields = [];
 
@@ -68,7 +48,7 @@ public sealed class CreateNewComponentPopup
 					ImGui.TableNextColumn();
 					if (ImGui.BeginCombo(Inline.Span($"##Type{i}"), componentField.Type?.Name ?? "<NONE>", ImGuiComboFlags.HeightLarge))
 					{
-						foreach (KeyValuePair<Type, string> type in _primitives)
+						foreach (KeyValuePair<Type, string> type in DataTypeUtils.Primitives)
 						{
 							if (ImGui.Selectable(type.Value))
 								_newComponentTypeFields[i].Type = type.Key;

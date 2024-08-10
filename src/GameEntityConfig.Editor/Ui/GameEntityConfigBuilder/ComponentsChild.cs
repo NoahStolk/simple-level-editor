@@ -1,5 +1,6 @@
 using Detach.Numerics;
-using GameEntityConfig.Core.Components;
+using GameEntityConfig.Editor.States;
+using GameEntityConfig.Editor.Utils;
 using ImGuiNET;
 using System.Numerics;
 using System.Reflection;
@@ -8,26 +9,13 @@ namespace GameEntityConfig.Editor.Ui.GameEntityConfigBuilder;
 
 public sealed class ComponentsChild
 {
-	private static readonly List<TypeInfo> _defaultComponents =
-	[
-		typeof(DiffuseColor).GetTypeInfo(),
-		typeof(Position).GetTypeInfo(),
-		typeof(Rotation).GetTypeInfo(),
-		typeof(Scale).GetTypeInfo(),
-		typeof(Shape).GetTypeInfo(),
-		typeof(Visualizer).GetTypeInfo(),
-	];
-
-	private bool _enableDefaultComponents;
-	private readonly List<TypeInfo> _componentTypes = [];
-
 	private readonly CreateNewComponentPopup _createNewComponentPopup = new();
 
-	public void Render()
+	public void Render(GameEntityConfigBuilderState state)
 	{
 		ImGui.SeparatorText("Components");
 
-		ImGui.Checkbox("Enable Default Components", ref _enableDefaultComponents);
+		ImGui.Checkbox("Enable Default Components", ref state.EnableDefaultComponents);
 
 		if (ImGui.BeginTable("ComponentsTable", 3, ImGuiTableFlags.Borders))
 		{
@@ -38,16 +26,16 @@ public sealed class ComponentsChild
 			ImGui.TableSetupScrollFreeze(0, 1);
 			ImGui.TableHeadersRow();
 
-			if (_enableDefaultComponents)
+			if (state.EnableDefaultComponents)
 			{
-				foreach (TypeInfo defaultComponent in _defaultComponents)
-					RenderComponent(true, defaultComponent);
+				foreach (TypeInfo defaultComponent in ComponentUtils.DefaultComponents)
+					RenderComponent(state, true, defaultComponent);
 			}
 
-			for (int i = _componentTypes.Count - 1; i >= 0; i--)
+			for (int i = state.ComponentTypes.Count - 1; i >= 0; i--)
 			{
-				TypeInfo componentType = _componentTypes[i];
-				RenderComponent(false, componentType);
+				TypeInfo componentType = state.ComponentTypes[i];
+				RenderComponent(state, false, componentType);
 			}
 
 			ImGui.EndTable();
@@ -61,14 +49,14 @@ public sealed class ComponentsChild
 		{
 			TypeInfo? newComponent = _createNewComponentPopup.Render();
 
-			if (newComponent != null && _componentTypes.TrueForAll(ct => ct.Name != newComponent.Name))
-				_componentTypes.Add(newComponent);
+			if (newComponent != null && state.ComponentTypes.TrueForAll(ct => ct.Name != newComponent.Name))
+				state.ComponentTypes.Add(newComponent);
 
 			ImGui.EndPopup();
 		}
 	}
 
-	private void RenderComponent(bool isDefaultComponent, TypeInfo componentType)
+	private static void RenderComponent(GameEntityConfigBuilderState state, bool isDefaultComponent, TypeInfo componentType)
 	{
 		FieldInfo[] fields = componentType.GetFields(BindingFlags.Public | BindingFlags.Instance);
 
@@ -84,7 +72,7 @@ public sealed class ComponentsChild
 			ImGui.Text("Custom component");
 			ImGui.SameLine();
 			if (ImGui.SmallButton($"Remove##{componentType.Name}"))
-				_componentTypes.Remove(componentType);
+				state.ComponentTypes.Remove(componentType);
 		}
 
 		ImGui.TableNextColumn();
