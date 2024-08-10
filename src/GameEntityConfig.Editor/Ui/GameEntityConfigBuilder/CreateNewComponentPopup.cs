@@ -1,6 +1,7 @@
 using Detach;
 using GameEntityConfig.Emit;
 using ImGuiNET;
+using System.Numerics;
 using System.Reflection;
 
 namespace GameEntityConfig.Editor.Ui.GameEntityConfigBuilder;
@@ -45,57 +46,90 @@ public sealed class CreateNewComponentPopup
 
 	public TypeInfo? Render()
 	{
-		ImGui.SeparatorText("Construct New Component");
-
-		ImGui.InputText("Component Type Name", ref _newComponentTypeName, 100);
-
-		for (int i = 0; i < _newComponentTypeFields.Count; i++)
+		if (ImGui.BeginChild("NewComponentChildWindow", new Vector2(0, ImGui.GetWindowHeight() - 96)))
 		{
-			ComponentField componentField = _newComponentTypeFields[i];
+			ImGui.InputText("Component Type Name", ref _newComponentTypeName, 100);
 
-			if (ImGui.Button(Inline.Span($"X##{i}")))
-				_newComponentTypeFields.RemoveAt(i);
-			ImGui.SameLine();
-
-			ImGui.PushItemWidth(120);
-			if (ImGui.BeginCombo(Inline.Span($"Field Type##{i}"), componentField.Type?.Name ?? "None", ImGuiComboFlags.HeightLarge))
+			if (ImGui.BeginTable("FieldsTable", 3, ImGuiTableFlags.Borders))
 			{
-				foreach (KeyValuePair<Type, string> type in _primitives)
+				ImGui.TableSetupColumn("Remove", ImGuiTableColumnFlags.WidthFixed, 64);
+				ImGui.TableSetupColumn("Type", ImGuiTableColumnFlags.WidthFixed, 128);
+				ImGui.TableSetupColumn("Name", ImGuiTableColumnFlags.WidthStretch);
+
+				ImGui.TableSetupScrollFreeze(0, 1);
+				ImGui.TableHeadersRow();
+
+				for (int i = 0; i < _newComponentTypeFields.Count; i++)
 				{
-					if (ImGui.Selectable(type.Value))
-						_newComponentTypeFields[i].Type = type.Key;
+					ComponentField componentField = _newComponentTypeFields[i];
+
+					ImGui.TableNextRow();
+
+					ImGui.TableNextColumn();
+					if (ImGui.Button(Inline.Span($"X##{i}")))
+						_newComponentTypeFields.RemoveAt(i);
+					if (ImGui.IsItemHovered())
+						ImGui.SetTooltip("Remove this field");
+
+					ImGui.TableNextColumn();
+					if (ImGui.BeginCombo(Inline.Span($"##Type{i}"), componentField.Type?.Name ?? "<NONE>", ImGuiComboFlags.HeightLarge))
+					{
+						foreach (KeyValuePair<Type, string> type in _primitives)
+						{
+							if (ImGui.Selectable(type.Value))
+								_newComponentTypeFields[i].Type = type.Key;
+						}
+
+						ImGui.EndCombo();
+					}
+
+					ImGui.TableNextColumn();
+					string temp = componentField.Name;
+					if (ImGui.InputText(Inline.Span($"##Name{i}"), ref temp, 100))
+						_newComponentTypeFields[i].Name = temp;
 				}
 
-				ImGui.EndCombo();
+				ImGui.EndTable();
 			}
 
-			ImGui.PopItemWidth();
+			if (ImGui.Button("+", new Vector2(32, 32)))
+				_newComponentTypeFields.Add(new ComponentField());
+
+			if (ImGui.IsItemHovered())
+				ImGui.SetTooltip("Add new field");
+		}
+
+		ImGui.EndChild();
+
+		if (ImGui.BeginChild("NewComponentChildWindowBottom"))
+		{
+			ImGui.Separator();
+
+			bool isValidComponent =
+				ComponentTypeBuilder.IsValidTypeName(_newComponentTypeName) &&
+				_newComponentTypeFields.Select(f => f.Name).Distinct().Count() == _newComponentTypeFields.Count &&
+				_newComponentTypeFields.All(f => ComponentTypeBuilder.IsValidFieldName(f.Name));
+			ImGui.BeginDisabled(!isValidComponent);
+			if (ImGui.Button("Create Component"))
+			{
+				if (isValidComponent)
+				{
+					ImGui.CloseCurrentPopup();
+					TypeInfo newType = ConstructComponent();
+					Reset();
+					return newType;
+				}
+			}
+
+			ImGui.EndDisabled();
 
 			ImGui.SameLine();
 
-			ImGui.PushItemWidth(240);
-			string temp = componentField.Name;
-			if (ImGui.InputText(Inline.Span($"Field Name##{i}"), ref temp, 100))
-				_newComponentTypeFields[i].Name = temp;
-			ImGui.PopItemWidth();
-		}
-
-		if (ImGui.Button("Add Field"))
-			_newComponentTypeFields.Add(new ComponentField());
-
-		if (ImGui.Button("Create Component"))
-		{
-			if (!string.IsNullOrWhiteSpace(_newComponentTypeName))
-			{
+			if (ImGui.Button("Cancel"))
 				ImGui.CloseCurrentPopup();
-				TypeInfo newType = ConstructComponent();
-				Reset();
-				return newType;
-			}
 		}
 
-		if (ImGui.Button("Cancel"))
-			ImGui.CloseCurrentPopup();
+		ImGui.EndChild();
 
 		return null;
 	}

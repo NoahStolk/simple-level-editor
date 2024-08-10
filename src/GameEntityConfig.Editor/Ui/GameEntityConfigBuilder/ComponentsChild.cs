@@ -75,7 +75,6 @@ public sealed class ComponentsChild
 		ImGui.TableNextRow();
 
 		ImGui.TableNextColumn();
-
 		if (isDefaultComponent)
 		{
 			ImGui.Text("Default component");
@@ -89,11 +88,9 @@ public sealed class ComponentsChild
 		}
 
 		ImGui.TableNextColumn();
-
 		ImGui.Text(componentType.Name);
 
 		ImGui.TableNextColumn();
-
 		if (fields.Length == 0)
 		{
 			ImGui.TextColored(Rgba.Gray(0.5f), "No fields");
