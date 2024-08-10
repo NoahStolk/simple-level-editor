@@ -68,17 +68,32 @@ public sealed class GameEntityConfigBuilder
 
 	public GameEntityConfigBuilder WithEntityDescriptor(EntityDescriptor entityDescriptor)
 	{
-		if (_entityDescriptors.Any(ed => ed.Name == entityDescriptor.Name))
+		if (_entityDescriptors.Exists(ed => ed.Name == entityDescriptor.Name))
 			throw new ArgumentException($"Entity descriptor '{entityDescriptor.Name}' already exists.");
 
-		if (entityDescriptor.FixedComponents.Any(fc => !_componentTypes.Contains(fc.GetType())))
-			throw new ArgumentException($"Entity descriptor '{entityDescriptor.Name}' contains fixed components with unknown types.");
+		foreach (FixedComponent fixedComponent in entityDescriptor.FixedComponents)
+			ValidateType(fixedComponent.GetType(), typeof(FixedComponent<>));
 
-		if (entityDescriptor.VaryingComponents.Any(vc => !_componentTypes.Contains(vc.GetType())))
-			throw new ArgumentException($"Entity descriptor '{entityDescriptor.Name}' contains varying components with unknown types.");
+		foreach (VaryingComponent varyingComponent in entityDescriptor.VaryingComponents)
+			ValidateType(varyingComponent.GetType(), typeof(VaryingComponent<>), typeof(VaryingComponent<,>));
 
 		_entityDescriptors.Add(entityDescriptor);
 		return this;
+
+		void ValidateType(Type componentType, params Type[] genericTypes)
+		{
+			Type genericType = componentType.GetGenericTypeDefinition();
+			if (genericTypes.Contains(genericType))
+			{
+				TypeInfo type = componentType.GetGenericArguments()[0].GetTypeInfo();
+				if (!_componentTypes.Contains(type))
+					throw new ArgumentException($"Entity descriptor '{entityDescriptor.Name}' contains fixed components of type '{type.Name}' which is not registered.");
+			}
+			else
+			{
+				throw new ArgumentException($"Entity descriptor '{entityDescriptor.Name}' contains fixed components without a type parameter.");
+			}
+		}
 	}
 
 	public Core.GameEntityConfig Build()

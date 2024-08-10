@@ -37,9 +37,9 @@ public class GameEntityConfigTests
 		Assert.AreEqual("Light", config.EntityDescriptors[1].Name);
 		Assert.AreEqual("WorldObject", config.EntityDescriptors[2].Name);
 
-		// TODO: Not sure if we should use JSON for this.
-		string json = JsonSerializer.Serialize(config, _jsonSerializerOptions);
-		Console.WriteLine(json);
+		// TODO: We can't use JSON for this.
+		// string json = JsonSerializer.Serialize(config, _jsonSerializerOptions);
+		// Console.WriteLine(json);
 	}
 
 	private static EntityDescriptor CreatePlayer()
