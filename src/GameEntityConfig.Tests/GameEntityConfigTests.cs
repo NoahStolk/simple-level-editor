@@ -9,11 +9,78 @@ namespace GameEntityConfig.Tests;
 [TestClass]
 public class GameEntityConfigTests
 {
-	// TODO: Add failing tests where an entity descriptor is created with unknown component types.
-	// TODO: Add failing tests where an entity descriptor is created with duplicate component types.
-	// TODO: Add failing tests where an entity descriptor is created before its component types are added.
-	// TODO: Add failing tests where component types are duplicated.
-	// TODO: Add failing tests where model/texture paths are duplicated.
+	[TestMethod]
+	public void FailOnIncorrectOrder()
+	{
+		GameEntityConfigBuilder builder = new();
+		Assert.ThrowsException<ArgumentException>(() =>
+		{
+			builder
+				.WithName("Test")
+				.WithDefaultComponentTypes()
+				.WithEntityDescriptor(CreatePlayer())
+				.WithComponentType<Health>()
+				.Build();
+		});
+	}
+
+	[TestMethod]
+	public void FailOnMissingComponentTypes()
+	{
+		GameEntityConfigBuilder builder = new();
+		Assert.ThrowsException<ArgumentException>(() =>
+		{
+			builder
+				.WithName("Test")
+				.WithEntityDescriptor(CreatePlayer())
+				.Build();
+		});
+	}
+
+	[TestMethod]
+	public void FailOnDuplicateComponentTypes()
+	{
+		GameEntityConfigBuilder builder = new();
+		Assert.ThrowsException<ArgumentException>(() =>
+		{
+			builder
+				.WithName("Test")
+				.WithDefaultComponentTypes()
+				.WithComponentType<Health>()
+				.WithComponentType<Radius>()
+				.WithComponentType<Health>()
+				.Build();
+		});
+	}
+
+	[TestMethod]
+	public void FailOnDuplicateModelPaths()
+	{
+		GameEntityConfigBuilder builder = new();
+		Assert.ThrowsException<ArgumentException>(() =>
+		{
+			builder
+				.WithName("Test")
+				.WithModelPath("Player.obj")
+				.WithModelPath("Player.obj")
+				.Build();
+		});
+	}
+
+	[TestMethod]
+	public void FailOnDuplicateTexturePaths()
+	{
+		GameEntityConfigBuilder builder = new();
+		Assert.ThrowsException<ArgumentException>(() =>
+		{
+			builder
+				.WithName("Test")
+				.WithTexturePath("Audio.png")
+				.WithTexturePath("Audio.png")
+				.Build();
+		});
+	}
+
 	[TestMethod]
 	public void BuildGameEntityConfig()
 	{

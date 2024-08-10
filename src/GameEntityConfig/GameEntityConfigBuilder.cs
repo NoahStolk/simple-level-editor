@@ -1,5 +1,6 @@
 using GameEntityConfig.Core;
 using GameEntityConfig.Core.Components;
+using GameEntityConfig.Extensions;
 using System.Reflection;
 
 namespace GameEntityConfig;
@@ -85,13 +86,13 @@ public sealed class GameEntityConfigBuilder
 			Type genericType = componentType.GetGenericTypeDefinition();
 			if (genericTypes.Contains(genericType))
 			{
-				TypeInfo type = componentType.GetGenericArguments()[0].GetTypeInfo();
+				TypeInfo type = componentType.GetFirstTypeParameter().GetTypeInfo();
 				if (!_componentTypes.Contains(type))
-					throw new ArgumentException($"Entity descriptor '{entityDescriptor.Name}' contains fixed components of type '{type.Name}' which is not registered.");
+					throw new ArgumentException($"Entity descriptor '{entityDescriptor.Name}' contains component of type '{type.FullName ?? type.Name}' which is not registered.");
 			}
 			else
 			{
-				throw new ArgumentException($"Entity descriptor '{entityDescriptor.Name}' contains fixed components without a type parameter.");
+				throw new InvalidOperationException($"Entity descriptor '{entityDescriptor.Name}' contains component of invalid type: {componentType.Name}");
 			}
 		}
 	}

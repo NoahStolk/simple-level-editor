@@ -1,4 +1,5 @@
 using GameEntityConfig.Core;
+using GameEntityConfig.Extensions;
 using System.Numerics;
 
 namespace GameEntityConfig;
@@ -51,7 +52,7 @@ public sealed class EntityDescriptorBuilder
 
 	private void AssertUniqueComponentType(Type newType)
 	{
-		if (_fixedComponents.Any(fc => fc.GetType() == newType) || _varyingComponents.Any(vc => vc.GetType() == newType))
+		if (_fixedComponents.Exists(fc => fc.GetType().GetFirstTypeParameter() == newType) || _varyingComponents.Exists(vc => vc.GetType().GetFirstTypeParameter() == newType))
 			throw new ArgumentException($"Fixed component of type '{newType.Name}' already exists.");
 	}
 }
