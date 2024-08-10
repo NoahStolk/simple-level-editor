@@ -61,7 +61,7 @@ public sealed class ComponentsChild
 		{
 			TypeInfo? newComponent = _createNewComponentPopup.Render();
 
-			if (newComponent != null && _componentTypes.All(ct => ct.Name != newComponent.Name))
+			if (newComponent != null && _componentTypes.TrueForAll(ct => ct.Name != newComponent.Name))
 				_componentTypes.Add(newComponent);
 
 			ImGui.EndPopup();

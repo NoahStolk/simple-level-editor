@@ -1,11 +1,14 @@
 using GameEntityConfig.Core;
 using ImGuiNET;
+using System.Numerics;
 
 namespace GameEntityConfig.Editor.Ui.GameEntityConfigBuilder;
 
 public sealed class EntityDescriptorsChild
 {
 	private readonly List<EntityDescriptor> _entityDescriptors = [];
+
+	private readonly CreateNewEntityDescriptorPopup _createNewEntityDescriptorPopup = new();
 
 	public void Render()
 	{
@@ -46,6 +49,18 @@ public sealed class EntityDescriptorsChild
 			ImGui.Unindent();
 		}
 
-		ImGui.SeparatorText("Construct New Entity Descriptor");
+		if (ImGui.Button("Create New Entity Descriptor"))
+			ImGui.OpenPopup("Create New Entity Descriptor");
+
+		ImGui.SetNextWindowSizeConstraints(new Vector2(640, 240), new Vector2(float.MaxValue, float.MaxValue));
+		if (ImGui.BeginPopupModal("Create New Entity Descriptor"))
+		{
+			EntityDescriptor? newEntityDescriptor = _createNewEntityDescriptorPopup.Render();
+
+			if (newEntityDescriptor != null && _entityDescriptors.TrueForAll(ct => ct.Name != newEntityDescriptor.Name))
+				_entityDescriptors.Add(newEntityDescriptor);
+
+			ImGui.EndPopup();
+		}
 	}
 }
