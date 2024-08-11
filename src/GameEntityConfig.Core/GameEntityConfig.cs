@@ -1,15 +1,13 @@
-using System.Reflection;
-
 namespace GameEntityConfig.Core;
 
 public sealed record GameEntityConfig
 {
-	internal GameEntityConfig(string name, IReadOnlyList<string> modelPaths, IReadOnlyList<string> texturePaths, IReadOnlyList<TypeInfo> componentTypes, IReadOnlyList<EntityDescriptor> entityDescriptors)
+	internal GameEntityConfig(string name, IReadOnlyList<string> modelPaths, IReadOnlyList<string> texturePaths, IReadOnlyList<DataType> dataTypes, IReadOnlyList<EntityDescriptor> entityDescriptors)
 	{
 		Name = name;
 		ModelPaths = modelPaths;
 		TexturePaths = texturePaths;
-		ComponentTypes = componentTypes;
+		DataTypes = dataTypes;
 		EntityDescriptors = entityDescriptors;
 	}
 
@@ -19,7 +17,7 @@ public sealed record GameEntityConfig
 
 	public IReadOnlyList<string> TexturePaths { get; }
 
-	public IReadOnlyList<TypeInfo> ComponentTypes { get; }
+	public IReadOnlyList<DataType> DataTypes { get; }
 
 	public IReadOnlyList<EntityDescriptor> EntityDescriptors { get; }
 }

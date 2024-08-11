@@ -1,6 +1,4 @@
 using GameEntityConfig.Core;
-using GameEntityConfig.Extensions;
-using System.Numerics;
 
 namespace GameEntityConfig;
 
@@ -20,28 +18,27 @@ public sealed class EntityDescriptorBuilder
 		return this;
 	}
 
-	public EntityDescriptorBuilder WithFixedComponent<T>(T value)
+	public EntityDescriptorBuilder WithFixedComponent(DataType dataType, string value)
 	{
-		AssertUniqueComponentType(typeof(T));
+		AssertUniqueComponentType(dataType);
 
-		_fixedComponents.Add(new FixedComponent<T>(value));
+		_fixedComponents.Add(new FixedComponent(dataType, value));
 		return this;
 	}
 
-	public EntityDescriptorBuilder WithVaryingComponent<T>(T defaultValue)
+	public EntityDescriptorBuilder WithVaryingComponent(DataType dataType, string defaultValue)
 	{
-		AssertUniqueComponentType(typeof(T));
+		AssertUniqueComponentType(dataType);
 
-		_varyingComponents.Add(new VaryingComponent<T>(defaultValue));
+		_varyingComponents.Add(new VaryingComponent(dataType, defaultValue, null));
 		return this;
 	}
 
-	public EntityDescriptorBuilder WithVaryingComponent<T, TSlider>(T defaultValue, TSlider step, TSlider min, TSlider max)
-		where TSlider : struct, INumber<TSlider>
+	public EntityDescriptorBuilder WithVaryingComponent(DataType dataType, string defaultValue, float step, float min, float max)
 	{
-		AssertUniqueComponentType(typeof(T));
+		AssertUniqueComponentType(dataType);
 
-		_varyingComponents.Add(new VaryingComponent<T, TSlider>(defaultValue, new SliderConfiguration<TSlider>(step, min, max)));
+		_varyingComponents.Add(new VaryingComponent(dataType, defaultValue, new SliderConfiguration(step, min, max)));
 		return this;
 	}
 
@@ -50,9 +47,9 @@ public sealed class EntityDescriptorBuilder
 		return new EntityDescriptor(Name, _fixedComponents, _varyingComponents);
 	}
 
-	private void AssertUniqueComponentType(Type newType)
+	private void AssertUniqueComponentType(DataType dataType)
 	{
-		if (_fixedComponents.Exists(fc => fc.GetType().GetFirstTypeParameter() == newType) || _varyingComponents.Exists(vc => vc.GetType().GetFirstTypeParameter() == newType))
-			throw new ArgumentException($"Fixed component of type '{newType.Name}' already exists.");
+		if (_fixedComponents.Exists(fc => fc.DataType.Name == dataType.Name) || _varyingComponents.Exists(vc => vc.DataType.Name == dataType.Name))
+			throw new ArgumentException($"Fixed component of type '{dataType.Name}' already exists.");
 	}
 }

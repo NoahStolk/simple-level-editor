@@ -18,8 +18,6 @@ public static class DataTypeUtils
 		{ typeof(Half), "f16" },
 		{ typeof(float), "f32" },
 		{ typeof(double), "f64" },
-		{ typeof(decimal), "d128" },
-		{ typeof(char), "char" },
 		{ typeof(string), "str" },
 	};
 

@@ -1,13 +1,13 @@
 namespace GameEntityConfig.Core;
 
-public abstract record FixedComponent;
-
-public sealed record FixedComponent<T> : FixedComponent
+public sealed record FixedComponent
 {
-	internal FixedComponent(T value)
+	public FixedComponent(DataType dataType, string value)
 	{
+		DataType = dataType;
 		Value = value;
 	}
 
-	public T Value { get; }
+	public DataType DataType { get; }
+	public string Value { get; }
 }

@@ -1,15 +1,15 @@
 namespace GameEntityConfig.Core;
 
-public record struct SliderConfiguration<T>
+public record SliderConfiguration
 {
-	public SliderConfiguration(T step, T min, T max)
+	public readonly float Step;
+	public readonly float Min;
+	public readonly float Max;
+
+	public SliderConfiguration(float step, float min, float max)
 	{
 		Step = step;
 		Min = min;
 		Max = max;
 	}
-
-	public readonly T Step;
-	public readonly T Min;
-	public readonly T Max;
 }

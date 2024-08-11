@@ -1,5 +1,4 @@
 using GameEntityConfig.Core;
-using System.Reflection;
 
 namespace GameEntityConfig.Editor.States;
 
@@ -9,6 +8,6 @@ public sealed class GameEntityConfigBuilderState
 	public List<string> ModelPaths = [];
 	public List<string> TexturePaths = [];
 	public bool EnableDefaultComponents;
-	public List<TypeInfo> ComponentTypes = [];
+	public List<DataType> DataTypes = [];
 	public List<EntityDescriptor> EntityDescriptors = [];
 }

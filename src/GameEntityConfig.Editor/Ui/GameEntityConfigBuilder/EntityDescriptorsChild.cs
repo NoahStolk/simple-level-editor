@@ -1,7 +1,8 @@
+using Detach;
 using GameEntityConfig.Core;
 using GameEntityConfig.Editor.States;
-using GameEntityConfig.Extensions;
 using ImGuiNET;
+using System.Globalization;
 using System.Numerics;
 
 namespace GameEntityConfig.Editor.Ui.GameEntityConfigBuilder;
@@ -28,20 +29,68 @@ public sealed class EntityDescriptorsChild
 
 			ImGui.SeparatorText("Fixed Components");
 
-			for (int j = entityDescriptor.FixedComponents.Count - 1; j >= 0; j--)
+			if (ImGui.BeginTable("FixedComponentsTable", 2, ImGuiTableFlags.Borders))
 			{
-				FixedComponent fixedComponent = entityDescriptor.FixedComponents[j];
-				string fixedComponentTypeName = fixedComponent.GetType().GetFirstTypeParameter().Name;
-				ImGui.Text(fixedComponentTypeName);
+				ImGui.TableSetupColumn("Type", ImGuiTableColumnFlags.WidthFixed, 128);
+				ImGui.TableSetupColumn("Value", ImGuiTableColumnFlags.WidthStretch);
+
+				ImGui.TableSetupScrollFreeze(0, 1);
+				ImGui.TableHeadersRow();
+
+				for (int j = entityDescriptor.FixedComponents.Count - 1; j >= 0; j--)
+				{
+					FixedComponent fixedComponent = entityDescriptor.FixedComponents[i];
+
+					ImGui.TableNextRow();
+
+					ImGui.TableNextColumn();
+					ImGui.Text(fixedComponent.DataType.Name);
+
+					ImGui.TableNextColumn();
+					ImGui.Text(fixedComponent.Value);
+				}
+
+				ImGui.EndTable();
 			}
 
 			ImGui.SeparatorText("Varying Components");
 
-			for (int j = entityDescriptor.VaryingComponents.Count - 1; j >= 0; j--)
+			if (ImGui.BeginTable("VaryingComponentsTable", 5, ImGuiTableFlags.Borders))
 			{
-				VaryingComponent varyingComponent = entityDescriptor.VaryingComponents[j];
-				string varyingComponentTypeName = varyingComponent.GetType().GetFirstTypeParameter().Name;
-				ImGui.Text(varyingComponentTypeName);
+				ImGui.TableSetupColumn("Type", ImGuiTableColumnFlags.WidthFixed, 128);
+				ImGui.TableSetupColumn("Default", ImGuiTableColumnFlags.WidthFixed, 128);
+				ImGui.TableSetupColumn("Step", ImGuiTableColumnFlags.WidthFixed, 128);
+				ImGui.TableSetupColumn("Min", ImGuiTableColumnFlags.WidthFixed, 128);
+				ImGui.TableSetupColumn("Max", ImGuiTableColumnFlags.WidthFixed, 128);
+
+				ImGui.TableSetupScrollFreeze(0, 1);
+				ImGui.TableHeadersRow();
+
+				for (int j = entityDescriptor.VaryingComponents.Count - 1; j >= 0; j--)
+				{
+					VaryingComponent varyingComponent = entityDescriptor.VaryingComponents[j];
+
+					ImGui.TableNextRow();
+
+					ImGui.TableNextColumn();
+					ImGui.Text(varyingComponent.DataType.Name);
+
+					ImGui.TableNextColumn();
+					ImGui.Text(varyingComponent.DefaultValue);
+
+					ImGui.TableNextColumn();
+					ImGui.Text(Inline.Span(varyingComponent.SliderConfiguration?.Step.ToString(CultureInfo.InvariantCulture) ?? "N/A"));
+
+					ImGui.TableNextColumn();
+					ImGui.Text(Inline.Span(varyingComponent.SliderConfiguration?.Min.ToString(CultureInfo.InvariantCulture) ?? "N/A"));
+
+					ImGui.TableNextColumn();
+					ImGui.Text(Inline.Span(varyingComponent.SliderConfiguration?.Max.ToString(CultureInfo.InvariantCulture) ?? "N/A"));
+
+					ImGui.TableNextColumn();
+				}
+
+				ImGui.EndTable();
 			}
 
 			ImGui.Unindent();

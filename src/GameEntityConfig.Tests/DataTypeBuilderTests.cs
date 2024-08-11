@@ -1,20 +1,19 @@
-using GameEntityConfig.Emit;
+using GameEntityConfig.Core;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Reflection;
 
 namespace GameEntityConfig.Tests;
 
 [TestClass]
-public class ComponentTypeBuilderTests
+public class DataTypeBuilderTests
 {
 	[TestMethod]
 	public void FailOnDuplicateFieldName()
 	{
-		Assert.ThrowsException<ArgumentException>(() => ComponentTypeBuilder.CompileResultTypeInfo(
+		Assert.ThrowsException<ArgumentException>(() => DataTypeBuilder.Build(
 			"Test",
 			[
-				new FieldDescriptor("Field", typeof(int)),
-				new FieldDescriptor("Field", typeof(int)),
+				new DataTypeField("Field", new Primitive.I32()),
+				new DataTypeField("Field", new Primitive.I32()),
 			]));
 	}
 
@@ -43,9 +42,9 @@ public class ComponentTypeBuilderTests
 	public void FailOnInvalidTypeName(bool expected, string typeName)
 	{
 		if (!expected)
-			Assert.ThrowsException<ArgumentException>(() => ComponentTypeBuilder.CompileResultTypeInfo(typeName, [new FieldDescriptor("Test1", typeof(int))]));
+			Assert.ThrowsException<ArgumentException>(() => DataTypeBuilder.Build(typeName, [new DataTypeField("Test1", new Primitive.I32())]));
 		else
-			Assert.IsNotNull(ComponentTypeBuilder.CompileResultTypeInfo(typeName, [new FieldDescriptor("Test1", typeof(int))]));
+			Assert.IsNotNull(DataTypeBuilder.Build(typeName, [new DataTypeField("Test1", new Primitive.I32())]));
 	}
 
 	[DataTestMethod]
@@ -77,24 +76,24 @@ public class ComponentTypeBuilderTests
 	public void FailOnInvalidFieldName(bool expected, string fieldName)
 	{
 		if (!expected)
-			Assert.ThrowsException<ArgumentException>(() => ComponentTypeBuilder.CompileResultTypeInfo("Test", [new FieldDescriptor(fieldName, typeof(int))]));
+			Assert.ThrowsException<ArgumentException>(() => DataTypeBuilder.Build("Test", [new DataTypeField(fieldName, new Primitive.I32())]));
 		else
-			Assert.IsNotNull(ComponentTypeBuilder.CompileResultTypeInfo("Test", [new FieldDescriptor(fieldName, typeof(int))]));
+			Assert.IsNotNull(DataTypeBuilder.Build("Test", [new DataTypeField(fieldName, new Primitive.I32())]));
 	}
 
 	[TestMethod]
 	public void BuildType()
 	{
-		TypeInfo typeInfo = ComponentTypeBuilder.CompileResultTypeInfo(
+		DataType typeInfo = DataTypeBuilder.Build(
 			"Test",
 			[
-				new FieldDescriptor("Test1", typeof(int)),
-				new FieldDescriptor("Test2", typeof(float)),
-				new FieldDescriptor("Test3", typeof(string)),
+				new DataTypeField("Test1", new Primitive.I32()),
+				new DataTypeField("Test2", new Primitive.F32()),
+				new DataTypeField("Test3", new Primitive.Str()),
 			]);
 
 		Assert.IsNotNull(typeInfo);
 		Assert.AreEqual("Test", typeInfo.Name);
-		Assert.AreEqual(3, typeInfo.DeclaredFields.Count());
+		Assert.AreEqual(3, typeInfo.Fields.Count);
 	}
 }

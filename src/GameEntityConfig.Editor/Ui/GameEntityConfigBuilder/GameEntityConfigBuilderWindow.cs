@@ -9,7 +9,7 @@ public sealed class GameEntityConfigBuilderWindow
 
 	private readonly ModelsChild _modelsChild = new();
 	private readonly TexturesChild _texturesChild = new();
-	private readonly ComponentsChild _componentsChild = new();
+	private readonly DataTypesChild _dataTypesChild = new();
 	private readonly EntityDescriptorsChild _entityDescriptorsChild = new();
 
 	public void Render()
@@ -37,7 +37,7 @@ public sealed class GameEntityConfigBuilderWindow
 
 			_modelsChild.Render(_state);
 			_texturesChild.Render(_state);
-			_componentsChild.Render(_state);
+			_dataTypesChild.Render(_state);
 			_entityDescriptorsChild.Render(_state);
 		}
 

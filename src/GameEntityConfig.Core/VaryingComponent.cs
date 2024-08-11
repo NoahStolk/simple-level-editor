@@ -1,29 +1,15 @@
-using System.Numerics;
-
 namespace GameEntityConfig.Core;
 
-public abstract record VaryingComponent;
-
-public sealed record VaryingComponent<T> : VaryingComponent
+public sealed record VaryingComponent
 {
-	internal VaryingComponent(T defaultValue)
+	public VaryingComponent(DataType dataType, string defaultValue, SliderConfiguration? sliderConfiguration)
 	{
-		DefaultValue = defaultValue;
-	}
-
-	public T DefaultValue { get; }
-}
-
-public sealed record VaryingComponent<T, TSlider> : VaryingComponent
-	where TSlider : struct, INumber<TSlider>
-{
-	internal VaryingComponent(T defaultValue, SliderConfiguration<TSlider>? sliderConfiguration)
-	{
+		DataType = dataType;
 		DefaultValue = defaultValue;
 		SliderConfiguration = sliderConfiguration;
 	}
 
-	public T DefaultValue { get; }
-
-	public SliderConfiguration<TSlider>? SliderConfiguration { get; }
+	public DataType DataType { get; }
+	public string DefaultValue { get; }
+	public SliderConfiguration? SliderConfiguration { get; }
 }

@@ -1,7 +1,4 @@
 using GameEntityConfig.Core;
-using GameEntityConfig.Core.Components;
-using GameEntityConfig.Extensions;
-using System.Reflection;
 
 namespace GameEntityConfig;
 
@@ -9,14 +6,14 @@ public sealed class GameEntityConfigBuilder
 {
 	private readonly List<string> _modelPaths = [];
 	private readonly List<string> _texturePaths = [];
-	private readonly List<TypeInfo> _componentTypes = [];
+	private readonly List<DataType> _dataTypes = [];
 	private readonly List<EntityDescriptor> _entityDescriptors = [];
 
 	public string Name { get; private set; } = string.Empty;
 
 	public IReadOnlyList<string> ModelPaths => _modelPaths;
 	public IReadOnlyList<string> TexturePaths => _texturePaths;
-	public IReadOnlyList<TypeInfo> ComponentTypes => _componentTypes;
+	public IReadOnlyList<DataType> DataTypes => _dataTypes;
 	public IReadOnlyList<EntityDescriptor> EntityDescriptors => _entityDescriptors;
 
 	public GameEntityConfigBuilder WithName(string name)
@@ -43,27 +40,23 @@ public sealed class GameEntityConfigBuilder
 		return this;
 	}
 
-	public GameEntityConfigBuilder WithDefaultComponentTypes()
+	public GameEntityConfigBuilder WithDefaultDataTypes()
 	{
-		return WithComponentType<DiffuseColor>()
-			.WithComponentType<Position>()
-			.WithComponentType<Rotation>()
-			.WithComponentType<Scale>()
-			.WithComponentType<Shape>()
-			.WithComponentType<Visualizer>();
+		return WithDataType(DataType.DiffuseColor)
+			.WithDataType(DataType.Position)
+			.WithDataType(DataType.Rotation)
+			.WithDataType(DataType.Scale)
+			.WithDataType(DataType.Model)
+			.WithDataType(DataType.Billboard)
+			.WithDataType(DataType.Wireframe);
 	}
 
-	public GameEntityConfigBuilder WithComponentType<T>()
+	public GameEntityConfigBuilder WithDataType(DataType dataType)
 	{
-		return WithComponentType(typeof(T).GetTypeInfo());
-	}
+		if (_dataTypes.Contains(dataType))
+			throw new ArgumentException($"Component type '{dataType}' already exists.");
 
-	public GameEntityConfigBuilder WithComponentType(TypeInfo type)
-	{
-		if (_componentTypes.Contains(type))
-			throw new ArgumentException($"Component type '{type.Name}' already exists.");
-
-		_componentTypes.Add(type);
+		_dataTypes.Add(dataType);
 		return this;
 	}
 
@@ -73,32 +66,23 @@ public sealed class GameEntityConfigBuilder
 			throw new ArgumentException($"Entity descriptor '{entityDescriptor.Name}' already exists.");
 
 		foreach (FixedComponent fixedComponent in entityDescriptor.FixedComponents)
-			ValidateType(fixedComponent.GetType(), typeof(FixedComponent<>));
+			ValidateDataType(fixedComponent.DataType);
 
 		foreach (VaryingComponent varyingComponent in entityDescriptor.VaryingComponents)
-			ValidateType(varyingComponent.GetType(), typeof(VaryingComponent<>), typeof(VaryingComponent<,>));
+			ValidateDataType(varyingComponent.DataType);
 
 		_entityDescriptors.Add(entityDescriptor);
 		return this;
 
-		void ValidateType(Type componentType, params Type[] genericTypes)
+		void ValidateDataType(DataType dataType)
 		{
-			Type genericType = componentType.GetGenericTypeDefinition();
-			if (genericTypes.Contains(genericType))
-			{
-				TypeInfo type = componentType.GetFirstTypeParameter().GetTypeInfo();
-				if (!_componentTypes.Contains(type))
-					throw new ArgumentException($"Entity descriptor '{entityDescriptor.Name}' contains component of type '{type.FullName ?? type.Name}' which is not registered.");
-			}
-			else
-			{
-				throw new InvalidOperationException($"Entity descriptor '{entityDescriptor.Name}' contains component of invalid type: {componentType.Name}");
-			}
+			if (!_dataTypes.Exists(dt => dt.Name == dataType.Name))
+				throw new ArgumentException($"Entity descriptor '{entityDescriptor.Name}' contains component of type '{dataType.Name}' which is not registered.");
 		}
 	}
 
 	public Core.GameEntityConfig Build()
 	{
-		return new Core.GameEntityConfig(Name, _modelPaths, _texturePaths, _componentTypes, _entityDescriptors);
+		return new Core.GameEntityConfig(Name, _modelPaths, _texturePaths, _dataTypes, _entityDescriptors);
 	}
 }

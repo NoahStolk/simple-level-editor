@@ -1,14 +1,14 @@
 using GameEntityConfig.Core;
-using GameEntityConfig.Core.Components;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Numerics;
-using System.Reflection;
 
 namespace GameEntityConfig.Tests;
 
 [TestClass]
 public class GameEntityConfigTests
 {
+	private static readonly DataType _health = new("Health", [new DataTypeField("Value", new Primitive.U32())]);
+	private static readonly DataType _radius = new("Radius", [new DataTypeField("Value", new Primitive.F32())]);
+
 	[TestMethod]
 	public void FailOnIncorrectOrder()
 	{
@@ -17,9 +17,9 @@ public class GameEntityConfigTests
 		{
 			builder
 				.WithName("Test")
-				.WithDefaultComponentTypes()
+				.WithDefaultDataTypes()
 				.WithEntityDescriptor(CreatePlayer())
-				.WithComponentType<Health>()
+				.WithDataType(_health)
 				.Build();
 		});
 	}
@@ -45,10 +45,10 @@ public class GameEntityConfigTests
 		{
 			builder
 				.WithName("Test")
-				.WithDefaultComponentTypes()
-				.WithComponentType<Health>()
-				.WithComponentType<Radius>()
-				.WithComponentType<Health>()
+				.WithDefaultDataTypes()
+				.WithDataType(_health)
+				.WithDataType(_radius)
+				.WithDataType(_health)
 				.Build();
 		});
 	}
@@ -87,9 +87,9 @@ public class GameEntityConfigTests
 		GameEntityConfigBuilder builder = new();
 		Core.GameEntityConfig config = builder
 			.WithName("Test")
-			.WithDefaultComponentTypes()
-			.WithComponentType<Health>()
-			.WithComponentType<Radius>()
+			.WithDefaultDataTypes()
+			.WithDataType(_health)
+			.WithDataType(_radius)
 			.WithModelPath("Player.obj")
 			.WithTexturePath("Audio.png")
 			.WithEntityDescriptor(CreatePlayer())
@@ -102,15 +102,16 @@ public class GameEntityConfigTests
 		Assert.AreEqual("Player.obj", config.ModelPaths[0]);
 		Assert.AreEqual(1, config.TexturePaths.Count);
 		Assert.AreEqual("Audio.png", config.TexturePaths[0]);
-		Assert.AreEqual(8, config.ComponentTypes.Count);
-		Assert.AreEqual(typeof(DiffuseColor).GetTypeInfo(), config.ComponentTypes[0]);
-		Assert.AreEqual(typeof(Position).GetTypeInfo(), config.ComponentTypes[1]);
-		Assert.AreEqual(typeof(Rotation).GetTypeInfo(), config.ComponentTypes[2]);
-		Assert.AreEqual(typeof(Scale).GetTypeInfo(), config.ComponentTypes[3]);
-		Assert.AreEqual(typeof(Shape).GetTypeInfo(), config.ComponentTypes[4]);
-		Assert.AreEqual(typeof(Visualizer).GetTypeInfo(), config.ComponentTypes[5]);
-		Assert.AreEqual(typeof(Health).GetTypeInfo(), config.ComponentTypes[6]);
-		Assert.AreEqual(typeof(Radius).GetTypeInfo(), config.ComponentTypes[7]);
+		Assert.AreEqual(9, config.DataTypes.Count);
+		Assert.AreEqual("DiffuseColor", config.DataTypes[0].Name);
+		Assert.AreEqual("Position", config.DataTypes[1].Name);
+		Assert.AreEqual("Rotation", config.DataTypes[2].Name);
+		Assert.AreEqual("Scale", config.DataTypes[3].Name);
+		Assert.AreEqual("Model", config.DataTypes[4].Name);
+		Assert.AreEqual("Billboard", config.DataTypes[5].Name);
+		Assert.AreEqual("Wireframe", config.DataTypes[6].Name);
+		Assert.AreEqual("Health", config.DataTypes[7].Name);
+		Assert.AreEqual("Radius", config.DataTypes[8].Name);
 		Assert.AreEqual(3, config.EntityDescriptors.Count);
 		Assert.AreEqual("Player", config.EntityDescriptors[0].Name);
 		Assert.AreEqual("Light", config.EntityDescriptors[1].Name);
@@ -126,11 +127,11 @@ public class GameEntityConfigTests
 		EntityDescriptorBuilder builder = new();
 		return builder
 			.WithName("Player")
-			.WithFixedComponent(new Scale(Vector3.One))
-			.WithFixedComponent(new DiffuseColor(0, 255, 90, 255))
-			.WithFixedComponent(new Health(100))
-			.WithFixedComponent<Visualizer>(new Visualizer.Model("Player.obj"))
-			.WithVaryingComponent(new Position(Vector3.Zero), 0.1f, -100, 100)
+			.WithFixedComponent(DataType.Scale, "1;1;1")
+			.WithFixedComponent(DataType.DiffuseColor, "0;255;90;255")
+			.WithFixedComponent(_health, "100")
+			.WithFixedComponent(DataType.Model, "Player.obj")
+			.WithVaryingComponent(DataType.Position, "0;0;0", 0.1f, -100, 100)
 			.Build();
 	}
 
@@ -139,11 +140,11 @@ public class GameEntityConfigTests
 		EntityDescriptorBuilder builder = new();
 		return builder
 			.WithName("Light")
-			.WithFixedComponent(new Scale(Vector3.One))
-			.WithFixedComponent(new DiffuseColor(255, 255, 255, 255))
-			.WithFixedComponent<Visualizer>(new Visualizer.Billboard("Light.png"))
-			.WithVaryingComponent(new Position(Vector3.Zero), 0.1f, -100, 100)
-			.WithVaryingComponent(new Radius(10), 0.1f, 0, 100)
+			.WithFixedComponent(DataType.Scale, "1;1;1")
+			.WithFixedComponent(DataType.DiffuseColor, "255;255;255;255")
+			.WithFixedComponent(DataType.Billboard, "Light.png")
+			.WithVaryingComponent(DataType.Position, "0;0;0", 0.1f, -100, 100)
+			.WithVaryingComponent(_health, "10", 0.1f, 0, 100)
 			.Build();
 	}
 
@@ -152,14 +153,11 @@ public class GameEntityConfigTests
 		EntityDescriptorBuilder builder = new();
 		return builder
 			.WithName("WorldObject")
-			.WithVaryingComponent(new Position(Vector3.Zero), 0.1f, -100, 100)
-			.WithVaryingComponent(new Rotation(Vector3.Zero), 0.1f, 0, 360)
-			.WithVaryingComponent(new Scale(Vector3.One), 0.1f, 0.1f, 100)
-			.WithVaryingComponent(new DiffuseColor(255, 255, 255, 255))
-			.WithVaryingComponent<Visualizer>(new Visualizer.Model("Placeholder.obj"))
+			.WithVaryingComponent(DataType.Position, "0;0;0", 0.1f, -100, 100)
+			.WithVaryingComponent(DataType.Rotation, "0;0;0", 0.1f, 0, 360)
+			.WithVaryingComponent(DataType.Scale, "1;1;1", 0.1f, 0.1f, 100)
+			.WithVaryingComponent(DataType.DiffuseColor, "255;255;255;255")
+			.WithVaryingComponent(DataType.Model, "Placeholder.obj")
 			.Build();
 	}
-
-	private readonly record struct Health(uint Value);
-	private readonly record struct Radius(float Value);
 }

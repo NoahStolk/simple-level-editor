@@ -1,10 +1,8 @@
 using Detach;
 using GameEntityConfig.Core;
 using GameEntityConfig.Editor.States;
-using GameEntityConfig.Editor.Utils;
 using ImGuiNET;
 using System.Numerics;
-using System.Reflection;
 
 namespace GameEntityConfig.Editor.Ui.GameEntityConfigBuilder;
 
@@ -42,7 +40,7 @@ public sealed class CreateNewEntityDescriptorPopup
 			if (ImGui.Button("Create Entity Descriptor"))
 			{
 				ImGui.CloseCurrentPopup();
-				EntityDescriptor entityDescriptor = ConstructEntityDescriptor();
+				EntityDescriptor entityDescriptor = ConstructEntityDescriptor(state);
 				Reset();
 				return entityDescriptor;
 			}
@@ -86,16 +84,16 @@ public sealed class CreateNewEntityDescriptorPopup
 					ImGui.SetTooltip("Remove this component");
 
 				ImGui.TableNextColumn();
-				if (ImGui.BeginCombo(Inline.Span($"##FixedType{i}"), fixedComponent.Type?.Name ?? "<NONE>", ImGuiComboFlags.HeightLarge))
+				if (ImGui.BeginCombo(Inline.Span($"##FixedType{i}"), fixedComponent.DataTypeName, ImGuiComboFlags.HeightLarge))
 				{
-					List<TypeInfo> allComponentTypes = state.ComponentTypes;
+					List<DataType> allDataTypes = state.DataTypes;
 					if (state.EnableDefaultComponents)
-						allComponentTypes = allComponentTypes.Concat(ComponentUtils.DefaultComponents).ToList();
+						allDataTypes = allDataTypes.Concat(DataType.DefaultDataTypes).ToList();
 
-					foreach (TypeInfo type in allComponentTypes)
+					foreach (DataType dataType in allDataTypes)
 					{
-						if (ImGui.Selectable(type.Name))
-							_fixedComponents[i].Type = type;
+						if (ImGui.Selectable(dataType.Name))
+							_fixedComponents[i].DataTypeName = dataType.Name;
 					}
 
 					ImGui.EndCombo();
@@ -143,16 +141,16 @@ public sealed class CreateNewEntityDescriptorPopup
 					ImGui.SetTooltip("Remove this component");
 
 				ImGui.TableNextColumn();
-				if (ImGui.BeginCombo(Inline.Span($"##VaryingType{i}"), varyingComponent.Type?.Name ?? "<NONE>", ImGuiComboFlags.HeightLarge))
+				if (ImGui.BeginCombo(Inline.Span($"##VaryingType{i}"), varyingComponent.DataTypeName, ImGuiComboFlags.HeightLarge))
 				{
-					List<TypeInfo> allComponentTypes = state.ComponentTypes;
+					List<DataType> allDataTypes = state.DataTypes;
 					if (state.EnableDefaultComponents)
-						allComponentTypes = allComponentTypes.Concat(ComponentUtils.DefaultComponents).ToList();
+						allDataTypes = allDataTypes.Concat(DataType.DefaultDataTypes).ToList();
 
-					foreach (TypeInfo type in allComponentTypes)
+					foreach (DataType dataType in allDataTypes)
 					{
-						if (ImGui.Selectable(type.Name))
-							_varyingComponents[i].Type = type;
+						if (ImGui.Selectable(dataType.Name))
+							_varyingComponents[i].DataTypeName = dataType.Name;
 					}
 
 					ImGui.EndCombo();
@@ -164,19 +162,19 @@ public sealed class CreateNewEntityDescriptorPopup
 					_varyingComponents[i].DefaultValue = temp;
 
 				ImGui.TableNextColumn();
-				temp = varyingComponent.StepValue;
-				if (ImGui.InputText(Inline.Span($"##StepValue{i}"), ref temp, 100))
-					_varyingComponents[i].StepValue = temp;
+				float floatTemp = varyingComponent.StepValue;
+				if (ImGui.InputFloat(Inline.Span($"##StepValue{i}"), ref floatTemp))
+					_varyingComponents[i].StepValue = floatTemp;
 
 				ImGui.TableNextColumn();
-				temp = varyingComponent.MinValue;
-				if (ImGui.InputText(Inline.Span($"##MinValue{i}"), ref temp, 100))
-					_varyingComponents[i].MinValue = temp;
+				floatTemp = varyingComponent.MinValue;
+				if (ImGui.InputFloat(Inline.Span($"##MinValue{i}"), ref floatTemp))
+					_varyingComponents[i].MinValue = floatTemp;
 
 				ImGui.TableNextColumn();
-				temp = varyingComponent.MaxValue;
-				if (ImGui.InputText(Inline.Span($"##MaxValue{i}"), ref temp, 100))
-					_varyingComponents[i].MaxValue = temp;
+				floatTemp = varyingComponent.MaxValue;
+				if (ImGui.InputFloat(Inline.Span($"##MaxValue{i}"), ref floatTemp))
+					_varyingComponents[i].MaxValue = floatTemp;
 			}
 
 			ImGui.EndTable();
@@ -186,40 +184,46 @@ public sealed class CreateNewEntityDescriptorPopup
 			_varyingComponents.Add(new VaryingComponent());
 	}
 
-	private EntityDescriptor ConstructEntityDescriptor()
+	private EntityDescriptor ConstructEntityDescriptor(GameEntityConfigBuilderState state)
 	{
 		EntityDescriptorBuilder builder = _entityDescriptorBuilder.WithName(_name);
 
 		foreach (FixedComponent fixedComponent in _fixedComponents)
 		{
-			if (fixedComponent.Type == null)
-				continue;
-
-			object? value = Activator.CreateInstance(fixedComponent.Type);
-
-			// TODO: Use correct type.
-			builder = builder.WithFixedComponent(value);
+			DataType dataType = GetRequiredDataType(state, fixedComponent.DataTypeName);
+			builder = builder.WithFixedComponent(dataType, fixedComponent.Value);
 		}
 
 		foreach (VaryingComponent varyingComponent in _varyingComponents)
 		{
+			DataType dataType = GetRequiredDataType(state, varyingComponent.DataTypeName);
+			builder = builder.WithVaryingComponent(dataType, varyingComponent.DefaultValue, varyingComponent.StepValue, varyingComponent.MinValue, varyingComponent.MaxValue);
 		}
 
 		return builder.Build();
+
+		static DataType GetRequiredDataType(GameEntityConfigBuilderState state, string dataTypeName)
+		{
+			DataType? dataType = state.DataTypes.Find(dt => dt.Name == dataTypeName) ?? DataType.DefaultDataTypes.FirstOrDefault(dt => dt.Name == dataTypeName);
+			if (dataType == null)
+				throw new InvalidOperationException($"Data type '{dataTypeName}' not found.");
+
+			return dataType;
+		}
 	}
 
 	private sealed record FixedComponent
 	{
-		public Type? Type { get; set; }
+		public string DataTypeName = string.Empty;
 		public string Value = string.Empty;
 	}
 
 	private sealed record VaryingComponent
 	{
-		public Type? Type { get; set; }
+		public string DataTypeName = string.Empty;
 		public string DefaultValue = string.Empty;
-		public string StepValue = string.Empty;
-		public string MinValue = string.Empty;
-		public string MaxValue = string.Empty;
+		public float StepValue = 0.1f;
+		public float MinValue = -100f;
+		public float MaxValue = 100f;
 	}
 }
