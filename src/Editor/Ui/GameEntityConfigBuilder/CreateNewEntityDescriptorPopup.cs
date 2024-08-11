@@ -1,11 +1,10 @@
 using Detach;
+using Editor.States.GameEntityConfigBuilder;
 using Format.GameEntityConfig;
 using Format.GameEntityConfig.Model;
-using GameEntityConfig.Editor.States;
 using ImGuiNET;
-using System.Numerics;
 
-namespace GameEntityConfig.Editor.Ui.GameEntityConfigBuilder;
+namespace Editor.Ui.GameEntityConfigBuilder;
 
 public sealed class CreateNewEntityDescriptorPopup
 {

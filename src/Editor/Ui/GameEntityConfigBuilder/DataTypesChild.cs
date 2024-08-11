@@ -1,10 +1,9 @@
 using Detach.Numerics;
+using Editor.States.GameEntityConfigBuilder;
 using Format.GameEntityConfig.Model;
-using GameEntityConfig.Editor.States;
 using ImGuiNET;
-using System.Numerics;
 
-namespace GameEntityConfig.Editor.Ui.GameEntityConfigBuilder;
+namespace Editor.Ui.GameEntityConfigBuilder;
 
 public sealed class DataTypesChild
 {

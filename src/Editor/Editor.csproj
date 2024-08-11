@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup Label="Build properties">
     <OutputType>Exe</OutputType>
@@ -11,6 +11,7 @@
 
   <ItemGroup Label="External dependencies">
     <PackageReference Include="Serilog.Sinks.File" Version="6.0.0"/>
+    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.5"/>
   </ItemGroup>
 
   <ItemGroup Label="Static code analysis">
@@ -19,6 +20,10 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Nullable.Extended.Analyzer" Version="1.15.6169">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="ReferenceCopAnalyzer" Version="0.3.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -36,18 +41,23 @@
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup Label="Trimming configuration">
-    <TrimmerRootDescriptor Include="TrimmerRoots.xml"/>
-  </ItemGroup>
-
   <ItemGroup Label="Content">
     <None Include="Content\**\*">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 
+  <ItemGroup Label="Trimming configuration">
+    <TrimmerRootDescriptor Include="TrimmerRoots.xml"/>
+  </ItemGroup>
+
   <ItemGroup>
-    <ProjectReference Include="..\SimpleLevelEditor.State\SimpleLevelEditor.State.csproj"/>
+    <AdditionalFiles Include=".refrules" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Editor.States\Editor.States.csproj" />
+    <ProjectReference Include="..\NativeFileDialogUtils\NativeFileDialogUtils.csproj" />
   </ItemGroup>
 
 </Project>

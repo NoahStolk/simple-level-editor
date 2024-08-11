@@ -1,6 +1,6 @@
 using Format.GameEntityConfig.Model;
 
-namespace GameEntityConfig.Editor.States;
+namespace Editor.States.GameEntityConfigBuilder;
 
 public sealed class GameEntityConfigBuilderState
 {

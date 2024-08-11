@@ -1,8 +1,8 @@
-using GameEntityConfig.Editor.States;
+using Editor.States.GameEntityConfigBuilder;
 using ImGuiNET;
 using NativeFileDialogUtils;
 
-namespace GameEntityConfig.Editor.Ui.GameEntityConfigBuilder;
+namespace Editor.Ui.GameEntityConfigBuilder;
 
 public sealed class TexturesChild
 {

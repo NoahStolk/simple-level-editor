@@ -1,17 +1,14 @@
 using Detach.Parsers.Texture;
 using Detach.Parsers.Texture.TgaFormat;
+using Editor.Ui.GameEntityConfigBuilder;
+using Editor.User;
 using ImGuiGlfw;
 using ImGuiNET;
 using Silk.NET.GLFW;
 using Silk.NET.OpenGL;
-using SimpleLevelEditor.State.States.Assets;
-using SimpleLevelEditor.State.States.Windows;
-using SimpleLevelEditor.Ui;
-using SimpleLevelEditor.Ui.Windows;
-using SimpleLevelEditor.User;
 using System.Runtime.InteropServices;
 
-namespace SimpleLevelEditor;
+namespace Editor;
 
 public sealed class App
 {
@@ -27,6 +24,8 @@ public sealed class App
 
 	private int _currentSecond;
 	private int _renders;
+
+	private static readonly GameEntityConfigBuilderWindow _gameEntityConfigBuilderWindow = new();
 
 	public unsafe App(ImGuiController imGuiController)
 	{
@@ -71,7 +70,6 @@ public sealed class App
 				Thread.Yield();
 		}
 
-		AssetFileWatcher.Destroy();
 		_imGuiController.Destroy();
 		Graphics.Glfw.Terminate();
 	}
@@ -123,29 +121,31 @@ public sealed class App
 
 	private static void RenderUi()
 	{
-		if (WindowsState.ShowControlsWindow)
-			ControlsWindow.Render(ref WindowsState.ShowControlsWindow);
+		// if (WindowsState.ShowControlsWindow)
+		// 	ControlsWindow.Render(ref WindowsState.ShowControlsWindow);
+		//
+		// if (WindowsState.ShowSettingsWindow)
+		// 	SettingsWindow.Render(ref WindowsState.ShowSettingsWindow);
+		//
+		// if (WindowsState.ShowDemoWindow)
+		// 	ImGui.ShowDemoWindow(ref WindowsState.ShowDemoWindow);
+		//
+		// if (WindowsState.ShowInputDebugWindow)
+		// 	InputDebugWindow.Render(ref WindowsState.ShowInputDebugWindow);
+		//
+		// if (WindowsState.ShowDebugWindow)
+		// 	DebugWindow.Render(ref WindowsState.ShowDebugWindow);
+		//
+		// MainMenuBar.Render();
 
-		if (WindowsState.ShowSettingsWindow)
-			SettingsWindow.Render(ref WindowsState.ShowSettingsWindow);
+		_gameEntityConfigBuilderWindow.Render();
 
-		if (WindowsState.ShowDemoWindow)
-			ImGui.ShowDemoWindow(ref WindowsState.ShowDemoWindow);
-
-		if (WindowsState.ShowInputDebugWindow)
-			InputDebugWindow.Render(ref WindowsState.ShowInputDebugWindow);
-
-		if (WindowsState.ShowDebugWindow)
-			DebugWindow.Render(ref WindowsState.ShowDebugWindow);
-
-		MainMenuBar.Render();
-
-		LevelInfoWindow.Render();
-		LevelModelsWindow.Render();
-		HistoryWindow.Render();
-		LevelEditorWindow.Render();
-		ObjectEditorWindow.Render();
-		MessagesWindow.Render();
-		EntityConfigEditorWindow.Render();
+		// LevelInfoWindow.Render();
+		// LevelModelsWindow.Render();
+		// HistoryWindow.Render();
+		// LevelEditorWindow.Render();
+		// ObjectEditorWindow.Render();
+		// MessagesWindow.Render();
+		// EntityConfigEditorWindow.Render();
 	}
 }

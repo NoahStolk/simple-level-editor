@@ -2,9 +2,8 @@ using Detach;
 using Format.GameEntityConfig;
 using Format.GameEntityConfig.Model;
 using ImGuiNET;
-using System.Numerics;
 
-namespace GameEntityConfig.Editor.Ui.GameEntityConfigBuilder;
+namespace Editor.Ui.GameEntityConfigBuilder;
 
 public sealed class CreateNewDataTypePopup
 {

@@ -1,0 +1,18 @@
+* Detach*
+* Format.GameEntityConfig*
+* Format.Level*
+* ImGuiGlfw*
+* ImGuiNET*
+* NativeFileDialogUtils*
+* Serilog*
+* Silk.NET*
+* System*
+
+* Editor.Extensions
+
+Editor Editor.Ui*
+Editor Editor.User*
+Editor.Ui.GameEntityConfigBuilder Editor.States.GameEntityConfigBuilder
+
+# TODO: Fix this:
+Editor.User Editor.States.Messages
