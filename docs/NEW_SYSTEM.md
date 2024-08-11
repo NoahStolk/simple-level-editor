@@ -1,17 +1,22 @@
 # Simple Level Editor
 
-## Component
+## Data Types
 
-Components are individual parts that can be assigned to an entity descriptor. They are the building blocks of an entity descriptor.
+Data types are individual parts that can be assigned to an entity descriptor. They are the building blocks of an entity descriptor.
 
-An entity descriptor can have zero or more components, but a component type can only be assigned once to an entity descriptor.
+An entity descriptor can have zero or more data types, but a data type can only be assigned once to an entity descriptor.
 
-Components are made up of a name and one or more fields, like a struct.
+Data types are made up of a name and one or more fields, like a struct.
 
-### Default Components
+### Default Data Types
 
-Default components are used for rendering entities in the level editor.
+Default data types are used for rendering entities in the level editor.
 
+- `diffuse_color`
+  - `r: u8`
+  - `g: u8`
+  - `b: u8`
+  - `a: u8`
 - `position`
   - `x: f32`
   - `y: f32`
@@ -24,21 +29,21 @@ Default components are used for rendering entities in the level editor.
   - `x: f32`
   - `y: f32`
   - `z: f32`
-- `diffuse_color`
-  - `r: u8`
-  - `g: u8`
-  - `b: u8`
-  - `a: u8`
-- `visualizer`
-  - `type: union(model / billboard / wireframe)`
+- `model`
+  - `model_path: str`
+- `billboard`
+  - `texture_path: str`
+- `wireframe`
+  - `thickness: f32`
+  - `shape: str`
 
-None of the default components are required.
+None of the default data types are required.
 
 - Position is the world position in the level.
 - Rotation is the Euler rotation in degrees.
 - Scale is the scaling factor.
 - Diffuse color is the color of the entity.
-- Visualizer is the type of visualization for the entity. This uses all the above components to render the entity in the level editor.
+- Visualizer is the type of visualization for the entity. This uses all the above data types to render the entity in the level editor.
   - Default cases:
     - If no position is provided, the entity will be placed at the origin.
     - If no rotation is provided, the entity will have no rotation.
@@ -46,16 +51,16 @@ None of the default components are required.
     - If no diffuse color is provided, the entity will have a white color.
   - Visualizer types:
     - Model: A 3D model.
-    - Billboard: A 2D sprite. (Note: This will probably need to ignore the rotation component.)
+    - Billboard: A 2D sprite. (Note: This will probably need to ignore the rotation data type.)
     - Wireframe: A wireframe shape.
 
-Entities that do not need to be rendered and only need to show up in the entity list can simply omit all the default components. They can use custom components. This is useful for controller entities.
+Entities that do not need to be rendered and only need to show up in the entity list can simply omit all the default data types. They can use custom data types. This is useful for controller entities.
 
-### Custom Components
+### Custom Data Types
 
-Custom components can be created by the user. Custom data types can be used as the data type of a custom component.
+Custom data types can be created by the user.
 
-#### Examples of Custom Components
+#### Examples of Custom Data Types
 
 - `health`
   - `amount: u16`
@@ -70,7 +75,7 @@ Custom components can be created by the user. Custom data types can be used as t
 - `mass`
   - `value: f32`
 - `hitbox`
-  - `shape: cube / sphere`
+  - `shape: str`
 - `spawn_entity`
   - `name: str`
 - `spawn_interval`
@@ -80,9 +85,9 @@ Custom components can be created by the user. Custom data types can be used as t
 
 ## Entity Descriptor
 
-Describes an entity by combining multiple components.
+Describes an entity by combining multiple components. A component contains one data type, and can either be "fixed" or "varying".
 
-Components can either be "fixed", or "varying". Fixed components are components that are always the same for all entities of the same type. Varying components are components that can be different for each entity of the same type.
+Fixed components are components that are always the same for all entities of the same type. Varying components are components that can be different for each entity of the same type.
 
 - `entity_descriptor`
   - `name: str`
@@ -93,19 +98,21 @@ Components can either be "fixed", or "varying". Fixed components are components 
 
 Fixed components are components that are always the same for all entities of the same type.
 
-- `fixed_component<T>`
-  - `component: T`
+- `fixed_component`
+  - `data_type: data_type`
+  - `value: str`
 
 ### Varying Components
 
 Varying components are components that can be different for each entity of the same type.
 
-- `varying_component<T, U>`
-  - `default_value: T`
+- `varying_component`
+  - `data_type: data_type`
+  - `default_value: str`
   - `slider_config: slider_config / null`
-    - `step: U`
-    - `min_value: U`
-    - `max_value: U`
+    - `step: f32`
+    - `min_value: f32`
+    - `max_value: f32`
 
 The actual data for varying components will be stored in the entity itself (in the level), not in the entity descriptor.
 
@@ -121,9 +128,8 @@ The actual data for varying components will be stored in the entity itself (in t
       - `r: 0`
       - `g: 255`
       - `b: 90`
-    - `visualizer`
-      - `type: model`
-        - `model_path: "player.obj"`
+    - `model`
+      - `model_path: "player.obj"`
     - `health`
       - `amount: 100`
   - `varying_components`
@@ -138,9 +144,8 @@ The actual data for varying components will be stored in the entity itself (in t
       - `r: 255`
       - `g: 255`
       - `b: 255`
-    - `visualizer`
-      - `type: billboard`
-        - `texture_path: "light.png"`
+    - `billboard`
+      - `texture_path: "light.png"`
     - `radius`
       - `amount: 10`
   - `varying_components`
@@ -156,10 +161,9 @@ The actual data for varying components will be stored in the entity itself (in t
       - `x: 0.5`
       - `y: 0.5`
       - `z: 0.5`
-    - `visualizer`
-      - `type: wireframe`
-        - `thickness: 0.1`
-        - `shape: sphere`
+    - `wireframe`
+      - `thickness: 0.1`
+      - `shape: sphere`
   - `varying_components`
     - `position`
     - `rotation`
@@ -171,10 +175,9 @@ The actual data for varying components will be stored in the entity itself (in t
       - `r: 0`
       - `g: 0`
       - `b: 255`
-    - `visualizer`
-      - `type: wireframe`
-        - `thickness: 0.1`
-        - `shape: cube`
+    - `wireframe`
+      - `thickness: 0.1`
+      - `shape: cube`
   - `varying_components`
     - `position`
     - `scale`
@@ -199,4 +202,5 @@ Describes a game by combining multiple entity descriptors. This can be used to b
   - `name: str`
   - `model_paths: list[str]`
   - `texture_paths: list[str]`
+  - `data_types: list[data_type]`
   - `entity_descriptors: list[entity_descriptor]`
