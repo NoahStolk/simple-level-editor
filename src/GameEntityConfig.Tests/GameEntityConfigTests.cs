@@ -14,7 +14,7 @@ public class GameEntityConfigTests
 	public void SerDes()
 	{
 		GameEntityConfigBuilder builder = new();
-		Format.GameEntityConfig.Model.GameEntityConfig config = builder
+		GameEntityConfigModel config = builder
 			.WithDefaultDataTypes()
 			.WithDataType(_health)
 			.WithDataType(_radius)
@@ -26,7 +26,7 @@ public class GameEntityConfigTests
 			.Build();
 
 		string json = GameEntityConfigSerializer.Serialize(config);
-		Format.GameEntityConfig.Model.GameEntityConfig deserializedConfig = GameEntityConfigSerializer.Deserialize(json);
+		GameEntityConfigModel deserializedConfig = GameEntityConfigSerializer.Deserialize(json);
 
 		Assert.AreEqual(config.ModelPaths.Count, deserializedConfig.ModelPaths.Count);
 		for (int i = 0; i < config.ModelPaths.Count; i++)
@@ -116,7 +116,7 @@ public class GameEntityConfigTests
 	public void BuildGameEntityConfig()
 	{
 		GameEntityConfigBuilder builder = new();
-		Format.GameEntityConfig.Model.GameEntityConfig config = builder
+		GameEntityConfigModel config = builder
 			.WithDefaultDataTypes()
 			.WithDataType(_health)
 			.WithDataType(_radius)

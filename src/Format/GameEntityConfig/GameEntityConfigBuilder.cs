@@ -68,8 +68,8 @@ public sealed class GameEntityConfigBuilder
 		}
 	}
 
-	public Model.GameEntityConfig Build()
+	public GameEntityConfigModel Build()
 	{
-		return new Model.GameEntityConfig(_modelPaths, _texturePaths, _dataTypes, _entityDescriptors);
+		return new GameEntityConfigModel(_modelPaths, _texturePaths, _dataTypes, _entityDescriptors);
 	}
 }

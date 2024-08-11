@@ -2,10 +2,10 @@ using System.Text.Json.Serialization;
 
 namespace Format.GameEntityConfig.Model;
 
-public sealed record GameEntityConfig
+public sealed record GameEntityConfigModel
 {
 	[JsonConstructor]
-	internal GameEntityConfig(IReadOnlyList<string> modelPaths, IReadOnlyList<string> texturePaths, IReadOnlyList<DataType> dataTypes, IReadOnlyList<EntityDescriptor> entityDescriptors)
+	internal GameEntityConfigModel(IReadOnlyList<string> modelPaths, IReadOnlyList<string> texturePaths, IReadOnlyList<DataType> dataTypes, IReadOnlyList<EntityDescriptor> entityDescriptors)
 	{
 		ModelPaths = modelPaths;
 		TexturePaths = texturePaths;

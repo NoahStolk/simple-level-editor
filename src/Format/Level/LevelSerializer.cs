@@ -1,3 +1,4 @@
+using Format.Level.Model;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -15,14 +16,14 @@ public static class LevelSerializer
 		},
 	};
 
-	public static string Serialize(Model.Level level)
+	public static string Serialize(LevelModel level)
 	{
 		return JsonSerializer.Serialize(level, _jsonSerializerOptions);
 	}
 
-	public static Model.Level Deserialize(string json)
+	public static LevelModel Deserialize(string json)
 	{
-		Model.Level? level = JsonSerializer.Deserialize<Model.Level>(json, _jsonSerializerOptions);
+		LevelModel? level = JsonSerializer.Deserialize<LevelModel>(json, _jsonSerializerOptions);
 		if (level == null)
 			throw new ArgumentException("Failed to deserialize Level");
 

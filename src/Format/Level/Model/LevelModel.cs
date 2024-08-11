@@ -2,10 +2,10 @@ using System.Text.Json.Serialization;
 
 namespace Format.Level.Model;
 
-public sealed record Level
+public sealed record LevelModel
 {
 	[JsonConstructor]
-	public Level(string gameEntityConfigPath, IReadOnlyList<LevelEntity> levelEntities)
+	public LevelModel(string gameEntityConfigPath, IReadOnlyList<LevelEntity> levelEntities)
 	{
 		GameEntityConfigPath = gameEntityConfigPath;
 		LevelEntities = levelEntities;

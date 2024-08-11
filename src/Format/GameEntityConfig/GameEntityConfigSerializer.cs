@@ -15,14 +15,14 @@ public static class GameEntityConfigSerializer
 		},
 	};
 
-	public static string Serialize(Model.GameEntityConfig config)
+	public static string Serialize(Model.GameEntityConfigModel config)
 	{
 		return JsonSerializer.Serialize(config, _jsonSerializerOptions);
 	}
 
-	public static Model.GameEntityConfig Deserialize(string json)
+	public static Model.GameEntityConfigModel Deserialize(string json)
 	{
-		Model.GameEntityConfig? gameEntityConfig = JsonSerializer.Deserialize<Model.GameEntityConfig>(json, _jsonSerializerOptions);
+		Model.GameEntityConfigModel? gameEntityConfig = JsonSerializer.Deserialize<Model.GameEntityConfigModel>(json, _jsonSerializerOptions);
 		if (gameEntityConfig == null)
 			throw new ArgumentException("Failed to deserialize GameEntityConfig");
 

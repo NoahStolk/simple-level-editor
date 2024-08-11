@@ -35,7 +35,7 @@ public sealed class GameEntityConfigBuilderWindow
 						foreach (EntityDescriptor entityDescriptor in _state.EntityDescriptors)
 							builder = builder.WithEntityDescriptor(entityDescriptor);
 
-						Format.GameEntityConfig.Model.GameEntityConfig config = builder.Build();
+						GameEntityConfigModel config = builder.Build();
 						DialogWrapper.FileSave(
 							s =>
 							{
@@ -57,7 +57,7 @@ public sealed class GameEntityConfigBuilderWindow
 									return;
 
 								string json = File.ReadAllText(s);
-								Format.GameEntityConfig.Model.GameEntityConfig config = GameEntityConfigSerializer.Deserialize(json);
+								GameEntityConfigModel config = GameEntityConfigSerializer.Deserialize(json);
 								_state.ModelPaths = config.ModelPaths.ToList();
 								_state.TexturePaths = config.TexturePaths.ToList();
 								_state.DataTypes = config.DataTypes.ToList();
