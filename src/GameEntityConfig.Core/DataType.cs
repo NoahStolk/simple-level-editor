@@ -24,47 +24,47 @@ public sealed record DataType
 
 	public static DataType DiffuseColor { get; } = new("DiffuseColor", new[]
 	{
-		new DataTypeField("R", new Primitive.U8()),
-		new DataTypeField("G", new Primitive.U8()),
-		new DataTypeField("B", new Primitive.U8()),
-		new DataTypeField("A", new Primitive.U8()),
+		new DataTypeField("R", Primitive.U8),
+		new DataTypeField("G", Primitive.U8),
+		new DataTypeField("B", Primitive.U8),
+		new DataTypeField("A", Primitive.U8),
 	});
 
 	public static DataType Position { get; } = new("Position", new[]
 	{
-		new DataTypeField("X", new Primitive.F32()),
-		new DataTypeField("Y", new Primitive.F32()),
-		new DataTypeField("Z", new Primitive.F32()),
+		new DataTypeField("X", Primitive.F32),
+		new DataTypeField("Y", Primitive.F32),
+		new DataTypeField("Z", Primitive.F32),
 	});
 
 	public static DataType Rotation { get; } = new("Rotation", new[]
 	{
-		new DataTypeField("X", new Primitive.F32()),
-		new DataTypeField("Y", new Primitive.F32()),
-		new DataTypeField("Z", new Primitive.F32()),
+		new DataTypeField("X", Primitive.F32),
+		new DataTypeField("Y", Primitive.F32),
+		new DataTypeField("Z", Primitive.F32),
 	});
 
 	public static DataType Scale { get; } = new("Scale", new[]
 	{
-		new DataTypeField("X", new Primitive.F32()),
-		new DataTypeField("Y", new Primitive.F32()),
-		new DataTypeField("Z", new Primitive.F32()),
+		new DataTypeField("X", Primitive.F32),
+		new DataTypeField("Y", Primitive.F32),
+		new DataTypeField("Z", Primitive.F32),
 	});
 
 	public static DataType Model { get; } = new("Model", new[]
 	{
-		new DataTypeField("ModelPath", new Primitive.Str()),
+		new DataTypeField("ModelPath", Primitive.Str),
 	});
 
 	public static DataType Billboard { get; } = new("Billboard", new[]
 	{
-		new DataTypeField("TexturePath", new Primitive.Str()),
+		new DataTypeField("TexturePath", Primitive.Str),
 	});
 
 	public static DataType Wireframe { get; } = new("Wireframe", new[]
 	{
-		new DataTypeField("Thickness", new Primitive.F32()),
-		new DataTypeField("Shape", new Primitive.Str()),
+		new DataTypeField("Thickness", Primitive.F32),
+		new DataTypeField("Shape", Primitive.Str),
 	});
 
 	public static IReadOnlyList<DataType> DefaultDataTypes { get; } = new[]

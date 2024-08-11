@@ -12,8 +12,8 @@ public class DataTypeBuilderTests
 		Assert.ThrowsException<ArgumentException>(() => DataTypeBuilder.Build(
 			"Test",
 			[
-				new DataTypeField("Field", new Primitive.I32()),
-				new DataTypeField("Field", new Primitive.I32()),
+				new DataTypeField("Field", Primitive.I32),
+				new DataTypeField("Field", Primitive.I32),
 			]));
 	}
 
@@ -42,9 +42,9 @@ public class DataTypeBuilderTests
 	public void FailOnInvalidTypeName(bool expected, string typeName)
 	{
 		if (!expected)
-			Assert.ThrowsException<ArgumentException>(() => DataTypeBuilder.Build(typeName, [new DataTypeField("Test1", new Primitive.I32())]));
+			Assert.ThrowsException<ArgumentException>(() => DataTypeBuilder.Build(typeName, [new DataTypeField("Test1", Primitive.I32)]));
 		else
-			Assert.IsNotNull(DataTypeBuilder.Build(typeName, [new DataTypeField("Test1", new Primitive.I32())]));
+			Assert.IsNotNull(DataTypeBuilder.Build(typeName, [new DataTypeField("Test1", Primitive.I32)]));
 	}
 
 	[DataTestMethod]
@@ -76,9 +76,9 @@ public class DataTypeBuilderTests
 	public void FailOnInvalidFieldName(bool expected, string fieldName)
 	{
 		if (!expected)
-			Assert.ThrowsException<ArgumentException>(() => DataTypeBuilder.Build("Test", [new DataTypeField(fieldName, new Primitive.I32())]));
+			Assert.ThrowsException<ArgumentException>(() => DataTypeBuilder.Build("Test", [new DataTypeField(fieldName, Primitive.I32)]));
 		else
-			Assert.IsNotNull(DataTypeBuilder.Build("Test", [new DataTypeField(fieldName, new Primitive.I32())]));
+			Assert.IsNotNull(DataTypeBuilder.Build("Test", [new DataTypeField(fieldName, Primitive.I32)]));
 	}
 
 	[TestMethod]
@@ -87,9 +87,9 @@ public class DataTypeBuilderTests
 		DataType typeInfo = DataTypeBuilder.Build(
 			"Test",
 			[
-				new DataTypeField("Test1", new Primitive.I32()),
-				new DataTypeField("Test2", new Primitive.F32()),
-				new DataTypeField("Test3", new Primitive.Str()),
+				new DataTypeField("Test1", Primitive.I32),
+				new DataTypeField("Test2", Primitive.F32),
+				new DataTypeField("Test3", Primitive.Str),
 			]);
 
 		Assert.IsNotNull(typeInfo);

@@ -46,7 +46,7 @@ public sealed class CreateNewDataTypePopup
 					ImGui.TableNextColumn();
 					if (ImGui.BeginCombo(Inline.Span($"##Type{i}"), field.Primitive.ToString() ?? "<NONE>", ImGuiComboFlags.HeightLarge))
 					{
-						foreach (Primitive primitive in Primitive.All)
+						foreach (Primitive primitive in Primitives.All)
 						{
 							if (ImGui.Selectable(primitive.ToString()))
 								_newDataTypeFields[i].Primitive = primitive;
@@ -109,6 +109,6 @@ public sealed class CreateNewDataTypePopup
 	private sealed record Field
 	{
 		public string Name { get; set; } = string.Empty;
-		public Primitive Primitive { get; set; } = new Primitive.U8();
+		public Primitive Primitive { get; set; } = Primitive.U8;
 	}
 }

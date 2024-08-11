@@ -1,13 +1,25 @@
 using GameEntityConfig.Core;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace GameEntityConfig.Tests;
 
 [TestClass]
 public class GameEntityConfigTests
 {
-	private static readonly DataType _health = new("Health", [new DataTypeField("Value", new Primitive.U32())]);
-	private static readonly DataType _radius = new("Radius", [new DataTypeField("Value", new Primitive.F32())]);
+	private static readonly JsonSerializerOptions _jsonSerializerOptions = new()
+	{
+		WriteIndented = true,
+		IncludeFields = true,
+		Converters =
+		{
+			new JsonStringEnumConverter(),
+		},
+	};
+
+	private static readonly DataType _health = new("Health", [new DataTypeField("Value", Primitive.U32)]);
+	private static readonly DataType _radius = new("Radius", [new DataTypeField("Value", Primitive.F32)]);
 
 	[TestMethod]
 	public void FailOnIncorrectOrder()
@@ -118,8 +130,8 @@ public class GameEntityConfigTests
 		Assert.AreEqual("WorldObject", config.EntityDescriptors[2].Name);
 
 		// TODO: We can't use JSON for this.
-		// string json = JsonSerializer.Serialize(config, _jsonSerializerOptions);
-		// Console.WriteLine(json);
+		string json = JsonSerializer.Serialize(config, _jsonSerializerOptions);
+		Console.WriteLine(json);
 	}
 
 	private static EntityDescriptor CreatePlayer()
