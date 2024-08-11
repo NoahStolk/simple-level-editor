@@ -1,7 +1,10 @@
+using System.Text.Json.Serialization;
+
 namespace GameEntityConfig.Core;
 
 public sealed record GameEntityConfig
 {
+	[JsonConstructor]
 	internal GameEntityConfig(string name, IReadOnlyList<string> modelPaths, IReadOnlyList<string> texturePaths, IReadOnlyList<DataType> dataTypes, IReadOnlyList<EntityDescriptor> entityDescriptors)
 	{
 		Name = name;

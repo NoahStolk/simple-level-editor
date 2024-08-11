@@ -1,7 +1,10 @@
+using System.Text.Json.Serialization;
+
 namespace GameEntityConfig.Core;
 
 public sealed record VaryingComponent
 {
+	[JsonConstructor]
 	public VaryingComponent(DataType dataType, string defaultValue, SliderConfiguration? sliderConfiguration)
 	{
 		DataType = dataType;

@@ -1,25 +1,51 @@
 using GameEntityConfig.Core;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace GameEntityConfig.Tests;
 
 [TestClass]
 public class GameEntityConfigTests
 {
-	private static readonly JsonSerializerOptions _jsonSerializerOptions = new()
-	{
-		WriteIndented = true,
-		IncludeFields = true,
-		Converters =
-		{
-			new JsonStringEnumConverter(),
-		},
-	};
-
 	private static readonly DataType _health = new("Health", [new DataTypeField("Value", Primitive.U32)]);
 	private static readonly DataType _radius = new("Radius", [new DataTypeField("Value", Primitive.F32)]);
+
+	[TestMethod]
+	public void SerDes()
+	{
+		GameEntityConfigBuilder builder = new();
+		Core.GameEntityConfig config = builder
+			.WithName("Test")
+			.WithDefaultDataTypes()
+			.WithDataType(_health)
+			.WithDataType(_radius)
+			.WithModelPath("Player.obj")
+			.WithTexturePath("Audio.png")
+			.WithEntityDescriptor(CreatePlayer())
+			.WithEntityDescriptor(CreateLight())
+			.WithEntityDescriptor(WorldObject())
+			.Build();
+
+		string json = GameEntityConfigSerializer.Serialize(config);
+		Core.GameEntityConfig deserializedConfig = GameEntityConfigSerializer.Deserialize(json);
+
+		Assert.AreEqual(config.Name, deserializedConfig.Name);
+
+		Assert.AreEqual(config.ModelPaths.Count, deserializedConfig.ModelPaths.Count);
+		for (int i = 0; i < config.ModelPaths.Count; i++)
+			Assert.AreEqual(config.ModelPaths[i], deserializedConfig.ModelPaths[i]);
+
+		Assert.AreEqual(config.TexturePaths.Count, deserializedConfig.TexturePaths.Count);
+		for (int i = 0; i < config.TexturePaths.Count; i++)
+			Assert.AreEqual(config.TexturePaths[i], deserializedConfig.TexturePaths[i]);
+
+		Assert.AreEqual(config.DataTypes.Count, deserializedConfig.DataTypes.Count);
+		for (int i = 0; i < config.DataTypes.Count; i++)
+			Assert.AreEqual(config.DataTypes[i].Name, deserializedConfig.DataTypes[i].Name);
+
+		Assert.AreEqual(config.EntityDescriptors.Count, deserializedConfig.EntityDescriptors.Count);
+		for (int i = 0; i < config.EntityDescriptors.Count; i++)
+			Assert.AreEqual(config.EntityDescriptors[i].Name, deserializedConfig.EntityDescriptors[i].Name);
+	}
 
 	[TestMethod]
 	public void FailOnIncorrectOrder()
@@ -128,10 +154,6 @@ public class GameEntityConfigTests
 		Assert.AreEqual("Player", config.EntityDescriptors[0].Name);
 		Assert.AreEqual("Light", config.EntityDescriptors[1].Name);
 		Assert.AreEqual("WorldObject", config.EntityDescriptors[2].Name);
-
-		// TODO: We can't use JSON for this.
-		string json = JsonSerializer.Serialize(config, _jsonSerializerOptions);
-		Console.WriteLine(json);
 	}
 
 	private static EntityDescriptor CreatePlayer()

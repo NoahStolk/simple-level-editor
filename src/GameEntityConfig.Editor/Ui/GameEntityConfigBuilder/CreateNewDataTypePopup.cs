@@ -44,7 +44,7 @@ public sealed class CreateNewDataTypePopup
 						ImGui.SetTooltip("Remove this field");
 
 					ImGui.TableNextColumn();
-					if (ImGui.BeginCombo(Inline.Span($"##Type{i}"), field.Primitive.ToString() ?? "<NONE>", ImGuiComboFlags.HeightLarge))
+					if (ImGui.BeginCombo(Inline.Span($"##Type{i}"), field.Primitive.ToString(), ImGuiComboFlags.HeightLarge))
 					{
 						foreach (Primitive primitive in Primitives.All)
 						{

@@ -1,7 +1,10 @@
+using System.Text.Json.Serialization;
+
 namespace GameEntityConfig.Core;
 
 public sealed record FixedComponent
 {
+	[JsonConstructor]
 	public FixedComponent(DataType dataType, string value)
 	{
 		DataType = dataType;

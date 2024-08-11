@@ -14,7 +14,14 @@ public sealed class DataTypesChild
 	{
 		ImGui.SeparatorText("Data Types");
 
-		ImGui.Checkbox("Enable Default Components", ref state.EnableDefaultComponents);
+		if (ImGui.Button("Add Default Data Types"))
+		{
+			foreach (DataType defaultDataType in DataType.DefaultDataTypes)
+			{
+				if (state.DataTypes.TrueForAll(ct => ct.Name != defaultDataType.Name))
+					state.DataTypes.Add(defaultDataType);
+			}
+		}
 
 		if (ImGui.BeginTable("DataTypesTable", 3, ImGuiTableFlags.Borders))
 		{
@@ -25,16 +32,10 @@ public sealed class DataTypesChild
 			ImGui.TableSetupScrollFreeze(0, 1);
 			ImGui.TableHeadersRow();
 
-			if (state.EnableDefaultComponents)
-			{
-				foreach (DataType defaultDataType in DataType.DefaultDataTypes)
-					RenderComponent(state, true, defaultDataType);
-			}
-
 			for (int i = state.DataTypes.Count - 1; i >= 0; i--)
 			{
 				DataType dataType = state.DataTypes[i];
-				RenderComponent(state, false, dataType);
+				RenderComponent(state, dataType);
 			}
 
 			ImGui.EndTable();
@@ -55,22 +56,13 @@ public sealed class DataTypesChild
 		}
 	}
 
-	private static void RenderComponent(GameEntityConfigBuilderState state, bool isDefaultComponent, DataType dataType)
+	private static void RenderComponent(GameEntityConfigBuilderState state, DataType dataType)
 	{
 		ImGui.TableNextRow();
 
 		ImGui.TableNextColumn();
-		if (isDefaultComponent)
-		{
-			ImGui.Text("Default component");
-		}
-		else
-		{
-			ImGui.Text("Custom component");
-			ImGui.SameLine();
-			if (ImGui.SmallButton($"Remove##{dataType}"))
-				state.DataTypes.Remove(dataType);
-		}
+		if (ImGui.SmallButton($"Remove##{dataType}"))
+			state.DataTypes.Remove(dataType);
 
 		ImGui.TableNextColumn();
 		ImGui.Text(dataType.Name);

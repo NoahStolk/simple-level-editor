@@ -86,11 +86,7 @@ public sealed class CreateNewEntityDescriptorPopup
 				ImGui.TableNextColumn();
 				if (ImGui.BeginCombo(Inline.Span($"##FixedType{i}"), fixedComponent.DataTypeName, ImGuiComboFlags.HeightLarge))
 				{
-					List<DataType> allDataTypes = state.DataTypes;
-					if (state.EnableDefaultComponents)
-						allDataTypes = allDataTypes.Concat(DataType.DefaultDataTypes).ToList();
-
-					foreach (DataType dataType in allDataTypes)
+					foreach (DataType dataType in state.DataTypes)
 					{
 						if (ImGui.Selectable(dataType.Name))
 							_fixedComponents[i].DataTypeName = dataType.Name;
@@ -143,11 +139,7 @@ public sealed class CreateNewEntityDescriptorPopup
 				ImGui.TableNextColumn();
 				if (ImGui.BeginCombo(Inline.Span($"##VaryingType{i}"), varyingComponent.DataTypeName, ImGuiComboFlags.HeightLarge))
 				{
-					List<DataType> allDataTypes = state.DataTypes;
-					if (state.EnableDefaultComponents)
-						allDataTypes = allDataTypes.Concat(DataType.DefaultDataTypes).ToList();
-
-					foreach (DataType dataType in allDataTypes)
+					foreach (DataType dataType in state.DataTypes)
 					{
 						if (ImGui.Selectable(dataType.Name))
 							_varyingComponents[i].DataTypeName = dataType.Name;

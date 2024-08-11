@@ -1,7 +1,10 @@
+using System.Text.Json.Serialization;
+
 namespace GameEntityConfig.Core;
 
 public sealed record DataType
 {
+	[JsonConstructor]
 	public DataType(string name, IReadOnlyList<DataTypeField> fields)
 	{
 		if (string.IsNullOrWhiteSpace(name))
