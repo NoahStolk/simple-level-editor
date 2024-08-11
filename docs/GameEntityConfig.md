@@ -1,4 +1,6 @@
-# Simple Level Editor
+# Game Entity Config
+
+A game entity config is a JSON file that describes the entities in a game. It is used to define the entities that can be placed in a level.
 
 ## Data Types
 
@@ -194,12 +196,11 @@ The actual data for varying components will be stored in the entity itself (in t
   - `varying_components`
     - `audio_path`
 
-## Game Config
+## Game Entity Config
 
 Describes a game by combining multiple entity descriptors. This can be used to build levels with.
 
-- `game_config`
-  - `name: str`
+- `game_entity_config`
   - `model_paths: list[str]`
   - `texture_paths: list[str]`
   - `data_types: list[data_type]`

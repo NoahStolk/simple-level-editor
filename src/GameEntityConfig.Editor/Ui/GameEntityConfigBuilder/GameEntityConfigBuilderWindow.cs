@@ -25,7 +25,6 @@ public sealed class GameEntityConfigBuilderWindow
 					if (ImGui.MenuItem("Save"))
 					{
 						GameEntityConfig.GameEntityConfigBuilder builder = new();
-						builder = builder.WithName(_state.Name);
 						foreach (string modelPath in _state.ModelPaths)
 							builder = builder.WithModelPath(modelPath);
 						foreach (string texturePath in _state.TexturePaths)
@@ -58,7 +57,6 @@ public sealed class GameEntityConfigBuilderWindow
 
 								string json = File.ReadAllText(s);
 								Core.GameEntityConfig config = GameEntityConfigSerializer.Deserialize(json);
-								_state.Name = config.Name;
 								_state.ModelPaths = config.ModelPaths.ToList();
 								_state.TexturePaths = config.TexturePaths.ToList();
 								_state.DataTypes = config.DataTypes.ToList();
@@ -72,8 +70,6 @@ public sealed class GameEntityConfigBuilderWindow
 
 				ImGui.EndMenuBar();
 			}
-
-			ImGui.InputText("Game Name", ref _state.Name, 100);
 
 			_modelsChild.Render(_state);
 			_texturesChild.Render(_state);

@@ -14,7 +14,6 @@ public class GameEntityConfigTests
 	{
 		GameEntityConfigBuilder builder = new();
 		Core.GameEntityConfig config = builder
-			.WithName("Test")
 			.WithDefaultDataTypes()
 			.WithDataType(_health)
 			.WithDataType(_radius)
@@ -27,8 +26,6 @@ public class GameEntityConfigTests
 
 		string json = GameEntityConfigSerializer.Serialize(config);
 		Core.GameEntityConfig deserializedConfig = GameEntityConfigSerializer.Deserialize(json);
-
-		Assert.AreEqual(config.Name, deserializedConfig.Name);
 
 		Assert.AreEqual(config.ModelPaths.Count, deserializedConfig.ModelPaths.Count);
 		for (int i = 0; i < config.ModelPaths.Count; i++)
@@ -54,7 +51,6 @@ public class GameEntityConfigTests
 		Assert.ThrowsException<ArgumentException>(() =>
 		{
 			builder
-				.WithName("Test")
 				.WithDefaultDataTypes()
 				.WithEntityDescriptor(CreatePlayer())
 				.WithDataType(_health)
@@ -69,7 +65,6 @@ public class GameEntityConfigTests
 		Assert.ThrowsException<ArgumentException>(() =>
 		{
 			builder
-				.WithName("Test")
 				.WithEntityDescriptor(CreatePlayer())
 				.Build();
 		});
@@ -82,7 +77,6 @@ public class GameEntityConfigTests
 		Assert.ThrowsException<ArgumentException>(() =>
 		{
 			builder
-				.WithName("Test")
 				.WithDefaultDataTypes()
 				.WithDataType(_health)
 				.WithDataType(_radius)
@@ -98,7 +92,6 @@ public class GameEntityConfigTests
 		Assert.ThrowsException<ArgumentException>(() =>
 		{
 			builder
-				.WithName("Test")
 				.WithModelPath("Player.obj")
 				.WithModelPath("Player.obj")
 				.Build();
@@ -112,7 +105,6 @@ public class GameEntityConfigTests
 		Assert.ThrowsException<ArgumentException>(() =>
 		{
 			builder
-				.WithName("Test")
 				.WithTexturePath("Audio.png")
 				.WithTexturePath("Audio.png")
 				.Build();
@@ -124,7 +116,6 @@ public class GameEntityConfigTests
 	{
 		GameEntityConfigBuilder builder = new();
 		Core.GameEntityConfig config = builder
-			.WithName("Test")
 			.WithDefaultDataTypes()
 			.WithDataType(_health)
 			.WithDataType(_radius)
@@ -135,7 +126,6 @@ public class GameEntityConfigTests
 			.WithEntityDescriptor(WorldObject())
 			.Build();
 
-		Assert.AreEqual("Test", config.Name);
 		Assert.AreEqual(1, config.ModelPaths.Count);
 		Assert.AreEqual("Player.obj", config.ModelPaths[0]);
 		Assert.AreEqual(1, config.TexturePaths.Count);
