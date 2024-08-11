@@ -19,7 +19,9 @@ public enum Primitive
 	Str,
 }
 
+#pragma warning disable SA1649
 public static class Primitives
+#pragma warning restore SA1649
 {
 	private static readonly List<Primitive> _all = Enum.GetValues<Primitive>().ToList();
 

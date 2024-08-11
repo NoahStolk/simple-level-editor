@@ -4,21 +4,15 @@ namespace GameEntityConfig;
 
 public sealed class GameEntityConfigBuilder
 {
+	private string _name = string.Empty;
 	private readonly List<string> _modelPaths = [];
 	private readonly List<string> _texturePaths = [];
 	private readonly List<DataType> _dataTypes = [];
 	private readonly List<EntityDescriptor> _entityDescriptors = [];
 
-	public string Name { get; private set; } = string.Empty;
-
-	public IReadOnlyList<string> ModelPaths => _modelPaths;
-	public IReadOnlyList<string> TexturePaths => _texturePaths;
-	public IReadOnlyList<DataType> DataTypes => _dataTypes;
-	public IReadOnlyList<EntityDescriptor> EntityDescriptors => _entityDescriptors;
-
 	public GameEntityConfigBuilder WithName(string name)
 	{
-		Name = name;
+		_name = name;
 		return this;
 	}
 
@@ -83,6 +77,6 @@ public sealed class GameEntityConfigBuilder
 
 	public Core.GameEntityConfig Build()
 	{
-		return new Core.GameEntityConfig(Name, _modelPaths, _texturePaths, _dataTypes, _entityDescriptors);
+		return new Core.GameEntityConfig(_name, _modelPaths, _texturePaths, _dataTypes, _entityDescriptors);
 	}
 }

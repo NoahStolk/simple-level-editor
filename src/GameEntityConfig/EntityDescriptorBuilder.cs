@@ -4,17 +4,13 @@ namespace GameEntityConfig;
 
 public sealed class EntityDescriptorBuilder
 {
+	private string _name = string.Empty;
 	private readonly List<FixedComponent> _fixedComponents = [];
 	private readonly List<VaryingComponent> _varyingComponents = [];
 
-	public string Name { get; private set; } = string.Empty;
-
-	public IReadOnlyList<FixedComponent> FixedComponents => _fixedComponents;
-	public IReadOnlyList<VaryingComponent> VaryingComponents => _varyingComponents;
-
 	public EntityDescriptorBuilder WithName(string name)
 	{
-		Name = name;
+		_name = name;
 		return this;
 	}
 
@@ -44,7 +40,7 @@ public sealed class EntityDescriptorBuilder
 
 	public EntityDescriptor Build()
 	{
-		return new EntityDescriptor(Name, _fixedComponents, _varyingComponents);
+		return new EntityDescriptor(_name, _fixedComponents, _varyingComponents);
 	}
 
 	private void AssertUniqueComponentType(DataType dataType)

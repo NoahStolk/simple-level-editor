@@ -1,6 +1,6 @@
 namespace GameEntityConfig.Core;
 
-public record SliderConfiguration
+public sealed record SliderConfiguration
 {
 	public readonly float Step;
 	public readonly float Min;
