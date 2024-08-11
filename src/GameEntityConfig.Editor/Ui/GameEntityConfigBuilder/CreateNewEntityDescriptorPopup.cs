@@ -182,25 +182,27 @@ public sealed class CreateNewEntityDescriptorPopup
 
 		foreach (FixedComponent fixedComponent in _fixedComponents)
 		{
-			DataType dataType = GetRequiredDataType(state, fixedComponent.DataTypeName);
+			DataType? dataType = GetRequiredDataType(state, fixedComponent.DataTypeName);
+			if (dataType == null)
+				continue;
+
 			builder = builder.WithFixedComponent(dataType, fixedComponent.Value);
 		}
 
 		foreach (VaryingComponent varyingComponent in _varyingComponents)
 		{
-			DataType dataType = GetRequiredDataType(state, varyingComponent.DataTypeName);
+			DataType? dataType = GetRequiredDataType(state, varyingComponent.DataTypeName);
+			if (dataType == null)
+				continue;
+
 			builder = builder.WithVaryingComponent(dataType, varyingComponent.DefaultValue, varyingComponent.StepValue, varyingComponent.MinValue, varyingComponent.MaxValue);
 		}
 
 		return builder.Build();
 
-		static DataType GetRequiredDataType(GameEntityConfigBuilderState state, string dataTypeName)
+		static DataType? GetRequiredDataType(GameEntityConfigBuilderState state, string dataTypeName)
 		{
-			DataType? dataType = state.DataTypes.Find(dt => dt.Name == dataTypeName) ?? DataType.DefaultDataTypes.FirstOrDefault(dt => dt.Name == dataTypeName);
-			if (dataType == null)
-				throw new InvalidOperationException($"Data type '{dataTypeName}' not found.");
-
-			return dataType;
+			return state.DataTypes.Find(dt => dt.Name == dataTypeName) ?? DataType.DefaultDataTypes.FirstOrDefault(dt => dt.Name == dataTypeName);
 		}
 	}
 

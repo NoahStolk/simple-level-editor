@@ -9,19 +9,17 @@ namespace GameEntityConfig.Editor.Ui.GameEntityConfigBuilder;
 
 public sealed class EntityDescriptorsChild
 {
-	private readonly List<EntityDescriptor> _entityDescriptors = [];
-
 	private readonly CreateNewEntityDescriptorPopup _createNewEntityDescriptorPopup = new();
 
 	public void Render(GameEntityConfigBuilderState state)
 	{
 		ImGui.SeparatorText("Entity Descriptors");
 
-		for (int i = _entityDescriptors.Count - 1; i >= 0; i--)
+		for (int i = state.EntityDescriptors.Count - 1; i >= 0; i--)
 		{
-			EntityDescriptor entityDescriptor = _entityDescriptors[i];
+			EntityDescriptor entityDescriptor = state.EntityDescriptors[i];
 			if (ImGui.Button($"X##{entityDescriptor.Name}"))
-				_entityDescriptors.Remove(entityDescriptor);
+				state.EntityDescriptors.Remove(entityDescriptor);
 			ImGui.SameLine();
 			ImGui.Text(entityDescriptor.Name);
 
@@ -104,8 +102,8 @@ public sealed class EntityDescriptorsChild
 		{
 			EntityDescriptor? newEntityDescriptor = _createNewEntityDescriptorPopup.Render(state);
 
-			if (newEntityDescriptor != null && _entityDescriptors.TrueForAll(ct => ct.Name != newEntityDescriptor.Name))
-				_entityDescriptors.Add(newEntityDescriptor);
+			if (newEntityDescriptor != null && state.EntityDescriptors.TrueForAll(ct => ct.Name != newEntityDescriptor.Name))
+				state.EntityDescriptors.Add(newEntityDescriptor);
 
 			ImGui.EndPopup();
 		}

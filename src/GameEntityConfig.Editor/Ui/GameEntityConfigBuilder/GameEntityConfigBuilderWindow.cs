@@ -1,3 +1,4 @@
+using GameEntityConfig.Core;
 using GameEntityConfig.Editor.States;
 using ImGuiNET;
 using NativeFileDialogUtils;
@@ -24,6 +25,16 @@ public sealed class GameEntityConfigBuilderWindow
 					if (ImGui.MenuItem("Save"))
 					{
 						GameEntityConfig.GameEntityConfigBuilder builder = new();
+						builder = builder.WithName(_state.Name);
+						foreach (string modelPath in _state.ModelPaths)
+							builder = builder.WithModelPath(modelPath);
+						foreach (string texturePath in _state.TexturePaths)
+							builder = builder.WithTexturePath(texturePath);
+						foreach (DataType dataType in _state.DataTypes)
+							builder = builder.WithDataType(dataType);
+						foreach (EntityDescriptor entityDescriptor in _state.EntityDescriptors)
+							builder = builder.WithEntityDescriptor(entityDescriptor);
+
 						Core.GameEntityConfig config = builder.Build();
 						DialogWrapper.FileSave(
 							s =>
@@ -32,7 +43,7 @@ public sealed class GameEntityConfigBuilderWindow
 									return;
 
 								string json = GameEntityConfigSerializer.Serialize(config);
-								File.WriteAllText(s, json);
+								File.WriteAllText(Path.ChangeExtension(s, ".json"), json);
 							},
 							"json");
 					}
