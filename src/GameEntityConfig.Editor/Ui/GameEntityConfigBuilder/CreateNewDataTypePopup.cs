@@ -1,5 +1,6 @@
 using Detach;
-using GameEntityConfig.Core;
+using Format.GameEntityConfig;
+using Format.GameEntityConfig.Model;
 using ImGuiNET;
 using System.Numerics;
 

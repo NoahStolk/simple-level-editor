@@ -1,4 +1,5 @@
-using GameEntityConfig.Core;
+using Format.GameEntityConfig;
+using Format.GameEntityConfig.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace GameEntityConfig.Tests;

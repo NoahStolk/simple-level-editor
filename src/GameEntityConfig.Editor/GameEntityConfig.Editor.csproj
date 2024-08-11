@@ -30,7 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\GameEntityConfig\GameEntityConfig.csproj"/>
+    <ProjectReference Include="..\Format\Format.csproj" />
     <ProjectReference Include="..\NativeFileDialogUtils\NativeFileDialogUtils.csproj" />
   </ItemGroup>
 

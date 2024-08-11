@@ -1,6 +1,6 @@
-using GameEntityConfig.Core;
+using Format.GameEntityConfig.Model;
 
-namespace GameEntityConfig;
+namespace Format.GameEntityConfig;
 
 public sealed class GameEntityConfigBuilder
 {
@@ -68,8 +68,8 @@ public sealed class GameEntityConfigBuilder
 		}
 	}
 
-	public Core.GameEntityConfig Build()
+	public Model.GameEntityConfig Build()
 	{
-		return new Core.GameEntityConfig(_modelPaths, _texturePaths, _dataTypes, _entityDescriptors);
+		return new Model.GameEntityConfig(_modelPaths, _texturePaths, _dataTypes, _entityDescriptors);
 	}
 }

@@ -36,7 +36,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\GameEntityConfig\GameEntityConfig.csproj"/>
+    <ProjectReference Include="..\Format\Format.csproj" />
   </ItemGroup>
 
 </Project>

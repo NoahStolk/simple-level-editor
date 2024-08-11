@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace GameEntityConfig.Core;
+namespace Format.GameEntityConfig.Model;
 
 public sealed record DataType
 {

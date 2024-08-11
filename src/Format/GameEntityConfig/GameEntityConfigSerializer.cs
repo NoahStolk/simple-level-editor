@@ -1,7 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace GameEntityConfig;
+namespace Format.GameEntityConfig;
 
 public static class GameEntityConfigSerializer
 {
@@ -15,14 +15,14 @@ public static class GameEntityConfigSerializer
 		},
 	};
 
-	public static string Serialize(Core.GameEntityConfig config)
+	public static string Serialize(Model.GameEntityConfig config)
 	{
 		return JsonSerializer.Serialize(config, _jsonSerializerOptions);
 	}
 
-	public static Core.GameEntityConfig Deserialize(string json)
+	public static Model.GameEntityConfig Deserialize(string json)
 	{
-		Core.GameEntityConfig? gameEntityConfig = JsonSerializer.Deserialize<Core.GameEntityConfig>(json, _jsonSerializerOptions);
+		Model.GameEntityConfig? gameEntityConfig = JsonSerializer.Deserialize<Model.GameEntityConfig>(json, _jsonSerializerOptions);
 		if (gameEntityConfig == null)
 			throw new ArgumentException("Failed to deserialize GameEntityConfig");
 

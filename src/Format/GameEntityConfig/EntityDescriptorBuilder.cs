@@ -1,6 +1,6 @@
-using GameEntityConfig.Core;
+using Format.GameEntityConfig.Model;
 
-namespace GameEntityConfig;
+namespace Format.GameEntityConfig;
 
 public sealed class EntityDescriptorBuilder
 {

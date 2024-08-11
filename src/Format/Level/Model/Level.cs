@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace Level.Core;
+namespace Format.Level.Model;
 
 public sealed record Level
 {

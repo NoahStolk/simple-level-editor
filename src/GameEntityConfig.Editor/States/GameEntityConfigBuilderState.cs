@@ -1,4 +1,4 @@
-using GameEntityConfig.Core;
+using Format.GameEntityConfig.Model;
 
 namespace GameEntityConfig.Editor.States;
 

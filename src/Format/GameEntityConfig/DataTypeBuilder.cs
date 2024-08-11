@@ -1,7 +1,7 @@
-using GameEntityConfig.Core;
+using Format.GameEntityConfig.Model;
 using System.Text.RegularExpressions;
 
-namespace GameEntityConfig;
+namespace Format.GameEntityConfig;
 
 public static partial class DataTypeBuilder
 {

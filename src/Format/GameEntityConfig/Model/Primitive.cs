@@ -1,4 +1,4 @@
-namespace GameEntityConfig.Core;
+namespace Format.GameEntityConfig.Model;
 
 public enum Primitive
 {
