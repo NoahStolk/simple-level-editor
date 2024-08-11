@@ -12,7 +12,13 @@ public sealed record VaryingComponent
 		SliderConfiguration = sliderConfiguration;
 	}
 
+	[JsonIgnore]
 	public DataType DataType { get; }
+
+	[JsonInclude]
+	public string DataTypeName => DataType.Name;
+
 	public string DefaultValue { get; }
+
 	public SliderConfiguration? SliderConfiguration { get; }
 }

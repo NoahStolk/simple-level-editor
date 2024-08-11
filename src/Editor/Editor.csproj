@@ -2,7 +2,7 @@
 
   <PropertyGroup Label="Build properties">
     <OutputType>Exe</OutputType>
-    <Version>0.13.0</Version>
+    <Version>0.14.0</Version>
     <ApplicationIcon>Icon.ico</ApplicationIcon>
     <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
     <SuppressTrimAnalysisWarnings>false</SuppressTrimAnalysisWarnings>

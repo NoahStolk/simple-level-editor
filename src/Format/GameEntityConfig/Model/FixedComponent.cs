@@ -11,6 +11,11 @@ public sealed record FixedComponent
 		Value = value;
 	}
 
+	[JsonIgnore]
 	public DataType DataType { get; }
+
+	[JsonInclude]
+	public string DataTypeName => DataType.Name;
+
 	public string Value { get; }
 }
