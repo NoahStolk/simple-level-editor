@@ -4,7 +4,12 @@ using ImGuiGlfw;
 using ImGuiNET;
 using Silk.NET.GLFW;
 using Silk.NET.OpenGL;
+using SimpleLevelEditorV2.States.App;
+using SimpleLevelEditorV2.States.GameEntityConfigBuilder;
+using SimpleLevelEditorV2.States.LevelEditor;
 using SimpleLevelEditorV2.Ui.GameEntityConfigBuilder;
+using SimpleLevelEditorV2.Ui.LevelEditor;
+using SimpleLevelEditorV2.Ui.Main;
 using SimpleLevelEditorV2.User;
 using System.Runtime.InteropServices;
 
@@ -25,7 +30,13 @@ public sealed class App
 	private int _currentSecond;
 	private int _renders;
 
-	private static readonly GameEntityConfigBuilderWindow _gameEntityConfigBuilderWindow = new();
+	private readonly MainWindow _mainWindow = new();
+	private readonly GameEntityConfigBuilderWindow _gameEntityConfigBuilderWindow = new();
+	private readonly LevelEditorWindow _levelEditorWindow = new();
+
+	private readonly AppState _appState = new();
+	private readonly GameEntityConfigBuilderState _gameEntityConfigBuilderState = new();
+	private readonly LevelEditorState _levelEditorState = new();
 
 	public unsafe App(ImGuiController imGuiController)
 	{
@@ -119,7 +130,7 @@ public sealed class App
 		Input.GlfwInput.PostRender();
 	}
 
-	private static void RenderUi()
+	private void RenderUi()
 	{
 		// if (WindowsState.ShowControlsWindow)
 		// 	ControlsWindow.Render(ref WindowsState.ShowControlsWindow);
@@ -138,7 +149,18 @@ public sealed class App
 		//
 		// MainMenuBar.Render();
 
-		_gameEntityConfigBuilderWindow.Render();
+		switch (_appState.CurrentView)
+		{
+			case AppView.Main:
+				_mainWindow.Render(_appState);
+				break;
+			case AppView.GameEntityConfigEditor:
+				_gameEntityConfigBuilderWindow.Render(_appState, _gameEntityConfigBuilderState);
+				break;
+			case AppView.LevelEditor:
+				_levelEditorWindow.Render(_appState, _levelEditorState);
+				break;
+		}
 
 		// LevelInfoWindow.Render();
 		// LevelModelsWindow.Render();

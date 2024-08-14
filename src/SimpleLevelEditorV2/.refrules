@@ -1,15 +1,16 @@
-* Detach*
-* SimpleLevelEditorV2.Formats.GameEntityConfig*
-* SimpleLevelEditorV2.Formats.Level*
-* ImGuiGlfw*
-* ImGuiNET*
-* NativeFileDialogUtils*
-* Serilog*
-* Silk.NET*
-* System*
+* *
+# * Detach*
+# * SimpleLevelEditorV2.Formats.GameEntityConfig*
+# * SimpleLevelEditorV2.Formats.Level*
+# * ImGuiGlfw*
+# * ImGuiNET*
+# * NativeFileDialogUtils*
+# * Serilog*
+# * Silk.NET*
+# * System*
 
-* SimpleLevelEditorV2.Extensions
+# * SimpleLevelEditorV2.Extensions
 
-SimpleLevelEditorV2 SimpleLevelEditorV2.Ui*
-SimpleLevelEditorV2 SimpleLevelEditorV2.User*
-SimpleLevelEditorV2.Ui.GameEntityConfigBuilder SimpleLevelEditorV2.States.GameEntityConfigBuilder
+# SimpleLevelEditorV2 SimpleLevelEditorV2.Ui*
+# SimpleLevelEditorV2 SimpleLevelEditorV2.User*
+# SimpleLevelEditorV2.Ui.GameEntityConfigBuilder SimpleLevelEditorV2.States.GameEntityConfigBuilder
