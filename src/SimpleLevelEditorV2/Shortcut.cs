@@ -1,5 +1,5 @@
-using SimpleLevelEditorV2.Extensions;
 using Silk.NET.GLFW;
+using SimpleLevelEditorV2.Extensions;
 
 namespace SimpleLevelEditorV2;
 

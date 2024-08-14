@@ -3,34 +3,20 @@ using Silk.NET.GLFW;
 
 namespace SimpleLevelEditorV2;
 
-public static class Shortcuts
+public sealed class Shortcuts
 {
-	public const string New = nameof(New);
-	public const string Open = nameof(Open);
-	public const string Save = nameof(Save);
-	public const string SaveAs = nameof(SaveAs);
-	public const string AddNewObject = nameof(AddNewObject);
-	public const string FocusOnCurrentObject = nameof(FocusOnCurrentObject);
-	public const string DeleteSelectedObjects = nameof(DeleteSelectedObjects);
-	public const string Undo = nameof(Undo);
-	public const string Redo = nameof(Redo);
+	private readonly List<Shortcut> _shortcuts;
 
-	private static readonly List<Shortcut> _shortcuts =
-	[
-		// new Shortcut(New, Keys.N, true, false, "New level", () => LevelState.New(Graphics.Gl)),
-		// new Shortcut(Open, Keys.O, true, false, "Open level", LevelState.Load),
-		// new Shortcut(Save, Keys.S, true, false, "Save level", LevelState.Save),
-		// new Shortcut(SaveAs, Keys.S, true, true, "Save level as", LevelState.SaveAs),
-		// new Shortcut(AddNewObject, Keys.C, false, false, "Add new object/entity", MainLogic.AddNew),
-		// new Shortcut(DeleteSelectedObjects, Keys.Delete, false, false, "Delete selected objects/entities", MainLogic.Remove),
-		// new Shortcut(FocusOnCurrentObject, Keys.Q, false, false, "Focus on current object/entity", MainLogic.Focus),
-		// new Shortcut(Undo, Keys.Z, true, false, "Undo", () => LevelState.SetHistoryIndex(LevelState.CurrentHistoryIndex - 1)),
-		// new Shortcut(Redo, Keys.Y, true, false, "Redo", () => LevelState.SetHistoryIndex(LevelState.CurrentHistoryIndex + 1)),
-	];
+	public Shortcuts(List<Shortcut> shortcuts)
+	{
+		_shortcuts = shortcuts;
+	}
 
-	public static IReadOnlyList<Shortcut> ShortcutsList => _shortcuts;
+	public IReadOnlyList<Shortcut> ShortcutsList => _shortcuts;
 
-	public static string GetKeyDescription(string shortcutName)
+	public static Shortcuts Empty { get; } = new([]);
+
+	public string GetKeyDescription(string shortcutName)
 	{
 		for (int i = 0; i < _shortcuts.Count; i++)
 		{
@@ -42,7 +28,7 @@ public static class Shortcuts
 		return "?";
 	}
 
-	public static void Handle()
+	public void Handle()
 	{
 		if (ImGui.GetIO().WantTextInput)
 			return;
