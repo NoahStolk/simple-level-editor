@@ -76,6 +76,16 @@ public sealed class GameEntityConfigBuilderMainMenuBar
 				ImGui.EndMenu();
 			}
 
+			if (ImGui.BeginMenu("Help"))
+			{
+				if (ImGui.MenuItem("Shortcuts"))
+				{
+					gameEntityConfigBuilderState.ShowShortcutsWindow = true;
+				}
+
+				ImGui.EndMenu();
+			}
+
 			ImGui.EndMainMenuBar();
 		}
 	}

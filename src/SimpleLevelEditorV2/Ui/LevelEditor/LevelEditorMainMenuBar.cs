@@ -58,6 +58,16 @@ public sealed class LevelEditorMainMenuBar
 				ImGui.EndMenu();
 			}
 
+			if (ImGui.BeginMenu("Help"))
+			{
+				if (ImGui.MenuItem("Shortcuts"))
+				{
+					levelEditorState.ShowShortcutsWindow = true;
+				}
+
+				ImGui.EndMenu();
+			}
+
 			ImGui.EndMainMenuBar();
 		}
 	}

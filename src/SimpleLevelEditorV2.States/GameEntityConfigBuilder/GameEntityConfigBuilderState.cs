@@ -8,4 +8,6 @@ public sealed class GameEntityConfigBuilderState
 	public List<string> TexturePaths = [];
 	public List<DataType> DataTypes = [];
 	public List<EntityDescriptor> EntityDescriptors = [];
+
+	public bool ShowShortcutsWindow;
 }

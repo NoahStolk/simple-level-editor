@@ -10,6 +10,7 @@ using SimpleLevelEditorV2.States.LevelEditor;
 using SimpleLevelEditorV2.Ui.GameEntityConfigBuilder;
 using SimpleLevelEditorV2.Ui.LevelEditor;
 using SimpleLevelEditorV2.Ui.Main;
+using SimpleLevelEditorV2.Ui.Shortcuts;
 using SimpleLevelEditorV2.User;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
@@ -41,6 +42,8 @@ public sealed class App
 
 	private readonly LevelEditorMainMenuBar _levelEditorMainMenuBar = new();
 	private readonly LevelEditorWindow _levelEditorWindow = new();
+
+	private readonly ShortcutsWindow _shortcutsWindow = new();
 
 	private readonly AppState _appState = new();
 	private readonly GameEntityConfigBuilderState _gameEntityConfigBuilderState = new();
@@ -188,10 +191,14 @@ public sealed class App
 				_gameEntityConfigTexturesWindow.Render(_gameEntityConfigBuilderState, initialWindowSize);
 				_gameEntityConfigDataTypesWindow.Render(_gameEntityConfigBuilderState, initialWindowSize);
 				_gameEntityConfigEntityDescriptorsWindow.Render(_gameEntityConfigBuilderState, initialWindowSize);
+
+				_shortcutsWindow.Render(ref _gameEntityConfigBuilderState.ShowShortcutsWindow, _gameEntityConfigBuilderShortcuts);
 				break;
 			case AppView.LevelEditor:
 				_levelEditorMainMenuBar.Render(_appState, _levelEditorState);
 				_levelEditorWindow.Render(_appState, _levelEditorState);
+
+				_shortcutsWindow.Render(ref _levelEditorState.ShowShortcutsWindow, _levelEditorShortcuts);
 				break;
 			default:
 				throw new UnreachableException($"Unknown app state: {_appState.CurrentView}");

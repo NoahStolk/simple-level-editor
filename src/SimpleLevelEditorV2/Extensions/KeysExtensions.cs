@@ -83,6 +83,8 @@ public static class KeysExtensions
 		[Keys.F10] = "F10",
 		[Keys.F11] = "F11",
 		[Keys.F12] = "F12",
+
+		[Keys.Escape] = "Escape",
 	};
 
 	private static readonly Dictionary<Keys, string> _displayStringsShift = new()
@@ -152,6 +154,8 @@ public static class KeysExtensions
 		[Keys.F10] = "F10",
 		[Keys.F11] = "F11",
 		[Keys.F12] = "F12",
+
+		[Keys.Escape] = "Escape",
 	};
 
 	public static string GetDisplayString(this Keys key, bool shift)
