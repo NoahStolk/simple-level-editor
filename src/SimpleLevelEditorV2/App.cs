@@ -33,7 +33,10 @@ public sealed class App
 	private readonly MainWindow _mainWindow = new();
 
 	private readonly GameEntityConfigBuilderMainMenuBar _gameEntityConfigBuilderMainMenuBar = new();
-	private readonly GameEntityConfigBuilderWindow _gameEntityConfigBuilderWindow = new();
+	private readonly GameEntityConfigModelsWindow _gameEntityConfigModelsWindow = new();
+	private readonly GameEntityConfigTexturesWindow _gameEntityConfigTexturesWindow = new();
+	private readonly GameEntityConfigDataTypesWindow _gameEntityConfigDataTypesWindow = new();
+	private readonly GameEntityConfigEntityDescriptorsWindow _gameEntityConfigEntityDescriptorsWindow = new();
 
 	private readonly LevelEditorMainMenuBar _levelEditorMainMenuBar = new();
 	private readonly LevelEditorWindow _levelEditorWindow = new();
@@ -136,23 +139,6 @@ public sealed class App
 
 	private void RenderUi()
 	{
-		// if (WindowsState.ShowControlsWindow)
-		// 	ControlsWindow.Render(ref WindowsState.ShowControlsWindow);
-		//
-		// if (WindowsState.ShowSettingsWindow)
-		// 	SettingsWindow.Render(ref WindowsState.ShowSettingsWindow);
-		//
-		// if (WindowsState.ShowDemoWindow)
-		// 	ImGui.ShowDemoWindow(ref WindowsState.ShowDemoWindow);
-		//
-		// if (WindowsState.ShowInputDebugWindow)
-		// 	InputDebugWindow.Render(ref WindowsState.ShowInputDebugWindow);
-		//
-		// if (WindowsState.ShowDebugWindow)
-		// 	DebugWindow.Render(ref WindowsState.ShowDebugWindow);
-		//
-		// MainMenuBar.Render();
-
 		switch (_appState.CurrentView)
 		{
 			case AppView.Main:
@@ -160,20 +146,17 @@ public sealed class App
 				break;
 			case AppView.GameEntityConfigEditor:
 				_gameEntityConfigBuilderMainMenuBar.Render(_appState, _gameEntityConfigBuilderState);
-				_gameEntityConfigBuilderWindow.Render(_gameEntityConfigBuilderState);
+
+				Vector2 initialWindowSize = new(640, 480);
+				_gameEntityConfigModelsWindow.Render(_gameEntityConfigBuilderState, initialWindowSize);
+				_gameEntityConfigTexturesWindow.Render(_gameEntityConfigBuilderState, initialWindowSize);
+				_gameEntityConfigDataTypesWindow.Render(_gameEntityConfigBuilderState, initialWindowSize);
+				_gameEntityConfigEntityDescriptorsWindow.Render(_gameEntityConfigBuilderState, initialWindowSize);
 				break;
 			case AppView.LevelEditor:
 				_levelEditorMainMenuBar.Render(_appState, _levelEditorState);
 				_levelEditorWindow.Render(_appState, _levelEditorState);
 				break;
 		}
-
-		// LevelInfoWindow.Render();
-		// LevelModelsWindow.Render();
-		// HistoryWindow.Render();
-		// LevelEditorWindow.Render();
-		// ObjectEditorWindow.Render();
-		// MessagesWindow.Render();
-		// EntityConfigEditorWindow.Render();
 	}
 }
