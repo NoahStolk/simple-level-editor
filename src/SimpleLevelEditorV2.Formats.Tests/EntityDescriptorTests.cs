@@ -1,8 +1,8 @@
-using Format.GameEntityConfig;
-using Format.GameEntityConfig.Model;
+using SimpleLevelEditorV2.Formats.GameEntityConfig;
+using SimpleLevelEditorV2.Formats.GameEntityConfig.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace GameEntityConfig.Tests;
+namespace SimpleLevelEditorV2.Formats.Tests;
 
 [TestClass]
 public class EntityDescriptorTests

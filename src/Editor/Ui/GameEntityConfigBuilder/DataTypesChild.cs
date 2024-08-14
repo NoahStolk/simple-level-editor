@@ -1,7 +1,7 @@
 using Detach.Numerics;
 using Editor.States.GameEntityConfigBuilder;
-using Format.GameEntityConfig.Model;
 using ImGuiNET;
+using SimpleLevelEditorV2.Formats.GameEntityConfig.Model;
 
 namespace Editor.Ui.GameEntityConfigBuilder;
 

@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace Format.Level.Model;
+namespace SimpleLevelEditorV2.Formats.Level.Model;
 
 public sealed record LevelEntity
 {

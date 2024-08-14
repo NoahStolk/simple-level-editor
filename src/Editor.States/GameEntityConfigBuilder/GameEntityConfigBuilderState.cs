@@ -1,4 +1,4 @@
-using Format.GameEntityConfig.Model;
+using SimpleLevelEditorV2.Formats.GameEntityConfig.Model;
 
 namespace Editor.States.GameEntityConfigBuilder;
 

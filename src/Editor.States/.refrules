@@ -2,5 +2,5 @@
 * Silk.NET*
 * System*
 
-Editor.States* Format.GameEntityConfig*
-Editor.States* Format.Level*
+Editor.States* SimpleLevelEditorV2.Formats.GameEntityConfig*
+Editor.States* SimpleLevelEditorV2.Formats.Level*

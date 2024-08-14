@@ -1,8 +1,8 @@
-using Format.Level.Model;
+using SimpleLevelEditorV2.Formats.Level.Model;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Format.Level;
+namespace SimpleLevelEditorV2.Formats.Level;
 
 public static class LevelSerializer
 {

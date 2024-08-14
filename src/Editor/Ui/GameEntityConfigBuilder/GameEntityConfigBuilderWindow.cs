@@ -1,8 +1,8 @@
 using Editor.States.GameEntityConfigBuilder;
-using Format.GameEntityConfig;
-using Format.GameEntityConfig.Model;
 using ImGuiNET;
 using NativeFileDialogUtils;
+using SimpleLevelEditorV2.Formats.GameEntityConfig;
+using SimpleLevelEditorV2.Formats.GameEntityConfig.Model;
 
 namespace Editor.Ui.GameEntityConfigBuilder;
 
@@ -25,7 +25,7 @@ public sealed class GameEntityConfigBuilderWindow
 				{
 					if (ImGui.MenuItem("Save"))
 					{
-						Format.GameEntityConfig.GameEntityConfigBuilder builder = new();
+						SimpleLevelEditorV2.Formats.GameEntityConfig.GameEntityConfigBuilder builder = new();
 						foreach (string modelPath in _state.ModelPaths)
 							builder = builder.WithModelPath(modelPath);
 						foreach (string texturePath in _state.TexturePaths)

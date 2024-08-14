@@ -1,7 +1,7 @@
-using Format.GameEntityConfig.Model;
+using SimpleLevelEditorV2.Formats.GameEntityConfig.Model;
 using System.Text.RegularExpressions;
 
-namespace Format.GameEntityConfig;
+namespace SimpleLevelEditorV2.Formats.GameEntityConfig;
 
 public static partial class DataTypeBuilder
 {

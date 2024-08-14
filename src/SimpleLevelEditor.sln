@@ -14,9 +14,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleLevelEditor.Formats.E
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleLevelEditor.Formats", "SimpleLevelEditor.Formats\SimpleLevelEditor.Formats.csproj", "{359FAF11-1A77-4608-A763-C057296F850D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Format", "Format\Format.csproj", "{F83B69C9-96A3-44EF-8530-73D47778DB70}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleLevelEditorV2.Formats", "SimpleLevelEditorV2.Formats\SimpleLevelEditorV2.Formats.csproj", "{F83B69C9-96A3-44EF-8530-73D47778DB70}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameEntityConfig.Tests", "GameEntityConfig.Tests\GameEntityConfig.Tests.csproj", "{F303CC2E-05E3-45C9-A643-130A8B540AF7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleLevelEditorV2.Formats.Tests", "SimpleLevelEditorV2.Formats.Tests\SimpleLevelEditorV2.Formats.Tests.csproj", "{F303CC2E-05E3-45C9-A643-130A8B540AF7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NativeFileDialogUtils", "NativeFileDialogUtils\NativeFileDialogUtils.csproj", "{0F273B95-D3AF-4624-A345-DD7E0CB6109C}"
 EndProject

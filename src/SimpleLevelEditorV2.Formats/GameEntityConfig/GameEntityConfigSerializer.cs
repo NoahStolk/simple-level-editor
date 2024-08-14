@@ -1,7 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Format.GameEntityConfig;
+namespace SimpleLevelEditorV2.Formats.GameEntityConfig;
 
 public static class GameEntityConfigSerializer
 {

@@ -33,7 +33,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Format\Format.csproj"/>
+    <ProjectReference Include="..\SimpleLevelEditorV2.Formats\SimpleLevelEditorV2.Formats.csproj" />
   </ItemGroup>
 
   <ItemGroup>
