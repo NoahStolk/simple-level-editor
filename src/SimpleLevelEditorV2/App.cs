@@ -31,7 +31,11 @@ public sealed class App
 	private int _renders;
 
 	private readonly MainWindow _mainWindow = new();
+
+	private readonly GameEntityConfigBuilderMainMenuBar _gameEntityConfigBuilderMainMenuBar = new();
 	private readonly GameEntityConfigBuilderWindow _gameEntityConfigBuilderWindow = new();
+
+	private readonly LevelEditorMainMenuBar _levelEditorMainMenuBar = new();
 	private readonly LevelEditorWindow _levelEditorWindow = new();
 
 	private readonly AppState _appState = new();
@@ -155,9 +159,11 @@ public sealed class App
 				_mainWindow.Render(_appState);
 				break;
 			case AppView.GameEntityConfigEditor:
-				_gameEntityConfigBuilderWindow.Render(_appState, _gameEntityConfigBuilderState);
+				_gameEntityConfigBuilderMainMenuBar.Render(_appState, _gameEntityConfigBuilderState);
+				_gameEntityConfigBuilderWindow.Render(_gameEntityConfigBuilderState);
 				break;
 			case AppView.LevelEditor:
+				_levelEditorMainMenuBar.Render(_appState, _levelEditorState);
 				_levelEditorWindow.Render(_appState, _levelEditorState);
 				break;
 		}
