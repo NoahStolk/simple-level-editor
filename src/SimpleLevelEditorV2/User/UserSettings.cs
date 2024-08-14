@@ -1,4 +1,5 @@
 using ImGuiNET;
+using SimpleLevelEditorV2.Logging;
 
 namespace SimpleLevelEditorV2.User;
 
@@ -21,10 +22,10 @@ public static class UserSettings
 		}
 		catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or PathTooLongException)
 		{
-			// MessagesState.AddError("Failed to load ImGui settings from " + _imGuiFilePath);
+			GlobalLogger.LogError("Failed to load ImGui settings from " + _imGuiFilePath);
 		}
 
-		// MessagesState.AddInfo("Loaded ImGui settings from " + _imGuiFilePath);
+		GlobalLogger.LogInfo("Loaded ImGui settings from " + _imGuiFilePath);
 	}
 
 	public static void LoadSettings()
@@ -38,10 +39,10 @@ public static class UserSettings
 		}
 		catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or PathTooLongException)
 		{
-			// MessagesState.AddError("Failed to load settings from " + _settingsFilePath);
+			GlobalLogger.LogError("Failed to load settings from " + _settingsFilePath);
 		}
 
-		// MessagesState.AddInfo("Loaded settings from " + _settingsFilePath);
+		GlobalLogger.LogInfo("Loaded settings from " + _settingsFilePath);
 	}
 
 	public static void SaveImGuiIni(ImGuiIOPtr io)
@@ -51,7 +52,7 @@ public static class UserSettings
 		string iniData = ImGui.SaveIniSettingsToMemory(out _);
 		File.WriteAllText(_imGuiFilePath, iniData);
 
-		// MessagesState.AddInfo("Saved ImGui settings to " + _imGuiFilePath);
+		GlobalLogger.LogInfo("Saved ImGui settings to " + _imGuiFilePath);
 
 		io.WantSaveIniSettings = false;
 	}
@@ -62,6 +63,6 @@ public static class UserSettings
 
 		File.WriteAllBytes(_settingsFilePath, Settings.Write());
 
-		// MessagesState.AddInfo("Saved settings to " + _settingsFilePath);
+		GlobalLogger.LogInfo("Saved settings to " + _settingsFilePath);
 	}
 }

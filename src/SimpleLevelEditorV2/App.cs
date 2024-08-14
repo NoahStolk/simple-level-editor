@@ -9,6 +9,7 @@ using SimpleLevelEditorV2.States.EntityConfigEditor;
 using SimpleLevelEditorV2.States.LevelEditor;
 using SimpleLevelEditorV2.Ui.EntityConfig;
 using SimpleLevelEditorV2.Ui.LevelEditor;
+using SimpleLevelEditorV2.Ui.Logging;
 using SimpleLevelEditorV2.Ui.Main;
 using SimpleLevelEditorV2.Ui.Shortcuts;
 using SimpleLevelEditorV2.User;
@@ -44,6 +45,8 @@ public sealed class App
 	private readonly LevelWindow _levelWindow = new();
 
 	private readonly ShortcutsWindow _shortcutsWindow = new();
+
+	private readonly LoggingWindow _loggingWindow = new();
 
 	private readonly AppState _appState = new();
 	private readonly EntityConfigEditorState _entityConfigEditorState = new();
@@ -178,6 +181,8 @@ public sealed class App
 
 	private void RenderUi()
 	{
+		_loggingWindow.Render();
+
 		switch (_appState.CurrentView)
 		{
 			case AppView.Main:

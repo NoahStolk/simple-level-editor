@@ -1,13 +1,14 @@
 using Detach.Parsers.Texture;
 using Detach.Parsers.Texture.TgaFormat;
+using ImGuiGlfw;
+using ImGuiNET;
 using SimpleLevelEditorV2;
+using SimpleLevelEditorV2.Logging;
 // using SimpleLevelEditorV2.States.InternalContent;
 using SimpleLevelEditorV2.User;
 using SimpleLevelEditorV2.Utils;
-using ImGuiGlfw;
-using ImGuiNET;
 
-AppDomain.CurrentDomain.UnhandledException += (_, args) => LogUtils.Log.Fatal(args.ExceptionObject.ToString() ?? "<NO ERROR>");
+AppDomain.CurrentDomain.UnhandledException += (_, args) => GlobalLogger.LogFatal(args.ExceptionObject.ToString() ?? "<MISSING EXCEPTION>");
 
 UserSettings.LoadSettings();
 
