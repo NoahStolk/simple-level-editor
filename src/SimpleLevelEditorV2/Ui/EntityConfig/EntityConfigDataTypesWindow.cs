@@ -1,15 +1,15 @@
 using Detach.Numerics;
 using ImGuiNET;
-using SimpleLevelEditorV2.Formats.GameEntityConfig.Model;
-using SimpleLevelEditorV2.States.GameEntityConfigBuilder;
+using SimpleLevelEditorV2.Formats.EntityConfig.Model;
+using SimpleLevelEditorV2.States.EntityConfigEditor;
 
-namespace SimpleLevelEditorV2.Ui.GameEntityConfigBuilder;
+namespace SimpleLevelEditorV2.Ui.EntityConfig;
 
-public sealed class GameEntityConfigDataTypesWindow
+public sealed class EntityConfigDataTypesWindow
 {
 	private readonly CreateNewDataTypePopup _createNewDataTypePopup = new();
 
-	public void Render(GameEntityConfigBuilderState state, Vector2 initialWindowSize)
+	public void Render(EntityConfigEditorState state, Vector2 initialWindowSize)
 	{
 		ImGuiIOPtr io = ImGui.GetIO();
 		Vector2 screenCenter = new(io.DisplaySize.X / 2, io.DisplaySize.Y / 2);
@@ -62,7 +62,7 @@ public sealed class GameEntityConfigDataTypesWindow
 		ImGui.End();
 	}
 
-	private static void RenderDataType(GameEntityConfigBuilderState state, DataType dataType)
+	private static void RenderDataType(EntityConfigEditorState state, DataType dataType)
 	{
 		ImGui.TableNextRow();
 

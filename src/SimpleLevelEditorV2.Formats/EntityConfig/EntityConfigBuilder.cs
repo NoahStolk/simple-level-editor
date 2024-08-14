@@ -1,15 +1,15 @@
-using SimpleLevelEditorV2.Formats.GameEntityConfig.Model;
+using SimpleLevelEditorV2.Formats.EntityConfig.Model;
 
-namespace SimpleLevelEditorV2.Formats.GameEntityConfig;
+namespace SimpleLevelEditorV2.Formats.EntityConfig;
 
-public sealed class GameEntityConfigBuilder
+public sealed class EntityConfigBuilder
 {
 	private readonly List<string> _modelPaths = [];
 	private readonly List<string> _texturePaths = [];
 	private readonly List<DataType> _dataTypes = [];
 	private readonly List<EntityDescriptor> _entityDescriptors = [];
 
-	public GameEntityConfigBuilder WithModelPath(string modelPath)
+	public EntityConfigBuilder WithModelPath(string modelPath)
 	{
 		if (_modelPaths.Contains(modelPath))
 			throw new ArgumentException($"Model path '{modelPath}' already exists.");
@@ -18,7 +18,7 @@ public sealed class GameEntityConfigBuilder
 		return this;
 	}
 
-	public GameEntityConfigBuilder WithTexturePath(string texturePath)
+	public EntityConfigBuilder WithTexturePath(string texturePath)
 	{
 		if (_texturePaths.Contains(texturePath))
 			throw new ArgumentException($"Texture path '{texturePath}' already exists.");
@@ -27,7 +27,7 @@ public sealed class GameEntityConfigBuilder
 		return this;
 	}
 
-	public GameEntityConfigBuilder WithDefaultDataTypes()
+	public EntityConfigBuilder WithDefaultDataTypes()
 	{
 		return WithDataType(DataType.DiffuseColor)
 			.WithDataType(DataType.Position)
@@ -38,7 +38,7 @@ public sealed class GameEntityConfigBuilder
 			.WithDataType(DataType.Wireframe);
 	}
 
-	public GameEntityConfigBuilder WithDataType(DataType dataType)
+	public EntityConfigBuilder WithDataType(DataType dataType)
 	{
 		if (_dataTypes.Contains(dataType))
 			throw new ArgumentException($"Component type '{dataType}' already exists.");
@@ -47,7 +47,7 @@ public sealed class GameEntityConfigBuilder
 		return this;
 	}
 
-	public GameEntityConfigBuilder WithEntityDescriptor(EntityDescriptor entityDescriptor)
+	public EntityConfigBuilder WithEntityDescriptor(EntityDescriptor entityDescriptor)
 	{
 		if (_entityDescriptors.Exists(ed => ed.Name == entityDescriptor.Name))
 			throw new ArgumentException($"Entity descriptor '{entityDescriptor.Name}' already exists.");
@@ -68,8 +68,8 @@ public sealed class GameEntityConfigBuilder
 		}
 	}
 
-	public GameEntityConfigModel Build()
+	public EntityConfigModel Build()
 	{
-		return new GameEntityConfigModel(_modelPaths, _texturePaths, _dataTypes, _entityDescriptors);
+		return new EntityConfigModel(_modelPaths, _texturePaths, _dataTypes, _entityDescriptors);
 	}
 }

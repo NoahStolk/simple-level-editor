@@ -1,12 +1,12 @@
 using ImGuiNET;
 using NativeFileDialogUtils;
-using SimpleLevelEditorV2.States.GameEntityConfigBuilder;
+using SimpleLevelEditorV2.States.EntityConfigEditor;
 
-namespace SimpleLevelEditorV2.Ui.GameEntityConfigBuilder;
+namespace SimpleLevelEditorV2.Ui.EntityConfig;
 
-public sealed class GameEntityConfigModelsWindow
+public sealed class EntityConfigModelsWindow
 {
-	public void Render(GameEntityConfigBuilderState state, Vector2 initialWindowSize)
+	public void Render(EntityConfigEditorState state, Vector2 initialWindowSize)
 	{
 		ImGuiIOPtr io = ImGui.GetIO();
 		Vector2 screenCenter = new(io.DisplaySize.X / 2, io.DisplaySize.Y / 2);

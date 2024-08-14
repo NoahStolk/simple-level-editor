@@ -1,8 +1,8 @@
-using SimpleLevelEditorV2.Formats.GameEntityConfig.Model;
+using SimpleLevelEditorV2.Formats.EntityConfig.Model;
 
-namespace SimpleLevelEditorV2.States.GameEntityConfigBuilder;
+namespace SimpleLevelEditorV2.States.EntityConfigEditor;
 
-public sealed class GameEntityConfigBuilderState
+public sealed class EntityConfigEditorState
 {
 	public List<string> ModelPaths = [];
 	public List<string> TexturePaths = [];

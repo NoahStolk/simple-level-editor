@@ -1,11 +1,11 @@
-using SimpleLevelEditorV2.Formats.GameEntityConfig;
-using SimpleLevelEditorV2.Formats.GameEntityConfig.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SimpleLevelEditorV2.Formats.EntityConfig;
+using SimpleLevelEditorV2.Formats.EntityConfig.Model;
 
 namespace SimpleLevelEditorV2.Formats.Tests;
 
 [TestClass]
-public class GameEntityConfigTests
+public class EntityConfigTests
 {
 	private static readonly DataType _health = new("Health", [new DataTypeField("Value", Primitive.U32)]);
 	private static readonly DataType _radius = new("Radius", [new DataTypeField("Value", Primitive.F32)]);
@@ -13,8 +13,8 @@ public class GameEntityConfigTests
 	[TestMethod]
 	public void SerDes()
 	{
-		GameEntityConfigBuilder builder = new();
-		GameEntityConfigModel config = builder
+		EntityConfigBuilder builder = new();
+		EntityConfigModel config = builder
 			.WithDefaultDataTypes()
 			.WithDataType(_health)
 			.WithDataType(_radius)
@@ -25,8 +25,8 @@ public class GameEntityConfigTests
 			.WithEntityDescriptor(WorldObject())
 			.Build();
 
-		string json = GameEntityConfigSerializer.Serialize(config);
-		GameEntityConfigModel deserializedConfig = GameEntityConfigSerializer.Deserialize(json);
+		string json = EntityConfigSerializer.Serialize(config);
+		EntityConfigModel deserializedConfig = EntityConfigSerializer.Deserialize(json);
 
 		Assert.AreEqual(config.ModelPaths.Count, deserializedConfig.ModelPaths.Count);
 		for (int i = 0; i < config.ModelPaths.Count; i++)
@@ -48,7 +48,7 @@ public class GameEntityConfigTests
 	[TestMethod]
 	public void FailOnIncorrectOrder()
 	{
-		GameEntityConfigBuilder builder = new();
+		EntityConfigBuilder builder = new();
 		Assert.ThrowsException<ArgumentException>(() =>
 		{
 			builder
@@ -62,7 +62,7 @@ public class GameEntityConfigTests
 	[TestMethod]
 	public void FailOnMissingComponentTypes()
 	{
-		GameEntityConfigBuilder builder = new();
+		EntityConfigBuilder builder = new();
 		Assert.ThrowsException<ArgumentException>(() =>
 		{
 			builder
@@ -74,7 +74,7 @@ public class GameEntityConfigTests
 	[TestMethod]
 	public void FailOnDuplicateComponentTypes()
 	{
-		GameEntityConfigBuilder builder = new();
+		EntityConfigBuilder builder = new();
 		Assert.ThrowsException<ArgumentException>(() =>
 		{
 			builder
@@ -89,7 +89,7 @@ public class GameEntityConfigTests
 	[TestMethod]
 	public void FailOnDuplicateModelPaths()
 	{
-		GameEntityConfigBuilder builder = new();
+		EntityConfigBuilder builder = new();
 		Assert.ThrowsException<ArgumentException>(() =>
 		{
 			builder
@@ -102,7 +102,7 @@ public class GameEntityConfigTests
 	[TestMethod]
 	public void FailOnDuplicateTexturePaths()
 	{
-		GameEntityConfigBuilder builder = new();
+		EntityConfigBuilder builder = new();
 		Assert.ThrowsException<ArgumentException>(() =>
 		{
 			builder
@@ -113,10 +113,10 @@ public class GameEntityConfigTests
 	}
 
 	[TestMethod]
-	public void BuildGameEntityConfig()
+	public void BuildEntityConfig()
 	{
-		GameEntityConfigBuilder builder = new();
-		GameEntityConfigModel config = builder
+		EntityConfigBuilder builder = new();
+		EntityConfigModel config = builder
 			.WithDefaultDataTypes()
 			.WithDataType(_health)
 			.WithDataType(_radius)

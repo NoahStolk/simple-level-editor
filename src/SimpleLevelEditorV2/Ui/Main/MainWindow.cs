@@ -14,9 +14,9 @@ public sealed class MainWindow
 		ImGui.SetNextWindowSize(windowSize);
 		if (ImGui.Begin("Simple Level Editor", ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoCollapse))
 		{
-			if (ImGui.Button("Game Entity Config Editor", new Vector2(256, 128)))
+			if (ImGui.Button("Entity Config Editor", new Vector2(256, 128)))
 			{
-				appState.CurrentView = AppView.GameEntityConfigEditor;
+				appState.CurrentView = AppView.EntityConfigEditor;
 			}
 
 			if (ImGui.Button("Level Editor", new Vector2(256, 128)))

@@ -5,13 +5,13 @@ namespace SimpleLevelEditorV2.Formats.Level.Model;
 public sealed record LevelModel
 {
 	[JsonConstructor]
-	public LevelModel(string gameEntityConfigPath, IReadOnlyList<LevelEntity> levelEntities)
+	public LevelModel(string entityConfigPath, IReadOnlyList<LevelEntity> levelEntities)
 	{
-		GameEntityConfigPath = gameEntityConfigPath;
+		EntityConfigPath = entityConfigPath;
 		LevelEntities = levelEntities;
 	}
 
-	public string GameEntityConfigPath { get; }
+	public string EntityConfigPath { get; }
 
 	public IReadOnlyList<LevelEntity> LevelEntities { get; }
 }

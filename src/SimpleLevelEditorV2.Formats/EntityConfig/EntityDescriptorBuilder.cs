@@ -1,6 +1,6 @@
-using SimpleLevelEditorV2.Formats.GameEntityConfig.Model;
+using SimpleLevelEditorV2.Formats.EntityConfig.Model;
 
-namespace SimpleLevelEditorV2.Formats.GameEntityConfig;
+namespace SimpleLevelEditorV2.Formats.EntityConfig;
 
 public sealed class EntityDescriptorBuilder
 {

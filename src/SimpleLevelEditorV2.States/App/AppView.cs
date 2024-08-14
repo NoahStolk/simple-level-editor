@@ -3,6 +3,6 @@
 public enum AppView
 {
 	Main,
-	GameEntityConfigEditor,
+	EntityConfigEditor,
 	LevelEditor,
 }

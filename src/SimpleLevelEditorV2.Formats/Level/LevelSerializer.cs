@@ -25,7 +25,7 @@ public static class LevelSerializer
 	{
 		LevelModel? level = JsonSerializer.Deserialize<LevelModel>(json, _jsonSerializerOptions);
 		if (level == null)
-			throw new ArgumentException("Failed to deserialize Level");
+			throw new ArgumentException("Failed to deserialize level.");
 
 		return level;
 	}

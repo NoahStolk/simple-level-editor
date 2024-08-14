@@ -1,11 +1,11 @@
 using System.Text.Json.Serialization;
 
-namespace SimpleLevelEditorV2.Formats.GameEntityConfig.Model;
+namespace SimpleLevelEditorV2.Formats.EntityConfig.Model;
 
-public sealed record GameEntityConfigModel
+public sealed record EntityConfigModel
 {
 	[JsonConstructor]
-	internal GameEntityConfigModel(IReadOnlyList<string> modelPaths, IReadOnlyList<string> texturePaths, IReadOnlyList<DataType> dataTypes, IReadOnlyList<EntityDescriptor> entityDescriptors)
+	internal EntityConfigModel(IReadOnlyList<string> modelPaths, IReadOnlyList<string> texturePaths, IReadOnlyList<DataType> dataTypes, IReadOnlyList<EntityDescriptor> entityDescriptors)
 	{
 		ModelPaths = modelPaths;
 		TexturePaths = texturePaths;

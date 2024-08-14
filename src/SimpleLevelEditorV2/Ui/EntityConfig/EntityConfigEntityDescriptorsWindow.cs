@@ -1,16 +1,16 @@
 using Detach;
 using ImGuiNET;
-using SimpleLevelEditorV2.Formats.GameEntityConfig.Model;
-using SimpleLevelEditorV2.States.GameEntityConfigBuilder;
+using SimpleLevelEditorV2.Formats.EntityConfig.Model;
+using SimpleLevelEditorV2.States.EntityConfigEditor;
 using System.Globalization;
 
-namespace SimpleLevelEditorV2.Ui.GameEntityConfigBuilder;
+namespace SimpleLevelEditorV2.Ui.EntityConfig;
 
-public sealed class GameEntityConfigEntityDescriptorsWindow
+public sealed class EntityConfigEntityDescriptorsWindow
 {
 	private readonly CreateNewEntityDescriptorPopup _createNewEntityDescriptorPopup = new();
 
-	public void Render(GameEntityConfigBuilderState state, Vector2 initialWindowSize)
+	public void Render(EntityConfigEditorState state, Vector2 initialWindowSize)
 	{
 		ImGuiIOPtr io = ImGui.GetIO();
 		Vector2 screenCenter = new(io.DisplaySize.X / 2, io.DisplaySize.Y / 2);

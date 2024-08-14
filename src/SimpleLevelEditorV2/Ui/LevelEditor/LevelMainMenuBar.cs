@@ -7,7 +7,7 @@ using SimpleLevelEditorV2.States.LevelEditor;
 
 namespace SimpleLevelEditorV2.Ui.LevelEditor;
 
-public sealed class LevelEditorMainMenuBar
+public sealed class LevelMainMenuBar
 {
 	public void Render(AppState appState, LevelEditorState levelEditorState)
 	{

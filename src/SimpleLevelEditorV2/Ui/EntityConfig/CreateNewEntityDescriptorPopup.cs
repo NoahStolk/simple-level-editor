@@ -1,10 +1,10 @@
 using Detach;
 using ImGuiNET;
-using SimpleLevelEditorV2.Formats.GameEntityConfig;
-using SimpleLevelEditorV2.Formats.GameEntityConfig.Model;
-using SimpleLevelEditorV2.States.GameEntityConfigBuilder;
+using SimpleLevelEditorV2.Formats.EntityConfig;
+using SimpleLevelEditorV2.Formats.EntityConfig.Model;
+using SimpleLevelEditorV2.States.EntityConfigEditor;
 
-namespace SimpleLevelEditorV2.Ui.GameEntityConfigBuilder;
+namespace SimpleLevelEditorV2.Ui.EntityConfig;
 
 public sealed class CreateNewEntityDescriptorPopup
 {
@@ -19,7 +19,7 @@ public sealed class CreateNewEntityDescriptorPopup
 		_name = string.Empty;
 	}
 
-	public EntityDescriptor? Render(GameEntityConfigBuilderState state)
+	public EntityDescriptor? Render(EntityConfigEditorState state)
 	{
 		if (ImGui.BeginChild("NewEntityDescriptorChildWindow", new Vector2(0, ImGui.GetWindowHeight() - 96)))
 		{
@@ -58,7 +58,7 @@ public sealed class CreateNewEntityDescriptorPopup
 		return null;
 	}
 
-	private void RenderFixedComponents(GameEntityConfigBuilderState state)
+	private void RenderFixedComponents(EntityConfigEditorState state)
 	{
 		ImGui.SeparatorText("Fixed Components");
 
@@ -108,7 +108,7 @@ public sealed class CreateNewEntityDescriptorPopup
 			_fixedComponents.Add(new FixedComponent());
 	}
 
-	private void RenderVaryingComponents(GameEntityConfigBuilderState state)
+	private void RenderVaryingComponents(EntityConfigEditorState state)
 	{
 		ImGui.SeparatorText("Varying Components");
 
@@ -176,7 +176,7 @@ public sealed class CreateNewEntityDescriptorPopup
 			_varyingComponents.Add(new VaryingComponent());
 	}
 
-	private EntityDescriptor ConstructEntityDescriptor(GameEntityConfigBuilderState state)
+	private EntityDescriptor ConstructEntityDescriptor(EntityConfigEditorState state)
 	{
 		EntityDescriptorBuilder builder = _entityDescriptorBuilder.WithName(_name);
 
@@ -200,7 +200,7 @@ public sealed class CreateNewEntityDescriptorPopup
 
 		return builder.Build();
 
-		static DataType? GetRequiredDataType(GameEntityConfigBuilderState state, string dataTypeName)
+		static DataType? GetRequiredDataType(EntityConfigEditorState state, string dataTypeName)
 		{
 			return state.DataTypes.Find(dt => dt.Name == dataTypeName) ?? DataType.DefaultDataTypes.FirstOrDefault(dt => dt.Name == dataTypeName);
 		}

@@ -4,7 +4,7 @@ using SimpleLevelEditorV2.States.LevelEditor;
 
 namespace SimpleLevelEditorV2.Ui.LevelEditor;
 
-public sealed class LevelEditorWindow
+public sealed class LevelWindow
 {
 	public void Render(AppState appState, LevelEditorState levelEditorState)
 	{

@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace SimpleLevelEditorV2.Formats.GameEntityConfig.Model;
+namespace SimpleLevelEditorV2.Formats.EntityConfig.Model;
 
 public sealed record FixedComponent
 {

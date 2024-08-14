@@ -5,9 +5,9 @@ using ImGuiNET;
 using Silk.NET.GLFW;
 using Silk.NET.OpenGL;
 using SimpleLevelEditorV2.States.App;
-using SimpleLevelEditorV2.States.GameEntityConfigBuilder;
+using SimpleLevelEditorV2.States.EntityConfigEditor;
 using SimpleLevelEditorV2.States.LevelEditor;
-using SimpleLevelEditorV2.Ui.GameEntityConfigBuilder;
+using SimpleLevelEditorV2.Ui.EntityConfig;
 using SimpleLevelEditorV2.Ui.LevelEditor;
 using SimpleLevelEditorV2.Ui.Main;
 using SimpleLevelEditorV2.Ui.Shortcuts;
@@ -34,22 +34,22 @@ public sealed class App
 
 	private readonly MainWindow _mainWindow = new();
 
-	private readonly GameEntityConfigBuilderMainMenuBar _gameEntityConfigBuilderMainMenuBar = new();
-	private readonly GameEntityConfigModelsWindow _gameEntityConfigModelsWindow = new();
-	private readonly GameEntityConfigTexturesWindow _gameEntityConfigTexturesWindow = new();
-	private readonly GameEntityConfigDataTypesWindow _gameEntityConfigDataTypesWindow = new();
-	private readonly GameEntityConfigEntityDescriptorsWindow _gameEntityConfigEntityDescriptorsWindow = new();
+	private readonly EntityConfigMainMenuBar _entityConfigMainMenuBar = new();
+	private readonly EntityConfigModelsWindow _entityConfigModelsWindow = new();
+	private readonly EntityConfigTexturesWindow _entityConfigTexturesWindow = new();
+	private readonly EntityConfigDataTypesWindow _entityConfigDataTypesWindow = new();
+	private readonly EntityConfigEntityDescriptorsWindow _entityConfigEntityDescriptorsWindow = new();
 
-	private readonly LevelEditorMainMenuBar _levelEditorMainMenuBar = new();
-	private readonly LevelEditorWindow _levelEditorWindow = new();
+	private readonly LevelMainMenuBar _levelMainMenuBar = new();
+	private readonly LevelWindow _levelWindow = new();
 
 	private readonly ShortcutsWindow _shortcutsWindow = new();
 
 	private readonly AppState _appState = new();
-	private readonly GameEntityConfigBuilderState _gameEntityConfigBuilderState = new();
+	private readonly EntityConfigEditorState _entityConfigEditorState = new();
 	private readonly LevelEditorState _levelEditorState = new();
 
-	private readonly Shortcuts _gameEntityConfigBuilderShortcuts;
+	private readonly Shortcuts _entityConfigEditorShortcuts;
 	private readonly Shortcuts _levelEditorShortcuts;
 
 	public unsafe App(ImGuiController imGuiController)
@@ -68,7 +68,7 @@ public sealed class App
 		};
 		Graphics.Glfw.SetWindowIcon(Graphics.Window, 1, &image);
 
-		_gameEntityConfigBuilderShortcuts = new Shortcuts([
+		_entityConfigEditorShortcuts = new Shortcuts([
 			new Shortcut("Exit", Keys.Escape, false, false, "Close the game entity config builder window", () => _appState.CurrentView = AppView.Main),
 			// new Shortcut(Shortcuts.New, Keys.N, true, false, "New level", () => _gameEntityConfigBuilderState.New()),
 			// new Shortcut(Shortcuts.Open, Keys.O, true, false, "Open level", _gameEntityConfigBuilderState.Load),
@@ -157,7 +157,7 @@ public sealed class App
 
 		Shortcuts shortcuts = _appState.CurrentView switch
 		{
-			AppView.GameEntityConfigEditor => _gameEntityConfigBuilderShortcuts,
+			AppView.EntityConfigEditor => _entityConfigEditorShortcuts,
 			AppView.LevelEditor => _levelEditorShortcuts,
 			_ => Shortcuts.Empty,
 		};
@@ -183,20 +183,20 @@ public sealed class App
 			case AppView.Main:
 				_mainWindow.Render(_appState);
 				break;
-			case AppView.GameEntityConfigEditor:
-				_gameEntityConfigBuilderMainMenuBar.Render(_appState, _gameEntityConfigBuilderState);
+			case AppView.EntityConfigEditor:
+				_entityConfigMainMenuBar.Render(_appState, _entityConfigEditorState);
 
 				Vector2 initialWindowSize = new(640, 480);
-				_gameEntityConfigModelsWindow.Render(_gameEntityConfigBuilderState, initialWindowSize);
-				_gameEntityConfigTexturesWindow.Render(_gameEntityConfigBuilderState, initialWindowSize);
-				_gameEntityConfigDataTypesWindow.Render(_gameEntityConfigBuilderState, initialWindowSize);
-				_gameEntityConfigEntityDescriptorsWindow.Render(_gameEntityConfigBuilderState, initialWindowSize);
+				_entityConfigModelsWindow.Render(_entityConfigEditorState, initialWindowSize);
+				_entityConfigTexturesWindow.Render(_entityConfigEditorState, initialWindowSize);
+				_entityConfigDataTypesWindow.Render(_entityConfigEditorState, initialWindowSize);
+				_entityConfigEntityDescriptorsWindow.Render(_entityConfigEditorState, initialWindowSize);
 
-				_shortcutsWindow.Render(ref _gameEntityConfigBuilderState.ShowShortcutsWindow, _gameEntityConfigBuilderShortcuts);
+				_shortcutsWindow.Render(ref _entityConfigEditorState.ShowShortcutsWindow, _entityConfigEditorShortcuts);
 				break;
 			case AppView.LevelEditor:
-				_levelEditorMainMenuBar.Render(_appState, _levelEditorState);
-				_levelEditorWindow.Render(_appState, _levelEditorState);
+				_levelMainMenuBar.Render(_appState, _levelEditorState);
+				_levelWindow.Render(_appState, _levelEditorState);
 
 				_shortcutsWindow.Render(ref _levelEditorState.ShowShortcutsWindow, _levelEditorShortcuts);
 				break;

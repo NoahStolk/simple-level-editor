@@ -1,6 +1,6 @@
-using SimpleLevelEditorV2.Formats.GameEntityConfig;
-using SimpleLevelEditorV2.Formats.GameEntityConfig.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SimpleLevelEditorV2.Formats.EntityConfig;
+using SimpleLevelEditorV2.Formats.EntityConfig.Model;
 
 namespace SimpleLevelEditorV2.Formats.Tests;
 

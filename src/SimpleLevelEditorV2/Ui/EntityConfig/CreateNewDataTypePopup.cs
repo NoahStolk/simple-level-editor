@@ -1,9 +1,9 @@
 using Detach;
 using ImGuiNET;
-using SimpleLevelEditorV2.Formats.GameEntityConfig;
-using SimpleLevelEditorV2.Formats.GameEntityConfig.Model;
+using SimpleLevelEditorV2.Formats.EntityConfig;
+using SimpleLevelEditorV2.Formats.EntityConfig.Model;
 
-namespace SimpleLevelEditorV2.Ui.GameEntityConfigBuilder;
+namespace SimpleLevelEditorV2.Ui.EntityConfig;
 
 public sealed class CreateNewDataTypePopup
 {

@@ -1,4 +1,4 @@
-namespace SimpleLevelEditorV2.Formats.GameEntityConfig.Model;
+namespace SimpleLevelEditorV2.Formats.EntityConfig.Model;
 
 public enum Primitive
 {
