@@ -1,4 +1,4 @@
-namespace SimpleLevelEditorV2.Extensions;
+namespace SimpleLevelEditorV2.Rendering;
 
 public static class FloatExtensions
 {

@@ -4,7 +4,7 @@ using ImGuiGlfw;
 using ImGuiNET;
 using SimpleLevelEditorV2;
 using SimpleLevelEditorV2.Logging;
-// using SimpleLevelEditorV2.States.InternalContent;
+using SimpleLevelEditorV2.Rendering;
 using SimpleLevelEditorV2.User;
 using SimpleLevelEditorV2.Utils;
 
@@ -20,14 +20,14 @@ foreach (string filePath in Directory.GetFiles(Path.Combine(Constants.ContentDir
 	string shaderName = Path.GetFileNameWithoutExtension(filePath);
 	string vertexCode = File.ReadAllText(Path.Combine(Constants.ContentDirectoryName, "Shaders", $"{shaderName}.vert"));
 	string fragmentCode = File.ReadAllText(Path.Combine(Constants.ContentDirectoryName, "Shaders", $"{shaderName}.frag"));
-	// InternalContentState.AddShader(Graphics.Gl, shaderName, vertexCode, fragmentCode);
+	InternalContentState.AddShader(Graphics.Gl, shaderName, vertexCode, fragmentCode);
 }
 
 foreach (string filePath in Directory.GetFiles(Path.Combine(Constants.ContentDirectoryName, "Textures")).DistinctBy(Path.GetFileNameWithoutExtension))
 {
 	string textureName = Path.GetFileNameWithoutExtension(filePath);
 	TextureData texture = TgaParser.Parse(File.ReadAllBytes(filePath));
-	// InternalContentState.AddTexture(Graphics.Gl, textureName, texture);
+	InternalContentState.AddTexture(Graphics.Gl, textureName, texture);
 }
 
 ImGuiController imGuiController = new(Graphics.Gl, Input.GlfwInput, Constants.WindowWidth, Constants.WindowHeight);

@@ -56,6 +56,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SimpleLevelEditorV2.Rendering\SimpleLevelEditorV2.Rendering.csproj" />
     <ProjectReference Include="..\SimpleLevelEditorV2.States\SimpleLevelEditorV2.States.csproj" />
     <ProjectReference Include="..\NativeFileDialogUtils\NativeFileDialogUtils.csproj" />
   </ItemGroup>
