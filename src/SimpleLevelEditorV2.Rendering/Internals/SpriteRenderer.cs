@@ -1,6 +1,5 @@
 using Detach.Parsers.Texture;
 using Silk.NET.OpenGL;
-using System.Numerics;
 
 namespace SimpleLevelEditorV2.Rendering.Internals;
 
@@ -30,12 +29,12 @@ internal sealed class SpriteRenderer
 		]);
 	}
 
-	public void Render(Matrix4x4 view, Matrix4x4 projection)
+	public void Render(RenderData renderData)
 	{
 		_gl.UseProgram(_spriteShader.Id);
 
-		_gl.UniformMatrix4x4(_spriteShader.GetUniformLocation(_gl, "view"), view);
-		_gl.UniformMatrix4x4(_spriteShader.GetUniformLocation(_gl, "projection"), projection);
+		_gl.UniformMatrix4x4(_spriteShader.GetUniformLocation(_gl, "view"), renderData.View);
+		_gl.UniformMatrix4x4(_spriteShader.GetUniformLocation(_gl, "projection"), renderData.Projection);
 
 		RenderSpriteEntities();
 	}

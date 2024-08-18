@@ -80,26 +80,16 @@ internal sealed class LineRenderer
 		]);
 	}
 
-	public void Render(
-		float gridCellFadeOutMinDistance,
-		float gridCellFadeOutMaxDistance,
-		Vector3? moveTargetPosition,
-		float targetHeight,
-		int gridCellInterval,
-		Vector3? selectedPosition,
-		Matrix4x4 view,
-		Matrix4x4 projection,
-		Vector3 cameraPosition,
-		Vector3 focusPointTarget)
+	public void Render(RenderData renderData)
 	{
-		float fadeOutMinDistance = Math.Min(gridCellFadeOutMinDistance, gridCellFadeOutMaxDistance);
-		float fadeOutMaxDistance = Math.Max(gridCellFadeOutMinDistance, gridCellFadeOutMaxDistance);
+		float fadeOutMinDistance = Math.Min(renderData.GridCellFadeOutMinDistance, renderData.GridCellFadeOutMaxDistance);
+		float fadeOutMaxDistance = Math.Max(renderData.GridCellFadeOutMinDistance, renderData.GridCellFadeOutMaxDistance);
 
 		_gl.UseProgram(_lineShader.Id);
 
-		_gl.UniformMatrix4x4(_lineShader.GetUniformLocation(_gl, "view"), view);
-		_gl.UniformMatrix4x4(_lineShader.GetUniformLocation(_gl, "projection"), projection);
-		_gl.Uniform3(_lineShader.GetUniformLocation(_gl, "cameraPosition"), cameraPosition);
+		_gl.UniformMatrix4x4(_lineShader.GetUniformLocation(_gl, "view"), renderData.View);
+		_gl.UniformMatrix4x4(_lineShader.GetUniformLocation(_gl, "projection"), renderData.Projection);
+		_gl.Uniform3(_lineShader.GetUniformLocation(_gl, "cameraPosition"), renderData.CameraPosition);
 		_gl.Uniform1(_lineShader.GetUniformLocation(_gl, "fadeMinDistance"), fadeOutMinDistance);
 		_gl.Uniform1(_lineShader.GetUniformLocation(_gl, "fadeMaxDistance"), fadeOutMaxDistance);
 
@@ -109,14 +99,14 @@ internal sealed class LineRenderer
 		RenderOrigin();
 
 		_gl.Uniform1(_fadeOutUniform, 1);
-		RenderGrid(focusPointTarget with { Y = targetHeight }, new Vector4(1, 1, 1, 0.25f), fadeOutMaxDistance, gridCellInterval);
-		if (moveTargetPosition.HasValue)
+		RenderGrid(renderData.FocusPointTarget with { Y = renderData.TargetHeight }, new Vector4(1, 1, 1, 0.25f), fadeOutMaxDistance, renderData.GridCellInterval);
+		if (renderData.MoveTargetPosition.HasValue)
 		{
-			if (selectedPosition != null)
+			if (renderData.SelectedPosition != null)
 			{
-				bool movedHorizontally = MathF.Abs(moveTargetPosition.Value.X - selectedPosition.Value.X) > float.Epsilon || MathF.Abs(moveTargetPosition.Value.Z - selectedPosition.Value.Z) > float.Epsilon;
-				if (movedHorizontally && MathF.Abs(targetHeight - selectedPosition.Value.Y) > float.Epsilon)
-					RenderGrid(focusPointTarget with { Y = selectedPosition.Value.Y }, new Vector4(1, 1, 0, 0.25f), fadeOutMaxDistance, gridCellInterval);
+				bool movedHorizontally = MathF.Abs(renderData.MoveTargetPosition.Value.X - renderData.SelectedPosition.Value.X) > float.Epsilon || MathF.Abs(renderData.MoveTargetPosition.Value.Z - renderData.SelectedPosition.Value.Z) > float.Epsilon;
+				if (movedHorizontally && MathF.Abs(renderData.TargetHeight - renderData.SelectedPosition.Value.Y) > float.Epsilon)
+					RenderGrid(renderData.FocusPointTarget with { Y = renderData.SelectedPosition.Value.Y }, new Vector4(1, 1, 0, 0.25f), fadeOutMaxDistance, renderData.GridCellInterval);
 			}
 		}
 
@@ -124,8 +114,8 @@ internal sealed class LineRenderer
 		// RenderEntities();
 
 		_gl.BindVertexArray(_centeredLineVao);
-		RenderFocusAxes(focusPointTarget);
-		RenderMoveComparison(moveTargetPosition, selectedPosition);
+		RenderFocusAxes(renderData.FocusPointTarget);
+		RenderMoveComparison(renderData.MoveTargetPosition, renderData.SelectedPosition);
 	}
 
 	private void RenderLine(Matrix4x4 modelMatrix, Vector4 color)

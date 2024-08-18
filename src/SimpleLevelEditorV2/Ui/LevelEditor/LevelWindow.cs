@@ -22,7 +22,8 @@ public sealed class LevelWindow
 
 			cameraState.AspectRatio = framebufferSize.X / framebufferSize.Y;
 
-			sceneFramebuffer.RenderFramebuffer(Graphics.Gl, framebufferSize, 50, 200, null, 0, 8, null, cameraState.ViewMatrix, cameraState.ProjectionMatrix, cameraState.Position, cameraState.FocusPointTarget);
+			RenderData renderData = new(framebufferSize, 50, 200, null, 0, 8, null, cameraState.ViewMatrix, cameraState.ProjectionMatrix, cameraState.Position, cameraState.FocusPointTarget);
+			sceneFramebuffer.RenderFramebuffer(Graphics.Gl, renderData);
 
 			ImDrawListPtr drawList = ImGui.GetWindowDrawList();
 			Vector2 cursorScreenPos = ImGui.GetCursorScreenPos();

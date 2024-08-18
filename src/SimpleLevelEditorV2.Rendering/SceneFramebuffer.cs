@@ -50,26 +50,14 @@ public sealed class SceneFramebuffer
 		return framebufferStatus;
 	}
 
-	public unsafe void RenderFramebuffer(
-		GL gl,
-		Vector2 size,
-		float gridCellFadeOutMinDistance,
-		float gridCellFadeOutMaxDistance,
-		Vector3? moveTargetPosition,
-		float targetHeight,
-		int gridCellInterval,
-		Vector3? selectedPosition,
-		Matrix4x4 view,
-		Matrix4x4 projection,
-		Vector3 cameraPosition,
-		Vector3 focusPointTarget)
+	public unsafe void RenderFramebuffer(GL gl, RenderData renderData)
 	{
 		gl.BindFramebuffer(FramebufferTarget.Framebuffer, _framebufferId);
 
 		// Keep track of the original viewport, so we can restore it later.
 		Span<int> originalViewport = stackalloc int[4];
 		gl.GetInteger(GLEnum.Viewport, originalViewport);
-		gl.Viewport(0, 0, (uint)size.X, (uint)size.Y);
+		gl.Viewport(0, 0, (uint)renderData.Size.X, (uint)renderData.Size.Y);
 
 		gl.ClearColor(0.3f, 0.3f, 0.3f, 0);
 		gl.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
@@ -79,7 +67,7 @@ public sealed class SceneFramebuffer
 		gl.Enable(EnableCap.CullFace);
 		gl.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
 
-		_sceneRenderer.RenderScene(gl, gridCellFadeOutMinDistance, gridCellFadeOutMaxDistance, moveTargetPosition, targetHeight, gridCellInterval, selectedPosition, view, projection, cameraPosition, focusPointTarget);
+		_sceneRenderer.RenderScene(gl, renderData);
 
 		gl.Viewport(originalViewport[0], originalViewport[1], (uint)originalViewport[2], (uint)originalViewport[3]);
 		gl.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
