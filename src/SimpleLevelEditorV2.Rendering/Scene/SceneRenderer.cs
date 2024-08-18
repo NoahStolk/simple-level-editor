@@ -16,14 +16,18 @@ public sealed class SceneRenderer
 		Vector3? moveTargetPosition,
 		float targetHeight,
 		int gridCellInterval,
-		Vector3? selectedPosition)
+		Vector3? selectedPosition,
+		Matrix4x4 view,
+		Matrix4x4 projection,
+		Vector3 cameraPosition,
+		Vector3 focusPointTarget)
 	{
 		_lineRenderer ??= new LineRenderer(gl);
 		_meshRenderer ??= new MeshRenderer(gl);
 		_spriteRenderer ??= new SpriteRenderer(gl);
 
-		_lineRenderer.Render(gridCellFadeOutMinDistance, gridCellFadeOutMaxDistance, moveTargetPosition, targetHeight, gridCellInterval, selectedPosition);
-		_meshRenderer.Render();
-		_spriteRenderer.Render();
+		_lineRenderer.Render(gridCellFadeOutMinDistance, gridCellFadeOutMaxDistance, moveTargetPosition, targetHeight, gridCellInterval, selectedPosition, view, projection, cameraPosition, focusPointTarget);
+		_meshRenderer.Render(view, projection);
+		_spriteRenderer.Render(view, projection);
 	}
 }

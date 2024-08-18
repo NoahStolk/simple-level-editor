@@ -30,12 +30,12 @@ public sealed class SpriteRenderer
 		]);
 	}
 
-	public void Render()
+	public void Render(Matrix4x4 view, Matrix4x4 projection)
 	{
 		_gl.UseProgram(_spriteShader.Id);
 
-		_gl.UniformMatrix4x4(_spriteShader.GetUniformLocation(_gl, "view"), Camera3d.ViewMatrix);
-		_gl.UniformMatrix4x4(_spriteShader.GetUniformLocation(_gl, "projection"), Camera3d.Projection);
+		_gl.UniformMatrix4x4(_spriteShader.GetUniformLocation(_gl, "view"), view);
+		_gl.UniformMatrix4x4(_spriteShader.GetUniformLocation(_gl, "projection"), projection);
 
 		RenderSpriteEntities();
 	}

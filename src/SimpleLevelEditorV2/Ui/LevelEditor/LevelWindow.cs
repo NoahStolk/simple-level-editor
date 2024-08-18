@@ -10,7 +10,7 @@ namespace SimpleLevelEditorV2.Ui.LevelEditor;
 
 public sealed class LevelWindow
 {
-	public unsafe void Render(AppState appState, LevelEditorWindowState levelEditorWindowState)
+	public unsafe void Render(AppState appState, LevelEditorWindowState levelEditorWindowState, CameraState cameraState)
 	{
 		if (ImGui.Begin("Level Editor"))
 		{
@@ -20,16 +20,16 @@ public sealed class LevelWindow
 			if (framebufferStatus is not GLEnum.None and not GLEnum.FramebufferComplete)
 				GlobalLogger.LogError("Framebuffer for scene is not complete.");
 
-			Camera3d.AspectRatio = framebufferSize.X / framebufferSize.Y;
+			cameraState.AspectRatio = framebufferSize.X / framebufferSize.Y;
 
-			SceneFramebuffer.RenderFramebuffer(Graphics.Gl, framebufferSize, 50, 200, null, 0, 8, null);
+			SceneFramebuffer.RenderFramebuffer(Graphics.Gl, framebufferSize, 50, 200, null, 0, 8, null, cameraState.ViewMatrix, cameraState.ProjectionMatrix, cameraState.Position, cameraState.FocusPointTarget);
 
 			ImDrawListPtr drawList = ImGui.GetWindowDrawList();
 			Vector2 cursorScreenPos = ImGui.GetCursorScreenPos();
 			drawList.AddImage((IntPtr)SceneFramebuffer.FramebufferTextureId, cursorScreenPos, cursorScreenPos + framebufferSize, Vector2.UnitY, Vector2.UnitX);
 
 			Vector2 focusPointIconSize = new(16, 16);
-			Vector2 focusPointIconPosition = cursorScreenPos + Camera3d.GetScreenPositionFrom3dPoint(Camera3d.FocusPointTarget, framebufferSize) - focusPointIconSize / 2;
+			Vector2 focusPointIconPosition = cursorScreenPos + cameraState.GetScreenPositionFrom3dPoint(cameraState.FocusPointTarget, framebufferSize) - focusPointIconSize / 2;
 			drawList.AddImage((IntPtr)InternalContentState.Textures["FocusPoint"], focusPointIconPosition, focusPointIconPosition + focusPointIconSize);
 
 			ReadOnlySpan<char> fpsText = Inline.Span($"{App.Instance.Fps} FPS");
@@ -57,7 +57,7 @@ public sealed class LevelWindow
 			// ImGui.SetCursorPos(cursorPosition);
 			// ImGui.InvisibleButton("3d_view", framebufferSize);
 			bool isFocused = ImGui.IsItemHovered();
-			Camera3d.Update(App.Instance.FrameTime, Input.GlfwInput, Graphics.Glfw, Graphics.Window, ImGui.GetIO().DeltaTime, isFocused);
+			cameraState.Update(App.Instance.FrameTime, Input.GlfwInput, Graphics.Glfw, Graphics.Window, ImGui.GetIO().DeltaTime, isFocused);
 
 			// MainLogic.Run(isFocused, normalizedMousePosition, nearPlane, LevelEditorState.Snap);
 		}

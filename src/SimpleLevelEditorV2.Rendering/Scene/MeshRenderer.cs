@@ -1,4 +1,5 @@
 using Silk.NET.OpenGL;
+using System.Numerics;
 
 namespace SimpleLevelEditorV2.Rendering.Scene;
 
@@ -15,12 +16,12 @@ public sealed class MeshRenderer
 		_modelUniform = _meshShader.GetUniformLocation(_gl, "model");
 	}
 
-	public void Render()
+	public void Render(Matrix4x4 view, Matrix4x4 projection)
 	{
 		_gl.UseProgram(_meshShader.Id);
 
-		_gl.UniformMatrix4x4(_meshShader.GetUniformLocation(_gl, "view"), Camera3d.ViewMatrix);
-		_gl.UniformMatrix4x4(_meshShader.GetUniformLocation(_gl, "projection"), Camera3d.Projection);
+		_gl.UniformMatrix4x4(_meshShader.GetUniformLocation(_gl, "view"), view);
+		_gl.UniformMatrix4x4(_meshShader.GetUniformLocation(_gl, "projection"), projection);
 
 		// RenderMeshEntities();
 		//

@@ -52,6 +52,7 @@ public sealed class App
 	private readonly EntityConfigEditorState _entityConfigEditorState = new();
 	private readonly LevelEditorWindowState _levelEditorWindowState = new();
 	private readonly LevelModelState _levelModelState = new();
+	private readonly CameraState _cameraState = new();
 
 	private readonly Shortcuts _entityConfigEditorShortcuts;
 	private readonly Shortcuts _levelEditorShortcuts;
@@ -202,7 +203,7 @@ public sealed class App
 				break;
 			case AppView.LevelEditor:
 				_levelMainMenuBar.Render(_appState, _levelEditorWindowState, _levelModelState);
-				_levelWindow.Render(_appState, _levelEditorWindowState);
+				_levelWindow.Render(_appState, _levelEditorWindowState, _cameraState);
 
 				_shortcutsWindow.Render(ref _levelEditorWindowState.ShowShortcutsWindow, _levelEditorShortcuts);
 				break;

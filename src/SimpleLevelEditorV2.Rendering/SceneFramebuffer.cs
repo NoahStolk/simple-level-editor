@@ -59,7 +59,11 @@ public static class SceneFramebuffer
 		Vector3? moveTargetPosition,
 		float targetHeight,
 		int gridCellInterval,
-		Vector3? selectedPosition)
+		Vector3? selectedPosition,
+		Matrix4x4 view,
+		Matrix4x4 projection,
+		Vector3 cameraPosition,
+		Vector3 focusPointTarget)
 	{
 		gl.BindFramebuffer(FramebufferTarget.Framebuffer, _framebufferId);
 
@@ -76,7 +80,7 @@ public static class SceneFramebuffer
 		gl.Enable(EnableCap.CullFace);
 		gl.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
 
-		_sceneRenderer.RenderScene(gl, gridCellFadeOutMinDistance, gridCellFadeOutMaxDistance, moveTargetPosition, targetHeight, gridCellInterval, selectedPosition);
+		_sceneRenderer.RenderScene(gl, gridCellFadeOutMinDistance, gridCellFadeOutMaxDistance, moveTargetPosition, targetHeight, gridCellInterval, selectedPosition, view, projection, cameraPosition, focusPointTarget);
 
 		gl.Viewport(originalViewport[0], originalViewport[1], (uint)originalViewport[2], (uint)originalViewport[3]);
 		gl.BindFramebuffer(FramebufferTarget.Framebuffer, 0);

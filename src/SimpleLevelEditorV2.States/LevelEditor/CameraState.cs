@@ -1,48 +1,48 @@
-using ImGuiGlfw;
+﻿using ImGuiGlfw;
 using Silk.NET.GLFW;
 using System.Numerics;
 
-namespace SimpleLevelEditorV2.Rendering;
+namespace SimpleLevelEditorV2.States.LevelEditor;
 
-public static class Camera3d
+public sealed class CameraState
 {
 	public const MouseButton LookButton = MouseButton.Right;
 	private const MouseButton _panButton = MouseButton.Middle;
-
 	private const int _fieldOfView = 2;
-	private static Vector2? _originalCursor;
 
-	private static float _yaw = MathF.PI * 0.25f;
-	private static float _pitch = -0.5f;
+	private Vector2? _originalCursor;
 
-	public static float Zoom = 5;
+	public float Yaw { get; private set; } = MathF.PI * 0.25f;
+	public float Pitch { get; private set; } = -0.5f;
+	public float Zoom { get; private set; } = 5;
 
-	private static Vector3 _focusPoint;
+	public Vector3 Position { get; private set; }
 
-	public static Quaternion Rotation { get; private set; } = Quaternion.CreateFromYawPitchRoll(_yaw, -_pitch, 0);
-	public static Vector3 Position { get; private set; }
+	public Vector3 FocusPoint { get; private set; }
+	public Vector3 FocusPointTarget { get; private set; }
 
-	public static Matrix4x4 Projection { get; private set; }
-	public static Matrix4x4 ViewMatrix { get; private set; }
-	public static float AspectRatio { get; set; }
-	public static CameraMode Mode { get; private set; }
-	public static Vector3 FocusPointTarget { get; private set; }
+	public CameraMode Mode { get; private set; }
 
-	public static Vector3 UpDirection => Vector3.Transform(Vector3.UnitY, Rotation);
-	public static Vector3 LookDirection => Vector3.Transform(Vector3.UnitZ, Rotation);
+	private Quaternion Rotation => Quaternion.CreateFromYawPitchRoll(Yaw, -Pitch, 0);
+	public Vector3 UpDirection => Vector3.Transform(Vector3.UnitY, Rotation);
+	public Vector3 LookDirection => Vector3.Transform(Vector3.UnitZ, Rotation);
 
-	public static void SetFocusPoint(Vector3 focusPoint)
+	public Matrix4x4 ProjectionMatrix { get; private set; }
+	public Matrix4x4 ViewMatrix { get; private set; }
+	public float AspectRatio { get; set; }
+
+	public void SetFocusPoint(Vector3 focusPoint)
 	{
 		FocusPointTarget = focusPoint;
 	}
 
-	private static void SetFocusPointHard(Vector3 focusPoint)
+	private void SetFocusPointHard(Vector3 focusPoint)
 	{
 		FocusPointTarget = focusPoint;
-		_focusPoint = focusPoint;
+		FocusPoint = focusPoint;
 	}
 
-	public static unsafe void Update(float frameTime, GlfwInput input, Glfw glfw, WindowHandle* window, float dt, bool isFocused)
+	public unsafe void Update(float frameTime, GlfwInput input, Glfw glfw, WindowHandle* window, float dt, bool isFocused)
 	{
 		if (isFocused)
 		{
@@ -74,17 +74,17 @@ public static class Camera3d
 			ResetCameraMode(glfw, window);
 		}
 
-		_focusPoint = Vector3.Lerp(_focusPoint, FocusPointTarget, dt * 10);
-		Position = _focusPoint + Vector3.Transform(new Vector3(0, 0, -Zoom), Rotation);
+		FocusPoint = Vector3.Lerp(FocusPoint, FocusPointTarget, dt * 10);
+		Position = FocusPoint + Vector3.Transform(new Vector3(0, 0, -Zoom), Rotation);
 
 		ViewMatrix = Matrix4x4.CreateLookAt(Position, Position + LookDirection, UpDirection);
 
 		const float nearPlaneDistance = 0.05f;
 		const float farPlaneDistance = 10000f;
-		Projection = Matrix4x4.CreatePerspectiveFieldOfView(MathF.PI / 4 * _fieldOfView, AspectRatio, nearPlaneDistance, farPlaneDistance);
+		ProjectionMatrix = Matrix4x4.CreatePerspectiveFieldOfView(MathF.PI / 4 * _fieldOfView, AspectRatio, nearPlaneDistance, farPlaneDistance);
 	}
 
-	private static unsafe void HandleMouse(GlfwInput input, Glfw glfw, WindowHandle* window)
+	private unsafe void HandleMouse(GlfwInput input, Glfw glfw, WindowHandle* window)
 	{
 		_originalCursor ??= input.CursorPosition;
 
@@ -108,9 +108,8 @@ public static class Camera3d
 		if (Mode == CameraMode.Look)
 		{
 			const float lookSpeed = 20;
-			_yaw -= lookSpeed * delta.X * 0.0001f;
-			_pitch -= lookSpeed * delta.Y * 0.0001f;
-			Rotation = Quaternion.CreateFromYawPitchRoll(_yaw, -_pitch, 0);
+			Yaw -= lookSpeed * delta.X * 0.0001f;
+			Pitch -= lookSpeed * delta.Y * 0.0001f;
 
 			glfw.SetCursorPos(window, _originalCursor.Value.X, _originalCursor.Value.Y);
 		}
@@ -123,18 +122,18 @@ public static class Camera3d
 		}
 	}
 
-	private static unsafe void ResetCameraMode(Glfw glfw, WindowHandle* window)
+	private unsafe void ResetCameraMode(Glfw glfw, WindowHandle* window)
 	{
 		glfw.SetInputMode(window, CursorStateAttribute.Cursor, CursorModeValue.CursorNormal);
 		Mode = CameraMode.None;
 	}
 
-	public static Vector3 GetMouseWorldPosition(Vector2 normalizedMousePosition, Plane plane)
+	public Vector3 GetMouseWorldPosition(Vector2 normalizedMousePosition, Plane plane)
 	{
 		Vector3 nearSource = new(normalizedMousePosition.X, normalizedMousePosition.Y, 0f);
 		Vector3 farSource = new(normalizedMousePosition.X, normalizedMousePosition.Y, 1f);
-		Vector3 nearPoint = UnProject(nearSource, Projection, ViewMatrix, Matrix4x4.Identity);
-		Vector3 farPoint = UnProject(farSource, Projection, ViewMatrix, Matrix4x4.Identity);
+		Vector3 nearPoint = UnProject(nearSource, ProjectionMatrix, ViewMatrix, Matrix4x4.Identity);
+		Vector3 farPoint = UnProject(farSource, ProjectionMatrix, ViewMatrix, Matrix4x4.Identity);
 
 		// Create a ray from the near clip plane to the far clip plane.
 		Vector3 rayDirection = Vector3.Normalize(farPoint - nearPoint);
@@ -165,9 +164,9 @@ public static class Camera3d
 		}
 	}
 
-	public static Vector2 GetScreenPositionFrom3dPoint(Vector3 position, Vector2 framebufferSize)
+	public Vector2 GetScreenPositionFrom3dPoint(Vector3 position, Vector2 framebufferSize)
 	{
-		Vector3 clipSpace = Vector3.Transform(position, ViewMatrix * Projection);
+		Vector3 clipSpace = Vector3.Transform(position, ViewMatrix * ProjectionMatrix);
 		return ToScreenSpace(clipSpace, framebufferSize);
 	}
 
