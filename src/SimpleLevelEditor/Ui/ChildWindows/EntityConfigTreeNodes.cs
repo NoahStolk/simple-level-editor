@@ -1,7 +1,8 @@
 using Detach;
 using ImGuiNET;
 using SimpleLevelEditor.Extensions;
-using SimpleLevelEditor.Formats.Types.EntityConfig;
+using SimpleLevelEditor.Formats;
+using SimpleLevelEditor.Formats.EntityConfig;
 using SimpleLevelEditor.Utils;
 using System.Diagnostics;
 using System.Globalization;
@@ -14,7 +15,7 @@ public static class EntityConfigTreeNodes
 	{
 		if (ImGui.TreeNode("Models"))
 		{
-			for (int i = 0; i < entityConfig.ModelPaths.Length; i++)
+			for (int i = 0; i < entityConfig.ModelPaths.Count; i++)
 				ImGui.Text(entityConfig.ModelPaths[i]);
 
 			ImGui.TreePop();
@@ -22,7 +23,7 @@ public static class EntityConfigTreeNodes
 
 		if (ImGui.TreeNode("Textures"))
 		{
-			for (int i = 0; i < entityConfig.TexturePaths.Length; i++)
+			for (int i = 0; i < entityConfig.TexturePaths.Count; i++)
 				ImGui.Text(entityConfig.TexturePaths[i]);
 
 			ImGui.TreePop();
@@ -30,7 +31,7 @@ public static class EntityConfigTreeNodes
 
 		if (ImGui.TreeNode("Entities"))
 		{
-			for (int i = 0; i < entityConfig.Entities.Length; i++)
+			for (int i = 0; i < entityConfig.Entities.Count; i++)
 			{
 				EntityDescriptor entity = entityConfig.Entities[i];
 				ImGui.SetNextItemOpen(true, ImGuiCond.Appearing);
@@ -107,7 +108,7 @@ public static class EntityConfigTreeNodes
 			ImGui.TreePop();
 		}
 
-		if (entity.Properties.Length > 0)
+		if (entity.Properties.Count > 0)
 		{
 			RenderEntityProperties(i, entity);
 		}
@@ -128,20 +129,20 @@ public static class EntityConfigTreeNodes
 				ImGui.TableSetupColumn("Max");
 				ImGui.TableHeadersRow();
 
-				for (int j = 0; j < entity.Properties.Length; j++)
+				for (int j = 0; j < entity.Properties.Count; j++)
 				{
 					EntityPropertyDescriptor property = entity.Properties[j];
 					Vector4 color = property.Type.GetDisplayColor();
 					string typeId = property.Type.GetTypeId();
-					string defaultValue = property.Type.DefaultValue.ToDisplayString();
+					string defaultValue = property.Type.GetDefaultValue().ToDisplayString();
 					ImGui.TableNextRow();
 
 					NextColumnTextColored(color, typeId);
 					NextColumnText(property.Name);
 					NextColumnTextOptional(defaultValue);
-					NextColumnTextOptional(Inline.Span(property.Type.Step), property.Type.Step.IsZero());
-					NextColumnTextOptional(Inline.Span(property.Type.MinValue), property.Type.MinValue.IsZero());
-					NextColumnTextOptional(Inline.Span(property.Type.MaxValue), property.Type.MaxValue.IsZero());
+					NextColumnTextOptional(Inline.Span(property.Type.GetStep()), property.Type.GetStep().IsZero());
+					NextColumnTextOptional(Inline.Span(property.Type.GetMin()), property.Type.GetMin().IsZero());
+					NextColumnTextOptional(Inline.Span(property.Type.GetMax()), property.Type.GetMax().IsZero());
 				}
 
 				ImGui.EndTable();

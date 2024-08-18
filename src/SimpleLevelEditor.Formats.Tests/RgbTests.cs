@@ -1,5 +1,5 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SimpleLevelEditor.Formats.Types;
+using SimpleLevelEditor.Formats.Core;
 using System.Numerics;
 
 namespace SimpleLevelEditor.Formats.Tests;
@@ -12,7 +12,7 @@ public class RgbTests
 	[TestMethod]
 	public void CreateDefault()
 	{
-		Rgb defaultRgb = Rgb.Default;
+		Rgb defaultRgb = default;
 		Assert.AreEqual(0, defaultRgb.R);
 		Assert.AreEqual(0, defaultRgb.G);
 		Assert.AreEqual(0, defaultRgb.B);

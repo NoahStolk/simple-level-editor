@@ -1,6 +1,6 @@
 # Simple Level Editor
 
-Simple cross-platform 3D level editor written in C# and F# using .NET 8, OpenGL and ImGui.
+Simple cross-platform 3D level editor written in C# using .NET 8, OpenGL and ImGui.
 
 > Try the latest alpha version [here](https://github.com/NoahStolk/simple-level-editor/releases).
 

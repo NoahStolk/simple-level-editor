@@ -8,8 +8,8 @@
   ],
   "WorldObjects": [
     {
-      "Id": 1,
-      "ModelPath": "Models\\Pillar.obj",
+      "Id": 0,
+      "ModelPath": "Models\\Altar.obj",
       "Scale": {
         "X": 1,
         "Y": 1,
@@ -21,14 +21,114 @@
         "Z": 0
       },
       "Position": {
-        "X": -0,
+        "X": 3,
         "Y": 0,
-        "Z": 0
+        "Z": -4
       },
       "Flags": []
     },
     {
-      "Id": 69,
+      "Id": 1,
+      "ModelPath": "Models\\Altar.obj",
+      "Scale": {
+        "X": 1,
+        "Y": 1,
+        "Z": 1
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "Position": {
+        "X": 10,
+        "Y": 0,
+        "Z": 9
+      },
+      "Flags": []
+    },
+    {
+      "Id": 2,
+      "ModelPath": "Models\\Altar.obj",
+      "Scale": {
+        "X": 1,
+        "Y": 1,
+        "Z": 1
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "Position": {
+        "X": -6,
+        "Y": 0,
+        "Z": 4
+      },
+      "Flags": []
+    },
+    {
+      "Id": 3,
+      "ModelPath": "Models\\Ammonite.obj",
+      "Scale": {
+        "X": 1,
+        "Y": 1,
+        "Z": 1
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "Position": {
+        "X": -3,
+        "Y": 0,
+        "Z": -4
+      },
+      "Flags": []
+    },
+    {
+      "Id": 4,
+      "ModelPath": "Models\\Ammonite.obj",
+      "Scale": {
+        "X": 1,
+        "Y": 1,
+        "Z": 1
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "Position": {
+        "X": 23,
+        "Y": 0,
+        "Z": -0
+      },
+      "Flags": []
+    },
+    {
+      "Id": 5,
+      "ModelPath": "Models\\Ammonite.obj",
+      "Scale": {
+        "X": 1,
+        "Y": 2.6,
+        "Z": 1
+      },
+      "Rotation": {
+        "X": 30,
+        "Y": 60,
+        "Z": 0
+      },
+      "Position": {
+        "X": 18,
+        "Y": 0,
+        "Z": -6
+      },
+      "Flags": []
+    },
+    {
+      "Id": 6,
       "ModelPath": "Models\\meshtest.obj",
       "Scale": {
         "X": 1,
@@ -41,55 +141,15 @@
         "Z": 0
       },
       "Position": {
-        "X": -27,
-        "Y": 0,
-        "Z": 10
-      },
-      "Flags": []
-    },
-    {
-      "Id": 70,
-      "ModelPath": "Models\\Ammonite.obj",
-      "Scale": {
-        "X": 1,
-        "Y": 1,
-        "Z": 1
-      },
-      "Rotation": {
-        "X": 0,
-        "Y": 0,
-        "Z": 115
-      },
-      "Position": {
-        "X": 4,
-        "Y": 0,
-        "Z": 8
-      },
-      "Flags": []
-    },
-    {
-      "Id": 71,
-      "ModelPath": "Models\\Ammonite.obj",
-      "Scale": {
-        "X": 1,
-        "Y": 1,
-        "Z": 1
-      },
-      "Rotation": {
-        "X": 0,
-        "Y": 15,
-        "Z": 20
-      },
-      "Position": {
-        "X": 7,
-        "Y": 0,
+        "X": -2,
+        "Y": -5,
         "Z": 5
       },
       "Flags": []
     },
     {
-      "Id": 72,
-      "ModelPath": "Models\\Ammonite.obj",
+      "Id": 7,
+      "ModelPath": "Models\\Pillar.obj",
       "Scale": {
         "X": 1,
         "Y": 1,
@@ -97,19 +157,19 @@
       },
       "Rotation": {
         "X": 0,
-        "Y": 60,
+        "Y": 0,
         "Z": 0
       },
       "Position": {
-        "X": 10,
-        "Y": 0,
-        "Z": 1
+        "X": 8,
+        "Y": 9.536743E-07,
+        "Z": 19
       },
       "Flags": []
     },
     {
-      "Id": 73,
-      "ModelPath": "Models\\Ammonite.obj",
+      "Id": 8,
+      "ModelPath": "Models\\Pillar.obj",
       "Scale": {
         "X": 1,
         "Y": 1,
@@ -117,70 +177,74 @@
       },
       "Rotation": {
         "X": 0,
-        "Y": 115,
+        "Y": 0,
         "Z": 0
       },
       "Position": {
-        "X": 16,
+        "X": 13,
         "Y": 0,
-        "Z": -4
+        "Z": 19
+      },
+      "Flags": []
+    },
+    {
+      "Id": 9,
+      "ModelPath": "Models\\Pillar.obj",
+      "Scale": {
+        "X": 1,
+        "Y": 1,
+        "Z": 1
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "Position": {
+        "X": 17,
+        "Y": 0,
+        "Z": 18
       },
       "Flags": []
     }
   ],
   "Entities": [
     {
-      "Id": 1,
-      "Name": "Point_SimpleSphere",
-      "Position": {
-        "X": 11,
-        "Y": 0,
-        "Z": -13
-      },
-      "Shape": {
-        "Case": "Point"
-      },
-      "Properties": []
-    },
-    {
       "Id": 2,
       "Name": "Point_BillboardSprite",
       "Position": {
-        "X": 9,
+        "X": 1,
         "Y": 0,
-        "Z": -13
+        "Z": 19
       },
       "Shape": {
-        "Case": "Point"
+        "$type": "Point"
       },
       "Properties": []
     },
     {
       "Id": 3,
-      "Name": "Point_Model",
+      "Name": "Point_SimpleSphere",
       "Position": {
-        "X": 21,
+        "X": -4,
         "Y": 0,
-        "Z": -8
+        "Z": 24
       },
       "Shape": {
-        "Case": "Point"
+        "$type": "Point"
       },
       "Properties": []
     },
     {
       "Id": 4,
-      "Name": "Sphere",
+      "Name": "Point_Model",
       "Position": {
-        "X": 11,
+        "X": 3,
         "Y": 0,
-        "Z": -20
+        "Z": 27
       },
       "Shape": {
-        "Case": "Sphere",
-        "Fields": [
-          2.5
-        ]
+        "$type": "Point"
       },
       "Properties": []
     },
@@ -188,113 +252,69 @@
       "Id": 5,
       "Name": "Aabb",
       "Position": {
-        "X": 5,
+        "X": 10,
         "Y": 0,
-        "Z": -20
+        "Z": 26
       },
       "Shape": {
-        "Case": "Aabb",
-        "Fields": [
-          {
-            "X": 4.7,
-            "Y": 2.2,
-            "Z": 5.8
-          }
-        ]
+        "$type": "Aabb",
+        "Size": {
+          "X": 1,
+          "Y": 1,
+          "Z": 1
+        }
       },
       "Properties": []
     },
     {
       "Id": 6,
-      "Name": "Light",
+      "Name": "Sphere",
       "Position": {
-        "X": 11,
-        "Y": 0,
-        "Z": -26
+        "X": 15,
+        "Y": 9.536743E-07,
+        "Z": 24
       },
       "Shape": {
-        "Case": "Point"
+        "$type": "Sphere",
+        "Radius": 2
+      },
+      "Properties": []
+    },
+    {
+      "Id": 7,
+      "Name": "Light",
+      "Position": {
+        "X": 27,
+        "Y": 0,
+        "Z": 17
+      },
+      "Shape": {
+        "$type": "Point"
       },
       "Properties": [
         {
           "Key": "Color",
           "Value": {
-            "Case": "Rgb",
-            "Fields": [
-              {
-                "R": 255,
-                "G": 255,
-                "B": 255
-              }
-            ]
+            "$type": "Rgb",
+            "Value": {
+              "R": 255,
+              "G": 71,
+              "B": 255
+            }
           }
         },
         {
           "Key": "Radius",
           "Value": {
-            "Case": "Float",
-            "Fields": [
-              5
-            ]
+            "$type": "Float",
+            "Value": 208
           }
         },
         {
           "Key": "Shadow",
           "Value": {
-            "Case": "Bool",
-            "Fields": [
-              false
-            ]
-          }
-        }
-      ]
-    },
-    {
-      "Id": 7,
-      "Name": "AudioSource",
-      "Position": {
-        "X": 5,
-        "Y": 0,
-        "Z": -26
-      },
-      "Shape": {
-        "Case": "Point"
-      },
-      "Properties": [
-        {
-          "Key": "Audio",
-          "Value": {
-            "Case": "String",
-            "Fields": [
-              ""
-            ]
-          }
-        },
-        {
-          "Key": "Gain",
-          "Value": {
-            "Case": "Float",
-            "Fields": [
-              1
-            ]
-          }
-        },
-        {
-          "Key": "Pitch",
-          "Value": {
-            "Case": "Float",
-            "Fields": [
-              1
-            ]
-          }
-        },
-        {
-          "Key": "Radius",
-          "Value": {
-            "Case": "Float",
-            "Fields": [
-              10
-            ]
+            "$type": "Bool",
+            "Value": true
           }
         }
       ]
@@ -303,75 +323,107 @@
       "Id": 8,
       "Name": "DynamicObject",
       "Position": {
-        "X": 3,
+        "X": 29,
         "Y": 0,
-        "Z": -13
+        "Z": 21
       },
       "Shape": {
-        "Case": "Point"
+        "$type": "Point"
       },
       "Properties": [
         {
-          "Key": "Mass",
-          "Value": {
-            "Case": "Float",
-            "Fields": [
-              1
-            ]
-          }
-        },
-        {
           "Key": "Mesh",
           "Value": {
-            "Case": "String",
-            "Fields": [
-              ""
-            ]
-          }
-        },
-        {
-          "Key": "Scale",
-          "Value": {
-            "Case": "Vector3",
-            "Fields": [
-              {
-                "X": 1,
-                "Y": 1,
-                "Z": 1
-              }
-            ]
+            "$type": "String",
+            "Value": "asdf"
           }
         },
         {
           "Key": "Texture",
           "Value": {
-            "Case": "String",
-            "Fields": [
-              ""
-            ]
+            "$type": "String",
+            "Value": "asdf"
+          }
+        },
+        {
+          "Key": "Scale",
+          "Value": {
+            "$type": "Vector3",
+            "Value": {
+              "X": 5.7,
+              "Y": 2.9,
+              "Z": 1
+            }
+          }
+        },
+        {
+          "Key": "Mass",
+          "Value": {
+            "$type": "Float",
+            "Value": 2.7
           }
         }
       ]
     },
     {
       "Id": 9,
-      "Name": "Item",
+      "Name": "AudioSource",
       "Position": {
-        "X": 0,
+        "X": 25,
         "Y": 0,
-        "Z": -26
+        "Z": 23
       },
       "Shape": {
-        "Case": "Point"
+        "$type": "Point"
+      },
+      "Properties": [
+        {
+          "Key": "Audio",
+          "Value": {
+            "$type": "String",
+            "Value": ""
+          }
+        },
+        {
+          "Key": "Gain",
+          "Value": {
+            "$type": "Float",
+            "Value": 1
+          }
+        },
+        {
+          "Key": "Pitch",
+          "Value": {
+            "$type": "Float",
+            "Value": 1
+          }
+        },
+        {
+          "Key": "Radius",
+          "Value": {
+            "$type": "Float",
+            "Value": 10
+          }
+        }
+      ]
+    },
+    {
+      "Id": 10,
+      "Name": "Item",
+      "Position": {
+        "X": 34,
+        "Y": 0,
+        "Z": 20
+      },
+      "Shape": {
+        "$type": "Point"
       },
       "Properties": [
         {
           "Key": "Type",
           "Value": {
-            "Case": "String",
-            "Fields": [
-              ""
-            ]
+            "$type": "String",
+            "Value": ""
           }
         }
       ]

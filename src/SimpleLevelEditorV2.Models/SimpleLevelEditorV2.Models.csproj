@@ -1,0 +1,7 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup Label="External dependencies">
+    <PackageReference Include="NoahStolk.Detach" Version="0.11.2"/>
+  </ItemGroup>
+
+</Project>

@@ -1,6 +1,6 @@
 using Detach;
 using ImGuiNET;
-using SimpleLevelEditor.Formats.Types.Level;
+using SimpleLevelEditor.Formats.Level;
 using SimpleLevelEditor.State.States.EntityConfig;
 using SimpleLevelEditor.State.States.Level;
 using SimpleLevelEditor.Ui.ChildWindows;
@@ -27,10 +27,10 @@ public static class LevelInfoWindow
 
 	private static void RenderLevel(Level3dData level)
 	{
-		ImGui.Text(Inline.Span($"Models: {level.ModelPaths.Length}"));
-		ImGui.Text(Inline.Span($"WorldObjects: {level.WorldObjects.Length}"));
-		ImGui.Text(Inline.Span($"Entities: {level.Entities.Length}"));
-		ImGui.TextWrapped(Inline.Span($"EntityConfig: {(level.EntityConfigPath == null ? "<No entity config loaded>" : level.EntityConfigPath.Value)}"));
+		ImGui.Text(Inline.Span($"Models: {level.ModelPaths.Count}"));
+		ImGui.Text(Inline.Span($"WorldObjects: {level.WorldObjects.Count}"));
+		ImGui.Text(Inline.Span($"Entities: {level.Entities.Count}"));
+		ImGui.TextWrapped(Inline.Span($"EntityConfig: {level.EntityConfigPath ?? "<No entity config loaded>"}"));
 		ImGui.SeparatorText("Entity config");
 		if (level.EntityConfigPath != null)
 		{

@@ -1,5 +1,5 @@
 using Detach.Utils;
-using SimpleLevelEditor.Formats.Types.Level;
+using SimpleLevelEditor.Formats.Level;
 
 namespace SimpleLevelEditor.Extensions;
 

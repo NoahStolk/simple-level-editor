@@ -17,7 +17,7 @@
         "Z": 0
       },
       "Shape": {
-        "Case": "Point"
+        "$type": "Point"
       },
       "Properties": []
     }

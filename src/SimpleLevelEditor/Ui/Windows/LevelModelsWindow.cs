@@ -1,9 +1,9 @@
 using Detach;
 using ImGuiNET;
+using NativeFileDialogUtils;
 using SimpleLevelEditor.State.States.Assets;
 using SimpleLevelEditor.State.States.EntityConfig;
 using SimpleLevelEditor.State.States.Level;
-using SimpleLevelEditor.State.Utils;
 using System.Diagnostics;
 
 namespace SimpleLevelEditor.Ui.Windows;
@@ -21,13 +21,13 @@ public static class LevelModelsWindow
 				{
 					string? parentDirectory = Path.GetDirectoryName(LevelState.LevelFilePath);
 					Debug.Assert(parentDirectory != null, "Parent directory should not be null.");
-					string absolutePath = Path.Combine(parentDirectory, LevelState.Level.EntityConfigPath.Value);
+					string absolutePath = Path.Combine(parentDirectory, LevelState.Level.EntityConfigPath);
 					EntityConfigState.LoadEntityConfig(absolutePath);
 				}
 			}
 
 			ImGui.SeparatorText("Entity Config");
-			ImGui.Text(LevelState.Level.EntityConfigPath == null ? "<No entity config loaded>" : LevelState.Level.EntityConfigPath.Value);
+			ImGui.Text(LevelState.Level.EntityConfigPath == null ? "<No entity config loaded>" : LevelState.Level.EntityConfigPath);
 
 			ImGui.BeginDisabled(LevelState.LevelFilePath == null);
 			if (ImGui.Button("Load entity config"))
@@ -71,7 +71,7 @@ public static class LevelModelsWindow
 		{
 			Debug.Assert(LevelState.LevelFilePath != null, "Cannot click this button because it should be disabled.");
 
-			DialogWrapper.FileOpenMultiple(AddAssetsCallback, "obj");
+			DialogWrapper.FileOpenMultiple(AddAssetsCallback, FileConstants.ModelFormats);
 		}
 
 		ImGui.EndDisabled();

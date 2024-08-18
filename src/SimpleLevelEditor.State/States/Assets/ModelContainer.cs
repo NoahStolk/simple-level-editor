@@ -96,6 +96,7 @@ public sealed class ModelContainer
 
 			MaterialsData materialsData = MtlParser.Parse(File.ReadAllBytes(absolutePathToMtlFile));
 
+			// ! LINQ filtering.
 			List<Material> materials = materialsData.Materials
 				.Select(materialData =>
 				{

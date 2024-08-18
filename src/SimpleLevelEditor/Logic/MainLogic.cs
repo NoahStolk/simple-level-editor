@@ -2,8 +2,8 @@ using Detach.Collisions;
 using Detach.Collisions.Primitives3D;
 using Silk.NET.GLFW;
 using SimpleLevelEditor.Extensions;
-using SimpleLevelEditor.Formats.Types.EntityConfig;
-using SimpleLevelEditor.Formats.Types.Level;
+using SimpleLevelEditor.Formats.EntityConfig;
+using SimpleLevelEditor.Formats.Level;
 using SimpleLevelEditor.Rendering;
 using SimpleLevelEditor.State.States.Assets;
 using SimpleLevelEditor.State.States.EntityConfig;
@@ -34,7 +34,6 @@ public static class MainLogic
 
 		if (isFocused && Input.GlfwInput.IsMouseButtonPressed(MouseButton.Left))
 		{
-			// ReSharper disable PossibleUnintendedReferenceComparison
 			if (LevelEditorState.HighlightedObject != null)
 			{
 				LevelEditorState.SetSelectedWorldObject(LevelEditorState.SelectedWorldObject == LevelEditorState.HighlightedObject ? null : LevelEditorState.HighlightedObject);
@@ -48,8 +47,6 @@ public static class MainLogic
 				LevelEditorState.ClearSelectedEntity();
 				LevelEditorState.ClearSelectedWorldObject();
 			}
-
-			// ReSharper restore PossibleUnintendedReferenceComparison
 		}
 	}
 
@@ -80,7 +77,7 @@ public static class MainLogic
 		if (referenceWorldObject.ModelPath.Length == 0)
 			return; // TODO: Show popup.
 
-		WorldObject worldObject = referenceWorldObject.CloneAndPlaceAtPosition(LevelState.Level.WorldObjects.Length > 0 ? LevelState.Level.WorldObjects.Max(o => o.Id) + 1 : 0, LevelEditorState.TargetPosition.Value);
+		WorldObject worldObject = referenceWorldObject.CloneAndPlaceAtPosition(LevelState.Level.WorldObjects.Count > 0 ? LevelState.Level.WorldObjects.Max(o => o.Id) + 1 : 0, LevelEditorState.TargetPosition.Value);
 		LevelState.Level.AddWorldObject(worldObject);
 
 		LevelEditorState.SetSelectedWorldObject(worldObject);
@@ -95,7 +92,7 @@ public static class MainLogic
 
 		Entity referenceEntity = LevelEditorState.SelectedEntity ?? EntityEditorState.DefaultEntity;
 
-		Entity entity = referenceEntity.CloneAndPlaceAtPosition(LevelState.Level.Entities.Length > 0 ? LevelState.Level.Entities.Max(o => o.Id) + 1 : 0, LevelEditorState.TargetPosition.Value);
+		Entity entity = referenceEntity.CloneAndPlaceAtPosition(LevelState.Level.Entities.Count > 0 ? LevelState.Level.Entities.Max(o => o.Id) + 1 : 0, LevelEditorState.TargetPosition.Value);
 		LevelState.Level.AddEntity(entity);
 
 		LevelEditorState.SetSelectedEntity(entity);
@@ -156,7 +153,7 @@ public static class MainLogic
 
 	private static void RaycastWorldObjects(Ray ray, ref float? closestIntersection)
 	{
-		for (int i = 0; i < LevelState.Level.WorldObjects.Length; i++)
+		for (int i = 0; i < LevelState.Level.WorldObjects.Count; i++)
 		{
 			WorldObject worldObject = LevelState.Level.WorldObjects[i];
 			Model? model = ModelContainer.LevelContainer.GetModel(worldObject.ModelPath);
@@ -184,7 +181,7 @@ public static class MainLogic
 
 	private static void RaycastEntities(Ray ray, float? closestDistance)
 	{
-		for (int i = 0; i < LevelState.Level.Entities.Length; i++)
+		for (int i = 0; i < LevelState.Level.Entities.Count; i++)
 		{
 			Entity entity = LevelState.Level.Entities[i];
 			if (!LevelEditorState.ShouldRenderEntity(entity))
@@ -203,9 +200,9 @@ public static class MainLogic
 
 		float? GetIntersection(Entity entity)
 		{
-			if (entity.Shape.IsPoint)
+			if (entity.Shape is EntityShape.Point)
 			{
-				EntityShapeDescriptor? entityShape = EntityConfigState.EntityConfig.Entities.FirstOrDefault(e => e.Name == entity.Name)?.Shape;
+				EntityShapeDescriptor? entityShape = EntityConfigState.EntityConfig.Entities.Find(e => e.Name == entity.Name)?.Shape;
 				if (entityShape is not EntityShapeDescriptor.Point point)
 					return null;
 

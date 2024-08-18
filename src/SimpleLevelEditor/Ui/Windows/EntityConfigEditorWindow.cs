@@ -1,10 +1,9 @@
 using Detach;
 using ImGuiNET;
-using Microsoft.FSharp.Collections;
-using SimpleLevelEditor.Formats.Types;
-using SimpleLevelEditor.Formats.Types.EntityConfig;
+using NativeFileDialogUtils;
+using SimpleLevelEditor.Formats.Core;
+using SimpleLevelEditor.Formats.EntityConfig;
 using SimpleLevelEditor.State.States.EntityConfigEditor;
-using SimpleLevelEditor.State.Utils;
 using System.Diagnostics;
 
 namespace SimpleLevelEditor.Ui.Windows;
@@ -53,17 +52,17 @@ public static class EntityConfigEditorWindow
 			"Models",
 			"Add models",
 			EntityConfigEditorState.EntityConfig.ModelPaths,
-			paths => AddCallback(EntityConfigEditorState.EntityConfig.AddModel, paths),
-			EntityConfigEditorState.EntityConfig.RemoveModel,
-			"obj");
+			paths => AddCallback(EntityConfigEditorState.EntityConfig.AddModelPath, paths),
+			EntityConfigEditorState.EntityConfig.RemoveModelPath,
+			FileConstants.ModelFormats);
 
 		RenderPaths(
 			"Textures",
 			"Add textures",
 			EntityConfigEditorState.EntityConfig.TexturePaths,
-			paths => AddCallback(EntityConfigEditorState.EntityConfig.AddTexture, paths),
-			EntityConfigEditorState.EntityConfig.RemoveTexture,
-			"bmp,gif,jpeg,pbm,png,tiff,tga,webp");
+			paths => AddCallback(EntityConfigEditorState.EntityConfig.AddTexturePath, paths),
+			EntityConfigEditorState.EntityConfig.RemoveTexturePath,
+			FileConstants.TextureFormats);
 
 		RenderEntities();
 	}
@@ -71,7 +70,7 @@ public static class EntityConfigEditorWindow
 	private static void RenderPaths(
 		ReadOnlySpan<char> title,
 		ReadOnlySpan<char> buttonLabel,
-		FSharpList<string> paths,
+		List<string> paths,
 		Action<IReadOnlyList<string>?> addCallback,
 		Action<string> removeCallback,
 		string fileExtensions)
@@ -127,7 +126,12 @@ public static class EntityConfigEditorWindow
 
 		if (ImGui.Button("Add entity"))
 		{
-			EntityDescriptor entity = new("New entity", EntityShapeDescriptor.NewPoint(PointEntityVisualization.NewSimpleSphere(new Rgb(255, 127, 0), 0.5f)), FSharpList<EntityPropertyDescriptor>.Empty);
+			EntityDescriptor entity = new()
+			{
+				Name = "New entity",
+				Shape = new EntityShapeDescriptor.Point(new PointEntityVisualization.SimpleSphere(new Rgb(255, 127, 0), 0.5f)),
+				Properties = [],
+			};
 			EntityConfigEditorState.EntityConfig.AddEntity(entity);
 		}
 

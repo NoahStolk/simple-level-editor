@@ -1,7 +1,7 @@
 using Detach.Parsers.Texture;
 using Silk.NET.OpenGL;
-using SimpleLevelEditor.Formats.Types.EntityConfig;
-using SimpleLevelEditor.Formats.Types.Level;
+using SimpleLevelEditor.Formats.EntityConfig;
+using SimpleLevelEditor.Formats.Level;
 using SimpleLevelEditor.State.Extensions;
 using SimpleLevelEditor.State.States.Assets;
 using SimpleLevelEditor.State.States.EntityConfig;
@@ -47,7 +47,7 @@ public sealed class SpriteRenderer
 
 	private void RenderSpriteEntities()
 	{
-		for (int i = 0; i < LevelState.Level.Entities.Length; i++)
+		for (int i = 0; i < LevelState.Level.Entities.Count; i++)
 		{
 			Entity entity = LevelState.Level.Entities[i];
 			if (!LevelEditorState.ShouldRenderEntity(entity))
@@ -74,7 +74,7 @@ public sealed class SpriteRenderer
 		if (levelDirectory == null)
 			return;
 
-		string absolutePathToEntityConfig = Path.Combine(levelDirectory, LevelState.Level.EntityConfigPath.Value);
+		string absolutePathToEntityConfig = Path.Combine(levelDirectory, LevelState.Level.EntityConfigPath);
 		string? entityConfigDirectory = Path.GetDirectoryName(absolutePathToEntityConfig);
 		if (entityConfigDirectory == null)
 			return;
