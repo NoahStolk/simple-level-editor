@@ -44,7 +44,7 @@ public sealed class LevelWindow
 			//
 			// RenderMoveDistances(drawList, cursorScreenPos, framebufferSize);
 			//
-			// Vector2 cursorPosition = ImGui.GetCursorPos();
+			Vector2 cursorPosition = ImGui.GetCursorPos();
 			//
 			// LevelEditorMenuWindow.Render(ImGui.GetCursorScreenPos());
 			//
@@ -55,8 +55,8 @@ public sealed class LevelWindow
 			//
 			// LevelEditorSelectionMenu.RenderSelectionMenu(framebufferSize, drawList, cursorScreenPos, nearPlane, normalizedMousePosition, LevelEditorState.Snap);
 
-			// ImGui.SetCursorPos(cursorPosition);
-			// ImGui.InvisibleButton("3d_view", framebufferSize);
+			ImGui.SetCursorPos(cursorPosition);
+			ImGui.InvisibleButton("3d_view", framebufferSize);
 			bool isFocused = ImGui.IsItemHovered();
 			cameraState.Update(App.Instance.FrameTime, Input.GlfwInput, Graphics.Glfw, Graphics.Window, ImGui.GetIO().DeltaTime, isFocused);
 
