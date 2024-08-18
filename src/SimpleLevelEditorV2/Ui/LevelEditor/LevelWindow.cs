@@ -10,7 +10,7 @@ namespace SimpleLevelEditorV2.Ui.LevelEditor;
 
 public sealed class LevelWindow
 {
-	public unsafe void Render(AppState appState, LevelEditorState levelEditorState)
+	public unsafe void Render(AppState appState, LevelEditorWindowState levelEditorWindowState)
 	{
 		if (ImGui.Begin("Level Editor"))
 		{

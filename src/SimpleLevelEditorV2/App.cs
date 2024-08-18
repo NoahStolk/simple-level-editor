@@ -50,7 +50,8 @@ public sealed class App
 
 	private readonly AppState _appState = new();
 	private readonly EntityConfigEditorState _entityConfigEditorState = new();
-	private readonly LevelEditorState _levelEditorState = new();
+	private readonly LevelEditorWindowState _levelEditorWindowState = new();
+	private readonly LevelModelState _levelModelState = new();
 
 	private readonly Shortcuts _entityConfigEditorShortcuts;
 	private readonly Shortcuts _levelEditorShortcuts;
@@ -200,10 +201,10 @@ public sealed class App
 				_shortcutsWindow.Render(ref _entityConfigEditorState.ShowShortcutsWindow, _entityConfigEditorShortcuts);
 				break;
 			case AppView.LevelEditor:
-				_levelMainMenuBar.Render(_appState, _levelEditorState);
-				_levelWindow.Render(_appState, _levelEditorState);
+				_levelMainMenuBar.Render(_appState, _levelEditorWindowState, _levelModelState);
+				_levelWindow.Render(_appState, _levelEditorWindowState);
 
-				_shortcutsWindow.Render(ref _levelEditorState.ShowShortcutsWindow, _levelEditorShortcuts);
+				_shortcutsWindow.Render(ref _levelEditorWindowState.ShowShortcutsWindow, _levelEditorShortcuts);
 				break;
 			default:
 				throw new UnreachableException($"Unknown app state: {_appState.CurrentView}");

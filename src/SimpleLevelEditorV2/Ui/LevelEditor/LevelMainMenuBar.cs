@@ -9,7 +9,7 @@ namespace SimpleLevelEditorV2.Ui.LevelEditor;
 
 public sealed class LevelMainMenuBar
 {
-	public void Render(AppState appState, LevelEditorState levelEditorState)
+	public void Render(AppState appState, LevelEditorWindowState levelEditorWindowState, LevelModelState levelModelState)
 	{
 		if (ImGui.BeginMainMenuBar())
 		{
@@ -17,7 +17,8 @@ public sealed class LevelMainMenuBar
 			{
 				if (ImGui.MenuItem("New"))
 				{
-					levelEditorState.Level = new LevelModel("temp", []);
+					// TODO: Choose entity config path before constructing new level model.
+					levelModelState.Level = new LevelModel("temp", []);
 				}
 
 				if (ImGui.MenuItem("Open"))
@@ -29,7 +30,7 @@ public sealed class LevelMainMenuBar
 								return;
 
 							string json = File.ReadAllText(s);
-							levelEditorState.Level = LevelSerializer.Deserialize(json);
+							levelModelState.Level = LevelSerializer.Deserialize(json);
 						},
 						"json");
 				}
@@ -39,10 +40,10 @@ public sealed class LevelMainMenuBar
 					DialogWrapper.FileSave(
 						s =>
 						{
-							if (s == null)
+							if (s == null || levelModelState.Level == null)
 								return;
 
-							string json = LevelSerializer.Serialize(levelEditorState.Level);
+							string json = LevelSerializer.Serialize(levelModelState.Level);
 							File.WriteAllText(Path.ChangeExtension(s, ".json"), json);
 						},
 						"json");
@@ -62,7 +63,7 @@ public sealed class LevelMainMenuBar
 			{
 				if (ImGui.MenuItem("Shortcuts"))
 				{
-					levelEditorState.ShowShortcutsWindow = true;
+					levelEditorWindowState.ShowShortcutsWindow = true;
 				}
 
 				ImGui.EndMenu();
