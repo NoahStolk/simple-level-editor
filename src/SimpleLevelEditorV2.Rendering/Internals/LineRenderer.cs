@@ -1,12 +1,9 @@
-using Detach.Numerics;
-using Detach.Utils;
-using Silk.NET.GLFW;
 using Silk.NET.OpenGL;
 using System.Numerics;
 
-namespace SimpleLevelEditorV2.Rendering.Scene;
+namespace SimpleLevelEditorV2.Rendering.Internals;
 
-public sealed class LineRenderer
+internal sealed class LineRenderer
 {
 	private readonly GL _gl;
 
@@ -32,7 +29,7 @@ public sealed class LineRenderer
 	public LineRenderer(GL gl)
 	{
 		_gl = gl;
-		_lineShader = InternalContentState.Shaders["Line"];
+		_lineShader = InternalContent.Shaders["Line"];
 		_modelUniform = _lineShader.GetUniformLocation(_gl, "model");
 		_colorUniform = _lineShader.GetUniformLocation(_gl, "color");
 		_fadeOutUniform = _lineShader.GetUniformLocation(_gl, "fadeOut");

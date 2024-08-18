@@ -10,27 +10,27 @@ namespace SimpleLevelEditorV2.Ui.LevelEditor;
 
 public sealed class LevelWindow
 {
-	public unsafe void Render(AppState appState, LevelEditorWindowState levelEditorWindowState, CameraState cameraState)
+	public unsafe void Render(AppState appState, LevelEditorWindowState levelEditorWindowState, CameraState cameraState, SceneFramebuffer sceneFramebuffer)
 	{
 		if (ImGui.Begin("Level Editor"))
 		{
 			Vector2 framebufferSize = ImGui.GetContentRegionAvail();
 
-			GLEnum framebufferStatus = SceneFramebuffer.Initialize(Graphics.Gl, framebufferSize);
+			GLEnum framebufferStatus = sceneFramebuffer.Initialize(Graphics.Gl, framebufferSize);
 			if (framebufferStatus is not GLEnum.None and not GLEnum.FramebufferComplete)
 				GlobalLogger.LogError("Framebuffer for scene is not complete.");
 
 			cameraState.AspectRatio = framebufferSize.X / framebufferSize.Y;
 
-			SceneFramebuffer.RenderFramebuffer(Graphics.Gl, framebufferSize, 50, 200, null, 0, 8, null, cameraState.ViewMatrix, cameraState.ProjectionMatrix, cameraState.Position, cameraState.FocusPointTarget);
+			sceneFramebuffer.RenderFramebuffer(Graphics.Gl, framebufferSize, 50, 200, null, 0, 8, null, cameraState.ViewMatrix, cameraState.ProjectionMatrix, cameraState.Position, cameraState.FocusPointTarget);
 
 			ImDrawListPtr drawList = ImGui.GetWindowDrawList();
 			Vector2 cursorScreenPos = ImGui.GetCursorScreenPos();
-			drawList.AddImage((IntPtr)SceneFramebuffer.FramebufferTextureId, cursorScreenPos, cursorScreenPos + framebufferSize, Vector2.UnitY, Vector2.UnitX);
+			drawList.AddImage((IntPtr)sceneFramebuffer.FramebufferTextureId, cursorScreenPos, cursorScreenPos + framebufferSize, Vector2.UnitY, Vector2.UnitX);
 
 			Vector2 focusPointIconSize = new(16, 16);
 			Vector2 focusPointIconPosition = cursorScreenPos + cameraState.GetScreenPositionFrom3dPoint(cameraState.FocusPointTarget, framebufferSize) - focusPointIconSize / 2;
-			drawList.AddImage((IntPtr)InternalContentState.Textures["FocusPoint"], focusPointIconPosition, focusPointIconPosition + focusPointIconSize);
+			drawList.AddImage((IntPtr)InternalContent.Textures["FocusPoint"], focusPointIconPosition, focusPointIconPosition + focusPointIconSize);
 
 			ReadOnlySpan<char> fpsText = Inline.Span($"{App.Instance.Fps} FPS");
 			drawList.AddText(new Vector2(cursorScreenPos.X + framebufferSize.X - 4 - ImGui.CalcTextSize(fpsText).X, cursorScreenPos.Y + 4), 0xffffffff, fpsText);

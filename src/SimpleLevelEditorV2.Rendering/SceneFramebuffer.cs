@@ -1,20 +1,19 @@
 using Silk.NET.OpenGL;
-using SimpleLevelEditorV2.Rendering.Scene;
+using SimpleLevelEditorV2.Rendering.Internals;
 using System.Numerics;
 
 namespace SimpleLevelEditorV2.Rendering;
 
-// TODO: Sealed
-public static class SceneFramebuffer
+public sealed class SceneFramebuffer
 {
-	private static readonly SceneRenderer _sceneRenderer = new();
+	private readonly SceneRenderer _sceneRenderer = new();
 
-	private static Vector2 _cachedFramebufferSize;
-	private static uint _framebufferId;
+	private Vector2 _cachedFramebufferSize;
+	private uint _framebufferId;
 
-	public static uint FramebufferTextureId { get; private set; }
+	public uint FramebufferTextureId { get; private set; }
 
-	public static unsafe GLEnum Initialize(GL gl, Vector2 framebufferSize)
+	public unsafe GLEnum Initialize(GL gl, Vector2 framebufferSize)
 	{
 		if (_cachedFramebufferSize == framebufferSize)
 			return GLEnum.None;
@@ -51,7 +50,7 @@ public static class SceneFramebuffer
 		return framebufferStatus;
 	}
 
-	public static unsafe void RenderFramebuffer(
+	public unsafe void RenderFramebuffer(
 		GL gl,
 		Vector2 size,
 		float gridCellFadeOutMinDistance,

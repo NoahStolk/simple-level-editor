@@ -1,9 +1,9 @@
 using Silk.NET.OpenGL;
 using System.Numerics;
 
-namespace SimpleLevelEditorV2.Rendering.Scene;
+namespace SimpleLevelEditorV2.Rendering.Internals;
 
-public sealed class SceneRenderer
+internal sealed class SceneRenderer
 {
 	private LineRenderer? _lineRenderer;
 	private MeshRenderer? _meshRenderer;

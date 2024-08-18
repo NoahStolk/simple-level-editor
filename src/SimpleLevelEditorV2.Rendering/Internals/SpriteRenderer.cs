@@ -2,9 +2,9 @@ using Detach.Parsers.Texture;
 using Silk.NET.OpenGL;
 using System.Numerics;
 
-namespace SimpleLevelEditorV2.Rendering.Scene;
+namespace SimpleLevelEditorV2.Rendering.Internals;
 
-public sealed class SpriteRenderer
+internal sealed class SpriteRenderer
 {
 	private readonly GL _gl;
 
@@ -19,7 +19,7 @@ public sealed class SpriteRenderer
 	public SpriteRenderer(GL gl)
 	{
 		_gl = gl;
-		_spriteShader = InternalContentState.Shaders["Sprite"];
+		_spriteShader = InternalContent.Shaders["Sprite"];
 		_modelUniform = _spriteShader.GetUniformLocation(_gl, "model");
 
 		_planeVao = VaoUtils.CreatePlaneVao(_gl, [

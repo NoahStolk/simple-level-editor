@@ -1,9 +1,9 @@
 using Silk.NET.OpenGL;
 using System.Numerics;
 
-namespace SimpleLevelEditorV2.Rendering.Scene;
+namespace SimpleLevelEditorV2.Rendering.Internals;
 
-public sealed class MeshRenderer
+internal sealed class MeshRenderer
 {
 	private readonly GL _gl;
 	private readonly ShaderCacheEntry _meshShader;
@@ -12,7 +12,7 @@ public sealed class MeshRenderer
 	public MeshRenderer(GL gl)
 	{
 		_gl = gl;
-		_meshShader = InternalContentState.Shaders["Mesh"];
+		_meshShader = InternalContent.Shaders["Mesh"];
 		_modelUniform = _meshShader.GetUniformLocation(_gl, "model");
 	}
 

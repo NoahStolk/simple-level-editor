@@ -4,6 +4,7 @@ using ImGuiGlfw;
 using ImGuiNET;
 using Silk.NET.GLFW;
 using Silk.NET.OpenGL;
+using SimpleLevelEditorV2.Rendering;
 using SimpleLevelEditorV2.States.App;
 using SimpleLevelEditorV2.States.EntityConfigEditor;
 using SimpleLevelEditorV2.States.LevelEditor;
@@ -53,6 +54,8 @@ public sealed class App
 	private readonly LevelEditorWindowState _levelEditorWindowState = new();
 	private readonly LevelModelState _levelModelState = new();
 	private readonly CameraState _cameraState = new();
+
+	private readonly SceneFramebuffer _sceneFramebuffer = new();
 
 	private readonly Shortcuts _entityConfigEditorShortcuts;
 	private readonly Shortcuts _levelEditorShortcuts;
@@ -203,7 +206,7 @@ public sealed class App
 				break;
 			case AppView.LevelEditor:
 				_levelMainMenuBar.Render(_appState, _levelEditorWindowState, _levelModelState);
-				_levelWindow.Render(_appState, _levelEditorWindowState, _cameraState);
+				_levelWindow.Render(_appState, _levelEditorWindowState, _cameraState, _sceneFramebuffer);
 
 				_shortcutsWindow.Render(ref _levelEditorWindowState.ShowShortcutsWindow, _levelEditorShortcuts);
 				break;

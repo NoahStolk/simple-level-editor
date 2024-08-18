@@ -3,7 +3,7 @@ using Silk.NET.OpenGL;
 
 namespace SimpleLevelEditorV2.Rendering;
 
-public static class InternalContentState
+public static class InternalContent
 {
 	private static readonly Dictionary<string, uint> _textures = new();
 	private static readonly Dictionary<string, ShaderCacheEntry> _shaders = new();
