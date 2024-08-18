@@ -2,10 +2,11 @@
 using Silk.NET.GLFW;
 using System.Numerics;
 
-namespace SimpleLevelEditorV2.States.LevelEditor;
+namespace SimpleLevelEditorV2.States.LevelEditor.Controllers;
 
-public sealed class CameraState
+public sealed class CameraController
 {
+	// TODO: Move mouse buttons to separate controls class.
 	public const MouseButton LookButton = MouseButton.Right;
 	private const MouseButton _panButton = MouseButton.Middle;
 	private const int _fieldOfView = 2;

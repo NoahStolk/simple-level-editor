@@ -12,6 +12,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleLevelEditorV2", "Simp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleLevelEditorV2.Rendering", "SimpleLevelEditorV2.Rendering\SimpleLevelEditorV2.Rendering.csproj", "{90EAEE25-2CB3-4F3B-8DD9-E5C0E9BC2A63}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleLevelEditorV2.Models", "SimpleLevelEditorV2.Models\SimpleLevelEditorV2.Models.csproj", "{2DC5B8AF-B679-4A74-8DF8-5E19BF32496D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,5 +44,9 @@ Global
 		{90EAEE25-2CB3-4F3B-8DD9-E5C0E9BC2A63}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{90EAEE25-2CB3-4F3B-8DD9-E5C0E9BC2A63}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{90EAEE25-2CB3-4F3B-8DD9-E5C0E9BC2A63}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2DC5B8AF-B679-4A74-8DF8-5E19BF32496D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2DC5B8AF-B679-4A74-8DF8-5E19BF32496D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2DC5B8AF-B679-4A74-8DF8-5E19BF32496D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2DC5B8AF-B679-4A74-8DF8-5E19BF32496D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

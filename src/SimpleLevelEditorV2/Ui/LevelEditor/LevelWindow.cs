@@ -5,12 +5,13 @@ using SimpleLevelEditorV2.Logging;
 using SimpleLevelEditorV2.Rendering;
 using SimpleLevelEditorV2.States.App;
 using SimpleLevelEditorV2.States.LevelEditor;
+using SimpleLevelEditorV2.States.LevelEditor.Controllers;
 
 namespace SimpleLevelEditorV2.Ui.LevelEditor;
 
 public sealed class LevelWindow
 {
-	public unsafe void Render(AppState appState, LevelEditorWindowState levelEditorWindowState, CameraState cameraState, SceneFramebuffer sceneFramebuffer)
+	public unsafe void Render(AppState appState, LevelEditorWindowState levelEditorWindowState, CameraController cameraController, SceneFramebuffer sceneFramebuffer)
 	{
 		if (ImGui.Begin("Level Editor"))
 		{
@@ -20,9 +21,9 @@ public sealed class LevelWindow
 			if (framebufferStatus is not GLEnum.None and not GLEnum.FramebufferComplete)
 				GlobalLogger.LogError("Framebuffer for scene is not complete.");
 
-			cameraState.AspectRatio = framebufferSize.X / framebufferSize.Y;
+			cameraController.AspectRatio = framebufferSize.X / framebufferSize.Y;
 
-			RenderData renderData = new(framebufferSize, 50, 200, null, 0, 8, null, cameraState.ViewMatrix, cameraState.ProjectionMatrix, cameraState.Position, cameraState.FocusPointTarget);
+			RenderData renderData = new(framebufferSize, 50, 200, null, 0, 8, null, cameraController.ViewMatrix, cameraController.ProjectionMatrix, cameraController.Position, cameraController.FocusPointTarget);
 			sceneFramebuffer.RenderFramebuffer(Graphics.Gl, renderData);
 
 			ImDrawListPtr drawList = ImGui.GetWindowDrawList();
@@ -30,7 +31,7 @@ public sealed class LevelWindow
 			drawList.AddImage((IntPtr)sceneFramebuffer.FramebufferTextureId, cursorScreenPos, cursorScreenPos + framebufferSize, Vector2.UnitY, Vector2.UnitX);
 
 			Vector2 focusPointIconSize = new(16, 16);
-			Vector2 focusPointIconPosition = cursorScreenPos + cameraState.GetScreenPositionFrom3dPoint(cameraState.FocusPointTarget, framebufferSize) - focusPointIconSize / 2;
+			Vector2 focusPointIconPosition = cursorScreenPos + cameraController.GetScreenPositionFrom3dPoint(cameraController.FocusPointTarget, framebufferSize) - focusPointIconSize / 2;
 			drawList.AddImage((IntPtr)InternalContent.Textures["FocusPoint"], focusPointIconPosition, focusPointIconPosition + focusPointIconSize);
 
 			ReadOnlySpan<char> fpsText = Inline.Span($"{App.Instance.Fps} FPS");
@@ -58,7 +59,7 @@ public sealed class LevelWindow
 			ImGui.SetCursorPos(cursorPosition);
 			ImGui.InvisibleButton("3d_view", framebufferSize);
 			bool isFocused = ImGui.IsItemHovered();
-			cameraState.Update(App.Instance.FrameTime, Input.GlfwInput, Graphics.Glfw, Graphics.Window, ImGui.GetIO().DeltaTime, isFocused);
+			cameraController.Update(App.Instance.FrameTime, Input.GlfwInput, Graphics.Glfw, Graphics.Window, ImGui.GetIO().DeltaTime, isFocused);
 
 			// MainLogic.Run(isFocused, normalizedMousePosition, nearPlane, LevelEditorState.Snap);
 		}

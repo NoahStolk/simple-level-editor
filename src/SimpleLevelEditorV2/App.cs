@@ -8,6 +8,7 @@ using SimpleLevelEditorV2.Rendering;
 using SimpleLevelEditorV2.States.App;
 using SimpleLevelEditorV2.States.EntityConfigEditor;
 using SimpleLevelEditorV2.States.LevelEditor;
+using SimpleLevelEditorV2.States.LevelEditor.Controllers;
 using SimpleLevelEditorV2.Ui.EntityConfig;
 using SimpleLevelEditorV2.Ui.LevelEditor;
 using SimpleLevelEditorV2.Ui.Logging;
@@ -53,7 +54,7 @@ public sealed class App
 	private readonly EntityConfigEditorState _entityConfigEditorState = new();
 	private readonly LevelEditorWindowState _levelEditorWindowState = new();
 	private readonly LevelModelState _levelModelState = new();
-	private readonly CameraState _cameraState = new();
+	private readonly CameraController _cameraController = new();
 
 	private readonly SceneFramebuffer _sceneFramebuffer = new();
 
@@ -206,7 +207,7 @@ public sealed class App
 				break;
 			case AppView.LevelEditor:
 				_levelMainMenuBar.Render(_appState, _levelEditorWindowState, _levelModelState);
-				_levelWindow.Render(_appState, _levelEditorWindowState, _cameraState, _sceneFramebuffer);
+				_levelWindow.Render(_appState, _levelEditorWindowState, _cameraController, _sceneFramebuffer);
 
 				_shortcutsWindow.Render(ref _levelEditorWindowState.ShowShortcutsWindow, _levelEditorShortcuts);
 				break;

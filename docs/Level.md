@@ -7,4 +7,3 @@
 - `level_entity`
   - `entity_descriptor_name: str`
   - `data: str`
-

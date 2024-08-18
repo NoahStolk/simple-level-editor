@@ -34,7 +34,6 @@ public static class MainLogic
 
 		if (isFocused && Input.GlfwInput.IsMouseButtonPressed(MouseButton.Left))
 		{
-			// ReSharper disable PossibleUnintendedReferenceComparison
 			if (LevelEditorState.HighlightedObject != null)
 			{
 				LevelEditorState.SetSelectedWorldObject(LevelEditorState.SelectedWorldObject == LevelEditorState.HighlightedObject ? null : LevelEditorState.HighlightedObject);
@@ -48,8 +47,6 @@ public static class MainLogic
 				LevelEditorState.ClearSelectedEntity();
 				LevelEditorState.ClearSelectedWorldObject();
 			}
-
-			// ReSharper restore PossibleUnintendedReferenceComparison
 		}
 	}
 

@@ -2,3 +2,5 @@
 
 SimpleLevelEditorV2.Formats.Level SimpleLevelEditorV2.Formats.Level.Model
 SimpleLevelEditorV2.Formats.EntityConfig SimpleLevelEditorV2.Formats.EntityConfig.Model
+
+SimpleLevelEditorV2.Formats.Level.Model SimpleLevelEditorV2.Formats.EntityConfig.Model

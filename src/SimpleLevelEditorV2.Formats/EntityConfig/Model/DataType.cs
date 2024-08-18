@@ -25,53 +25,46 @@ public sealed record DataType
 
 	public IReadOnlyList<DataTypeField> Fields { get; }
 
-	public static DataType DiffuseColor { get; } = new("DiffuseColor", new[]
-	{
+	public static DataType DiffuseColor { get; } = new("DiffuseColor", [
 		new DataTypeField("R", Primitive.U8),
 		new DataTypeField("G", Primitive.U8),
 		new DataTypeField("B", Primitive.U8),
 		new DataTypeField("A", Primitive.U8),
-	});
+	]);
 
-	public static DataType Position { get; } = new("Position", new[]
-	{
+	public static DataType Position { get; } = new("Position", [
 		new DataTypeField("X", Primitive.F32),
 		new DataTypeField("Y", Primitive.F32),
 		new DataTypeField("Z", Primitive.F32),
-	});
+	]);
 
-	public static DataType Rotation { get; } = new("Rotation", new[]
-	{
+	public static DataType Rotation { get; } = new("Rotation", [
 		new DataTypeField("X", Primitive.F32),
 		new DataTypeField("Y", Primitive.F32),
 		new DataTypeField("Z", Primitive.F32),
-	});
+	]);
 
-	public static DataType Scale { get; } = new("Scale", new[]
-	{
+	public static DataType Scale { get; } = new("Scale", [
 		new DataTypeField("X", Primitive.F32),
 		new DataTypeField("Y", Primitive.F32),
 		new DataTypeField("Z", Primitive.F32),
-	});
+	]);
 
-	public static DataType Model { get; } = new("Model", new[]
-	{
+	public static DataType Model { get; } = new("Model", [
 		new DataTypeField("ModelPath", Primitive.Str),
-	});
+	]);
 
-	public static DataType Billboard { get; } = new("Billboard", new[]
-	{
+	public static DataType Billboard { get; } = new("Billboard", [
 		new DataTypeField("TexturePath", Primitive.Str),
-	});
+	]);
 
-	public static DataType Wireframe { get; } = new("Wireframe", new[]
-	{
+	public static DataType Wireframe { get; } = new("Wireframe", [
 		new DataTypeField("Thickness", Primitive.F32),
 		new DataTypeField("Shape", Primitive.Str),
-	});
+	]);
 
-	public static IReadOnlyList<DataType> DefaultDataTypes { get; } = new[]
-	{
+	public static IReadOnlyList<DataType> DefaultDataTypes { get; } =
+	[
 		DiffuseColor,
 		Position,
 		Rotation,
@@ -79,5 +72,5 @@ public sealed record DataType
 		Model,
 		Billboard,
 		Wireframe,
-	};
+	];
 }
