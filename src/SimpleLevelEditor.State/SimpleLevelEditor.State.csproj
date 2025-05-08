@@ -1,14 +1,36 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup Label="External dependencies">
-    <PackageReference Include="NativeFileDialogSharp" Version="0.5.0"/>
-    <PackageReference Include="NoahStolk.Detach" Version="0.11.2"/>
     <PackageReference Include="NoahStolk.ImGuiGlfw" Version="0.7.0"/>
     <PackageReference Include="SixLabors.ImageSharp" Version="3.1.7"/>
   </ItemGroup>
 
+  <ItemGroup Label="Static code analysis">
+    <PackageReference Include="Microsoft.CodeAnalysis.BannedApiAnalyzers" Version="3.3.4">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Nullable.Extended.Analyzer" Version="1.15.6169">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Roslynator.Analyzers" Version="4.12.4">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="9.28.0.94264">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.556">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
   <ItemGroup>
-    <ProjectReference Include="..\SimpleLevelEditor.Formats\SimpleLevelEditor.Formats.fsproj"/>
+    <ProjectReference Include="..\NativeFileDialogUtils\NativeFileDialogUtils.csproj" />
+    <ProjectReference Include="..\SimpleLevelEditor.Formats\SimpleLevelEditor.Formats.csproj" />
   </ItemGroup>
 
 </Project>

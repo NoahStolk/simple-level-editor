@@ -1,7 +1,6 @@
-using Microsoft.FSharp.Core;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SimpleLevelEditor.Formats.Types;
-using SimpleLevelEditor.Formats.Types.EntityConfig;
+using SimpleLevelEditor.Formats.Core;
+using SimpleLevelEditor.Formats.EntityConfig;
 using System.Numerics;
 
 namespace SimpleLevelEditor.Formats.Tests;
@@ -23,23 +22,22 @@ public class EntityConfigDeserializationTests
 	public void DeserializeEntityConfig()
 	{
 		using FileStream fs = File.OpenRead(Path.Combine("Resources", "EntityConfig.json"));
-		FSharpOption<EntityConfigData>? result = SimpleLevelEditorJsonSerializer.DeserializeEntityConfigFromStream(fs);
-		Assert.IsNotNull(result);
-		EntityConfigData? data = result.Value;
+		EntityConfigData? data = SimpleLevelEditorJsonSerializer.DeserializeEntityConfigFromStream(fs);
+		Assert.IsNotNull(data);
 
-		Assert.AreEqual(1, data.ModelPaths.Length);
-		Assert.AreEqual(2, data.TexturePaths.Length);
-		Assert.AreEqual(5, data.Entities.Length);
+		Assert.AreEqual(1, data.ModelPaths.Count);
+		Assert.AreEqual(2, data.TexturePaths.Count);
+		Assert.AreEqual(5, data.Entities.Count);
 
 		EntityDescriptor entity = data.Entities[0];
 		Assert.AreEqual("PlayerSpawn", entity.Name);
-		Assert.AreEqual(EntityShapeDescriptor.NewPoint(PointEntityVisualization.NewBillboardSprite("PlayerIcon.tga", 32)), entity.Shape);
-		Assert.AreEqual(0, entity.Properties.Length);
+		Assert.AreEqual(new EntityShapeDescriptor.Point(new PointEntityVisualization.BillboardSprite("PlayerIcon.tga", 32)), entity.Shape);
+		Assert.AreEqual(0, entity.Properties.Count);
 
 		entity = data.Entities[1];
 		Assert.AreEqual("Light", entity.Name);
-		Assert.AreEqual(EntityShapeDescriptor.NewPoint(PointEntityVisualization.NewSimpleSphere(new Rgb(255, 127, 255), 0.25f)), entity.Shape);
-		Assert.AreEqual(3, entity.Properties.Length);
+		Assert.AreEqual(new EntityShapeDescriptor.Point(new PointEntityVisualization.SimpleSphere(new Rgb(255, 127, 255), 0.25f)), entity.Shape);
+		Assert.AreEqual(3, entity.Properties.Count);
 
 		EntityPropertyDescriptor property = entity.Properties[0];
 		Assert.AreEqual("Color", property.Name);
@@ -66,8 +64,8 @@ public class EntityConfigDeserializationTests
 
 		entity = data.Entities[2];
 		Assert.AreEqual("DynamicObject", entity.Name);
-		Assert.AreEqual(EntityShapeDescriptor.NewPoint(PointEntityVisualization.NewModel("Sphere.obj", 0.5f)), entity.Shape);
-		Assert.AreEqual(4, entity.Properties.Length);
+		Assert.AreEqual(new EntityShapeDescriptor.Point(new PointEntityVisualization.Model("Sphere.obj", 0.5f)), entity.Shape);
+		Assert.AreEqual(4, entity.Properties.Count);
 
 		property = entity.Properties[0];
 		Assert.AreEqual("Mesh", property.Name);
@@ -101,12 +99,12 @@ public class EntityConfigDeserializationTests
 
 		entity = data.Entities[3];
 		Assert.AreEqual("Sphere", entity.Name);
-		Assert.AreEqual(EntityShapeDescriptor.NewSphere(new Rgb(240, 120, 60)), entity.Shape);
-		Assert.AreEqual(0, entity.Properties.Length);
+		Assert.AreEqual(new EntityShapeDescriptor.Sphere(new Rgb(240, 120, 60)), entity.Shape);
+		Assert.AreEqual(0, entity.Properties.Count);
 
 		entity = data.Entities[4];
 		Assert.AreEqual("Aabb", entity.Name);
-		Assert.AreEqual(EntityShapeDescriptor.NewAabb(new Rgb(60, 120, 240)), entity.Shape);
-		Assert.AreEqual(0, entity.Properties.Length);
+		Assert.AreEqual(new EntityShapeDescriptor.Aabb(new Rgb(60, 120, 240)), entity.Shape);
+		Assert.AreEqual(0, entity.Properties.Count);
 	}
 }

@@ -1,8 +1,7 @@
-using Microsoft.FSharp.Core;
+using NativeFileDialogUtils;
 using SimpleLevelEditor.Formats;
-using SimpleLevelEditor.Formats.Types.EntityConfig;
+using SimpleLevelEditor.Formats.EntityConfig;
 using SimpleLevelEditor.State.States.Messages;
-using SimpleLevelEditor.State.Utils;
 
 namespace SimpleLevelEditor.State.States.EntityConfigEditor;
 
@@ -49,14 +48,14 @@ public static class EntityConfigEditorState
 			return;
 
 		using FileStream fs = new(path, FileMode.Open);
-		FSharpOption<EntityConfigData>? entityConfigData = SimpleLevelEditorJsonSerializer.DeserializeEntityConfigFromStream(fs);
+		EntityConfigData? entityConfigData = SimpleLevelEditorJsonSerializer.DeserializeEntityConfigFromStream(fs);
 		if (entityConfigData == null)
 		{
 			MessagesState.AddError("Failed to load entity config.");
 			return;
 		}
 
-		SetEntityConfig(path, entityConfigData.Value);
+		SetEntityConfig(path, entityConfigData);
 	}
 
 	public static void Save()
