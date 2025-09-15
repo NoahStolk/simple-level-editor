@@ -14,6 +14,6 @@ jobs:
             -   name: Checkout
                 uses: actions/checkout@v2
             -   name: Build
-                run: dotnet build src/SimpleLevelEditor.sln -c Release
+                run: dotnet build src/SimpleLevelEditor.slnx -c Release
             -   name: Test
-                run: dotnet test src/SimpleLevelEditor.sln -c Release --no-build
+                run: dotnet test src/SimpleLevelEditor.slnx -c Release --no-build

@@ -1,0 +1,6 @@
+﻿<Solution>
+  <Project Path="SimpleLevelEditor.Formats.Tests\SimpleLevelEditor.Formats.Tests.csproj" Type="Classic C#" />
+  <Project Path="SimpleLevelEditor.Formats\SimpleLevelEditor.Formats.fsproj" Type="Classic C#" />
+  <Project Path="SimpleLevelEditor.State\SimpleLevelEditor.State.csproj" Type="Classic C#" />
+  <Project Path="SimpleLevelEditor\SimpleLevelEditor.csproj" Type="Classic C#" />
+</Solution>
