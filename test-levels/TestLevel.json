@@ -1,15 +1,15 @@
 {
-  "EntityConfigPath": "EntityConfig\\EntityConfig.json",
+  "EntityConfigPath": "EntityConfig/EntityConfig.json",
   "ModelPaths": [
-    "Models\\Altar.obj",
-    "Models\\Ammonite.obj",
-    "Models\\meshtest.obj",
-    "Models\\Pillar.obj"
+    "Models/Altar.obj",
+    "Models/Ammonite.obj",
+    "Models/meshtest.obj",
+    "Models/Pillar.obj"
   ],
   "WorldObjects": [
     {
       "Id": 1,
-      "ModelPath": "Models\\Pillar.obj",
+      "ModelPath": "Models/Pillar.obj",
       "Scale": {
         "X": 1,
         "Y": 1,
@@ -29,7 +29,7 @@
     },
     {
       "Id": 69,
-      "ModelPath": "Models\\meshtest.obj",
+      "ModelPath": "Models/meshtest.obj",
       "Scale": {
         "X": 1,
         "Y": 1,
@@ -49,7 +49,7 @@
     },
     {
       "Id": 70,
-      "ModelPath": "Models\\Ammonite.obj",
+      "ModelPath": "Models/Ammonite.obj",
       "Scale": {
         "X": 1,
         "Y": 1,
@@ -69,7 +69,7 @@
     },
     {
       "Id": 71,
-      "ModelPath": "Models\\Ammonite.obj",
+      "ModelPath": "Models/Ammonite.obj",
       "Scale": {
         "X": 1,
         "Y": 1,
@@ -89,7 +89,7 @@
     },
     {
       "Id": 72,
-      "ModelPath": "Models\\Ammonite.obj",
+      "ModelPath": "Models/Ammonite.obj",
       "Scale": {
         "X": 1,
         "Y": 1,
@@ -109,7 +109,7 @@
     },
     {
       "Id": 73,
-      "ModelPath": "Models\\Ammonite.obj",
+      "ModelPath": "Models/Ammonite.obj",
       "Scale": {
         "X": 1,
         "Y": 1,

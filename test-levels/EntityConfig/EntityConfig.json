@@ -1,12 +1,12 @@
 {
   "ModelPaths": [
-    "..\\Models\\Altar.obj",
-    "..\\Models\\Ammonite.obj"
+    "../Models/Altar.obj",
+    "../Models/Ammonite.obj"
   ],
   "TexturePaths": [
-    "Sprites\\AudioSourceIcon.tga",
-    "Sprites\\Blue.tga",
-    "Sprites\\LightIcon.tga"
+    "Sprites/AudioSourceIcon.tga",
+    "Sprites/Blue.tga",
+    "Sprites/LightIcon.tga"
   ],
   "Entities": [
     {
@@ -37,7 +37,7 @@
           {
             "Case": "BillboardSprite",
             "Fields": [
-              "Sprites\\Blue.tga",
+              "Sprites/Blue.tga",
               0.5
             ]
           }
@@ -53,7 +53,7 @@
           {
             "Case": "Model",
             "Fields": [
-              "..\\Models\\Altar.obj",
+              "../Models/Altar.obj",
               0.5
             ]
           }
@@ -97,7 +97,7 @@
           {
             "Case": "BillboardSprite",
             "Fields": [
-              "Sprites\\LightIcon.tga",
+              "Sprites/LightIcon.tga",
               0.5
             ]
           }
@@ -151,7 +151,7 @@
           {
             "Case": "Model",
             "Fields": [
-              "..\\Models\\Ammonite.obj",
+              "../Models/Ammonite.obj",
               0.5
             ]
           }
@@ -218,7 +218,7 @@
           {
             "Case": "BillboardSprite",
             "Fields": [
-              "Sprites\\AudioSourceIcon.tga",
+              "Sprites/AudioSourceIcon.tga",
               0.5
             ]
           }
