@@ -1,5 +1,9 @@
 # Simple Level Editor
 
+> ⚠️ **NOTE:** This project has been superseded by a new level editor and will not receive new updates.
+> The new level editor is currently not open source because it is part of my proprietary engine.
+> The new editor contains better state management, improved formats, and bug fixes.
+
 Simple cross-platform 3D level editor written in C# and F# using .NET 10, OpenGL and ImGui.
 
 > Try the latest alpha version [here](https://github.com/NoahStolk/simple-level-editor/releases).
